@@ -2,7 +2,7 @@
 var _ = require("lodash");
 
 var system = require("katana/system");
-var server = require("./server");
+var server = require("./src/sockets");
 
 // TODO: Make something like this
 // buildType().has("command", String).maybe("data", [Array,
@@ -16,24 +16,58 @@ var isCommand = function(data) {
 	return is;
 };
 
-var swytch = function(input, outputs) {
-	_.each(outputs, function() {
-		// TODO: this
-	});
+var buildSwitch = function(outputs, defaultFn) {
+
+	return function(input) {
+		var foundOutput = false;
+
+		_.each(outputs, function(output) {
+
+			var type = output.type;
+			debugger;
+			if(type(input)) {
+				foundOutput = true;
+
+				var func = output.func;
+				func(input);
+			}
+		});
+
+		if(!foundOutput && defaultFn)
+			defaultFn(input);
+	};
 };
 
-var handleData = function(dataStr) {
-	var data = JSON.parse(dataStr);
-	system.out(data);
+var handleCommand = function(message) {
 
-	// FIXME: This is broken, should return "no" right now
-	system.out("Is Valid: " + (isCommand(data) ? "yes" : "no"));
-/*
-	dataSwitch(data, [
-		[ command, handleCommand ],
-		[ badData ]
-	]);
-*/
+	var commandName = message.data.command;
+
+	console.log("Command: ");
+	console.log(commandName);
+
+	switch(commandName) {
+	case "version":
+		message.socket("1.0.0");
+			break;
+	}
+};
+
+var handleData = function(message) {
+	var data = JSON.parse(message.data);
+	system.out(data);
+	var isValid = isCommand(data) ? "yes" : "no";
+	var msg = "Is Valid: " + isValid;
+	system.out(msg);
+
+	var socket = message.socket;
+	socket(msg);
+
+	buildSwitch([
+		{ type: isCommand, func: handleCommand }
+	], function defaultFn(data) {
+		console.log("Message was invalid:");
+		console.log(data);
+	})(message);
 };
 
 var handleSocket = function(socket) {
@@ -44,7 +78,7 @@ var handleSocket = function(socket) {
 };
 
 var start = function() {
-	var serverInst = server.buildWebSocketServerPipe({ port: 8081 });
+	var serverInst = server.buildServerPipe({ port: 8081 });
 	serverInst.out(handleSocket);
 	return serverInst;
 };
