@@ -24,7 +24,6 @@ var buildSwitch = function(outputs, defaultFn) {
 		_.each(outputs, function(output) {
 
 			var type = output.type;
-			debugger;
 			if(type(input)) {
 				foundOutput = true;
 
