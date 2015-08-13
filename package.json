@@ -8,5 +8,18 @@
     "start": "node server.js"
   },
   "author": "Edward Nicholes Jr.",
-  "license": "GPL"
+  "license": "GPL",
+  "devDependencies": {
+    "del": "^1.2.0",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.2.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-symlink": "^2.1.2",
+    "jshint-stylish": "^2.0.1",
+    "source-map-support": "^0.3.2"
+  },
+  "dependencies": {
+    "lodash": "^3.10.1",
+    "ws": "^0.7.2"
+  }
 }

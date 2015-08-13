@@ -1,0 +1,2 @@
+#!/bin/bash
+node debug ./node_modules/.bin/gulp start

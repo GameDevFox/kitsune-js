@@ -1,31 +1,31 @@
-var func = require("katana/func");
-var pipes = require("katana/pipes");
+import { outFn } from "katana/func";
+import * as pipes from "katana/pipes";
+import { buildPoint } from "katana/point";
 
-var WebSocketServer = require("ws").Server;
+import { Server as WebSocketServer } from "ws";
 
 var server = {};
 
 var buildSocketPipe = function(socket) {
-	var socketMessagePipe = func.fo(function(data) {
+	var socketMsgPipe = outFn(function(data) {
 		socket.send(data);
 	});
 	socket.on("message", function(data, flags) {
 
-		var out = {
-			socket: socketMessagePipe,
-			data: data,
-			flags: flags
-		};
+		var dataObj = JSON.parse(data);
+		var out = buildPoint(dataObj);
+		out.socket = socketMsgPipe;
+		out.flags = flags;
 
-		socketMessagePipe.out()(out);
+		socketMsgPipe.out()(out);
 	});
-	return socketMessagePipe;
+	return socketMsgPipe;
 };
 server.buildSocketPipe = buildSocketPipe;
 
 var buildServerPipe = function(opts) {
 	var socketPipe = pipes.pipe();
-
+q
 	var server = new WebSocketServer(opts);
 	server.on("connection", function(socket) {
 		var dataPipe = buildSocketPipe(socket);
