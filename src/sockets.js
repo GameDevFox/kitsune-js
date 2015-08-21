@@ -25,7 +25,7 @@ server.buildSocketPipe = buildSocketPipe;
 
 var buildServerPipe = function(opts) {
 	var socketPipe = pipes.pipe();
-q
+
 	var server = new WebSocketServer(opts);
 	server.on("connection", function(socket) {
 		var dataPipe = buildSocketPipe(socket);

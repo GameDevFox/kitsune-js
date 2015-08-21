@@ -16,7 +16,8 @@
     "gulp-jshint": "^1.11.2",
     "gulp-symlink": "^2.1.2",
     "jshint-stylish": "^2.0.1",
-    "source-map-support": "^0.3.2"
+    "source-map-support": "^0.3.2",
+    "sqlite3": "^3.0.10"
   },
   "dependencies": {
     "lodash": "^3.10.1",
