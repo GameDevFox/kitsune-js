@@ -1,6 +1,7 @@
 import _ from "lodash";
 
-import * as system from "katana/system";
+import * as sys from "katana/system";
+import * as ksystem from "./system";
 import server from "./sockets";
 
 // TODO: Make something like this
@@ -33,40 +34,35 @@ var buildSwitch = function(outputs, defaultFn) {
 	};
 };
 
-var buildKSys = function() {
-	var handlers = {};
-	var kSys = function(data) {
+var processCommand = function(data) {
 
-		var cmdName = data().$command;
-		system.log("Command: " + cmdName);
+	var cmdName = data().$command;
+	sys.log("Command: " + cmdName);
 
-		var handler = handlers[cmdName];
-		handler(data);
-	};
-	kSys.command = function(cmdName, func) {
-		handlers[cmdName] = func;
-	};
-	return kSys;
+	var handler = ksystem[cmdName];
+	if(!handler) {
+		var errorMsg = "Invalid command: "+cmdName;
+		console.error(errorMsg);
+		data.socket({ $error: errorMsg });
+		return;
+	}
+
+	handler(data);
 };
 
-var kSys = buildKSys();
-kSys.command("version", function(data) {
-	data.socket("1.0.0");
-});
-
 var handleData = function(data) {
-	system.log(data());
+	sys.log(data());
 
 	buildSwitch([
-		{ type: isCommand, func: kSys }
+		{ type: isCommand, func: processCommand }
 	], function defaultFn(data) {
-		system.log("Message was invalid:");
-		system.log(data());
+		sys.log("Message was invalid:");
+		sys.log(data());
 	})(data);
 };
 
 var handleSocket = function(socket) {
-	system.log("Client connected");
+	sys.log("Client connected");
 	socket.out(handleData);
 
 	socket("Hello Client!");
