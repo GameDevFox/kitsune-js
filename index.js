@@ -1,3 +1,3 @@
-var kitsune = require("./app/kitsune");
+var kitsune = require("kitsune/kitsune");
 
 kitsune();
