@@ -1,1 +1,3 @@
-rm -rf data/data.db && cat sql/core | sql/init-sql | sqlite3 data/data.db
+mkdir -p data
+rm -rf data/data.db
+cat sql/core | sql/init-sql | sqlite3 data/data.db

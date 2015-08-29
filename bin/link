@@ -1,2 +1,2 @@
-ln -s ../build/katana ./node_modules/katana
-ln -s ../build/kitsune ./node_modules/kitsune
+ln -sf ../build/katana ./node_modules/katana
+ln -sf ../build/kitsune ./node_modules/kitsune
