@@ -4,7 +4,7 @@
   "description": "Experimental programming system",
   "main": "index.js",
   "scripts": {
-    "postinstall": "./bin/link",
+    "postinstall": "./bin/link && ./bin/clean-db",
     "test": "gulp test",
     "start": "node server.js"
   },
@@ -22,6 +22,7 @@
     "istanbul": "^0.3.18",
     "jshint-stylish": "^2.0.1",
     "mocha": "^2.2.5",
+    "sinon": "^1.16.1",
     "source-map-support": "^0.3.2"
   },
   "dependencies": {

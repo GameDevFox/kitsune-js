@@ -5,7 +5,6 @@ var gulp = require("gulp");
 var _ = require("lodash");
 var del = require("del");
 var babel = require("gulp-babel");
-var debug = require("gulp-debug");
 var istanbul = require("gulp-istanbul");
 var jshint = require("gulp-jshint");
 var jshintStylish = require("jshint-stylish");
