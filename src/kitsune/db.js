@@ -35,6 +35,14 @@ export function createNode(type) {
 	});
 }
 
+export function createNodes(count, type) {
+	var promises = [];
+	for(var i=0; i<count; i++) {
+		promises.push(createNode(type));
+	}
+	return Promise.all(promises);
+}
+
 var getKeyStr = function(data) {
 	var keyStr = _.keys(data).join(", ");
 	return keyStr;
@@ -88,15 +96,74 @@ export function getType(id) {
 	});
 }
 
-export function relate(head, tail) {
+export function relate(head, tail, type) {
+
+	if(_.isArray(tail)) {
+		var promises = _.map(tail, function(thisTail) {
+			return relate(head, thisTail, type);
+		});
+		return Promise.all(promises);
+	}
+
+	if(!type)
+		type = core.relationship;
+
 	return new Promise(function(resolve, reject) {
-		var id = createId();
-		var query = "INSERT INTO t" + core.relationship + " (id, head, tail) VALUES (?, ?, ?)";
-		db.run(query, [id, head, tail], function(err) {
+		createNode(core.relationship)
+			.then(function(id) {
+				var query = "INSERT INTO t" + core.relationship + " (id, head, tail, type) VALUES (?, ?, ?, ?)";
+				db.run(query, [id, head, tail, type], function(err) {
+					if(err)
+						reject(err);
+
+					resolve(id);
+				});
+			});
+	});
+}
+
+export function otherNode(node, rel) {
+	if(rel.head == node)
+		return rel.tail;
+	else if(rel.tail == node)
+		return rel.head;
+	else
+		throw new Error("node \"" + node + "\" is not part of this relationship");
+}
+
+// TODO: Consider making a more dynamic "find()" function instead of this
+export function rels(node, type, dir="both") {
+	return new Promise(function(resolve, reject) {
+
+		var where;
+		var params = [node];
+		switch(dir) {
+		case "both":
+			where = "(head = ? OR tail = ?)";
+			params.push(node);
+			break;
+		case "head":
+			where = "head = ?";
+			break;
+		case "tail":
+			where = "tail = ?";
+			break;
+		default:
+			throw new Error("\"dir\" must be one of [both DEFAULT, head, tail]");
+		}
+
+		var query = "SELECT * FROM t" + core.relationship + " WHERE " + where;
+
+		if(type) {
+			query += " AND type = ?";
+			params.push(type);
+		}
+
+		db.all(query, params, function(err, rows) {
 			if(err)
 				reject(err);
 
-			resolve(id);
+			resolve(rows);
 		});
 	});
 }
