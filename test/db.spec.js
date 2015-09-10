@@ -93,7 +93,6 @@ describe("kitsune/db", function() {
 				.then(function(relatedNodes) {
 					var nodeIds = _.pluck(relatedNodes, "tail");
 					expect(nodeIds).to.have.members([nodeB, nodeC]);
-					expect(nodeIds).to.have.length(2);
 				})
 				.then(done, done);
 		});
@@ -117,7 +116,6 @@ describe("kitsune/db", function() {
 				.then(function(relatedNodes) {
 					var nodeIds = _.map(relatedNodes, _.partial(db.otherNode, nodeA));
 					expect(nodeIds).to.have.members([nodeB, nodeC]);
-					expect(nodeIds).to.have.length(2);
 				})
 				.then(done, done);
 		});
@@ -146,7 +144,104 @@ describe("kitsune/db", function() {
 				.then(function(rels) {
 					var tails = _.pluck(rels, "tail");
 					expect(tails).to.have.members([typeAChild, typeAChild2, typeABChild]);
-					expect(tails).to.have.length(3);
+				})
+				.then(done, done);
+		});
+	});
+
+	describe("nameNode(node, name)", function() {
+		it("creates a \"name\" relationship bewteen a node and a new string", function(done) {
+			var newNode;
+			db.createNode()
+				.then(function(node) {
+					newNode = node;
+					return db.nameNode(newNode, "newNode");
+				})
+				.then(function() {
+					return db.getNames(newNode);
+				}).then(function(rows) {
+					return _.pluck(rows, "string");
+				}).then(db.one)
+				.catch(function(arr) {
+					throw new Error("Expecting only one result: [" + arr + "]");
+				})
+				.then(function(name) {
+					expect(name).to.equal("newNode");
+				})
+				.then(done, done);
+		});
+
+		it("creates multiple \"name\" relationships for one node", function(done) {
+			var newNode;
+			db.createNode()
+				.then(function(node) {
+					newNode = node;
+					return Promise.all([
+						db.nameNode(newNode, "nameA"),
+						db.nameNode(newNode, "nameB")
+					]);
+				})
+				.then(function() {
+					return db.getNames(newNode);
+				})
+				.then(function(rows) {
+					return _.pluck(rows, "string");
+				})
+				.then(function(names) {
+					expect(names).to.have.members(["nameA", "nameB"]);
+				})
+				.then(done, done);
+		});
+	});
+
+	describe("byName(nameStr)", function() {
+		it("resolves a list of nodes that are have \"name\" relationships to a string \"nameStr\"", function(done) {
+			var newNodes;
+			db.createNodes(3)
+				.then(function(nodes) {
+					newNodes = nodes;
+					return Promise.all(_.map(newNodes, function(node) {
+						return db.nameNode(node, "thisName");
+					}));
+				})
+				.then(function() {
+					return db.byName("thisName");
+				})
+				.then(function(nodes) {
+					expect(nodes).to.include.members(newNodes);
+				})
+				.then(done, done);
+		});
+	});
+
+	describe("one(array)", function() {
+		it.skip("Move this, it doesn't go in this package");
+		it("resolves if the array has only one element", function(done) {
+			db.one([1])
+				.then(function(one) {
+					expect(one).to.equal(1);
+				})
+				.then(done, done);
+		});
+
+		it("rejects if the array is empty", function(done) {
+			db.one([])
+				.then(function(one) {
+					throw new Error("one() should not resolve on empty array");
+				})
+				.catch(function(e) {
+					expect(e).to.deep.equal([]);
+				})
+				.then(done, done);
+		});
+
+		it("rejects if the array has more than one element", function(done) {
+			db.one([1, 2, 3])
+				.then(function(one) {
+					throw new Error("one() should not resolve on empty array");
+				})
+				.catch(function(e) {
+					expect(e).to.deep.equal([1, 2, 3]);
 				})
 				.then(done, done);
 		});
