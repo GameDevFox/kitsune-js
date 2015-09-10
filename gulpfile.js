@@ -28,7 +28,8 @@ gulp.task("clean", function(done) {
 gulp.task("lint", function() {
 	return gulp.src([srcPath, testPath])
 		.pipe(jshint({ esnext: true }))
-		.pipe(jshint.reporter(jshintStylish));
+		.pipe(jshint.reporter(jshintStylish))
+		.pipe(jshint.reporter("fail"));
 });
 
 gulp.task("build", ["lint"], function() {
