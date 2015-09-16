@@ -7,11 +7,13 @@ var db = new sqlite3.Database("data/data.db");
 // Load core ids
 // TODO: Load this from a file
 export var core = {
+	// table ids
 	node: "1df43bddb068c88a5d38a0b6819261f3b1454977",
 	tab: "4940fef3ec048c3ff34151fbb7d842eb51c159cc",
 	relationship: "ca0768dab03eb0523568e066f333a7d82e75cf27",
 	string: "4fe868cd3e83b53a04b346b546bc6e1b5e32ad04",
 
+	// relationship ids
 	name: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0"
 };
 
