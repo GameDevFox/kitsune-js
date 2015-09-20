@@ -1,6 +1,11 @@
-import _ from "lodash";
-import * as db from "kitsune/db";
 import { expect } from "chai";
+import _ from "lodash";
+import sqlite3 from "sqlite3";
+
+import buildDB from "kitsune/db";
+
+var sqliteDB = new sqlite3.Database("data/data.db");
+var db = buildDB(sqliteDB);
 
 describe("kitsune/db", function() {
 

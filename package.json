@@ -4,7 +4,7 @@
   "description": "Experimental programming system",
   "main": "index.js",
   "scripts": {
-    "postinstall": "./bin/link && ./bin/clean-db",
+    "postinstall": "./bin/link",
     "test": "gulp test",
     "start": "node server.js"
   },
