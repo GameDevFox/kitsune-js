@@ -1,42 +1,38 @@
 import _ from "lodash";
-import crypto from "crypto";
-import sqlite3 from "sqlite3";
-
-var db = new sqlite3.Database("data/data.db");
 
 // Load core ids
-// TODO: Load this from a file
-export var core = {
+export var ids = {
 	// table ids
 	node: "1df43bddb068c88a5d38a0b6819261f3b1454977",
-	tab: "4940fef3ec048c3ff34151fbb7d842eb51c159cc",
+	table: "4940fef3ec048c3ff34151fbb7d842eb51c159cc",
 	relationship: "ca0768dab03eb0523568e066f333a7d82e75cf27",
 	string: "4fe868cd3e83b53a04b346b546bc6e1b5e32ad04",
 
 	// relationship ids
 	name: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0"
-};
-
-export function createId() {
-	var id = crypto.createHash("sha1").update(Math.random().toString()).digest("hex");
-	return id;
 }
 
-export function createNode(type) {
-	return new Promise(function(resolve, reject) {
-		if(!type)
-			type = core.node;
+export default function buildDB(sqliteDB) {
+	var newDB = {};
 
-		var id = createId();
-		var insert = "INSERT INTO t" + core.node + " (id, type) VALUES (?, ?);";
+	newDB.createNode = function(type) {
+		return new Promise(function(resolve, reject) {
+			if(!type)
+				type = core.node;
 
-		db.run(insert, id, type, function(err) {
-			if(err)
-				reject(err);
+			var id = createId();
+			var insert = "INSERT INTO t" + core.node + " (id, type) VALUES (?, ?);";
 
-			resolve(id);
+			db.run(insert, id, type, function(err) {
+				if(err)
+					reject(err);
+
+				resolve(id);
+			});
 		});
-	});
+	};
+
+	return newDB;
 }
 
 export function createNodes(count, type) {

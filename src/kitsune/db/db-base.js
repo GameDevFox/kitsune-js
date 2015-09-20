@@ -1,7 +1,4 @@
-#!/usr/bin/env node
-import sqlite3 from "sqlite3";
 
-var db = new sqlite3.Database("data/data.db");
 
 export function createTable(name, ...cols) {
 	return new Promise(function(resolve, reject) {
@@ -16,9 +13,4 @@ export function createTable(name, ...cols) {
 			resolve(name);
 		});
 	});
-}
-
-export function init() {
-	createTable(core, "id TEXT", "name TEXT")
-		.then(createTable(core.node, "is TEXT PRIMARY KEY", "type TEXT"));
 }
