@@ -10,7 +10,7 @@ export var ids = {
 
 	// relationship ids
 	name: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0"
-}
+};
 
 export default function buildDB(sqliteDB) {
 	var newDB = {};
