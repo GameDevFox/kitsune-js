@@ -11,6 +11,7 @@
   "author": "Edward Nicholes Jr.",
   "license": "GPL-2.0",
   "devDependencies": {
+    "babel-runtime": "^5.8.24",
     "chai": "^3.2.0",
     "del": "^1.2.0",
     "gulp": "^3.9.0",

@@ -1,5 +1,7 @@
 import _ from "lodash";
 
+import { createId } from "./db-util";
+
 // Load core ids
 export var ids = {
 	// table ids
@@ -18,12 +20,12 @@ export default function buildDB(sqliteDB) {
 	newDB.createNode = function(type) {
 		return new Promise(function(resolve, reject) {
 			if(!type)
-				type = core.node;
+				type = ids.node;
 
 			var id = createId();
-			var insert = "INSERT INTO t" + core.node + " (id, type) VALUES (?, ?);";
+			var insert = "INSERT INTO t" + ids.node + " (id, type) VALUES (?, ?);";
 
-			db.run(insert, id, type, function(err) {
+			sqliteDB.run(insert, id, type, function(err) {
 				if(err)
 					reject(err);
 

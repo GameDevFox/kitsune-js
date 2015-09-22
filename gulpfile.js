@@ -35,7 +35,7 @@ gulp.task("lint", function() {
 gulp.task("build", ["lint"], function() {
 	return gulp.src([srcPath, "!"+katanaTestPath])
 		.pipe(plumber())
-		.pipe(babel({ sourceMaps: "inline" }))
+		.pipe(babel({ sourceMaps: "inline", optional: ["runtime"] }))
 		.pipe(gulp.dest("./build"));
 });
 
@@ -44,7 +44,7 @@ gulp.task("build-test", ["build-test-katana", "build-test-kitsune"]);
 gulp.task("build-test-katana", ["lint"], function() {
 	return gulp.src(katanaTestPath)
 		.pipe(plumber())
-		.pipe(babel({ sourceMaps: "inline" }))
+		.pipe(babel({ sourceMaps: "inline", optional: ["runtime"] }))
 		.pipe(gulp.dest("./build/test/katana"));
 });
 

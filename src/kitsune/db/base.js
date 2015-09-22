@@ -1,5 +1,3 @@
-
-
 export function createTable(name, ...cols) {
 	return new Promise(function(resolve, reject) {
 		var query = "CREATE TABLE " + name + "(";

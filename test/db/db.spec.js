@@ -3,6 +3,7 @@ import _ from "lodash";
 import sqlite3 from "sqlite3";
 
 import buildDB from "kitsune/db";
+import { ids } from "kitsune/db";
 
 var sqliteDB = new sqlite3.Database("data/data.db");
 var db = buildDB(sqliteDB);
@@ -10,8 +11,8 @@ var db = buildDB(sqliteDB);
 describe("kitsune/db", function() {
 
 	describe("createNode(type)", function() {
-		it("should create a \"type\" node", function(done) {
-			db.createNode(db.core.node)
+		it.only("should create a \"type\" node", function(done) {
+			db.createNode(ids.node)
 				.then(function(id) {
 					expect(id).to.not.equal(null);
 				})
