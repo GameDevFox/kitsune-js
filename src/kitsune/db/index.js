@@ -14,6 +14,13 @@ export var ids = {
 	name: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0"
 };
 
+export var tables = [
+	ids.node,
+	ids.table,
+	ids.relationship,
+	ids.string
+];
+
 export default function buildDB(sqliteDB) {
 	var db = {};
 
