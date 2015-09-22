@@ -51,7 +51,7 @@ gulp.task("build-test-katana", ["lint"], function() {
 gulp.task("build-test-kitsune", ["lint"], function() {
 	return gulp.src(testPath)
 		.pipe(plumber())
-		.pipe(babel({ sourceMaps: "inline" }))
+		.pipe(babel({ sourceMaps: "inline" , optional: ["runtime"] }))
 		.pipe(gulp.dest("./build/test/kitsune"));
 });
 
