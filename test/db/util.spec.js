@@ -4,7 +4,6 @@ import * as util from "kitsune/db/util";
 
 describe("kitsune/db/util", function() {
 	describe("one(array)", function() {
-		it.skip("Move this, it doesn't go in this package");
 		it("resolves if the array has only one element", function(done) {
 			util.one([1])
 				.then(function(one) {
