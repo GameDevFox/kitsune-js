@@ -20,7 +20,6 @@ export default function buildDB(sqliteDB) {
 
 	var createNode = function(type) {
 		return new Promise(function(resolve, reject) {
-
 			if(!type)
 				type = ids.node;
 
@@ -38,11 +37,31 @@ export default function buildDB(sqliteDB) {
 	db.createNode = createNode;
 
 	var createNodes = function(count, type) {
-		var promises = [];
-		for(var i=0; i<count; i++) {
-			promises.push(createNode(type));
-		}
-		return Promise.all(promises);
+		return new Promise(function(resolve, reject) {
+			if(!type)
+				type = ids.node;
+
+			var nodeIds = [];
+			var args = [];
+			var valuesClause = "";
+			for(var i=0; i<count; i++) {
+				var id = util.createId();
+				nodeIds.push(id);
+				args.push(id, type);
+				valuesClause += "(?, ?)";
+				if(i < count-1)
+					valuesClause += ", ";
+			}
+
+			var insert = "INSERT INTO t" + ids.node + " (id, type) VALUES " + valuesClause + ";";
+
+			sqliteDB.run(insert, args, function(err) {
+				if(err)
+					reject(err);
+
+				resolve(nodeIds);
+			});
+		});
 	};
 	db.createNodes = createNodes;
 
