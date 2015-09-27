@@ -1,3 +1,7 @@
-mkdir -p data
-rm -rf data/data.db
-cat sql/core | sql/init-sql | sqlite3 data/data.db
+#!/bin/bash
+DB_TEST_FILE="$1"
+
+mkdir -p "$(dirname "$DB_TEST_FILE")"
+rm -rf "$DB_TEST_FILE"
+
+./build/kitsune/db/init.js "$DB_TEST_FILE"

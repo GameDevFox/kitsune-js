@@ -35,7 +35,7 @@ gulp.task("lint", function() {
 gulp.task("build", ["lint"], function() {
 	return gulp.src([srcPath, "!"+katanaTestPath])
 		.pipe(plumber())
-		.pipe(babel({ sourceMaps: "inline" }))
+		.pipe(babel({ sourceMaps: "inline", optional: ["runtime"] }))
 		.pipe(gulp.dest("./build"));
 });
 
@@ -44,28 +44,40 @@ gulp.task("build-test", ["build-test-katana", "build-test-kitsune"]);
 gulp.task("build-test-katana", ["lint"], function() {
 	return gulp.src(katanaTestPath)
 		.pipe(plumber())
-		.pipe(babel({ sourceMaps: "inline" }))
+		.pipe(babel({ sourceMaps: "inline", optional: ["runtime"] }))
 		.pipe(gulp.dest("./build/test/katana"));
 });
 
 gulp.task("build-test-kitsune", ["lint"], function() {
 	return gulp.src(testPath)
 		.pipe(plumber())
-		.pipe(babel({ sourceMaps: "inline" }))
+		.pipe(babel({ sourceMaps: "inline" , optional: ["runtime"] }))
 		.pipe(gulp.dest("./build/test/kitsune"));
 });
 
-gulp.task("test", ["build", "build-test"], function() {
-	return gulp.src(testBuildPath)
-		.pipe(mocha());
+var exec = require("child_process").exec;
+gulp.task("clean-db", ["build"], function(done) {
+	var proc = exec("./bin/clean-db data/test.db");
+	proc.on("exit", function(code, signal) {
+		if(code != 0)
+			throw new Error("clean-db failed: "+code);
+
+		done();
+	});
 });
 
-gulp.task("test-only", ["build-test"], function() {
+var test = function() {
 	return gulp.src(testBuildPath)
 		.pipe(mocha());
+};
+gulp.task("test", ["clean-db", "build", "build-test"], function() {
+	return test();
+});
+gulp.task("test-only", ["clean-db", "build-test"], function() {
+	return test();
 });
 
-gulp.task("coverage", ["build", "build-test"], function(done) {
+gulp.task("coverage", ["clean-db", "build", "build-test"], function(done) {
 	gulp.src(["./build/**/*.js", "!./build/test/**/*.spec.js"])
 		.pipe(istanbul({
 			includeUntested: true

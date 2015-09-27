@@ -1,12 +1,19 @@
-import _ from "lodash";
-import * as db from "kitsune/db";
 import { expect } from "chai";
+import _ from "lodash";
+import sqlite3 from "sqlite3";
+
+import buildDB from "kitsune/db";
+import { ids } from "kitsune/db";
+import * as util from "kitsune/db/util";
+
+var sqliteDB = new sqlite3.Database("data/test.db");
+var db = buildDB(sqliteDB);
 
 describe("kitsune/db", function() {
 
 	describe("createNode(type)", function() {
 		it("should create a \"type\" node", function(done) {
-			db.createNode(db.core.node)
+			db.createNode(ids.node)
 				.then(function(id) {
 					expect(id).to.not.equal(null);
 				})
@@ -17,7 +24,7 @@ describe("kitsune/db", function() {
 			db.createNode()
 				.then(db.getType)
 				.then(function(type) {
-					expect(type).to.equal(db.core.node);
+					expect(type).to.equal(ids.node);
 				})
 				.then(done, done);
 		});
@@ -36,10 +43,10 @@ describe("kitsune/db", function() {
 	describe("create(type, data)", function() {
 		it("should save a node with it's type and data", function(done) {
 
-			db.create(db.core.string, { string: "Super power" })
+			db.create(ids.string, { string: "Super power" })
 				.then(db.getType)
 				.then(function(type) {
-					expect(type).to.equal(db.core.string);
+					expect(type).to.equal(ids.string);
 				})
 				.then(done, done);
 
@@ -55,7 +62,7 @@ describe("kitsune/db", function() {
 				})
 				.then(db.getType)
 				.then(function(type) {
-					expect(type).to.equal(db.core.relationship);
+					expect(type).to.equal(ids.relationship);
 				})
 				.then(done, done);
 		});
@@ -74,6 +81,8 @@ describe("kitsune/db", function() {
 	});
 
 	describe("rels(node, type)", function() {
+		// TODO: Resolve this
+		this.timeout(5000);
 		it("should return an array of all relationships", function(done) {
 
 			var nodeA, nodeB, nodeC;
@@ -114,7 +123,7 @@ describe("kitsune/db", function() {
 					return db.rels(nodeA);
 				})
 				.then(function(relatedNodes) {
-					var nodeIds = _.map(relatedNodes, _.partial(db.otherNode, nodeA));
+					var nodeIds = _.map(relatedNodes, _.partial(util.otherNode, nodeA));
 					expect(nodeIds).to.have.members([nodeB, nodeC]);
 				})
 				.then(done, done);
@@ -161,7 +170,7 @@ describe("kitsune/db", function() {
 					return db.getNames(newNode);
 				}).then(function(rows) {
 					return _.pluck(rows, "string");
-				}).then(db.one)
+				}).then(util.one)
 				.catch(function(arr) {
 					throw new Error("Expecting only one result: [" + arr + "]");
 				})
@@ -195,6 +204,7 @@ describe("kitsune/db", function() {
 	});
 
 	describe("byName(nameStr)", function() {
+		this.timeout(5000);
 		it("resolves a list of nodes that are have \"name\" relationships to a string \"nameStr\"", function(done) {
 			var newNodes;
 			db.createNodes(3)
@@ -209,39 +219,6 @@ describe("kitsune/db", function() {
 				})
 				.then(function(nodes) {
 					expect(nodes).to.include.members(newNodes);
-				})
-				.then(done, done);
-		});
-	});
-
-	describe("one(array)", function() {
-		it.skip("Move this, it doesn't go in this package");
-		it("resolves if the array has only one element", function(done) {
-			db.one([1])
-				.then(function(one) {
-					expect(one).to.equal(1);
-				})
-				.then(done, done);
-		});
-
-		it("rejects if the array is empty", function(done) {
-			db.one([])
-				.then(function(one) {
-					throw new Error("one() should not resolve on empty array");
-				})
-				.catch(function(e) {
-					expect(e).to.deep.equal([]);
-				})
-				.then(done, done);
-		});
-
-		it("rejects if the array has more than one element", function(done) {
-			db.one([1, 2, 3])
-				.then(function(one) {
-					throw new Error("one() should not resolve on empty array");
-				})
-				.catch(function(e) {
-					expect(e).to.deep.equal([1, 2, 3]);
 				})
 				.then(done, done);
 		});
