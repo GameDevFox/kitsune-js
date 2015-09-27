@@ -1,6 +1,7 @@
 #!/bin/bash
-mkdir -p data
-rm -rf data/data.db
+DB_TEST_FILE="$1"
 
-./build/kitsune/db/init.js
-sqlite3 data/data.db
+mkdir -p "$(dirname "$DB_TEST_FILE")"
+rm -rf "$DB_TEST_FILE"
+
+./build/kitsune/db/init.js "$DB_TEST_FILE"
