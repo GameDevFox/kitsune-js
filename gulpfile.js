@@ -55,29 +55,18 @@ gulp.task("build-test-kitsune", ["lint"], function() {
 		.pipe(gulp.dest("./build/test/kitsune"));
 });
 
-var exec = require("child_process").exec;
-gulp.task("clean-db", ["build"], function(done) {
-	var proc = exec("./bin/clean-db data/test.db");
-	proc.on("exit", function(code, signal) {
-		if(code != 0)
-			throw new Error("clean-db failed: "+code);
-
-		done();
-	});
-});
-
 var test = function() {
 	return gulp.src(testBuildPath)
 		.pipe(mocha());
 };
-gulp.task("test", ["clean-db", "build", "build-test"], function() {
+gulp.task("test", ["build", "build-test"], function() {
 	return test();
 });
-gulp.task("test-only", ["clean-db", "build-test"], function() {
+gulp.task("test-only", ["build-test"], function() {
 	return test();
 });
 
-gulp.task("coverage", ["clean-db", "build", "build-test"], function(done) {
+gulp.task("coverage", ["build", "build-test"], function(done) {
 	gulp.src(["./build/**/*.js", "!./build/test/**/*.spec.js"])
 		.pipe(istanbul({
 			includeUntested: true
