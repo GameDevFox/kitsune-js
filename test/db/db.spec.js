@@ -82,7 +82,7 @@ describe("kitsune/db", function() {
 		});
 	});
 
-	describe("rels(node, type)", function() {
+	describe("rels(node, type, dir=\"both\")", function() {
 		// TODO: Resolve this
 		this.timeout(5000);
 		it("should return an array of all relationships", function(done) {
@@ -164,43 +164,33 @@ describe("kitsune/db", function() {
 		it("creates a \"name\" relationship bewteen a node and a new string", function(done) {
 			var newNode;
 			db.createNode()
-				.then(function(node) {
+				.then(node => {
 					newNode = node;
 					return db.nameNode(newNode, "newNode");
 				})
-				.then(function() {
-					return db.getNames(newNode);
-				}).then(function(rows) {
-					return _.pluck(rows, "string");
-				}).then(util.one)
-				.catch(function(arr) {
+				.then(() => db.getNames(newNode))
+				.then(rows => _.pluck(rows, "string"))
+				.then(util.one)
+				.catch(arr => {
 					throw new Error("Expecting only one result: [" + arr + "]");
 				})
-				.then(function(name) {
-					expect(name).to.equal("newNode");
-				})
+				.then(name => { expect(name).to.equal("newNode"); })
 				.then(done, done);
 		});
 
 		it("creates multiple \"name\" relationships for one node", function(done) {
 			var newNode;
 			db.createNode()
-				.then(function(node) {
+				.then(node => {
 					newNode = node;
 					return Promise.all([
 						db.nameNode(newNode, "nameA"),
 						db.nameNode(newNode, "nameB")
 					]);
 				})
-				.then(function() {
-					return db.getNames(newNode);
-				})
-				.then(function(rows) {
-					return _.pluck(rows, "string");
-				})
-				.then(function(names) {
-					expect(names).to.have.members(["nameA", "nameB"]);
-				})
+				.then(() => db.getNames(newNode))
+				.then(names => _.pluck(names, "string"))
+				.then(names => { expect(names).to.have.members(["nameA", "nameB"]); })
 				.then(done, done);
 		});
 	});
@@ -210,18 +200,14 @@ describe("kitsune/db", function() {
 		it("resolves a list of nodes that are have \"name\" relationships to a string \"nameStr\"", function(done) {
 			var newNodes;
 			db.createNodes(3)
-				.then(function(nodes) {
+				.then(nodes => {
 					newNodes = nodes;
 					return Promise.all(_.map(newNodes, function(node) {
 						return db.nameNode(node, "thisName");
 					}));
 				})
-				.then(function() {
-					return db.byName("thisName");
-				})
-				.then(function(nodes) {
-					expect(nodes).to.include.members(newNodes);
-				})
+				.then(() => db.byName("thisName"))
+				.then(nodes => { expect(nodes).to.include.members(newNodes); })
 				.then(done, done);
 		});
 	});

@@ -125,6 +125,7 @@ export default function buildDB(sqliteDB) {
 		});
 	};
 	db.relate = relate;
+
 	// TODO: Consider making a more dynamic "find()" function instead of this
 	var rels = function(node, type, dir="both") {
 		return new Promise(function(resolve, reject) {
