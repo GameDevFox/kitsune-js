@@ -56,7 +56,7 @@ gulp.task("build-test-kitsune", ["lint"], function() {
 });
 
 var exec = require("child_process").exec;
-gulp.task("clean-db", function(done) {
+gulp.task("clean-db", ["build"], function(done) {
 	var proc = exec("./bin/clean-db data/test.db");
 	proc.on("exit", function(code, signal) {
 		if(code != 0)
