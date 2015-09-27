@@ -6,9 +6,8 @@ import { log } from "katana/system";
 import { ids, tables } from "./index";
 import buildBase from "./base";
 
-export function init(dbFileName) {
+export default function init(sqliteDB) {
 
-	var sqliteDB = new sqlite3.Database(dbFileName);
 	var base = buildBase(sqliteDB);
 
 	var create = base.create;
@@ -32,7 +31,10 @@ export function init(dbFileName) {
 	});
 }
 
-var dbFile = process.argv[2];
-dbFile = dbFile ? dbFile : "data/data.db";
+if(!module.parent) {
+	var dbFile = process.argv[2];
+	dbFile = dbFile ? dbFile : "data/data.db";
+	var sqliteDB = new sqlite3.Database(dbFile);
 
-init(dbFile);
+	init(sqliteDB);
+}
