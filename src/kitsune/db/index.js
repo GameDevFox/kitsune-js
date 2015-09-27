@@ -3,23 +3,17 @@ import _ from "lodash";
 import * as util from "./util";
 
 // Load core ids
-export var ids = {
-	// table ids
+export var tables = {
 	node: "1df43bddb068c88a5d38a0b6819261f3b1454977",
 	table: "4940fef3ec048c3ff34151fbb7d842eb51c159cc",
 	relationship: "ca0768dab03eb0523568e066f333a7d82e75cf27",
-	string: "4fe868cd3e83b53a04b346b546bc6e1b5e32ad04",
-
-	// relationship ids
-	name: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0"
+	string: "4fe868cd3e83b53a04b346b546bc6e1b5e32ad04"
 };
 
-export var tables = [
-	ids.node,
-	ids.table,
-	ids.relationship,
-	ids.string
-];
+export var ids = _.extend(tables, {
+	// relationship ids
+	name: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0"
+});
 
 export default function buildDB(sqliteDB) {
 	var db = {};

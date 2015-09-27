@@ -6,7 +6,7 @@ import buildDB from "kitsune/db";
 import { ids } from "kitsune/db";
 import * as util from "kitsune/db/util";
 
-var sqliteDB = new sqlite3.Database("data/data.db");
+var sqliteDB = new sqlite3.Database("data/test.db");
 var db = buildDB(sqliteDB);
 
 describe("kitsune/db", function() {
