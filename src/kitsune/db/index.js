@@ -10,10 +10,10 @@ export var tables = {
 	string: "4fe868cd3e83b53a04b346b546bc6e1b5e32ad04"
 };
 
-export var ids = _.extend(tables, {
+export var ids = _.extend({
 	// relationship ids
 	name: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0"
-});
+}, tables);
 
 export default function buildDB(sqliteDB) {
 	var db = {};

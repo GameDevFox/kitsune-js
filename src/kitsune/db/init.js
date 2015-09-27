@@ -7,7 +7,6 @@ import { ids, tables } from "./index";
 import buildBase from "./base";
 
 export default function init(sqliteDB) {
-
 	var base = buildBase(sqliteDB);
 
 	var create = base.create;
@@ -33,8 +32,9 @@ export default function init(sqliteDB) {
 
 if(!module.parent) {
 	var dbFile = process.argv[2];
-	dbFile = dbFile ? dbFile : "data/data.db";
-	var sqliteDB = new sqlite3.Database(dbFile);
+	if(!dbFile)
+		throw new Error("Please specify database file");
 
+	var sqliteDB = new sqlite3.Database(dbFile);
 	init(sqliteDB);
 }
