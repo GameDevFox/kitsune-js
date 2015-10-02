@@ -83,8 +83,6 @@ describe("kitsune/db", function() {
 	});
 
 	describe("rels(node, type, dir=\"both\")", function() {
-		// TODO: Resolve this
-		this.timeout(5000);
 		it("should return an array of all relationships", function(done) {
 
 			var nodeA, nodeB, nodeC;
@@ -196,7 +194,6 @@ describe("kitsune/db", function() {
 	});
 
 	describe("byName(nameStr)", function() {
-		this.timeout(5000);
 		it("resolves a list of nodes that are have \"name\" relationships to a string \"nameStr\"", function(done) {
 			var newNodes;
 			db.createNodes(3)
