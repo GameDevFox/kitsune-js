@@ -58,24 +58,27 @@ describe("kitsune/db", function() {
 	describe("relate(head, tail)", function() {
 		it("should create a generic relationship between two nodes", function(done) {
 
-			db.createNodes(2)
-				.then(function(nodes) {
-					return db.relate(nodes[0], nodes[1]);
-				})
-				.then(db.getType)
-				.then(function(type) {
-					expect(type).to.equal(ids.relationship);
+			var ids = util.createIds(2);
+
+			db.relate(ids[0], ids[1])
+				.then(function(relId) {
+					// TODO: Better assertion here
+					expect(relId).to.not.equal(null);
 				})
 				.then(done, done);
 		});
 
 		it("should create multple relationships if an array is passed to tail", function(done) {
-			db.createNodes(3)
-				.then(function(nodes) {
-					var [ parent, childA, childB ] = nodes;
-					return db.relate(parent, [childA, childB]);
-				})
+
+			var [ parent, childA, childB ] = util.createIds(3);
+
+			db.relate(parent, [childA, childB])
 				.then(function(relationshipIds) {
+					// TODO: Better assertion here
+					sqliteDB.each("SELECT * FROM rel", function(err, row) {
+						console.log("R:");
+						console.log(row);
+					});
 					expect(relationshipIds).to.have.length(2);
 				})
 				.then(done, done);
