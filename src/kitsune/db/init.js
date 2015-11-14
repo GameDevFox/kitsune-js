@@ -4,29 +4,24 @@ import sqlite3 from "sqlite3";
 
 import { log } from "katana/system";
 import { ids, tables } from "./index";
-import buildBase from "./base";
+import base from "./base";
 
 export default function init(sqliteDB) {
-	var base = buildBase(sqliteDB);
-
-	var create = base.create;
-	var alias = base.alias;
+	var { create, alias } = base(sqliteDB);
 
 	sqliteDB.serialize(function() {
-		create("core", "id TEXT", "name TEXT");
-		create("t"+ids.node, "id TEXT PRIMARY KEY", "type TEXT");
-		create("t"+ids.table, "id TEXT");
-		create("t"+ids.relationship, "id TEXT", "head TEXT", "tail TEXT", "type TEXT");
-		create("t"+ids.string, "id TEXT", "string TEXT");
+		console.log(ids.relationship);
+		create("t"+ids.relationship, "id TEXT", "head TEXT", "tail TEXT").catch(console.error);
+		alias("t"+ids.relationship, "relationship").catch(console.error);
+		alias("relationship", "rel").catch(console.error);
 
-		_.each(tables, function(table, tableName) {
-			alias(table, tableName).catch(log);
+		// Add ids view
+		alias("ids", "SELECT id FROM rel UNION SELECT head FROM rel UNION SELECT tail FROM rel");
 
-			// TODO:
-			// echo "INSERT INTO core VALUES (\"$id\", \"$name\");"
-			// echo "INSERT INTO t${nodeId} VALUES (\"$id\", \"${tableId}\");" # "node" table
-			// echo "INSERT INTO t${tableId} VALUES (\"$id\");"; # "table" table
-		});
+		// TODO:
+		// echo "INSERT INTO core VALUES (\"$id\", \"$name\");"
+		// echo "INSERT INTO t${nodeId} VALUES (\"$id\", \"${tableId}\");" # "node" table
+		// echo "INSERT INTO t${tableId} VALUES (\"$id\");"; # "table" table
 	});
 }
 

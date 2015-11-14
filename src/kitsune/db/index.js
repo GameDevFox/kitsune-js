@@ -4,10 +4,7 @@ import * as util from "./util";
 
 // Load core ids
 export var tables = {
-	node: "1df43bddb068c88a5d38a0b6819261f3b1454977",
-	table: "4940fef3ec048c3ff34151fbb7d842eb51c159cc",
 	relationship: "ca0768dab03eb0523568e066f333a7d82e75cf27",
-	string: "4fe868cd3e83b53a04b346b546bc6e1b5e32ad04"
 };
 
 export var ids = _.extend({
@@ -99,29 +96,25 @@ export default function buildDB(sqliteDB) {
 	};
 	db.create = create;
 
-	var relate = function(head, tail, type) {
+	var relate = function(head, tail) {
 
 		if(_.isArray(tail)) {
 			var promises = _.map(tail, function(thisTail) {
-				return relate(head, thisTail, type);
+				return relate(head, thisTail);
 			});
 			return Promise.all(promises);
 		}
 
-		if(!type)
-			type = ids.relationship;
-
 		return new Promise(function(resolve, reject) {
-			createNode(ids.relationship)
-				.then(function(id) {
-					var query = "INSERT INTO t" + ids.relationship + " (id, head, tail, type) VALUES (?, ?, ?, ?)";
-					sqliteDB.run(query, [id, head, tail, type], function(err) {
-						if(err)
-							reject(err);
+			var id = util.createId();
 
-						resolve(id);
-					});
-				});
+			var query = "INSERT INTO t" + ids.relationship + " (id, head, tail) VALUES (?, ?, ?)";
+			sqliteDB.run(query, [id, head, tail], function(err) {
+				if(err)
+					reject(err);
+
+				resolve(id);
+			});
 		});
 	};
 	db.relate = relate;

@@ -6,6 +6,15 @@ export function createId() {
 	return id;
 }
 
+export function createIds(count) {
+	var result = [];
+
+	for(var i=0; i<count; i++)
+		result.push(createId());
+
+	return result;
+}
+
 export function getKeyStr(data) {
 	var keyStr = _.keys(data).join(", ");
 	return keyStr;
