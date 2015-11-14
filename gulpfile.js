@@ -1,81 +1,78 @@
 require('source-map-support').install();
 
 var gulp = require("gulp");
+var gulpLoadPlugins = require("gulp-load-plugins");
+var g = gulpLoadPlugins();
 
-var _ = require("lodash");
 var del = require("del");
-var babel = require("gulp-babel");
-var istanbul = require("gulp-istanbul");
-var jshint = require("gulp-jshint");
 var jshintStylish = require("jshint-stylish");
-var mocha = require("gulp-mocha");
-var plumber = require("gulp-plumber");
 
-var srcPath = "./src/**/*.js";
-var testPath = "./test/**/*.spec.js";
+var appSrcPath = ["./src/kitsune/**/*.js", "./src/katana/*.js"];
+
+var kitsuneTestPath = "./test/**/*.spec.js";
 var katanaTestPath = "./src/katana/test/**/*.spec.js";
+var testSrcPath = [kitsuneTestPath, katanaTestPath];
 
 var testBuildPath = ["./build/test/katana/**/*.spec.js", "./build/test/kitsune/**/*.spec.js"];
 
-gulp.task("default", ["build", "watch"]);
+gulp.task("default", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "test-run"));
 
 gulp.task("clean", function(done) {
-	del(["./build",
-		 "./coverage"
-		], done);
+	del(["./build", "./coverage"], done);
 });
 
-gulp.task("lint", function() {
-	return gulp.src([srcPath, testPath])
-		.pipe(jshint({ esnext: true }))
-		.pipe(jshint.reporter(jshintStylish))
-		.pipe(jshint.reporter("fail"));
-});
+var buildStream = function(stream, debugTitle) {
+	return stream
+		.pipe(g.plumber())
+		.pipe(g.debug({ title: debugTitle }))
+		.pipe(g.jshint({ esnext: true }))
+		.pipe(g.jshint.reporter(jshintStylish))
+		.pipe(g.jshint.reporter("fail"))
+		.pipe(g.babel({ sourceMaps: "inline", optional: ["runtime"] }))
+};
 
-gulp.task("build", ["lint"], function() {
-	return gulp.src([srcPath, "!"+katanaTestPath])
-		.pipe(plumber())
-		.pipe(babel({ sourceMaps: "inline", optional: ["runtime"] }))
+gulp.task("build", function() {
+	var input = gulp.src(appSrcPath, { base: "./src" })
+		.pipe(g.changed("./build"))
+	return buildStream(input, "build")
 		.pipe(gulp.dest("./build"));
 });
 
-gulp.task("build-test", ["build-test-katana", "build-test-kitsune"]);
-
-gulp.task("build-test-katana", ["lint"], function() {
-	return gulp.src(katanaTestPath)
-		.pipe(plumber())
-		.pipe(babel({ sourceMaps: "inline", optional: ["runtime"] }))
+gulp.task("build-test", g.sequence(["build-test-kitsune", "build-test-katana"]));
+gulp.task("build-test-kitsune", function() {	
+	var input = gulp.src(kitsuneTestPath)
+		.pipe(g.changed("./build/test/kitsune"))
+	return buildStream(input, "kistune-test-build")
+		.pipe(gulp.dest("./build/test/kitsune"));
+});
+gulp.task("build-test-katana", function() {
+	var input = gulp.src(katanaTestPath)
+		.pipe(g.changed("./build/test/katana"))
+	return buildStream(input, "katana-test-build")
 		.pipe(gulp.dest("./build/test/katana"));
 });
 
-gulp.task("build-test-kitsune", ["lint"], function() {
-	return gulp.src(testPath)
-		.pipe(plumber())
-		.pipe(babel({ sourceMaps: "inline" , optional: ["runtime"] }))
-		.pipe(gulp.dest("./build/test/kitsune"));
-});
-
-var test = function() {
+gulp.task("test", g.sequence(["build", "build-test-kitsune", "build-test-katana"], "test-run"));
+gulp.task("test-run", function() {
 	return gulp.src(testBuildPath)
-		.pipe(mocha());
-};
-gulp.task("test", ["build", "build-test"], function() {
-	return test();
-});
-gulp.task("test-only", ["build-test"], function() {
-	return test();
+		.pipe(g.plumber())
+		.pipe(g.cached("mocha"))
+		.pipe(g.mocha());
 });
 
-gulp.task("coverage", ["build", "build-test"], function(done) {
+gulp.task("coverage", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "coverage-run"));
+gulp.task("coverage-run", function(done) {
 	gulp.src(["./build/**/*.js", "!./build/test/**/*.spec.js"])
-		.pipe(istanbul({
+		.pipe(g.plumber())
+		.pipe(g.istanbul({
 			includeUntested: true
 		}))
-		.pipe(istanbul.hookRequire())
+		.pipe(g.istanbul.hookRequire())
 		.on("finish", function() {
 			gulp.src(testBuildPath)
-				.pipe(mocha())
-				.pipe(istanbul.writeReports())
+				.pipe(g.plumber())
+				.pipe(g.mocha())
+				.pipe(g.istanbul.writeReports())
 				.on("end", done);
 		});
 });
@@ -86,20 +83,35 @@ gulp.task("coverage", ["build", "build-test"], function(done) {
 // 		.pipe(gulp.dest("./app"));
 // });
 
-// gulp.task("start", ["prepend-source-map-support", "build"], function() {
-gulp.task("start", ["link"], function() {
-	var kitsune = require("./app/kitsune");
+gulp.task("start", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "test-run", "start-run"));
+gulp.task("start-run", function() {
+	var kitsune = require("kitsune");
 	kitsune();
 });
 
-gulp.task("watch", ["watch-src"], function() {
-	gulp.watch([testPath, katanaTestPath], ["test"]);
+// Watch tasks
+gulp.task("watch", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "test-run", ["watch-src", "watch-test"]));
+
+gulp.task("watch-src", function() {	gulp.watch(appSrcPath, ["watch-src-run"]); });
+gulp.task("watch-src-run", function(cb) {
+	delete g.cached.caches["mocha"];
+	g.sequence("build", "test-run")(cb);
 });
 
-gulp.task("watch-src", function() {
-	gulp.watch(srcPath, ["test"]);
+gulp.task("watch-test", function() { gulp.watch(testSrcPath, ["watch-test-run"]); });
+gulp.task("watch-test-run", function(cb) {
+	g.sequence(["build-test-kitsune", "build-test-katana"], "test-run")(cb);
 });
 
-gulp.task("watch-coverage", function() {
-	gulp.watch([srcPath, testPath], ["coverage"]);
+//
+gulp.task("watch-coverage", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "coverage-run", ["watch-cover-src", "watch-cover-test"]));
+
+gulp.task("watch-cover-src", function() {	gulp.watch(appSrcPath, ["watch-cover-src-run"]); });
+gulp.task("watch-cover-src-run", function(cb) {
+	g.sequence("build", "coverage-run")(cb);
+});
+
+gulp.task("watch-cover-test", function() { gulp.watch(testSrcPath, ["watch-cover-test-run"]); });
+gulp.task("watch-cover-test-run", function(cb) {
+	g.sequence(["build-test-kitsune", "build-test-katana"], "coverage-run")(cb);
 });
