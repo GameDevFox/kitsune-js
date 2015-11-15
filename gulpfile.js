@@ -33,7 +33,7 @@ var buildStream = function(stream, debugTitle) {
 
 gulp.task("build", function() {
 	var input = gulp.src(appSrcPath, { base: "./src" })
-		.pipe(g.changed("./build"))
+			.pipe(g.cached("build"))
 	return buildStream(input, "build")
 		.pipe(gulp.dest("./build"));
 });
@@ -41,13 +41,13 @@ gulp.task("build", function() {
 gulp.task("build-test", g.sequence(["build-test-kitsune", "build-test-katana"]));
 gulp.task("build-test-kitsune", function() {	
 	var input = gulp.src(kitsuneTestPath)
-		.pipe(g.changed("./build/test/kitsune"))
+		.pipe(g.cached("kitsune-src"))
 	return buildStream(input, "kistune-test-build")
 		.pipe(gulp.dest("./build/test/kitsune"));
 });
 gulp.task("build-test-katana", function() {
 	var input = gulp.src(katanaTestPath)
-		.pipe(g.changed("./build/test/katana"))
+		.pipe(g.cached("katana-src"))
 	return buildStream(input, "katana-test-build")
 		.pipe(gulp.dest("./build/test/katana"));
 });
