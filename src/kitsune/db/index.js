@@ -28,12 +28,12 @@ export function relate(db, head, ...tails) {
 	var query = `INSERT INTO t${ids.relationship} (id, head, tail) VALUES (?, ?, ?)`;
 	return runP(db, query, [id, head, tail])
 		.then(() => id);
-};
+}
 
 export function getRel(db, id) {
 	var query = `SELECT * FROM t${ids.relationship} WHERE id = ?;`;
 	return getP(db, query, id);
-};
+}
 
 // helper functions
 var dbOpTemplate = function(opName, db, query, args) {
