@@ -55,9 +55,12 @@ gulp.task("build-test-katana", function() {
 gulp.task("test", g.sequence(["build", "build-test-kitsune", "build-test-katana"], "test-run"));
 gulp.task("test-run", function() {
 	return gulp.src(testBuildPath)
-		.pipe(g.plumber())
 		.pipe(g.cached("mocha"))
-		.pipe(g.mocha());
+		.pipe(g.mocha())
+		.on("error", function(e) {
+			g.util.log(e);
+			this.emit("end");
+		});
 });
 
 gulp.task("coverage", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "coverage-run"));
@@ -73,6 +76,10 @@ gulp.task("coverage-run", function(done) {
 				.pipe(g.plumber())
 				.pipe(g.mocha())
 				.pipe(g.istanbul.writeReports())
+				.on('error', function(e) {
+					g.util.log(e);
+					this.emit("end");
+				})
 				.on("end", done);
 		});
 });
