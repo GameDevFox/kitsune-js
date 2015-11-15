@@ -7,18 +7,17 @@ import { ids, tables } from "./index";
 import base from "./base";
 
 export default function init(sqliteDB) {
-	var { create, alias } = base(sqliteDB);
+	var { alias, create, view } = base(sqliteDB);
 
 	sqliteDB.serialize(function() {
-		console.log(ids.relationship);
 		create("t"+ids.relationship, "id TEXT", "head TEXT", "tail TEXT").catch(console.error);
 		alias("t"+ids.relationship, "relationship").catch(console.error);
 		alias("relationship", "rel").catch(console.error);
 
 		// Add ids view
-		alias("ids", "SELECT id FROM rel UNION SELECT head FROM rel UNION SELECT tail FROM rel");
+		view("ids", "SELECT id FROM rel UNION SELECT head FROM rel UNION SELECT tail FROM rel");
 
-		// TODO:
+		// TODO: The new equivalent of these
 		// echo "INSERT INTO core VALUES (\"$id\", \"$name\");"
 		// echo "INSERT INTO t${nodeId} VALUES (\"$id\", \"${tableId}\");" # "node" table
 		// echo "INSERT INTO t${tableId} VALUES (\"$id\");"; # "table" table
