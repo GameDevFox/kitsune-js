@@ -8,12 +8,15 @@ import init from "kitsune/db/init";
 import * as util from "kitsune/db/util";
 
 var sqliteDB = new sqlite3.Database(":memory:");
+// sqliteDB.on("trace", function(sql) {
+//		console.log(sql);
+// });
 init(sqliteDB);
 var db = buildDB(sqliteDB);
 
 describe("kitsune/db", function() {
 
-	describe("getRel(id)", function() {
+	describe("getRel(ids)", function() {
 		it("should return the relationship data for this id", function() {
 			// noop
 		});
@@ -37,7 +40,7 @@ describe("kitsune/db", function() {
 			var [ parent, childA, childB ] = util.createIds(3);
 
 			db.relate(parent, childA, childB)
-				.then((relIds) => Promise.all(_.map(relIds, (id) => db.getRel(id))))
+				.then(db.getRels)
 				.then((rels) => {
 					expect(rels[0]).to.include({ head: parent, tail: childA });
 					expect(rels[1]).to.include({ head: parent, tail: childB });
@@ -56,65 +59,71 @@ describe("kitsune/db", function() {
 		});
 	});
 
-	describe.skip("getTails(head)", function() {
-		it("should get all tails of provided head", function() {
-			expect(true).to.equal(false);
+	describe("getTails(head)", function() {
+		it("should get all tails of provided head", function(done) {
+			var [head, tailA, tailB] = util.createIds(3);
+
+			db.relate(head, tailA, tailB)
+				.then(db.getRel)
+				.then((rels) => db.getTails(head))
+				.then((tails) => {
+					expect(tails).to.contain(tailA, tailB);
+				})
+				.then(done, done);
 		});
 	});
 
-	describe.skip("getHeads(head)", function() {
+	describe("getHeads(tail)", function(done) {
 		it("should get all heads of provided tail", function() {
-			expect(true).to.equal(false);
-		});
-	});
+			var [headA, headB, tail] = util.createIds(3);
 
-	describe.skip("name(id, name)", function() {
-		it("creates a \"name\" relationship bewteen a node and a new string", function(done) {
-			var newNode;
-			db.createNode()
-				.then(node => {
-					newNode = node;
-					return db.nameNode(newNode, "newNode");
+			Promise.all(_.map(
+				[headA, headB],
+				(head) => db.relate(head, tail)
+			))
+				.then((relIds) => Promise.all(_.map(relIds, (id) => db.getRel(id))))
+				.then((rels) => db.getHeads(tail))
+				.then((heads) => {
+					expect(heads).to.contain(headA, headB);
 				})
-				.then(() => db.getNames(newNode))
-				.then(rows => _.pluck(rows, "string"))
-				.then(util.one)
-				.catch(arr => {
-					throw new Error("Expecting only one result: [" + arr + "]");
-				})
-				.then(name => { expect(name).to.equal("newNode"); })
-				.then(done, done);
-		});
-
-		it("creates multiple \"name\" relationships for one node", function(done) {
-			var newNode;
-			db.createNode()
-				.then(node => {
-					newNode = node;
-					return Promise.all([
-						db.nameNode(newNode, "nameA"),
-						db.nameNode(newNode, "nameB")
-					]);
-				})
-				.then(() => db.getNames(newNode))
-				.then(names => _.pluck(names, "string"))
-				.then(names => { expect(names).to.have.members(["nameA", "nameB"]); })
 				.then(done, done);
 		});
 	});
 
-	describe.skip("byName(nameStr)", function() {
-		it("resolves a list of nodes that are have \"name\" relationships to a string \"nameStr\"", function(done) {
-			var newNodes;
-			db.createNodes(3)
-				.then(nodes => {
-					newNodes = nodes;
-					return Promise.all(_.map(newNodes, function(node) {
-						return db.nameNode(node, "thisName");
-					}));
+	describe("name(id, nameId)", function() {
+		it("creates a \"name\" relationship bewteen a node and a specified node", function(done) {
+
+			var [id, nameId] = util.createIds(2);
+
+			db.name(id, nameId)
+				.then((nameRel) => {
+					expect(nameRel.head).to.equal(ids.name);
+					return db.getRel(nameRel.tail);
 				})
-				.then(() => db.byName("thisName"))
-				.then(nodes => { expect(nodes).to.include.members(newNodes); })
+				.then((rel) => {
+					expect(rel).to.contain({ head: id, tail: nameId });
+				})
+				.then(done, done);
+		});
+	});
+
+	describe.skip("nameByStr(id, nameStr)", function() {
+		it("should name a node using the string itself as a parameter", function() {});
+	});
+
+	describe("findByName(nameId)", function() {
+		it("resolves a list of nodes that are have \"name\" relationships to nameId", function(done) {
+
+			var [nodeA, nodeB, nameId] = util.createIds(3);
+
+			Promise.all([
+				db.name(nodeA, nameId),
+				db.name(nodeB, nameId)
+			])
+				.then(() => db.findByName(nameId))
+				.then((ids) => {
+					expect(ids).to.have.members([nodeA, nodeB]);
+				})
 				.then(done, done);
 		});
 	});
