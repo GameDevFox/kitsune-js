@@ -58,7 +58,7 @@ gulp.task("test-run", function() {
 		.pipe(g.cached("mocha"))
 		.pipe(g.mocha())
 		.on("error", function(e) {
-			g.util.log(e);
+			g.util.log(e.stack);
 			this.emit("end");
 		});
 });
@@ -77,7 +77,7 @@ gulp.task("coverage-run", function(done) {
 				.pipe(g.mocha())
 				.pipe(g.istanbul.writeReports())
 				.on('error', function(e) {
-					g.util.log(e);
+					g.util.log(e.stack);
 					this.emit("end");
 				})
 				.on("end", done);

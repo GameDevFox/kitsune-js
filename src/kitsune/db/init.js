@@ -3,19 +3,27 @@ import _ from "lodash";
 import sqlite3 from "sqlite3";
 
 import { log } from "katana/system";
-import { ids, tables } from "./index";
-import base from "./base";
+
+import ids from "kitsune/ids";
+import bindDB from "kitsune/db";
 
 export default function init(sqliteDB) {
-	var { alias, create, view } = base(sqliteDB);
+	var { alias, create, view } = bindDB(sqliteDB);
 
 	sqliteDB.serialize(function() {
-		create("t"+ids.relationship, "id TEXT", "head TEXT", "tail TEXT").catch(console.error);
-		alias("t"+ids.relationship, "relationship").catch(console.error);
-		alias("relationship", "rel").catch(console.error);
+		// rel database
+		var p = create("t"+ids.relationship, "id TEXT", "head TEXT", "tail TEXT")
+			.then(alias("t"+ids.relationship, "relationship"))
+			.then(alias("relationship", "rel"));
 
 		// Add ids view
-		view("ids", "SELECT id FROM rel UNION SELECT head FROM rel UNION SELECT tail FROM rel");
+		p.then(view("ids", "SELECT id FROM rel UNION SELECT head FROM rel UNION SELECT tail FROM rel"));
+
+		// str database
+		p.then(create("t"+ids.string, "id TEXT", "string TEXT").catch(console.error))
+			.then(alias("t"+ids.string, "string"));
+
+		p.catch(console.error);
 
 		// TODO: The new equivalent of these
 		// echo "INSERT INTO core VALUES (\"$id\", \"$name\");"
@@ -24,6 +32,7 @@ export default function init(sqliteDB) {
 	});
 }
 
+// istanbul ignore if
 if(!module.parent) {
 	var dbFile = process.argv[2];
 	if(!dbFile)
