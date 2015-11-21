@@ -54,18 +54,6 @@ export function getHeads(db, tail) {
 		.then(heads => _.map(heads, "head"));
 }
 
-export function name(db, id, nameId) {
-	return assign(db, ids.name, id, nameId);
-}
-
-export function findByName(db, nameId) {
-	return findByTail(db, ids.name, nameId);
-}
-
-export function getNames(db, id) {
-	return findByHead(db, ids.name, id);
-}
-
 function assign(db, relType, head, tail) {
 	let first;
 	return relate(db, head, tail)
@@ -108,8 +96,8 @@ export default function bind(db) {
 		getTails: getTails.bind(this, db),
 		getHeads: getHeads.bind(this, db),
 
-		name: name.bind(this, db),
-		findByName: findByName.bind(this, db),
-		getNames: getNames.bind(this, db)
+		assign: assign.bind(this, db),
+		findByTail: findByTail.bind(this, db),
+		findByHead: findByHead.bind(this, db),
 	};
 }

@@ -3,17 +3,17 @@ import sqlite3 from "sqlite3";
 
 import bindDB from "kitsune/string";
 import init from "kitsune/db/init";
-
+import { logP } from "kitsune/util";
 
 let sqliteDB = new sqlite3.Database(":memory:");
 init(sqliteDB);
-let str = bindDB(sqliteDB);
+let strSys = bindDB(sqliteDB);
 
 describe("kitsune/string", function() {
 
-	describe("create(str)", function() {
+	describe("put(str)", function() {
 		it("should return the hash/id of the string", function(done) {
-			str.create("relationship")
+			strSys.put("relationship")
 				.then(strId => {
 					expect(strId).to.equal("6a73a9121a5de29346900d4f866e89b5f9e284dc");
 				})
@@ -23,11 +23,32 @@ describe("kitsune/string", function() {
 
 	describe("get(id)", function() {
 		it("should return the string for id", function(done) {
-
-			str.create("string")
-				.then(id => str.get(id))
+			strSys.put("string")
+				.then(id => strSys.get(id))
 				.then(str => {
 					expect(str).to.equal("string");
+				})
+				.then(done, done);
+		});
+
+		it("should return undefined if the string isn't found", function(done) {
+			strSys.get("unknown")
+				.then(id => {
+					expect(id).to.equal(undefined);
+				})
+				.then(done, done);
+		});
+	});
+
+	describe("getAll(...ids)", function() {
+		it("should return an string for each id", function(done) {
+			Promise.all([
+				strSys.put("one"),
+				strSys.put("two")
+			])
+				.then(ids => strSys.getAll(...ids))
+				.then((strings) => {
+					expect(strings).to.have.members(["one", "two"]);
 				})
 				.then(done, done);
 		});

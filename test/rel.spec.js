@@ -13,7 +13,7 @@ let sqliteDB = new sqlite3.Database(":memory:");
 //		console.log(sql);
 // });
 init(sqliteDB);
-let relDB = bindRel(sqliteDB);
+let relSys = bindRel(sqliteDB);
 
 describe("kitsune/rel", function() {
 
@@ -28,8 +28,8 @@ describe("kitsune/rel", function() {
 
 			let [head, tail] = util.createIds(2);
 
-			relDB.relate(head, tail)
-				.then(relDB.getRel)
+			relSys.relate(head, tail)
+				.then(relSys.getRel)
 				.then(rel => {
 					expect(rel).to.include({ head: head, tail: tail });
 				})
@@ -40,8 +40,8 @@ describe("kitsune/rel", function() {
 
 			let [ parent, childA, childB ] = util.createIds(3);
 
-			relDB.relate(parent, childA, childB)
-				.then(relDB.getRels)
+			relSys.relate(parent, childA, childB)
+				.then(relSys.getRels)
 				.then(rels => {
 					// NOTE: This failed once, randomly
 					expect(rels[0]).to.include({ head: parent, tail: childA });
@@ -52,8 +52,8 @@ describe("kitsune/rel", function() {
 
 		it("should allow null tails", function(done) {
 			let head = util.createId();
-			relDB.relate(head)
-				.then(relDB.getRel)
+			relSys.relate(head)
+				.then(relSys.getRel)
 				.then(rel => {
 					expect(rel).to.contain({ head: head, tail: null });
 				})
@@ -66,16 +66,16 @@ describe("kitsune/rel", function() {
 			let [nodeA, nodeB] = util.createIds(2);
 
 			let relId;
-			relDB.relate(nodeA, nodeB)
+			relSys.relate(nodeA, nodeB)
 				.then(id => {
 					relId = id;
-					return relDB.getRel(id);
+					return relSys.getRel(id);
 				})
 				.then(rel => {
 					expect(rel).to.include({ head: nodeA, tail: nodeB });
-					return relDB.del(relId);
+					return relSys.del(relId);
 				})
-				.then(relDB.getRel)
+				.then(relSys.getRel)
 				.then(rel => {
 					expect(rel).to.equal(undefined);
 				})
@@ -87,9 +87,9 @@ describe("kitsune/rel", function() {
 		it("should get all tails of provided head", function(done) {
 			let [head, tailA, tailB] = util.createIds(3);
 
-			relDB.relate(head, tailA, tailB)
-				.then(relDB.getRel)
-				.then(rels => relDB.getTails(head))
+			relSys.relate(head, tailA, tailB)
+				.then(relSys.getRel)
+				.then(rels => relSys.getTails(head))
 				.then(tails => {
 					expect(tails).to.contain(tailA, tailB);
 				})
@@ -103,10 +103,10 @@ describe("kitsune/rel", function() {
 
 			Promise.all(_.map(
 				[headA, headB],
-				head => relDB.relate(head, tail)
+				head => relSys.relate(head, tail)
 			))
-				.then(relIds => Promise.all(_.map(relIds, id => relDB.getRel(id))))
-				.then(rels => relDB.getHeads(tail))
+				.then(relIds => Promise.all(_.map(relIds, id => relSys.getRel(id))))
+				.then(rels => relSys.getHeads(tail))
 				.then(heads => {
 					expect(heads).to.contain(headA, headB);
 				})
@@ -114,33 +114,35 @@ describe("kitsune/rel", function() {
 		});
 	});
 
-	describe("name(id, nameId)", function() {
-		it("creates a \"name\" relationship bewteen a node and a specified node", function(done) {
+	it.skip("TODO: Assign multiple head/tails ???", function() {});
 
-			let [id, nameId] = util.createIds(2);
+	describe("assign(relType, head, tail)", function() {
+		it("creates a \"relType\" relationship bewteen a head node and a tail node", function(done) {
 
-			relDB.name(id, nameId)
-				.then(nameRel => {
-					expect(nameRel.head).to.equal(ids.name);
-					return relDB.getRel(nameRel.tail);
+			let [relType, head, tail] = util.createIds(3);
+
+			relSys.assign(relType, head, tail)
+				.then(rel => {
+					expect(rel.head).to.equal(relType);
+					return relSys.getRel(rel.tail);
 				})
 				.then(rel => {
-					expect(rel).to.contain({ head: id, tail: nameId });
+					expect(rel).to.contain({ head, tail });
 				})
 				.then(done, done);
 		});
 	});
 
-	describe("findByName(nameId)", function() {
-		it("resolves a list of nodes that are have \"name\" relationships to nameId", function(done) {
+	describe("findByTail(relType, tail)", function() {
+		it("resolves a list of nodes that are have \"relType\" relationships to tail", function(done) {
 
-			let [nodeA, nodeB, nameId] = util.createIds(3);
+			let [relType, nodeA, nodeB, nameId] = util.createIds(4);
 
 			Promise.all([
-				relDB.name(nodeA, nameId),
-				relDB.name(nodeB, nameId)
+				relSys.assign(relType, nodeA, nameId),
+				relSys.assign(relType, nodeB, nameId)
 			])
-				.then(() => relDB.findByName(nameId))
+				.then(() => relSys.findByTail(relType, nameId))
 				.then(ids => {
 					expect(ids).to.have.members([nodeA, nodeB]);
 				})
@@ -148,16 +150,16 @@ describe("kitsune/rel", function() {
 		});
 	});
 
-	describe("getNames(id)", function() {
-		it("should return a list a all name nodes for this node", function(done) {
+	describe("findByHead(relType, head)", function() {
+		it("resolves a list of nodes that are have \"relType\" relationships to head", function(done) {
 
-			let [node, nameA, nameB] = util.createIds(3);
+			let [relType, node, nameA, nameB] = util.createIds(4);
 
 			Promise.all([
-				relDB.name(node, nameA),
-				relDB.name(node, nameB)
+				relSys.assign(relType, node, nameA),
+				relSys.assign(relType, node, nameB)
 			])
-				.then(() => relDB.getNames(node))
+				.then(() => relSys.findByHead(relType, node))
 				.then(nameIds => {
 					expect(nameIds).to.have.members([nameA, nameB]);
 				})

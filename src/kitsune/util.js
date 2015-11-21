@@ -33,3 +33,12 @@ export function one(arr) {
 			reject(arr);
 	});
 }
+
+export function logP(msg="") {
+	return function(value) {
+		console.log(msg+" ===============");
+		console.log(value);
+		console.log("===================");
+		return value;
+	}
+}
