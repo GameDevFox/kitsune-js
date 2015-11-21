@@ -40,5 +40,5 @@ export function logP(msg="") {
 		console.log(value);
 		console.log("===================");
 		return value;
-	}
+	};
 }
