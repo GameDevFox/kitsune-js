@@ -2,7 +2,6 @@ import { expect } from "chai";
 import _ from "lodash";
 import sqlite3 from "sqlite3";
 
-import bindDB from "kitsune/db";
 import init from "kitsune/db/init";
 
 import ids from "kitsune/ids";
@@ -10,11 +9,10 @@ import bindRel from "kitsune/rel";
 import * as util from "kitsune/util";
 
 let sqliteDB = new sqlite3.Database(":memory:");
-let dbSys = bindDB(sqliteDB);
 
 let relSys = bindRel(sqliteDB);
 
-before((done) => init(dbSys).then(done, done));
+before((done) => init(sqliteDB).then(done, done));
 
 describe("kitsune/rel", function() {
 
