@@ -36,11 +36,7 @@ export function init({ dbSys: dbSys, nameSys: nameSys }) {
 
 export function populate(nameSys) {
 	var promises = _.map(ids, (value, name) => {
-		return nameSys.name(value, name)
-			.then(() => {
-				return nameSys.getNames(value);
-			})
-			.then(names => logP("names: "));
+		return nameSys.name(value, name);
 	});
 	return Promise.all(promises);
 }
