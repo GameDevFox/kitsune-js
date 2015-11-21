@@ -7,29 +7,27 @@ import { log } from "katana/system";
 import ids from "kitsune/ids";
 import bindDB from "kitsune/db";
 
-export default function init(sqliteDB) {
-	var { alias, create, view } = bindDB(sqliteDB);
+export default function init(dbSys) {
+	var { alias, create, view } = dbSys;
 
-	sqliteDB.serialize(function() {
-		// rel database
-		var p = create("t"+ids.relationship, "id TEXT", "head TEXT", "tail TEXT")
+	// rel database
+	var p = create("t"+ids.relationship, "id TEXT", "head TEXT", "tail TEXT")
 			.then(alias("t"+ids.relationship, "relationship"))
 			.then(alias("relationship", "rel"));
 
-		// Add ids view
-		p.then(view("ids", "SELECT id FROM rel UNION SELECT head FROM rel UNION SELECT tail FROM rel"));
+	// Add ids view
+	p.then(view("ids", "SELECT id FROM rel UNION SELECT head FROM rel UNION SELECT tail FROM rel"));
 
-		// str database
-		p.then(create("t"+ids.string, "id TEXT", "string TEXT").catch(console.error))
-			.then(alias("t"+ids.string, "string"));
+	// str database
+	p.then(create("t"+ids.string, "id TEXT", "string TEXT").catch(console.error))
+		.then(alias("t"+ids.string, "string"));
 
-		p.catch(console.error);
+	return p.catch(console.error);
 
-		// TODO: The new equivalent of these
-		// echo "INSERT INTO core VALUES (\"$id\", \"$name\");"
-		// echo "INSERT INTO t${nodeId} VALUES (\"$id\", \"${tableId}\");" # "node" table
-		// echo "INSERT INTO t${tableId} VALUES (\"$id\");"; # "table" table
-	});
+	// TODO: The new equivalent of these
+	// echo "INSERT INTO core VALUES (\"$id\", \"$name\");"
+	// echo "INSERT INTO t${nodeId} VALUES (\"$id\", \"${tableId}\");" # "node" table
+	// echo "INSERT INTO t${tableId} VALUES (\"$id\");"; # "table" table
 }
 
 // istanbul ignore if
@@ -39,5 +37,7 @@ if(!module.parent) {
 		throw new Error("Please specify database file");
 
 	var sqliteDB = new sqlite3.Database(dbFile);
-	init(sqliteDB);
+
+	let dbSys = bindDB(sqliteDB);
+	init(dbSys);
 }
