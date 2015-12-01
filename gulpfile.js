@@ -6,6 +6,7 @@ var g = gulpLoadPlugins();
 
 var del = require("del");
 var jshintStylish = require("jshint-stylish");
+var browserSync = require("browser-sync").create();
 
 var appSrcPath = ["./src/kitsune/**/*.js", "./src/katana/*.js"];
 
@@ -111,14 +112,26 @@ gulp.task("watch-test-run", function(cb) {
 });
 
 //
-gulp.task("watch-coverage", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "coverage-run", ["watch-cover-src", "watch-cover-test"]));
+gulp.task("watch-coverage", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "coverage-run", ["watch-cover-src", "watch-cover-test", "browser-sync-cover"]));
 
 gulp.task("watch-cover-src", function() {	gulp.watch(appSrcPath, ["watch-cover-src-run"]); });
 gulp.task("watch-cover-src-run", function(cb) {
-	g.sequence("build", "coverage-run")(cb);
+	g.sequence("build", "coverage-run", "browser-sync-reload")(cb);
 });
 
 gulp.task("watch-cover-test", function() { gulp.watch(testSrcPath, ["watch-cover-test-run"]); });
 gulp.task("watch-cover-test-run", function(cb) {
-	g.sequence(["build-test-kitsune", "build-test-katana"], "coverage-run")(cb);
+	g.sequence(["build-test-kitsune", "build-test-katana"], "coverage-run", "browser-sync-reload")(cb);
+});
+
+gulp.task("browser-sync-cover", function() {
+	browserSync.init({
+		server: {
+			baseDir: "./coverage/lcov-report"
+		}
+	});
+});
+
+gulp.task("browser-sync-reload", function() {
+	browserSync.reload();
 });
