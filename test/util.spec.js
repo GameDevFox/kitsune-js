@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import * as util from "kitsune/util";
 
-describe("kitsune/db/util", function() {
+describe("kitsune/util", function() {
 	describe("one(array)", function() {
 		it("resolves if the array has only one element", function(done) {
 			util.one([1])
