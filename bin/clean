@@ -1,0 +1,2 @@
+#!/bin/bash
+rm node_modules/kitsune node_modules/katana
