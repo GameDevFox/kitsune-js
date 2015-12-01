@@ -1,15 +1,15 @@
 import { expect } from "chai";
 import sqlite3 from "sqlite3";
 
-import init from "kitsune/db/init";
+import getDB from "kitsune/db/cache";
 import bindStrSys from "kitsune/string";
 import { logP } from "kitsune/util";
 
-let sqliteDB = new sqlite3.Database(":memory:");
+let sqliteDB = getDB();
 
 let strSys = bindStrSys(sqliteDB);
 
-before((done) => init(sqliteDB).then(done, done));
+before((done) => sqliteDB.initP.then(done, done));
 
 describe("kitsune/string", function() {
 

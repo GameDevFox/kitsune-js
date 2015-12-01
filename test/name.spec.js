@@ -1,20 +1,20 @@
 import { expect } from "chai";
 import sqlite3 from "sqlite3";
 
-import init from "kitsune/db/init";
+import getDB from "kitsune/db/cache";
 import buildNameSys from "kitsune/name";
 import bindRelSys from "kitsune/rel";
 import bindStringSys from "kitsune/string";
 import { createId, logP } from "kitsune/util";
 
-let sqliteDB = new sqlite3.Database(":memory:");
+let sqliteDB = getDB();
 
 let relSys = bindRelSys(sqliteDB);
 let stringSys = bindStringSys(sqliteDB);
 
 let nameSys = buildNameSys({ relSys, stringSys });
 
-before((done) => init(sqliteDB).then(done, done));
+before((done) => sqliteDB.initP.then(done, done));
 
 describe("kitsune/name", function() {
 

@@ -3,16 +3,16 @@ import { logP } from "kitsune/util";
 
 export function name(relSys, stringSys, id, nameStr) {
 	return stringSys.put(nameStr)
-		.then(nameId => relSys.assign(ids.name, id, nameId));
+		.then(nameId => relSys.assign(ids.name, nameId, id));
 }
 
 export function getNodes(relSys, stringSys, nameStr) {
 	return stringSys.put(nameStr)
-		.then(nameId => relSys.findByTail(ids.name, nameId));
+		.then(nameId => relSys.findByHead(ids.name, nameId));
 }
 
 export function getNames(relSys, stringSys, id) {
-	return relSys.findByHead(ids.name, id)
+	return relSys.findByTail(ids.name, id)
 		.then(tails => stringSys.getAll(...tails));
 }
 
