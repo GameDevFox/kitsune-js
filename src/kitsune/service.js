@@ -28,9 +28,11 @@ sqliteDB.initP.then(systems => {
 	let { relSys, stringSys, idSys } = systems;
 
 	// id service
-	app.get("/ids", sendP((req, res) => idSys.all()));
-	app.get("/heads", sendP((req, res) => idSys.heads()));
+	app.get("/nodes", sendP((req, res) => idSys.all()));
+	app.get("/nodes/:id/tails", sendP((req, res) => relSys.getTails(req.params.id)));
+	app.get("/nodes/:id/heads", sendP((req, res) => relSys.getHeads(req.params.id)));
 	app.get("/tails", sendP((req, res) => idSys.tails()));
+	app.get("/heads", sendP((req, res) => idSys.heads()));
 
 	// rel service
 	app.get("/rels", sendP((req, res) => relSys.search(req.query)));
