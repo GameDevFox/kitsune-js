@@ -101,10 +101,10 @@ gulp.task("start-run", function() {
 		proc.kill();
 
 	proc = spawn("node", ["build/kitsune/service.js"]);
-	proc.stdout.on("data", data => {
+	proc.stdout.on("data", function(data) {
 		process.stdout.write("service: " + data.toString());
 	});
-	proc.stderr.on("data", data => {
+	proc.stderr.on("data", function(data) {
 		process.stderr.write("service-error: " + data.toString());
 	});
 
