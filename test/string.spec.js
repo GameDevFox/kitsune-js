@@ -9,7 +9,7 @@ let sqliteDB = getDB();
 
 let strSys = bindStrSys(sqliteDB);
 
-before((done) => sqliteDB.initP.then(done, done));
+before((done) => sqliteDB.initP.then(() => done(), done));
 
 describe("kitsune/string", function() {
 
@@ -42,15 +42,33 @@ describe("kitsune/string", function() {
 		});
 	});
 
-	describe("getAll(...ids)", function() {
+	describe("getMany(...ids)", function() {
 		it("should return an string for each id", function(done) {
 			Promise.all([
 				strSys.put("one"),
 				strSys.put("two")
 			])
-				.then(ids => strSys.getAll(...ids))
+				.then(ids => strSys.getMany(...ids))
 				.then((strings) => {
 					expect(strings).to.have.members(["one", "two"]);
+				})
+				.then(done, done);
+		});
+	});
+
+	describe("del(id)", function() {
+		it("should delete a string entry from the database", function(done) {
+			let msg = "Hello World";
+
+			let strId;
+			strSys.put(msg)
+				.then(id => { strId = id; })
+				.then(() => strSys.get(strId))
+				.then(str => { expect(str).to.equal(msg); })
+				.then(() => strSys.del(strId))
+				.then(() => strSys.get(strId))
+				.then(str => {
+					expect(str).to.equal(undefined);
 				})
 				.then(done, done);
 		});

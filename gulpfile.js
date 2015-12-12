@@ -1,5 +1,7 @@
 require('source-map-support').install();
 
+var spawn = require("child_process").spawn;
+
 var gulp = require("gulp");
 var gulpLoadPlugins = require("gulp-load-plugins");
 var g = gulpLoadPlugins();
@@ -40,7 +42,7 @@ gulp.task("build", function() {
 });
 
 gulp.task("build-test", g.sequence(["build-test-kitsune", "build-test-katana"]));
-gulp.task("build-test-kitsune", function() {	
+gulp.task("build-test-kitsune", function() {
 	var input = gulp.src(kitsuneTestPath)
 		.pipe(g.cached("kitsune-src"))
 	return buildStream(input, "kistune-test-build")
@@ -86,29 +88,44 @@ gulp.task("coverage-run", function(done) {
 });
 
 // gulp.task("prepend-source-map-support", ["build"], function() {
-// 	return gulp.src("./app/kitsune.js")
-// 		.pipe(insert.prepend("require('source-map-support').install();\n"))
-// 		.pipe(gulp.dest("./app"));
+//		return gulp.src("./app/kitsune.js")
+//			.pipe(insert.prepend("require('source-map-support').install();\n"))
+//			.pipe(gulp.dest("./app"));
 // });
 
+var proc;
 gulp.task("start", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "test-run", "start-run"));
 gulp.task("start-run", function() {
-	var kitsune = require("kitsune");
-	kitsune();
+
+	if(proc != null)
+		proc.kill();
+
+	proc = spawn("node", ["build/kitsune/service.js"]);
+	proc.stdout.on("data", data => {
+		process.stdout.write("service: " + data.toString());
+	});
+	proc.stderr.on("data", data => {
+		process.stderr.write("service-error: " + data.toString());
+	});
+
+	console.log("Process ID: " + proc.pid);
+
+	// var kitsune = require("kitsune");
+	// kitsune();
 });
 
 // Watch tasks
-gulp.task("watch", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "test-run", ["watch-src", "watch-test"]));
+gulp.task("watch", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "test-run", "start-run", ["watch-src", "watch-test"]));
 
 gulp.task("watch-src", function() {	gulp.watch(appSrcPath, ["watch-src-run"]); });
 gulp.task("watch-src-run", function(cb) {
 	delete g.cached.caches["mocha"];
-	g.sequence("build", "test-run")(cb);
+	g.sequence("build", "test-run", "start-run")(cb);
 });
 
 gulp.task("watch-test", function() { gulp.watch(testSrcPath, ["watch-test-run"]); });
 gulp.task("watch-test-run", function(cb) {
-	g.sequence(["build-test-kitsune", "build-test-katana"], "test-run")(cb);
+	g.sequence(["build-test-kitsune", "build-test-katana"], "test-run", "start-run")(cb);
 });
 
 //

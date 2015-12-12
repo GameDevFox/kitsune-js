@@ -6,7 +6,9 @@ import { noop } from "katana/func";
 import { log } from "katana/system";
 
 import ids from "kitsune/ids";
+import { aliases, tables, views } from "kitsune/ids";
 import bindDB from "kitsune/db";
+import bindIdSys from "kitsune/id";
 import bindRelSys from "kitsune/rel";
 import bindStrSys from "kitsune/string";
 import buildNameSys from "kitsune/name";
@@ -17,37 +19,69 @@ export default function initDB(sqliteDB) {
 	return init(systems);
 }
 
-export function init({ dbSys: dbSys, nameSys: nameSys }) {
+export function init(systems) {
+
+	var { dbSys, nameSys, stringSys } = systems;
 	var { alias, create, view } = dbSys;
 
 	// rel database
-	return create("t"+ids.relationship, "id TEXT", "head TEXT", "tail TEXT")
-		.then(alias("t"+ids.relationship, "relationship"))
-		.then(alias("relationship", "rel"))
-		// Add ids view
-		.then(view("ids", "SELECT id FROM rel UNION SELECT head FROM rel UNION SELECT tail FROM rel"))
-		// str database
-		.then(create("t"+ids.string, "id TEXT", "string TEXT").catch(console.error))
-		.then(alias("t"+ids.string, "string"))
-		.then(() => populate(nameSys))
-		.then(noop)
+	return createTables(dbSys)
+		.then(createAliases(dbSys))
+		.then(createViews(dbSys))
+		.then(() => nameIds(nameSys))
+		// .then(() => addStrings(stringSys, nameSys))
+		.then(() => systems)
 		.catch(console.error);
 }
 
-export function populate(nameSys) {
-	var promises = _.map(ids, (value, name) => {
-		return nameSys.name(value, name);
+function createTables({ alias, create }) {
+	var promises = _.map(tables, (table, name) => {
+		let tableId = "t"+table.id;
+		return create(tableId, table.columns)
+			.then(alias(tableId, name));
 	});
 	return Promise.all(promises);
 }
 
+function createAliases({ alias: aliasFn }) {
+	var promises = _.map(aliases, (name, alias) => aliasFn(name, alias));
+	return Promise.all(promises);
+}
+
+function createViews({ alias, view: viewFn }) {
+	var promises = _.map(views, (view, viewName) => {
+	var tableId = "t"+view.id;
+		return viewFn(tableId, view.query)
+			.then(alias(tableId, viewName));
+	});
+	return Promise.all(promises);
+}
+
+function nameIds(nameSys) {
+	var promises = _.map(ids, (value, name) => nameSys.name(value, name));
+	return Promise.all(promises);
+}
+
+// function addStrings(stringSys, nameSys) {
+//		var promises = _.map(strings, (string, name) => {
+//			return stringSys.put(string)
+//				.then(strId => {
+//					return nameSys.name(strId, name);
+//				});
+//		});
+//		return Promise.all(promises);
+// }
+
+// TODO: Move to new file?
 export function buildSystems(sqliteDB) {
 
 	let relSys = bindRelSys(sqliteDB);
 	let stringSys = bindStrSys(sqliteDB);
+	let idSys = bindIdSys(sqliteDB);
 
 	return {
 		dbSys: bindDB(sqliteDB),
+		idSys,
 		relSys,
 		stringSys,
 		nameSys: buildNameSys({ relSys, stringSys })

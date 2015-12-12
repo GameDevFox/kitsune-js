@@ -1,4 +1,4 @@
-function dbQuery(opName, db, query, ...args) {
+function dbQuery(opName, db, query, args) {
 	return new Promise((resolve, reject) => {
 		db[opName](query, args, (err, result) => {
 			if(err)
@@ -12,16 +12,16 @@ function dbQuery(opName, db, query, ...args) {
 	});
 }
 
-export function runP(db, query, ...args) {
-	return dbQuery("run", db, query, ...args);
+export function runP(db, query, args) {
+	return dbQuery("run", db, query, args);
 }
 
-export function getP(db, query, ...args) {
-	return dbQuery("get", db, query, ...args);
+export function getP(db, query, args) {
+	return dbQuery("get", db, query, args);
 }
 
-export function allP(db, query, ...args) {
-	return dbQuery("all", db, query, ...args);
+export function allP(db, query, args) {
+	return dbQuery("all", db, query, args);
 }
 
 

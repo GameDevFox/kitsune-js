@@ -14,7 +14,7 @@ let stringSys = bindStringSys(sqliteDB);
 
 let nameSys = buildNameSys({ relSys, stringSys });
 
-before((done) => sqliteDB.initP.then(done, done));
+before((done) => sqliteDB.initP.then(() => done(), done));
 
 describe("kitsune/name", function() {
 

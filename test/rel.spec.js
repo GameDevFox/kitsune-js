@@ -11,11 +11,11 @@ let sqliteDB = getDB();
 
 let relSys = bindRel(sqliteDB);
 
-before((done) => sqliteDB.initP.then(done, done));
+before((done) => sqliteDB.initP.then(() => done(), done));
 
 describe("kitsune/rel", function() {
 
-	describe("getRel(ids)", function() {
+	describe("get(ids)", function() {
 		it("should return the relationship data for this id", function() {
 			// noop
 		});
@@ -27,7 +27,7 @@ describe("kitsune/rel", function() {
 			let [head, tail] = util.createIds(2);
 
 			relSys.relate(head, tail)
-				.then(relSys.getRel)
+				.then(relSys.get)
 				.then(rel => {
 					expect(rel).to.include({ head: head, tail: tail });
 				})
@@ -39,7 +39,7 @@ describe("kitsune/rel", function() {
 			let [ parent, childA, childB ] = util.createIds(3);
 
 			relSys.relate(parent, childA, childB)
-				.then(relSys.getRels)
+				.then(relSys.getMany)
 				.then(rels => {
 					// NOTE: This failed once, randomly
 					expect(rels[0]).to.include({ head: parent, tail: childA });
@@ -51,7 +51,7 @@ describe("kitsune/rel", function() {
 		it("should allow null tails", function(done) {
 			let head = util.createId();
 			relSys.relate(head)
-				.then(relSys.getRel)
+				.then(relSys.get)
 				.then(rel => {
 					expect(rel).to.contain({ head: head, tail: null });
 				})
@@ -67,13 +67,13 @@ describe("kitsune/rel", function() {
 			relSys.relate(nodeA, nodeB)
 				.then(id => {
 					relId = id;
-					return relSys.getRel(id);
+					return relSys.get(id);
 				})
 				.then(rel => {
 					expect(rel).to.include({ head: nodeA, tail: nodeB });
 					return relSys.del(relId);
 				})
-				.then(relSys.getRel)
+				.then(relSys.get)
 				.then(rel => {
 					expect(rel).to.equal(undefined);
 				})
@@ -86,7 +86,7 @@ describe("kitsune/rel", function() {
 			let [head, tailA, tailB] = util.createIds(3);
 
 			relSys.relate(head, tailA, tailB)
-				.then(relSys.getRel)
+				.then(relSys.getMany)
 				.then(rels => relSys.getTails(head))
 				.then(tails => {
 					expect(tails).to.contain(tailA, tailB);
@@ -103,7 +103,7 @@ describe("kitsune/rel", function() {
 				[headA, headB],
 				head => relSys.relate(head, tail)
 			))
-				.then(relIds => Promise.all(_.map(relIds, id => relSys.getRel(id))))
+				.then(relIds => Promise.all(_.map(relIds, id => relSys.get(id))))
 				.then(rels => relSys.getHeads(tail))
 				.then(heads => {
 					expect(heads).to.contain(headA, headB);
@@ -122,7 +122,7 @@ describe("kitsune/rel", function() {
 			relSys.assign(relType, head, tail)
 				.then(rel => {
 					expect(rel.head).to.equal(relType);
-					return relSys.getRel(rel.tail);
+					return relSys.get(rel.tail);
 				})
 				.then(rel => {
 					expect(rel).to.contain({ head, tail });

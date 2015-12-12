@@ -33,6 +33,7 @@
     "source-map-support": "^0.3.2"
   },
   "dependencies": {
+    "body-parser": "^1.14.1",
     "lodash": "^3.10.1",
     "sqlite3": "^3.0.10",
     "ws": "^0.7.2"

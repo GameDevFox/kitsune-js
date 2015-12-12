@@ -13,7 +13,7 @@ export function getNodes(relSys, stringSys, nameStr) {
 
 export function getNames(relSys, stringSys, id) {
 	return relSys.findByTail(ids.name, id)
-		.then(tails => stringSys.getAll(...tails));
+		.then(tails => stringSys.getMany(...tails));
 }
 
 export default function build({ relSys: relSys, stringSys: stringSys }) {
