@@ -20,7 +20,7 @@ export function tails(db) {
 function listIdTable(db, tableId) {
 	let query = `SELECT id FROM t${tableId}`;
 	return allP(db, query)
-		.then(results => _.map(results, result => result["id"]));
+		.then(results => _.map(results, result => result.id));
 }
 
 export default function bind(db) {
