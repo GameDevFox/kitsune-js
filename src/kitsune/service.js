@@ -27,6 +27,12 @@ sqliteDB.initP.then(systems => {
 
 	let { relSys, stringSys, idSys } = systems;
 
+	app.use((req, res, next) => {
+		res.header("Access-Control-Allow-Origin", "*");
+		// res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		next();
+	});
+
 	// id service
 	app.get("/nodes", sendP((req, res) => idSys.all()));
 	app.get("/nodes/:id/tails", sendP((req, res) => relSys.getTails(req.params.id)));
