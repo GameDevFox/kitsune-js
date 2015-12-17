@@ -1,20 +1,19 @@
 import _ from "lodash";
 
-import { runP, getP, allP } from "kitsune/db";
-import { views } from "kitsune/ids";
-
-let idTable = `t${views.id.id}`;
-let headTable = `t${views.head.id}`;
-let tailTable = `t${views.tail.id}`;
+import { runP, getP, allP } from "kitsune/systems/db";
+import ids from "kitsune/ids";
 
 export function all(db) {
-	return listIdTable(db, views.id.id);
+	return listIdTable(db, ids.id);
+}
+export function points(db) {
+	return listIdTable(db, ids.point);
 }
 export function heads(db) {
-	return listIdTable(db, views.head.id);
+	return listIdTable(db, ids.head);
 }
 export function tails(db) {
-	return listIdTable(db, views.tail.id);
+	return listIdTable(db, ids.tail);
 }
 
 function listIdTable(db, tableId) {
@@ -25,7 +24,10 @@ function listIdTable(db, tableId) {
 
 export default function bind(db) {
 	return {
+		search: search.bind(this, db),
+
 		all: all.bind(this, db),
+		points: points.bind(this, db),
 		heads: heads.bind(this, db),
 		tails: tails.bind(this, db)
 	};

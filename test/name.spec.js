@@ -1,10 +1,10 @@
 import { expect } from "chai";
 import sqlite3 from "sqlite3";
 
-import getDB from "kitsune/db/cache";
-import buildNameSys from "kitsune/name";
-import bindRelSys from "kitsune/rel";
-import bindStringSys from "kitsune/string";
+import getDB from "kitsune/systems/db/cache";
+import buildNameSys from "kitsune/systems/name";
+import bindRelSys from "kitsune/systems/rel";
+import bindStringSys from "kitsune/systems/string";
 import { createId, logP } from "kitsune/util";
 
 let sqliteDB = getDB();

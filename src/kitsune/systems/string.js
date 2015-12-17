@@ -1,6 +1,6 @@
 import { createHash } from "crypto";
 
-import { runP, getP, allP } from "kitsune/db";
+import { runP, getP, allP } from "kitsune/systems/db";
 import ids from "kitsune/ids";
 import { getSqlQMarks, logP } from "kitsune/util";
 

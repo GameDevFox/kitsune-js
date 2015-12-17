@@ -1,7 +1,7 @@
 import _ from "lodash";
 
-import { runP, getP, allP } from "kitsune/db";
-import * as dbUtil from "kitsune/db/util";
+import { runP, getP, allP } from "kitsune/systems/db";
+import * as dbUtil from "kitsune/systems/db/util";
 import ids from "kitsune/ids";
 import * as util from "kitsune/util";
 

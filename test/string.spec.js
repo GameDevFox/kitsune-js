@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import sqlite3 from "sqlite3";
 
-import getDB from "kitsune/db/cache";
-import bindStrSys from "kitsune/string";
+import getDB from "kitsune/systems/db/cache";
+import bindStrSys from "kitsune/systems/string";
 import { logP } from "kitsune/util";
 
 let sqliteDB = getDB();

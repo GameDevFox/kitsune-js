@@ -2,9 +2,9 @@ import { expect } from "chai";
 import _ from "lodash";
 import sqlite3 from "sqlite3";
 
-import getDB from "kitsune/db/cache";
+import getDB from "kitsune/systems/db/cache";
 import ids from "kitsune/ids";
-import bindRel from "kitsune/rel";
+import bindRel from "kitsune/systems/rel";
 import * as util from "kitsune/util";
 
 let sqliteDB = getDB();

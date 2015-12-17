@@ -7,11 +7,15 @@ import { log } from "katana/system";
 
 import ids from "kitsune/ids";
 import { aliases, tables, views } from "kitsune/ids";
-import bindDB from "kitsune/db";
-import bindIdSys from "kitsune/id";
-import bindRelSys from "kitsune/rel";
-import bindStrSys from "kitsune/string";
-import buildNameSys from "kitsune/name";
+import bindDB from "kitsune/systems/db";
+
+import bindIdSys from "kitsune/systems/node";
+import bindRelSys from "kitsune/systems/rel";
+import bindTypeSys from "kitsune/systems/type";
+import bindStrSys from "kitsune/systems/string";
+
+import buildNameSys from "kitsune/systems/name";
+
 import { logP } from "kitsune/util";
 
 export default function initDB(sqliteDB) {
@@ -25,7 +29,7 @@ export function init(systems) {
 	var { alias, create, view } = dbSys;
 
 	// rel database
-	return createTables(dbSys)
+	return createTables(systems)
 		.then(createAliases(dbSys))
 		.then(createViews(dbSys))
 		.then(() => nameIds(nameSys))
@@ -34,11 +38,13 @@ export function init(systems) {
 		.catch(console.error);
 }
 
-function createTables({ alias, create }) {
+function createTables({ dbSys: { alias, create }, relSys }) {
 	var promises = _.map(tables, (table, name) => {
 		let tableId = "t"+table.id;
 		return create(tableId, table.columns)
-			.then(alias(tableId, name));
+			.then(alias(tableId, name))
+			// Mark tables
+			.then(relSys.assign(ids.is, ids.table, table.id));
 	});
 	return Promise.all(promises);
 }
@@ -75,16 +81,24 @@ function nameIds(nameSys) {
 // TODO: Move to new file?
 export function buildSystems(sqliteDB) {
 
+	let dbSys = bindDB(sqliteDB);
+
+	let idSys = bindIdSys(sqliteDB);
 	let relSys = bindRelSys(sqliteDB);
 	let stringSys = bindStrSys(sqliteDB);
-	let idSys = bindIdSys(sqliteDB);
+	let typeSys = bindTypeSys(sqliteDB);
+
+	let nameSys = buildNameSys({ relSys, stringSys });
 
 	return {
-		dbSys: bindDB(sqliteDB),
+		dbSys,
+
 		idSys,
 		relSys,
 		stringSys,
-		nameSys: buildNameSys({ relSys, stringSys })
+		typeSys,
+
+		nameSys
 	};
 }
 

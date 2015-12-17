@@ -1,6 +1,6 @@
 import sqlite3 from "sqlite3";
 
-import init from "kitsune/db/init";
+import init from "kitsune/systems/db/init";
 
 var dbs = {};
 

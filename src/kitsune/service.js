@@ -2,7 +2,7 @@ import bodyParser from "body-parser";
 import express from "express";
 import sqlite3 from "sqlite3";
 
-import getDB from "kitsune/db/cache";
+import getDB from "kitsune/systems/db/cache";
 import ids from "kitsune/ids";
 
 let sqliteDB = getDB();
@@ -25,7 +25,7 @@ function sendP(func) {
 
 sqliteDB.initP.then(systems => {
 
-	let { relSys, stringSys, idSys } = systems;
+	let { idSys, relSys, stringSys, typeSys, nameSys } = systems;
 
 	app.use((req, res, next) => {
 		res.header("Access-Control-Allow-Origin", "*");
@@ -33,12 +33,18 @@ sqliteDB.initP.then(systems => {
 		next();
 	});
 
-	// id service
+	// node service
 	app.get("/nodes", sendP((req, res) => idSys.all()));
-	app.get("/nodes/:id/tails", sendP((req, res) => relSys.getTails(req.params.id)));
-	app.get("/nodes/:id/heads", sendP((req, res) => relSys.getHeads(req.params.id)));
+	// TODO - Organize these under another path
+	// Such as "/types/:typeName"
+	app.get("/points", sendP((req, res) => idSys.points()));
 	app.get("/tails", sendP((req, res) => idSys.tails()));
 	app.get("/heads", sendP((req, res) => idSys.heads()));
+
+	app.get("/nodes/:id/types", sendP((req, res) => typeSys.getTypes(req.params.id)));
+	app.get("/nodes/:id/tails", sendP((req, res) => relSys.getTails(req.params.id)));
+	app.get("/nodes/:id/heads", sendP((req, res) => relSys.getHeads(req.params.id)));
+	app.get("/nodes/:id/names", sendP((req, res) => nameSys.getNames(req.params.id)));
 
 	// rel service
 	app.get("/rels", sendP((req, res) => relSys.search(req.query)));
