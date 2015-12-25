@@ -37,13 +37,15 @@ export let aliases = {
 };
 
 let relTable = "t"+ids.relationship;
+
+let relQuery = `SELECT id FROM ${relTable} WHERE id IS NOT NULL`;
+let headQuery = `SELECT DISTINCT head AS id FROM ${relTable} WHERE head IS NOT NULL`;
+let tailQuery = `SELECT DISTINCT tail AS id FROM ${relTable} WHERE tail IS NOT NULL`;
+
 export let views = {
 	id: {
 		id: ids.id,
-		query: `SELECT DISTINCT id FROM (` +
-			`SELECT id FROM ${relTable} WHERE id IS NOT NULL ` +
-			`UNION SELECT head FROM ${relTable} WHERE head IS NOT NULL ` +
-			`UNION SELECT tail FROM ${relTable} WHERE tail IS NOT NULL)`
+		query: `SELECT DISTINCT id FROM (${relQuery} UNION ${headQuery} UNION ${tailQuery})`
 	},
 	point: {
 		id: ids.point,
@@ -51,16 +53,23 @@ export let views = {
 	},
 	head: {
 		id: ids.head,
-		query: `SELECT DISTINCT head AS id FROM ${relTable} WHERE head IS NOT NULL`
+		query: headQuery
 	},
 	tail: {
 		id: ids.tail,
-		query: `SELECT DISTINCT tail AS id FROM ${relTable} WHERE tail IS NOT NULL`
+		query: tailQuery
 	},
 	name: {
 		id: ids.name,
 		query: `SELECT head FROM ${relTable} WHERE id IN (SELECT tail FROM ${relTable} WHERE head = '${ids.name})'`
 	}
+};
+
+export let opQueries = {
+	tails: `SELECT tail AS id FROM ${relTable} WHERE head IN ?`,
+	heads: `SELECT head AS id FROM ${relTable} WHERE tail IN ?`,
+	tailEdges: `SELECT id FROM ${relTable} WHERE head IN ?`,
+	headEdges: `SELECT id FROM ${relTable} WHERE tail IN ?`
 };
 
 export default ids;

@@ -24,8 +24,6 @@ function listIdTable(db, tableId) {
 
 export default function bind(db) {
 	return {
-		search: search.bind(this, db),
-
 		all: all.bind(this, db),
 		points: points.bind(this, db),
 		heads: heads.bind(this, db),
