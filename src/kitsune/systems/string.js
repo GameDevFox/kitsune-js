@@ -33,8 +33,6 @@ export function search(db, criteria) {
 		}
 	}
 
-	console.log(query);
-
 	return allP(db, query, args);
 }
 

@@ -6,7 +6,7 @@ import { noop } from "katana/func";
 import { log } from "katana/system";
 
 import ids from "kitsune/ids";
-import { aliases, tables, views } from "kitsune/ids";
+import { aliases, tables, queries, views } from "kitsune/ids";
 import bindDB from "kitsune/systems/db";
 
 import bindIdSys from "kitsune/systems/node";
@@ -25,7 +25,7 @@ export default function initDB(sqliteDB) {
 
 export function init(systems) {
 
-	var { dbSys, nameSys, stringSys } = systems;
+	var { dbSys, relSys, stringSys, nameSys } = systems;
 	var { alias, create, view } = dbSys;
 
 	// rel database
@@ -33,7 +33,9 @@ export function init(systems) {
 		.then(createAliases(dbSys))
 		.then(createViews(dbSys))
 		.then(() => nameIds(nameSys))
-		// .then(() => addStrings(stringSys, nameSys))
+		.then(() => types(relSys))
+		.then(() => markTables(relSys))
+		.then(() => insertQueries(relSys, stringSys))
 		.then(() => systems)
 		.catch(console.error);
 }
@@ -56,7 +58,7 @@ function createAliases({ alias: aliasFn }) {
 
 function createViews({ alias, view: viewFn }) {
 	var promises = _.map(views, (view, viewName) => {
-	var tableId = "t"+view.id;
+		var tableId = "t"+view.id;
 		return viewFn(tableId, view.query)
 			.then(alias(tableId, viewName));
 	});
@@ -65,6 +67,32 @@ function createViews({ alias, view: viewFn }) {
 
 function nameIds(nameSys) {
 	var promises = _.map(ids, (value, name) => nameSys.name(value, name));
+	return Promise.all(promises);
+}
+
+function types(relSys) {
+	var types = [
+		ids.table,
+		ids.query
+	];
+	var promises = _.map(types, (type) => relSys.relate(ids.type, type));
+	return Promise.all(promises);
+}
+
+function markTables(relSys) {
+	var promises = _.map(tables, (table, tableName) => {
+		return relSys.relate(ids.table, table.id);
+	});
+	return Promise.all(promises);
+}
+
+function insertQueries(relSys, stringSys) {
+	var promises = _.map(queries, (query, queryName) => {
+		return stringSys.put(query)
+			.then(queryId => {
+				return relSys.relate(ids.query, queryId);
+			});
+	});
 	return Promise.all(promises);
 }
 

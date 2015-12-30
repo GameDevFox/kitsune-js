@@ -47,10 +47,10 @@ sqliteDB.initP.then(systems => {
 	app.get("/nodes/:id/names", sendP((req, res) => nameSys.getNames(req.params.id)));
 
 	// rel service
-	app.get("/rels", sendP((req, res) => relSys.search(req.query)));
-	app.get("/rels/:id", sendP((req, res) => relSys.get(req.params.id)));
-	app.post("/rels", sendP((req, res) => relSys.relate(req.body.head, req.body.tail)));
-	app.delete("/rels/:id", sendP((req, res) => relSys.del(req.params.id)));
+	app.get("/edges", sendP((req, res) => relSys.search(req.query)));
+	app.get("/edges/:id", sendP((req, res) => relSys.get(req.params.id)));
+	app.post("/edges", sendP((req, res) => relSys.relate(req.body.head, req.body.tail)));
+	app.delete("/edges/:id", sendP((req, res) => relSys.del(req.params.id)));
 
 	// string service
 	app.get("/strings", sendP((req, res) => stringSys.search(req.query)));
