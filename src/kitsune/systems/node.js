@@ -3,9 +3,12 @@ import _ from "lodash";
 import { runP, getP, allP } from "kitsune/systems/db";
 import ids from "kitsune/ids";
 
-export function all(db) {
-	return listIdTable(db, ids.id);
+export function search(db, { type }) {
+	let query = `SELECT id FROM t${ids.node}`;
+	return allP(db, query)
+		.then(results => _.map(results, result => result.id));
 }
+
 export function points(db) {
 	return listIdTable(db, ids.point);
 }
@@ -24,7 +27,8 @@ function listIdTable(db, tableId) {
 
 export default function bind(db) {
 	return {
-		all: all.bind(this, db),
+		search: search.bind(this, db),
+
 		points: points.bind(this, db),
 		heads: heads.bind(this, db),
 		tails: tails.bind(this, db)

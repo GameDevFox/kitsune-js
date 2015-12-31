@@ -36,7 +36,7 @@ export function view(db, name, viewSql) {
 }
 
 export function alias(db, table, name) {
-	var subQuery = `SELECT * FROM ${table};`;
+	var subQuery = `SELECT * FROM ${table}`;
 	return view(db, name, subQuery);
 }
 

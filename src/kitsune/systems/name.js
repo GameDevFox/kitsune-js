@@ -1,25 +1,25 @@
 import ids from "kitsune/ids";
 import { logP } from "kitsune/util";
 
-export function name(relSys, stringSys, id, nameStr) {
+export function name(edgeSys, stringSys, id, nameStr) {
 	return stringSys.put(nameStr)
-		.then(nameId => relSys.assign(ids.name, nameId, id));
+		.then(nameId => edgeSys.assign(ids.name, nameId, id));
 }
 
-export function getNodes(relSys, stringSys, nameStr) {
+export function getNodes(edgeSys, stringSys, nameStr) {
 	return stringSys.put(nameStr)
-		.then(nameId => relSys.findByHead(ids.name, nameId));
+		.then(nameId => edgeSys.findByHead(ids.name, nameId));
 }
 
-export function getNames(relSys, stringSys, id) {
-	return relSys.findByTail(ids.name, id)
+export function getNames(edgeSys, stringSys, id) {
+	return edgeSys.findByTail(ids.name, id)
 		.then(tails => stringSys.getMany(...tails));
 }
 
-export default function build({ relSys: relSys, stringSys: stringSys }) {
+export default function build({ edgeSys: edgeSys, stringSys: stringSys }) {
 	return {
-		name: name.bind(this, relSys, stringSys),
-		getNodes: getNodes.bind(this, relSys, stringSys),
-		getNames: getNames.bind(this, relSys, stringSys)
+		name: name.bind(this, edgeSys, stringSys),
+		getNodes: getNodes.bind(this, edgeSys, stringSys),
+		getNames: getNames.bind(this, edgeSys, stringSys)
 	};
 }

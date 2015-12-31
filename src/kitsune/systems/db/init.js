@@ -6,11 +6,11 @@ import { noop } from "katana/func";
 import { log } from "katana/system";
 
 import ids from "kitsune/ids";
-import { aliases, tables, queries, views } from "kitsune/ids";
+import { aliases, tables, queries, types, views } from "kitsune/ids";
 import bindDB from "kitsune/systems/db";
 
-import bindIdSys from "kitsune/systems/node";
-import bindRelSys from "kitsune/systems/rel";
+import bindNodeSys from "kitsune/systems/node";
+import bindEdgeSys from "kitsune/systems/edge";
 import bindTypeSys from "kitsune/systems/type";
 import bindStrSys from "kitsune/systems/string";
 
@@ -25,28 +25,28 @@ export default function initDB(sqliteDB) {
 
 export function init(systems) {
 
-	var { dbSys, relSys, stringSys, nameSys } = systems;
+	var { dbSys, edgeSys, stringSys, nameSys } = systems;
 	var { alias, create, view } = dbSys;
 
-	// rel database
+	// edge database
 	return createTables(systems)
 		.then(createAliases(dbSys))
 		.then(createViews(dbSys))
 		.then(() => nameIds(nameSys))
-		.then(() => types(relSys))
-		.then(() => markTables(relSys))
-		.then(() => insertQueries(relSys, stringSys))
+		.then(() => markTypes(edgeSys))
+		.then(() => markTables(edgeSys))
+		.then(() => insertQueries(edgeSys, stringSys))
 		.then(() => systems)
 		.catch(console.error);
 }
 
-function createTables({ dbSys: { alias, create }, relSys }) {
+function createTables({ dbSys: { alias, create }, edgeSys }) {
 	var promises = _.map(tables, (table, name) => {
 		let tableId = "t"+table.id;
 		return create(tableId, table.columns)
 			.then(alias(tableId, name))
 			// Mark tables
-			.then(relSys.assign(ids.is, ids.table, table.id));
+			.then(edgeSys.assign(ids.is, ids.table, table.id));
 	});
 	return Promise.all(promises);
 }
@@ -60,7 +60,8 @@ function createViews({ alias, view: viewFn }) {
 	var promises = _.map(views, (view, viewName) => {
 		var tableId = "t"+view.id;
 		return viewFn(tableId, view.query)
-			.then(alias(tableId, viewName));
+			.then(alias(tableId, viewName))
+			.catch(e => console.log(e));
 	});
 	return Promise.all(promises);
 }
@@ -70,27 +71,23 @@ function nameIds(nameSys) {
 	return Promise.all(promises);
 }
 
-function types(relSys) {
-	var types = [
-		ids.table,
-		ids.query
-	];
-	var promises = _.map(types, (type) => relSys.relate(ids.type, type));
+function markTypes(edgeSys) {
+	var promises = _.map(types, (type) => edgeSys.relate(ids.type, type));
 	return Promise.all(promises);
 }
 
-function markTables(relSys) {
+function markTables(edgeSys) {
 	var promises = _.map(tables, (table, tableName) => {
-		return relSys.relate(ids.table, table.id);
+		return edgeSys.relate(ids.table, table.id);
 	});
 	return Promise.all(promises);
 }
 
-function insertQueries(relSys, stringSys) {
+function insertQueries(edgeSys, stringSys) {
 	var promises = _.map(queries, (query, queryName) => {
 		return stringSys.put(query)
 			.then(queryId => {
-				return relSys.relate(ids.query, queryId);
+				return edgeSys.relate(ids.query, queryId);
 			});
 	});
 	return Promise.all(promises);
@@ -111,18 +108,18 @@ export function buildSystems(sqliteDB) {
 
 	let dbSys = bindDB(sqliteDB);
 
-	let idSys = bindIdSys(sqliteDB);
-	let relSys = bindRelSys(sqliteDB);
+	let nodeSys = bindNodeSys(sqliteDB);
+	let edgeSys = bindEdgeSys(sqliteDB);
 	let stringSys = bindStrSys(sqliteDB);
 	let typeSys = bindTypeSys(sqliteDB);
 
-	let nameSys = buildNameSys({ relSys, stringSys });
+	let nameSys = buildNameSys({ edgeSys, stringSys });
 
 	return {
 		dbSys,
 
-		idSys,
-		relSys,
+		nodeSys,
+		edgeSys,
 		stringSys,
 		typeSys,
 

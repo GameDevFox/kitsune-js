@@ -1,15 +1,17 @@
 // TODO: Make columns ids as well
-// ... then use these ids in the services (like "rel.js")
+// ... then use these ids in the services (like "edge.js")
 export let ids = {
+	// types
 	type: "86124d0bb2f607e8c369f92987b71e8f46f720b5", //
 		table: "9f568ad4ed64b326d24f672d0ea046e0db8bc3b7", //
 		query: "46db53f47941dcfce69b57b81fac0312c242b93d", //
 
 	// tables
-	relationship: "ca0768dab03eb0523568e066f333a7d82e75cf27", //
+	edge: "ca0768dab03eb0523568e066f333a7d82e75cf27", //
 	string: "4fe868cd3e83b53a04b346b546bc6e1b5e32ad04", //
 
-	id: "9994a48a790d9c9c619853b9baff8ab36eace365",
+	// entities
+	node: "9994a48a790d9c9c619853b9baff8ab36eace365",
 	point: "479fec66cd9ebd2f7f73c702580ceb0c90712e79",
 	head: "0f51ed71c5fbae5998482f73f61f207ff57bd980",
 	tail: "67dc0a2e7f8562343efa43cbcae67f04a001af36",
@@ -24,8 +26,8 @@ export let ids = {
 };
 
 export let tables = {
-	relationship: {
-		id: ids.relationship,
+	edge: {
+		id: ids.edge,
 		columns: ["id TEXT", "head TEXT", "tail TEXT"]
 	},
 	string: {
@@ -34,12 +36,14 @@ export let tables = {
 	}
 };
 
-export let aliases = {
-	rel: "relationship"
-};
+export let types = [
+	ids.type,
+	ids.table,
+	ids.query
+];
 
-let edgeTable = "t"+ids.relationship;
 
+let edgeTable = "t"+ids.edge;
 export let queries = {
 	// Type queries (return list of ids)
 	edge: `SELECT id FROM ${edgeTable} WHERE id IS NOT NULL`,
@@ -47,20 +51,20 @@ export let queries = {
 	tail: `SELECT DISTINCT tail AS id FROM ${edgeTable} WHERE tail IS NOT NULL`,
 
 	// Op queries (takes a list and returns a list)
-	tails: `SELECT tail AS id FROM ${edgeTable} WHERE head IN ?`,
-	heads: `SELECT head AS id FROM ${edgeTable} WHERE tail IN ?`,
-	tailEdges: `SELECT id FROM ${edgeTable} WHERE head IN ?`,
-	headEdges: `SELECT id FROM ${edgeTable} WHERE tail IN ?`
+	tails: 'SELECT tail AS id FROM '+edgeTable+' WHERE head IN ${in}',
+	heads: 'SELECT head AS id FROM '+edgeTable+' WHERE tail IN ${in}',
+	tailEdges: 'SELECT id FROM '+edgeTable+' WHERE head IN ${in}',
+	headEdges: 'SELECT id FROM '+edgeTable+' WHERE tail IN ${in}'
 };
 
 export let views = {
-	id: {
-		id: ids.id,
+	node: {
+		id: ids.node,
 		query: `SELECT DISTINCT id FROM (${queries.edge} UNION ${queries.head} UNION ${queries.tail})`
 	},
 	point: {
 		id: ids.point,
-		query: `SELECT DISTINCT id FROM id WHERE id NOT IN (SELECT id FROM ${edgeTable})`
+		query: `SELECT DISTINCT id FROM node WHERE id NOT IN (SELECT id FROM ${edgeTable})`
 	},
 	head: {
 		id: ids.head,
@@ -72,7 +76,7 @@ export let views = {
 	},
 	name: {
 		id: ids.name,
-		query: `SELECT head FROM ${edgeTable} WHERE id IN (SELECT tail FROM ${edgeTable} WHERE head = '${ids.name})'`
+		query: `SELECT head FROM ${edgeTable} WHERE id IN (SELECT tail FROM ${edgeTable} WHERE head = '${ids.name}')`
 	}
 };
 

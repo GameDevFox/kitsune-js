@@ -2,19 +2,19 @@ import { expect } from "chai";
 import sqlite3 from "sqlite3";
 
 import getDB from "kitsune/systems/db/cache";
-import buildNameSys from "kitsune/systems/name";
-import bindRelSys from "kitsune/systems/rel";
-import bindStringSys from "kitsune/systems/string";
 import { createId, logP } from "kitsune/util";
 
 let sqliteDB = getDB();
 
-let relSys = bindRelSys(sqliteDB);
-let stringSys = bindStringSys(sqliteDB);
+let edgeSys, stringSys, nameSys;
 
-let nameSys = buildNameSys({ relSys, stringSys });
-
-before((done) => sqliteDB.initP.then(() => done(), done));
+before((done) => sqliteDB.initP
+	   .then(systems => {
+		   edgeSys = systems.edgeSys;
+		   stringSys = systems.stringSys;
+		   nameSys = systems.nameSys;
+	   })
+	   .then(() => done(), done));
 
 describe("kitsune/name", function() {
 
@@ -22,7 +22,7 @@ describe("kitsune/name", function() {
 		it("should name the node with provided string", function(done) {
 			var id = createId();
 			nameSys.name(id, "myName")
-				.then(rel => nameSys.getNodes("myName"))
+				.then(edge => nameSys.getNodes("myName"))
 				.then(ids => {
 					expect(ids).to.deep.equal([id]);
 				})
@@ -42,7 +42,7 @@ describe("kitsune/name", function() {
 				nameSys.name(id, "yourName"),
 				nameSys.name(id, "thisName")
 			])
-				.then(rel => nameSys.getNames(id))
+				.then(edge => nameSys.getNames(id))
 				.then(names => {
 					expect(names).to.have.members(["yourName", "thisName"]);
 				})

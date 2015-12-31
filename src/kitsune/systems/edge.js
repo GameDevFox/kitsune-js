@@ -5,11 +5,11 @@ import * as dbUtil from "kitsune/systems/db/util";
 import ids from "kitsune/ids";
 import * as util from "kitsune/util";
 
-let relTable = `t${ids.relationship}`;
+let edgeTable = `t${ids.edge}`;
 
 // Module functions
 export function search(db, criteria) {
-	let query = `SELECT * FROM ${relTable}`;
+	let query = `SELECT * FROM ${edgeTable}`;
 
 	let { sql: whereClause, args } = dbUtil.whereClause(criteria);
 	query += whereClause;
@@ -18,14 +18,14 @@ export function search(db, criteria) {
 }
 
 export function get(db, id) {
-	let query = `SELECT * FROM ${relTable} WHERE id = ?;`;
+	let query = `SELECT * FROM ${edgeTable} WHERE id = ?;`;
 	return getP(db, query, id);
 }
 
 export function getMany(db, ...ids) {
 	ids = _.flatten(ids);
 	let qMarks = util.getSqlQMarks(ids.length);
-	let query = `SELECT * FROM ${relTable} WHERE id IN (${qMarks});`;
+	let query = `SELECT * FROM ${edgeTable} WHERE id IN (${qMarks});`;
 	return allP(db, query, ids);
 }
 
@@ -41,57 +41,57 @@ export function relate(db, head, ...tails) {
 	let id = util.createId();
 	let tail = tails[0];
 
-	let query = `INSERT INTO ${relTable} (id, head, tail) VALUES (?, ?, ?)`;
+	let query = `INSERT INTO ${edgeTable} (id, head, tail) VALUES (?, ?, ?)`;
 	return runP(db, query, [id, head, tail])
 		.then(() => id);
 }
 
 export function del(db, ...ids) {
 	let qMarks = util.getSqlQMarks(ids.length);
-	let query = `DELETE FROM ${relTable} WHERE id IN (${qMarks});`;
+	let query = `DELETE FROM ${edgeTable} WHERE id IN (${qMarks});`;
 	return runP(db, query, ids);
 }
 
 export function getTails(db, head) {
-	let query = `SELECT tail FROM ${relTable} WHERE head = ?;`;
+	let query = `SELECT tail FROM ${edgeTable} WHERE head = ?;`;
 	return allP(db, query, head)
 		.then(tails => _.map(tails, "tail"));
 }
 
 export function getHeads(db, tail) {
-	let query = `SELECT head FROM ${relTable} WHERE tail = ?;`;
+	let query = `SELECT head FROM ${edgeTable} WHERE tail = ?;`;
 	return allP(db, query, tail)
 		.then(heads => _.map(heads, "head"));
 }
 
-function assign(db, relType, head, tail) {
+function assign(db, edgeType, head, tail) {
 	let first;
 	return relate(db, head, tail)
-		.then(relId => {
-			first = relId;
-			return relate(db, relType, relId);
+		.then(edgeId => {
+			first = edgeId;
+			return relate(db, edgeType, edgeId);
 		})
-		.then(relId => {
+		.then(edgeId => {
 			return {
-				id: relId,
-				head: relType,
+				id: edgeId,
+				head: edgeType,
 				tail: first
 			};
 		});
 }
 
-// TODO: This query may return nodes that aren't rel nodes
-let relTypeQuery = `SELECT tail FROM ${relTable} WHERE head = ?`;
+// TODO: This query may return nodes that aren't edge nodes
+let edgeTypeQuery = `SELECT tail FROM ${edgeTable} WHERE head = ?`;
 
-function findByTail(db, relType, tail) {
-	let query = `SELECT head FROM ${relTable} WHERE id IN (${relTypeQuery}) AND tail = ?`;
-	return allP(db, query, [relType, tail])
+function findByTail(db, edgeType, tail) {
+	let query = `SELECT head FROM ${edgeTable} WHERE id IN (${edgeTypeQuery}) AND tail = ?`;
+	return allP(db, query, [edgeType, tail])
 		.then(heads => _.map(heads, "head"));
 }
 
-function findByHead(db, relType, head) {
-	let query = `SELECT tail FROM ${relTable} WHERE id IN (${relTypeQuery}) AND head = ?`;
-	return allP(db, query, [relType, head])
+function findByHead(db, edgeType, head) {
+	let query = `SELECT tail FROM ${edgeTable} WHERE id IN (${edgeTypeQuery}) AND head = ?`;
+	return allP(db, query, [edgeType, head])
 		.then(tails => _.map(tails, "tail"));
 }
 
