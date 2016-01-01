@@ -6,8 +6,9 @@ import { noop } from "katana/func";
 import { log } from "katana/system";
 
 import ids from "kitsune/ids";
-import { aliases, tables, queries, types, views } from "kitsune/ids";
+import { aliases, tables, typeQs, opQs as ops, types, views } from "kitsune/ids";
 import bindDB from "kitsune/systems/db";
+import { buildQuery, queryBuilder as q } from "kitsune/systems/db/util";
 
 import bindNodeSys from "kitsune/systems/node";
 import bindEdgeSys from "kitsune/systems/edge";
@@ -84,6 +85,8 @@ function markTables(edgeSys) {
 }
 
 function insertQueries(edgeSys, stringSys) {
+	var queries = _.extend(ops, typeQs);
+
 	var promises = _.map(queries, (query, queryName) => {
 		return stringSys.put(query)
 			.then(queryId => {

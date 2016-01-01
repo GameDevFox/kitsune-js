@@ -24,7 +24,7 @@ export function get(db, id) {
 
 export function getMany(db, ...ids) {
 	ids = _.flatten(ids);
-	let qMarks = util.getSqlQMarks(ids.length);
+	let qMarks = dbUtil.getSqlQMarks(ids.length);
 	let query = `SELECT * FROM ${edgeTable} WHERE id IN (${qMarks});`;
 	return allP(db, query, ids);
 }
@@ -42,12 +42,14 @@ export function relate(db, head, ...tails) {
 	let tail = tails[0];
 
 	let query = `INSERT INTO ${edgeTable} (id, head, tail) VALUES (?, ?, ?)`;
+
+	// TODO: And exception is SOMETIMES thrown here, we need to figure this out
 	return runP(db, query, [id, head, tail])
 		.then(() => id);
 }
 
 export function del(db, ...ids) {
-	let qMarks = util.getSqlQMarks(ids.length);
+	let qMarks = dbUtil.getSqlQMarks(ids.length);
 	let query = `DELETE FROM ${edgeTable} WHERE id IN (${qMarks});`;
 	return runP(db, query, ids);
 }

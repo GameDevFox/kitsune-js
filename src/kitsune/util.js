@@ -15,16 +15,6 @@ export function createIds(count) {
 	return result;
 }
 
-export function getSqlQMarks(count) {
-	var result = "";
-	for(var i=0; i<count; i++) {
-		result += "?";
-		if(i<count-1)
-			result += ", ";
-	}
-	return result;
-}
-
 export function one(arr) {
 	return new Promise(function(resolve, reject) {
 		if(arr.length == 1)

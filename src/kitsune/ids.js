@@ -1,3 +1,7 @@
+import _ from "lodash";
+
+import { buildQuery, queryBuilder as q } from "kitsune/systems/db/util";
+
 // TODO: Make columns ids as well
 // ... then use these ids in the services (like "edge.js")
 export let ids = {
@@ -44,23 +48,41 @@ export let types = [
 
 
 let edgeTable = "t"+ids.edge;
-export let queries = {
+
+export let typeQs = {
 	// Type queries (return list of ids)
 	edge: `SELECT id FROM ${edgeTable} WHERE id IS NOT NULL`,
 	head: `SELECT DISTINCT head AS id FROM ${edgeTable} WHERE head IS NOT NULL`,
 	tail: `SELECT DISTINCT tail AS id FROM ${edgeTable} WHERE tail IS NOT NULL`,
 
-	// Op queries (takes a list and returns a list)
-	tails: 'SELECT tail AS id FROM '+edgeTable+' WHERE head IN ${in}',
-	heads: 'SELECT head AS id FROM '+edgeTable+' WHERE tail IN ${in}',
-	tailEdges: 'SELECT id FROM '+edgeTable+' WHERE head IN ${in}',
-	headEdges: 'SELECT id FROM '+edgeTable+' WHERE tail IN ${in}'
 };
+
+export let opQs = {
+	// Node op queries (takes a list and returns a list)
+	tails: 'SELECT tail AS id FROM '+edgeTable+' WHERE head IN (${nodes})',
+	heads: 'SELECT head AS id FROM '+edgeTable+' WHERE tail IN (${nodes})',
+	tailEdges: 'SELECT id FROM '+edgeTable+' WHERE head IN (${nodes})',
+	headEdges: 'SELECT id FROM '+edgeTable+' WHERE tail IN (${nodes})',
+
+	// Edge op queries
+	tailEnd: 'SELECT tail AS id FROM '+edgeTable+' WHERE id IN (${nodes})',
+	headEnd: 'SELECT head AS id FROM '+edgeTable+' WHERE id IN (${nodes})',
+
+	selectType: 'SELECT id FROM (${nodes}) WHERE id IN (${type})',
+};
+
+export let queries = _.extend(typeQs, opQs);
+
+// TODO: Find some better way to do this
+let { tails, headEnd } = opQs;
+let nameQ = q(`'${ids.name}'`).op(tails).op(headEnd);
+// let nameQ = q(`'${ids.name}'`, tails, headEnd)
+let nameSql = buildQuery(nameQ).query;
 
 export let views = {
 	node: {
 		id: ids.node,
-		query: `SELECT DISTINCT id FROM (${queries.edge} UNION ${queries.head} UNION ${queries.tail})`
+		query: `SELECT DISTINCT id FROM (${typeQs.edge} UNION ${typeQs.head} UNION ${typeQs.tail})`
 	},
 	point: {
 		id: ids.point,
@@ -68,15 +90,15 @@ export let views = {
 	},
 	head: {
 		id: ids.head,
-		query: queries.head
+		query: typeQs.head
 	},
 	tail: {
 		id: ids.tail,
-		query: queries.tail
+		query: typeQs.tail
 	},
 	name: {
 		id: ids.name,
-		query: `SELECT head FROM ${edgeTable} WHERE id IN (SELECT tail FROM ${edgeTable} WHERE head = '${ids.name}')`
+		query: nameSql // `SELECT head FROM ${edgeTable} WHERE id IN (SELECT tail FROM ${edgeTable} WHERE head = '${ids.name}')`
 	}
 };
 
