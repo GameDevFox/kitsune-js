@@ -43,10 +43,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Prince86EKNJ/kitsune.git"
+    "url": "git+https://github.com/GameDevFox/kitsune.git"
   },
   "bugs": {
-    "url": "https://github.com/Prince86EKNJ/kitsune/issues"
+    "url": "https://github.com/GameDevFox/kitsune/issues"
   },
-  "homepage": "https://github.com/Prince86EKNJ/kitsune#readme"
+  "homepage": "https://github.com/GameDevFox/kitsune#readme"
 }
