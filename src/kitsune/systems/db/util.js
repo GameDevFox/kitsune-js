@@ -10,13 +10,21 @@ export function whereClause(obj) {
 		else
 			sql += "AND ";
 
-		sql += `${name} = ? `;
-		args.push(value);
+		if(_.isArray(value)) {
+			let qMarks = getSqlQMarks(value.length);
+
+			sql += `${name} IN (${qMarks}) `;
+			args = args.concat(value);
+		} else {
+			sql += `${name} = ? `;
+			args.push(value);
+		}
 	});
 
 	return { sql, args };
 }
 
+// TODO: Rename this to be more friendly
 export function getSqlQMarks(count) {
 	var result = "";
 	for(var i=0; i<count; i++) {
