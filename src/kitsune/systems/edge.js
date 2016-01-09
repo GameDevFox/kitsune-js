@@ -29,8 +29,14 @@ export function getMany(db, ...ids) {
 	return allP(db, query, ids);
 }
 
-export function relate(db, head, ...tails) {
+// TODO: Make is possible to add an arbritrary about of edges in the form of:
+// - one head, many tails
+// - many heads, one tail
+// - many head tail pairs
+// NOTE: These should all be executed with one call
 
+// TODO: rename to add/create/put (to standardize api)
+export function relate(db, head, ...tails) {
 	if(tails.length > 1) {
 		let promises = _.map(tails, thisTail => {
 			return relate(db, head, thisTail);
@@ -41,6 +47,7 @@ export function relate(db, head, ...tails) {
 	let id = util.createId();
 	let tail = tails[0];
 
+	// TODO: Update this so that it passes all values in one query
 	let query = `INSERT INTO ${edgeTable} (id, head, tail) VALUES (?, ?, ?)`;
 
 	// TODO: And exception is SOMETIMES thrown here, we need to figure this out
@@ -54,18 +61,21 @@ export function del(db, ...ids) {
 	return runP(db, query, ids);
 }
 
+// TODO: Condidate for node module
 export function getTails(db, head) {
 	let query = `SELECT tail FROM ${edgeTable} WHERE head = ?;`;
 	return allP(db, query, head)
 		.then(tails => _.map(tails, "tail"));
 }
 
+// TODO: Candidate for node module
 export function getHeads(db, tail) {
 	let query = `SELECT head FROM ${edgeTable} WHERE tail = ?;`;
 	return allP(db, query, tail)
 		.then(heads => _.map(heads, "head"));
 }
 
+// TODO: Condidate for dict module ???
 function assign(db, edgeType, head, tail) {
 	let first;
 	return relate(db, head, tail)
@@ -85,6 +95,7 @@ function assign(db, edgeType, head, tail) {
 // TODO: This query may return nodes that aren't edge nodes
 let edgeTypeQuery = `SELECT tail FROM ${edgeTable} WHERE head = ?`;
 
+// TODO: Candidate for dict module
 function findByTail(db, edgeType, tail) {
 	let query = `SELECT head FROM ${edgeTable} WHERE id IN (${edgeTypeQuery}) AND tail = ?`;
 	return allP(db, query, [edgeType, tail])

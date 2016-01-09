@@ -1,8 +1,13 @@
 import crypto from "crypto";
 import _ from "lodash";
 
+export function hash(str) {
+	let hash = crypto.createHash("sha1").update(str).digest("hex");
+	return hash;
+}
+
 export function createId() {
-	var id = crypto.createHash("sha1").update(Math.random().toString()).digest("hex");
+	let id = hash(Math.random().toString());
 	return id;
 }
 
@@ -15,6 +20,9 @@ export function createIds(count) {
 	return result;
 }
 
+// TODO: Consider moving below functions to "util/promise.js"
+
+// TODO: Rename this to "oneP" and create a generic "one" function
 export function one(arr) {
 	return new Promise(function(resolve, reject) {
 		if(arr.length == 1)
