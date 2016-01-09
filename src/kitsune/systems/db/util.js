@@ -22,7 +22,6 @@ export function whereClause(obj) {
 	return { sql, args };
 }
 
-// TODO: Rename this to be more friendly
 export function qMarks(count) {
 	if(_.isArray(count))
 		count = count.length;
