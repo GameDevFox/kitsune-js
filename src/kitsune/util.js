@@ -2,8 +2,8 @@ import crypto from "crypto";
 import _ from "lodash";
 
 export function hash(str) {
-	let hash = crypto.createHash("sha1").update(str).digest("hex");
-	return hash;
+	let result = crypto.createHash("sha1").update(str).digest("hex");
+	return result;
 }
 
 export function createId() {

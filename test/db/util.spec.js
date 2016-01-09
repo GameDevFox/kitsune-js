@@ -3,7 +3,6 @@ import sqlite3 from "sqlite3";
 
 import _ from "lodash";
 
-import { getSqlQMarks } from "kitsune/util";
 import getDB from "kitsune/systems/db/cache";
 import { buildQuery, queryBuilder as q } from "kitsune/systems/db/util";
 

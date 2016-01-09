@@ -11,9 +11,7 @@ export function whereClause(obj) {
 			sql += "AND ";
 
 		if(_.isArray(value)) {
-			let qMarks = getSqlQMarks(value.length);
-
-			sql += `${name} IN (${qMarks}) `;
+			sql += `${name} IN (${qMarks(value)}) `;
 			args = args.concat(value);
 		} else {
 			sql += `${name} = ? `;
@@ -25,7 +23,10 @@ export function whereClause(obj) {
 }
 
 // TODO: Rename this to be more friendly
-export function getSqlQMarks(count) {
+export function qMarks(count) {
+	if(_.isArray(count))
+		count = count.length;
+
 	var result = "";
 	for(var i=0; i<count; i++) {
 		result += "?";
@@ -45,7 +46,7 @@ export function buildQuery({ query, args }) {
 			return finalQuery.query;
 		} else if(_.isArray(value)) {
 			otherArgs.push(value);
-			return getSqlQMarks(value.length);
+			return qMarks(value);
 		} else {
 			// Oops...
 			throw new Error(`Expected Object or Array, got [${typeof value}]: ` + value);
