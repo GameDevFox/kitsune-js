@@ -38,7 +38,7 @@ export function getMany(db, ...ids) {
 // NOTE: These should all be executed with one call
 
 // TODO: rename to add/create/put (to standardize api)
-export function create(db, head, ...tails) {
+export function create(db, heads, tails) {
 	if(tails.length > 1) {
 		let promises = _.map(tails, thisTail => {
 			return create(db, head, thisTail);
@@ -46,11 +46,24 @@ export function create(db, head, ...tails) {
 		return Promise.all(promises);
 	}
 
+	if(!_.isArray(heads) && !_.isArray(tails)) {
+		// One to one
+	} else if(!_.isArray(heads) && _.isArray(tails)) {
+		// One to many
+	} else if(_.isArray(heads) && !_.isArray(tails)) {
+		// Many to one
+	} else if(!tails) {
+		// Many
+	} else {
+		throw new Error("Invalid arguments");
+	}
+
 	let id = util.createId();
 	let tail = tails[0];
 
 	// TODO: Update this so that it passes all values in one query
-	let query = `INSERT INTO ${edgeTable} (id, head, tail) VALUES (?, ?, ?)`;
+	let query = `INSERT INTO ${edgeTable} (id, head, tail) VALUES `;
+	let edgeValues = `(?, ?, ?)`;
 
 	// TODO: And exception is SOMETIMES thrown here, we need to figure this out
 	return runP(db, query, [id, head, tail])
