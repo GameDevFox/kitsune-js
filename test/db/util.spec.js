@@ -12,8 +12,8 @@ let sqliteDB = getDB();
 let allP;
 
 before((done) => sqliteDB.initP
-	   .then(systems => {
-		   let dbSys = systems.dbSys;
+	   .then(sys => {
+		   let dbSys = sys.dbSys;
 		   allP = dbSys.allP;
 	   })
 	   .then(() => done(), done));

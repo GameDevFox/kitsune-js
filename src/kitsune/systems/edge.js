@@ -17,6 +17,8 @@ export function search(db, criteria) {
 	return allP(db, query, args);
 }
 
+// TODO: Do I need "get" and "getMany", we should only have "getMany"
+// and use it to get one edge
 export function get(db, id) {
 	let query = `SELECT * FROM ${edgeTable} WHERE id = ?;`;
 	return getP(db, query, id);
@@ -61,6 +63,8 @@ export function del(db, ...ids) {
 	return runP(db, query, ids);
 }
 
+// QUERIES
+
 // TODO: Condidate for node module
 export function getTails(db, head) {
 	let query = `SELECT tail FROM ${edgeTable} WHERE head = ?;`;
@@ -75,34 +79,17 @@ export function getHeads(db, tail) {
 		.then(heads => _.map(heads, "head"));
 }
 
-// TODO: Condidate for dict module ???
-function assign(db, edgeType, head, tail) {
-	let first;
-	return relate(db, head, tail)
-		.then(edgeId => {
-			first = edgeId;
-			return relate(db, edgeType, edgeId);
-		})
-		.then(edgeId => {
-			return {
-				id: edgeId,
-				head: edgeType,
-				tail: first
-			};
-		});
-}
-
 // TODO: This query may return nodes that aren't edge nodes
 let edgeTypeQuery = `SELECT tail FROM ${edgeTable} WHERE head = ?`;
 
 // TODO: Candidate for dict module
-function findByTail(db, edgeType, tail) {
+export function findByTail(db, edgeType, tail) {
 	let query = `SELECT head FROM ${edgeTable} WHERE id IN (${edgeTypeQuery}) AND tail = ?`;
 	return allP(db, query, [edgeType, tail])
 		.then(heads => _.map(heads, "head"));
 }
 
-function findByHead(db, edgeType, head) {
+export function findByHead(db, edgeType, head) {
 	let query = `SELECT tail FROM ${edgeTable} WHERE id IN (${edgeTypeQuery}) AND head = ?`;
 	return allP(db, query, [edgeType, head])
 		.then(tails => _.map(tails, "tail"));
@@ -113,17 +100,16 @@ export default function bind(db) {
 	return {
 		search: search.bind(this, db), // GET
 		get: get.bind(this, db), // GET /:id
-		getMany: getMany.bind(this, db),
+		getMany: getMany.bind(this, db), // GET (multi)
 
-		relate: relate.bind(this, db),
+		relate: relate.bind(this, db), // CREATE
+		del: del.bind(this, db), // DELETE /:id
 
 		getTails: getTails.bind(this, db),
 		getHeads: getHeads.bind(this, db),
 
-		assign: assign.bind(this, db),
 		findByTail: findByTail.bind(this, db),
-		findByHead: findByHead.bind(this, db),
+		findByHead: findByHead.bind(this, db)
 
-		del: del.bind(this, db) // DELETE /:id
 	};
 }
