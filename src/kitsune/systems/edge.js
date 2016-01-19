@@ -31,6 +31,7 @@ export function getMany(db, ...ids) {
 }
 
 // TODO: Make is possible to add an arbritrary about of edges in the form of:
+// - one head, one tail
 // - one head, many tails
 // - many heads, one tail
 // - many head tail pairs

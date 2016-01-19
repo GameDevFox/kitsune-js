@@ -21,20 +21,20 @@ describe("kitsune/edge", function() {
 		});
 	});
 
-	describe("relate(head, ...tails)", function() {
-		it("should create a generic edge between two nodes", function(done) {
+	describe("create(head[s], tail[s])", function() {
+		it("should create an edge between two nodes (one-to-one)", function(done) {
 
 			let [head, tail] = util.createIds(2);
 
 			edgeSys.relate(head, tail)
 				.then(edgeSys.get)
 				.then(edge => {
-					expect(edge).to.include({ head: head, tail: tail });
+					expect(edge).to.include({ head, tail });
 				})
 				.then(done, done);
 		});
 
-		it("should create multple edges if multiple values are passed to tail", function(done) {
+		it("should create multple edges from one head to many tails (one-to-many)", function(done) {
 
 			let [ parent, childA, childB ] = util.createIds(3);
 
@@ -48,7 +48,13 @@ describe("kitsune/edge", function() {
 				.then(done, done);
 		});
 
-		it("should allow null tails", function(done) {
+		it.skip("should create multple edges from many heads to one tail (many-to-one)", function(done) {
+		});
+
+		it.skip("should create multple edges from a list of head/tail pairs (many)", function(done) {
+		});
+			
+		it.skip("FIXME: should not allow null heads or tails", function(done) {
 			let head = util.createId();
 			edgeSys.relate(head)
 				.then(edgeSys.get)
