@@ -38,10 +38,10 @@ export function getMany(db, ...ids) {
 // NOTE: These should all be executed with one call
 
 // TODO: rename to add/create/put (to standardize api)
-export function relate(db, head, ...tails) {
+export function create(db, head, ...tails) {
 	if(tails.length > 1) {
 		let promises = _.map(tails, thisTail => {
-			return relate(db, head, thisTail);
+			return create(db, head, thisTail);
 		});
 		return Promise.all(promises);
 	}
@@ -101,7 +101,7 @@ export default function bind(db) {
 		get: get.bind(this, db), // GET /:id
 		getMany: getMany.bind(this, db), // GET (multi)
 
-		relate: relate.bind(this, db), // CREATE
+		create: create.bind(this, db), // CREATE
 		del: del.bind(this, db), // DELETE /:id
 
 		getTails: getTails.bind(this, db),

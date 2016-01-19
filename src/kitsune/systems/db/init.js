@@ -74,13 +74,13 @@ function nameIds(nameSys) {
 }
 
 function markTypes(edgeSys) {
-	var promises = _.map(types, (type) => edgeSys.relate(ids.type, type));
+	var promises = _.map(types, (type) => edgeSys.create(ids.type, type));
 	return Promise.all(promises);
 }
 
 function markTables(edgeSys) {
 	var promises = _.map(tables, (table, tableName) => {
-		return edgeSys.relate(ids.table, table.id);
+		return edgeSys.create(ids.table, table.id);
 	});
 	return Promise.all(promises);
 }
@@ -91,7 +91,7 @@ function insertQueries(edgeSys, stringSys) {
 	var promises = _.map(queries, (query, queryName) => {
 		return stringSys.put(query)
 			.then(queryId => {
-				return edgeSys.relate(ids.query, queryId);
+				return edgeSys.create(ids.query, queryId);
 			});
 	});
 	return Promise.all(promises);

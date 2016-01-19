@@ -26,7 +26,7 @@ describe("kitsune/edge", function() {
 
 			let [head, tail] = util.createIds(2);
 
-			edgeSys.relate(head, tail)
+			edgeSys.create(head, tail)
 				.then(edgeSys.get)
 				.then(edge => {
 					expect(edge).to.include({ head, tail });
@@ -38,7 +38,7 @@ describe("kitsune/edge", function() {
 
 			let [ parent, childA, childB ] = util.createIds(3);
 
-			edgeSys.relate(parent, childA, childB)
+			edgeSys.create(parent, childA, childB)
 				.then(edgeSys.getMany)
 				.then(edges => {
 					// NOTE: This failed once, randomly
@@ -56,7 +56,7 @@ describe("kitsune/edge", function() {
 
 		it.skip("FIXME: should not allow null heads or tails", function(done) {
 			let head = util.createId();
-			edgeSys.relate(head)
+			edgeSys.create(head)
 				.then(edgeSys.get)
 				.then(edge => {
 					expect(edge).to.contain({ head: head, tail: null });
@@ -70,7 +70,7 @@ describe("kitsune/edge", function() {
 			let [nodeA, nodeB] = util.createIds(2);
 
 			let edgeId;
-			edgeSys.relate(nodeA, nodeB)
+			edgeSys.create(nodeA, nodeB)
 				.then(id => {
 					edgeId = id;
 					return edgeSys.get(id);
@@ -91,7 +91,7 @@ describe("kitsune/edge", function() {
 		it("should get all tails of provided head", function(done) {
 			let [head, tailA, tailB] = util.createIds(3);
 
-			edgeSys.relate(head, tailA, tailB)
+			edgeSys.create(head, tailA, tailB)
 				.then(edgeSys.getMany)
 				.then(edges => edgeSys.getTails(head))
 				.then(tails => {
@@ -107,7 +107,7 @@ describe("kitsune/edge", function() {
 
 			Promise.all(_.map(
 				[headA, headB],
-				head => edgeSys.relate(head, tail)
+				head => edgeSys.create(head, tail)
 			))
 				.then(edgeIds => Promise.all(_.map(edgeIds, id => edgeSys.get(id))))
 				.then(edges => edgeSys.getHeads(tail))

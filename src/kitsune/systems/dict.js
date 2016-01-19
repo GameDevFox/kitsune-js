@@ -1,9 +1,9 @@
 export function put(edgeSys, node, key, value) {
 	let first;
-	return edgeSys.relate(node, value)
+	return edgeSys.create(node, value)
 		.then(edgeId => {
 			first = edgeId;
-			return edgeSys.relate(key, edgeId);
+			return edgeSys.create(key, edgeId);
 		})
 		.then(edgeId => {
 			return {
