@@ -53,7 +53,7 @@ describe("kitsune/edge", function() {
 
 		it.skip("should create multple edges from a list of head/tail pairs (many)", function(done) {
 		});
-			
+
 		it.skip("FIXME: should not allow null heads or tails", function(done) {
 			let head = util.createId();
 			edgeSys.relate(head)
