@@ -1,7 +1,7 @@
 import _ from "lodash";
 
 import { runP, getP, allP } from "kitsune/systems/db";
-import * as dbUtil from "kitsune/systems/db/util";
+import { qMarks, whereClause } from "kitsune/systems/db/util";
 import ids from "kitsune/ids";
 import * as util from "kitsune/util";
 
@@ -11,7 +11,7 @@ let edgeTable = `t${ids.edge}`;
 export function search(db, criteria) {
 	let query = `SELECT * FROM ${edgeTable}`;
 
-	let { sql: whereClause, args } = dbUtil.whereClause(criteria);
+	let { sql: whereClause, args } = whereClause(criteria);
 	query += whereClause;
 
 	return allP(db, query, args);
@@ -26,8 +26,7 @@ export function get(db, id) {
 
 export function getMany(db, ...ids) {
 	ids = _.flatten(ids);
-	let qMarks = dbUtil.getSqlQMarks(ids.length);
-	let query = `SELECT * FROM ${edgeTable} WHERE id IN (${qMarks});`;
+	let query = `SELECT * FROM ${edgeTable} WHERE id IN (${qMarks(ids)});`;
 	return allP(db, query, ids);
 }
 
@@ -58,8 +57,7 @@ export function relate(db, head, ...tails) {
 }
 
 export function del(db, ...ids) {
-	let qMarks = dbUtil.getSqlQMarks(ids.length);
-	let query = `DELETE FROM ${edgeTable} WHERE id IN (${qMarks});`;
+	let query = `DELETE FROM ${edgeTable} WHERE id IN (${qMarks(ids)});`;
 	return runP(db, query, ids);
 }
 

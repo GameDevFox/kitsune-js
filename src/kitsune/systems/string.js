@@ -3,7 +3,7 @@ import { createHash } from "crypto";
 import { runP, getP, allP } from "kitsune/systems/db";
 import ids from "kitsune/ids";
 import { logP } from "kitsune/util";
-import { getSqlQMarks } from "kitsune/systems/db/util";
+import { qMarks } from "kitsune/systems/db/util";
 
 let strTable = `t${ids.string}`;
 
@@ -60,15 +60,13 @@ export function get(db, id) {
 }
 
 export function getMany(db, ...ids) {
-	var qMarks = getSqlQMarks(ids.length);
-	var query = `SELECT * FROM ${strTable} WHERE id IN (${qMarks})`;
+	var query = `SELECT * FROM ${strTable} WHERE id IN (${qMarks(ids)})`;
 	return allP(db, query, ids)
 		.then(result => result.map((row) => row.string));
 }
 
 export function del(db, ...ids) {
-	var qMarks = getSqlQMarks(ids.length);
-	var query = `DELETE FROM ${strTable} WHERE id IN (${qMarks})`;
+	var query = `DELETE FROM ${strTable} WHERE id IN (${qMarks(ids)})`;
 	return runP(db, query, ids);
 }
 
