@@ -17,8 +17,6 @@ export function search(db, criteria) {
 	return allP(db, query, args);
 }
 
-// TODO: Do I need "get" and "getMany", we should only have "getMany"
-// and use it to get one edge
 export function get(db, ...ids) {
 	ids = _.flatten(ids);
 	let query = `SELECT * FROM ${edgeTable} WHERE id IN (${qMarks(ids)});`;
