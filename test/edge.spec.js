@@ -27,7 +27,7 @@ describe("kitsune/edge", function() {
 			let [head, tail] = createIds(2);
 
 			edgeSys.create(head, tail)
-				.then(edgeId => edgeSys.getMany(edgeId).then(one))
+				.then(edgeId => edgeSys.get(edgeId).then(one))
 				.then(edge => {
 					expect(edge).to.include({ head, tail });
 				})
@@ -39,7 +39,7 @@ describe("kitsune/edge", function() {
 			let [ parent, childA, childB, childC ] = createIds(4);
 
 			edgeSys.create(parent, [childA, childB, childC])
-				.then(edgeSys.getMany)
+				.then(edgeSys.get)
 				.then(edges => {
 					// NOTE: This failed once, randomly
 					expect(edges[0]).to.include({ head: parent, tail: childA });
@@ -54,7 +54,7 @@ describe("kitsune/edge", function() {
 			let [ parentA, parentB, parentC, child ] = createIds(4);
 
 			edgeSys.create([parentA, parentB, parentC], child)
-				.then(edgeSys.getMany)
+				.then(edgeSys.get)
 				.then(edges => {
 					// NOTE: This failed once, randomly
 					expect(edges[0]).to.include({ head: parentA, tail: child });
@@ -75,7 +75,7 @@ describe("kitsune/edge", function() {
 			];
 
 			edgeSys.create(edges)
-				.then(edgeSys.getMany)
+				.then(edgeSys.get)
 				.then(edges => {
 					// NOTE: This failed once, randomly
 					expect(edges[0]).to.include({ head: parentA, tail: childA });
@@ -88,7 +88,7 @@ describe("kitsune/edge", function() {
 		it.skip("FIXME: should not allow null heads or tails", function(done) {
 			let head = createId();
 			edgeSys.create(head)
-				.then(edgeId => edgeSys.getMany(edgeId).then(one))
+				.then(edgeId => edgeSys.get(edgeId).then(one))
 				.then(edge => {
 					expect(edge).to.contain({ head: head, tail: null });
 				})
@@ -104,13 +104,13 @@ describe("kitsune/edge", function() {
 			edgeSys.create(nodeA, nodeB)
 				.then(id => {
 					edgeId = id;
-					return edgeSys.getMany(id).then(one);
+					return edgeSys.get(id).then(one);
 				})
 				.then(edge => {
 					expect(edge).to.include({ head: nodeA, tail: nodeB });
 					return edgeSys.del(edgeId);
 				})
-				.then(edgeSys.getMany(edgeId).then(one))
+				.then(edgeSys.get(edgeId).then(one))
 				.then(edge => {
 					expect(edge).to.equal(undefined);
 				})
@@ -123,7 +123,7 @@ describe("kitsune/edge", function() {
 			let [head, tailA, tailB] = createIds(3);
 
 			edgeSys.create(head, tailA, tailB)
-				.then(edgeSys.getMany)
+				.then(edgeSys.get)
 				.then(edges => edgeSys.getTails(head))
 				.then(tails => {
 					expect(tails).to.contain(tailA, tailB);
@@ -140,7 +140,7 @@ describe("kitsune/edge", function() {
 				[headA, headB],
 				head => edgeSys.create(head, tail)
 			))
-				.then(edgeIds => Promise.all(_.map(edgeIds, id => edgeSys.getMany(id).then(one))))
+				.then(edgeIds => Promise.all(_.map(edgeIds, id => edgeSys.get(id).then(one))))
 				.then(edges => edgeSys.getHeads(tail))
 				.then(heads => {
 					expect(heads).to.contain(headA, headB);

@@ -19,7 +19,7 @@ export function search(db, criteria) {
 
 // TODO: Do I need "get" and "getMany", we should only have "getMany"
 // and use it to get one edge
-export function getMany(db, ...ids) {
+export function get(db, ...ids) {
 	ids = _.flatten(ids);
 	let query = `SELECT * FROM ${edgeTable} WHERE id IN (${qMarks(ids)});`;
 	return allP(db, query, ids);
@@ -104,7 +104,7 @@ export function findByHead(db, edgeType, head) {
 export default function bind(db) {
 	return {
 		search: search.bind(this, db), // GET
-		getMany: getMany.bind(this, db), // GET (multi)
+		get: get.bind(this, db), // GET (multi)
 
 		create: create.bind(this, db), // CREATE
 		del: del.bind(this, db), // DELETE /:id

@@ -28,7 +28,7 @@ describe("kitsune/systems/dict", function() {
 			dictSys.put(node, key, value)
 				.then(edge => {
 					expect(edge.head).to.equal(key);
-					return edgeSys.getMany(edge.tail);
+					return edgeSys.get(edge.tail);
 				})
 				.then(one)
 				.then(edge => {
