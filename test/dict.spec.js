@@ -2,7 +2,7 @@ import { expect } from "chai";
 import sqlite3 from "sqlite3";
 
 import getDB from "kitsune/systems/db/cache";
-import * as util from "kitsune/util";
+import { createIds, one } from "kitsune/util";
 
 let sqliteDB = getDB();
 
@@ -23,13 +23,14 @@ describe("kitsune/systems/dict", function() {
 		
 		it('should create a "key" type relationship between "node" and "value"', function(done) {
 
-			let [node, key, value] = util.createIds(3);
+			let [node, key, value] = createIds(3);
 
 			dictSys.put(node, key, value)
 				.then(edge => {
 					expect(edge.head).to.equal(key);
-					return edgeSys.get(edge.tail);
+					return edgeSys.getMany(edge.tail);
 				})
+				.then(one)
 				.then(edge => {
 					expect(edge).to.contain({ head: node, tail: value });
 				})

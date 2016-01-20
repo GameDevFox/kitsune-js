@@ -4,6 +4,7 @@ import sqlite3 from "sqlite3";
 
 import getDB from "kitsune/systems/db/cache";
 import ids from "kitsune/ids";
+import { one } from "kitsune/util";
 
 let sqliteDB = getDB();
 let app = express.createServer();
@@ -47,7 +48,7 @@ sqliteDB.initP.then(systems => {
 
 	// edge service
 	app.get("/edges", sendP((req, res) => edgeSys.search(req.query)));
-		app.get("/edges/:id", sendP((req, res) => edgeSys.get(req.params.id)));
+		app.get("/edges/:id", sendP((req, res) => edgeSys.getMany(req.params.id).then(one)));
 		app.post("/edges", sendP((req, res) => edgeSys.create(req.body.head, req.body.tail)));
 		app.delete("/edges/:id", sendP((req, res) => edgeSys.del(req.params.id)));
 
