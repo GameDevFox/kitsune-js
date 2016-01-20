@@ -30,14 +30,6 @@ export function getMany(db, ...ids) {
 	return allP(db, query, ids);
 }
 
-// TODO: Make is possible to add an arbritrary about of edges in the form of:
-// - one head, one tail
-// - one head, many tails
-// - many heads, one tail
-// - many head tail pairs
-// NOTE: These should all be executed with one call
-
-// TODO: rename to add/create/put (to standardize api)
 export function create(db, heads, tails) {
 
 	let edgePairs;
