@@ -39,35 +39,41 @@ export function getMany(db, ...ids) {
 
 // TODO: rename to add/create/put (to standardize api)
 export function create(db, heads, tails) {
-	if(tails.length > 1) {
-		let promises = _.map(tails, thisTail => {
-			return create(db, head, thisTail);
-		});
-		return Promise.all(promises);
-	}
 
-	if(!_.isArray(heads) && !_.isArray(tails)) {
+	let edgePairs;
+	if(!tails) {
+		// Many
+		edgePairs = heads;
+	} else if(!_.isArray(heads) && !_.isArray(tails)) {
 		// One to one
+		edgePairs = [[heads, tails]];
 	} else if(!_.isArray(heads) && _.isArray(tails)) {
 		// One to many
+		edgePairs = _.map(tails, (tail) => [heads, tail]);
 	} else if(_.isArray(heads) && !_.isArray(tails)) {
 		// Many to one
-	} else if(!tails) {
-		// Many
+		edgePairs = _.map(heads, head => [head, tails]);
 	} else {
 		throw new Error("Invalid arguments");
 	}
 
-	let id = util.createId();
-	let tail = tails[0];
+	let queryArgs = [];
+	let edges = _.each(edgePairs, edgePair => {
+		var edgeId = util.createId();
+		edgePair.splice(0, 0, edgeId);
 
-	// TODO: Update this so that it passes all values in one query
-	let query = `INSERT INTO ${edgeTable} (id, head, tail) VALUES `;
-	let edgeValues = `(?, ?, ?)`;
+		queryArgs.push("(?, ?, ?)");
+	});
+	let args = _.flattenDeep(edges);
+
+	let queryArgsStr = queryArgs.join(", ");
+	let query = `INSERT INTO ${edgeTable} (id, head, tail) VALUES ${queryArgsStr}`;
+
+	let result = _.map(edges, edge => edge[0]);
 
 	// TODO: And exception is SOMETIMES thrown here, we need to figure this out
-	return runP(db, query, [id, head, tail])
-		.then(() => id);
+	return runP(db, query, args)
+		.then(() => result);
 }
 
 export function del(db, ...ids) {

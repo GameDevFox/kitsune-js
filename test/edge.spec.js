@@ -36,22 +36,53 @@ describe("kitsune/edge", function() {
 
 		it("should create multple edges from one head to many tails (one-to-many)", function(done) {
 
-			let [ parent, childA, childB ] = util.createIds(3);
+			let [ parent, childA, childB, childC ] = util.createIds(4);
 
-			edgeSys.create(parent, childA, childB)
+			edgeSys.create(parent, [childA, childB, childC])
 				.then(edgeSys.getMany)
 				.then(edges => {
 					// NOTE: This failed once, randomly
 					expect(edges[0]).to.include({ head: parent, tail: childA });
 					expect(edges[1]).to.include({ head: parent, tail: childB });
+					expect(edges[2]).to.include({ head: parent, tail: childC });
 				})
 				.then(done, done);
 		});
 
-		it.skip("should create multple edges from many heads to one tail (many-to-one)", function(done) {
+		it("should create multple edges from many heads to one tail (many-to-one)", function(done) {
+
+			let [ parentA, parentB, parentC, child ] = util.createIds(4);
+
+			edgeSys.create([parentA, parentB, parentC], child)
+				.then(edgeSys.getMany)
+				.then(edges => {
+					// NOTE: This failed once, randomly
+					expect(edges[0]).to.include({ head: parentA, tail: child });
+					expect(edges[1]).to.include({ head: parentB, tail: child });
+					expect(edges[2]).to.include({ head: parentC, tail: child });
+				})
+				.then(done, done);
 		});
 
-		it.skip("should create multple edges from a list of head/tail pairs (many)", function(done) {
+		it("should create multple edges from a list of head/tail pairs (many)", function(done) {
+
+			let [ parentA, parentB, parentC, childA, childB, childC ] = util.createIds(6);
+
+			var edges = [
+				[parentA, childA],
+				[parentB, childB],
+				[parentC, childC]
+			];
+
+			edgeSys.create(edges)
+				.then(edgeSys.getMany)
+				.then(edges => {
+					// NOTE: This failed once, randomly
+					expect(edges[0]).to.include({ head: parentA, tail: childA });
+					expect(edges[1]).to.include({ head: parentB, tail: childB });
+					expect(edges[2]).to.include({ head: parentC, tail: childC });
+				})
+				.then(done, done);
 		});
 
 		it.skip("FIXME: should not allow null heads or tails", function(done) {
