@@ -59,11 +59,15 @@ gulp.task("build-test-katana", function() {
 		.pipe(gulp.dest("./build/test/katana"));
 });
 
+var mochaOpts = {
+	require: ["source-map-support"]
+};
+
 gulp.task("test", "Runs tests", g.sequence(["build", "build-test-kitsune", "build-test-katana"], "test-run"));
 gulp.task("test-run", function() {
 	return gulp.src(testBuildPath)
 		.pipe(g.cached("mocha"))
-		.pipe(g.mocha())
+		.pipe(g.mocha(mochaOpts))
 		.on("error", function(e) {
 			g.util.log(e.stack);
 			this.emit("end");
@@ -81,7 +85,7 @@ gulp.task("coverage-run", function(done) {
 		.on("finish", function() {
 			gulp.src(testBuildPath)
 				.pipe(g.plumber())
-				.pipe(g.mocha())
+				.pipe(g.mocha(mochaOpts))
 				.pipe(g.istanbul.writeReports())
 				.on('error', function(e) {
 					g.util.log(e.stack);
