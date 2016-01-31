@@ -19,8 +19,6 @@ describe("kitsune/systems/dict", function() {
 
 	describe("put(node, key, value)", function() {
 
-		it.skip("TODO: Assign multiple head/tails ???", function() {});
-		
 		it('should create a "key" type relationship between "node" and "value"', function(done) {
 
 			let [node, key, value] = createIds(3);

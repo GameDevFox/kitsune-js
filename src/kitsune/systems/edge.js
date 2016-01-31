@@ -68,6 +68,23 @@ export function del(db, ...ids) {
 
 // QUERIES
 
+// TODO: Condidate for dict module ???
+function assign(db, edgeType, head, tail) {
+	let first;
+	return create(db, head, tail)
+		.then(edgeId => {
+			first = edgeId;
+			return create(db, edgeType, edgeId);
+		})
+		.then(edgeId => {
+			return {
+				id: edgeId,
+				head: edgeType,
+				tail: first
+			};
+		});
+}
+
 // TODO: Condidate for node module
 export function getTails(db, head) {
 	let query = `SELECT tail FROM ${edgeTable} WHERE head = ?;`;
@@ -107,6 +124,7 @@ export default function bind(db) {
 		create: create.bind(this, db), // CREATE
 		del: del.bind(this, db), // DELETE /:id
 
+		assign: assign.bind(this, db),
 		getTails: getTails.bind(this, db),
 		getHeads: getHeads.bind(this, db),
 

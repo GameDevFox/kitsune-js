@@ -170,7 +170,7 @@ describe("kitsune/edge", function() {
 	});
 
 	describe("findByTail(edgeType, tail)", function() {
-		it.skip("FIXME: resolves a list of nodes that are have \"edgeType\" edges to tail", function(done) {
+		it("resolves a list of nodes that are have \"edgeType\" edges to tail", function(done) {
 
 			let [edgeType, nodeA, nodeB, nameId] = createIds(4);
 
@@ -187,7 +187,7 @@ describe("kitsune/edge", function() {
 	});
 
 	describe("findByHead(edgeType, head)", function() {
-		it.skip("FIXME: resolves a list of nodes that are have \"edgeType\" edges to head", function(done) {
+		it("resolves a list of nodes that are have \"edgeType\" edges to head", function(done) {
 
 			let [edgeType, node, nameA, nameB] = createIds(4);
 
