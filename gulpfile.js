@@ -2,7 +2,11 @@ require('source-map-support').install();
 
 var spawn = require("child_process").spawn;
 
-var gulp = require("gulp");
+var gulpHelp = require("gulp-help");
+var gulp = gulpHelp(require("gulp"), {
+	hideEmpty: true
+});
+
 var gulpLoadPlugins = require("gulp-load-plugins");
 var g = gulpLoadPlugins();
 
@@ -18,9 +22,9 @@ var testSrcPath = [kitsuneTestPath, katanaTestPath];
 
 var testBuildPath = ["./build/test/katana/**/*.spec.js", "./build/test/kitsune/**/*.spec.js"];
 
-gulp.task("default", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "test-run"));
+gulp.task("default", 'runs "clean" and "build"', g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "test-run"));
 
-gulp.task("clean", function(done) {
+gulp.task("clean", 'Cleans up (deletes) all build files', function(done) {
 	del(["./build", "./coverage"], done);
 });
 
@@ -34,7 +38,7 @@ var buildStream = function(stream, debugTitle) {
 		.pipe(g.babel({ sourceMaps: "inline", optional: ["runtime"] }))
 };
 
-gulp.task("build", function() {
+gulp.task("build", "Builds project", function() {
 	var input = gulp.src(appSrcPath, { base: "./src" })
 			.pipe(g.cached("build"))
 	return buildStream(input, "build")
@@ -55,7 +59,7 @@ gulp.task("build-test-katana", function() {
 		.pipe(gulp.dest("./build/test/katana"));
 });
 
-gulp.task("test", g.sequence(["build", "build-test-kitsune", "build-test-katana"], "test-run"));
+gulp.task("test", "Runs tests", g.sequence(["build", "build-test-kitsune", "build-test-katana"], "test-run"));
 gulp.task("test-run", function() {
 	return gulp.src(testBuildPath)
 		.pipe(g.cached("mocha"))
@@ -66,7 +70,7 @@ gulp.task("test-run", function() {
 		});
 });
 
-gulp.task("coverage", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "coverage-run"));
+gulp.task("coverage", "Creates coverage report", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "coverage-run"));
 gulp.task("coverage-run", function(done) {
 	gulp.src(["./build/**/*.js", "!./build/test/**/*.spec.js"])
 		.pipe(g.plumber())
@@ -94,7 +98,7 @@ gulp.task("coverage-run", function(done) {
 // });
 
 var proc;
-gulp.task("start", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "test-run", "start-run"));
+gulp.task("start", "Runs an instance of kitsune", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "test-run", "start-run"));
 gulp.task("start-run", function() {
 
 	if(proc != null)
@@ -115,7 +119,8 @@ gulp.task("start-run", function() {
 });
 
 // Watch tasks
-gulp.task("watch", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "test-run", "start-run", ["watch-src", "watch-test"]));
+gulp.task("watch", 'Runs app in "development mode", reloading app and running tests on files changes',
+		  g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "test-run", "start-run", ["watch-src", "watch-test"]));
 
 gulp.task("watch-src", function() {	gulp.watch(appSrcPath, ["watch-src-run"]); });
 gulp.task("watch-src-run", function(cb) {
@@ -129,7 +134,7 @@ gulp.task("watch-test-run", function(cb) {
 });
 
 //
-gulp.task("watch-coverage", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "coverage-run", ["watch-cover-src", "watch-cover-test", "browser-sync-cover"]));
+gulp.task("watch-coverage", "Create new coverage report everytime files change", g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "coverage-run", ["watch-cover-src", "watch-cover-test", "browser-sync-cover"]));
 
 gulp.task("watch-cover-src", function() {	gulp.watch(appSrcPath, ["watch-cover-src-run"]); });
 gulp.task("watch-cover-src-run", function(cb) {

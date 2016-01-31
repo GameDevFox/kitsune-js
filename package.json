@@ -19,6 +19,7 @@
     "gulp-babel": "^5.2.0",
     "gulp-cached": "^1.1.0",
     "gulp-debug": "^2.1.2",
+    "gulp-help": "^1.6.1",
     "gulp-istanbul": "^0.10.0",
     "gulp-jshint": "^1.11.2",
     "gulp-load-plugins": "^1.1.0",
