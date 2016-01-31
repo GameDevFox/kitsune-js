@@ -15,6 +15,26 @@ before((done) => sqliteDB.initP.then(() => done(), done));
 
 describe("kitsune/edge", function() {
 
+	describe("search(criteria)", function() {
+		it("should return all edges that match the given criteria", function(done) {
+
+			let ids = createIds(5);
+
+			edgeSys.create([
+				[ids[0], ids[1]],
+				[ids[0], ids[2]],
+				[ids[3], ids[4]]
+			])
+				.then(() => {
+					return edgeSys.search({ head: ids[0] });
+				})
+				.then((result) => {
+					expect(result).to.have.length(2);
+				})
+				.then(done, done);
+		});
+	});
+
 	describe("get(ids)", function() {
 		it("should return the edge data for this id", function() {
 			// noop

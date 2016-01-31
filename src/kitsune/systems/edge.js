@@ -11,8 +11,8 @@ let edgeTable = `t${ids.edge}`;
 export function search(db, criteria) {
 	let query = `SELECT * FROM ${edgeTable}`;
 
-	let { sql: whereClause, args } = whereClause(criteria);
-	query += whereClause;
+	let { sql: whereSql, args } = whereClause(criteria);
+	query += whereSql;
 
 	return allP(db, query, args);
 }
