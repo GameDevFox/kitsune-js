@@ -1,3 +1,6 @@
+import sourceMapSupport from "source-map-support";
+sourceMapSupport.install();
+
 import bodyParser from "body-parser";
 import express from "express";
 import sqlite3 from "sqlite3";
