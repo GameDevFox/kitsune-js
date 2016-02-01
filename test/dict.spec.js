@@ -52,7 +52,7 @@ describe("kitsune/systems/dict", function() {
 		});
 	});
 
-	describe("reverseGet(value, key)", function() {
+	describe("getHead(value, key)", function() {
 		it("resolves a list of nodes that have \"key\" edges to value", function(done) {
 
 			let [nodeA, nodeB, key, value] = createIds(4);

@@ -30,7 +30,6 @@ export function get(dbSys, node, key) {
 		.then(tails => _.map(tails, "tail"));
 }
 
-// TODO: Find a better name for this
 export function getHead(dbSys, value, key) {
 	let query = `SELECT head FROM ${edgeTable} WHERE id IN (${edgeTypeQuery}) AND tail = ?`;
 	return dbSys.allP(query, [key, value])
