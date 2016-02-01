@@ -1,0 +1,1 @@
+find src -type f && find test -type f
