@@ -6,12 +6,10 @@ import { createId, logP } from "kitsune/util";
 
 let sqliteDB = getDB();
 
-let edgeSys, stringSys, nameSys;
+let nameSys;
 
 before((done) => sqliteDB.initP
 	   .then(systems => {
-		   edgeSys = systems.edgeSys;
-		   stringSys = systems.stringSys;
 		   nameSys = systems.nameSys;
 	   })
 	   .then(() => done(), done));

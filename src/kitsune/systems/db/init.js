@@ -117,7 +117,7 @@ export function buildSystems(sqliteDB) {
 	let stringSys = bindStrSys(sqliteDB);
 	let typeSys = bindTypeSys(sqliteDB);
 
-	let dictSys = buildDictSys(edgeSys);
+	let dictSys = buildDictSys(dbSys, edgeSys);
 	let nameSys = buildNameSys({ dictSys, edgeSys, stringSys });
 
 	return {

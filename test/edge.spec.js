@@ -35,12 +35,6 @@ describe("kitsune/edge", function() {
 		});
 	});
 
-	describe("get(ids)", function() {
-		it("should return the edge data for this id", function() {
-			// noop
-		});
-	});
-
 	describe("create(head[s], tail[s])", function() {
 		it("should create an edge between two nodes (one-to-one)", function(done) {
 
@@ -116,6 +110,12 @@ describe("kitsune/edge", function() {
 		});
 	});
 
+	describe("get(ids)", function() {
+		it("should return the edge data for this id", function() {
+			// noop
+		});
+	});
+
 	describe("del(...ids)", function() {
 		it("should delete edges from the system", function(done) {
 			let [nodeA, nodeB] = createIds(2);
@@ -164,40 +164,6 @@ describe("kitsune/edge", function() {
 				.then(edges => edgeSys.getHeads(tail))
 				.then(heads => {
 					expect(heads).to.contain(headA, headB);
-				})
-				.then(done, done);
-		});
-	});
-
-	describe("findByTail(edgeType, tail)", function() {
-		it("resolves a list of nodes that are have \"edgeType\" edges to tail", function(done) {
-
-			let [edgeType, nodeA, nodeB, nameId] = createIds(4);
-
-			Promise.all([
-				edgeSys.assign(edgeType, nodeA, nameId),
-				edgeSys.assign(edgeType, nodeB, nameId)
-			])
-				.then(() => edgeSys.findByTail(edgeType, nameId))
-				.then(ids => {
-					expect(ids).to.have.members([nodeA, nodeB]);
-				})
-				.then(done, done);
-		});
-	});
-
-	describe("findByHead(edgeType, head)", function() {
-		it("resolves a list of nodes that are have \"edgeType\" edges to head", function(done) {
-
-			let [edgeType, node, nameA, nameB] = createIds(4);
-
-			Promise.all([
-				edgeSys.assign(edgeType, node, nameA),
-				edgeSys.assign(edgeType, node, nameB)
-			])
-				.then(() => edgeSys.findByHead(edgeType, node))
-				.then(nameIds => {
-					expect(nameIds).to.have.members([nameA, nameB]);
 				})
 				.then(done, done);
 		});

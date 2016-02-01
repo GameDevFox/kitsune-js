@@ -6,20 +6,20 @@ export function name(dictSys, stringSys, id, nameStr) {
 		.then(nameId => dictSys.put(nameId, ids.name, id));
 }
 
-export function getNodes(edgeSys, stringSys, nameStr) {
+export function getNodes(dictSys, stringSys, nameStr) {
 	return stringSys.put(nameStr)
-		.then(nameId => edgeSys.findByHead(ids.name, nameId));
+		.then(nameId => dictSys.get(nameId, ids.name));
 }
 
-export function getNames(edgeSys, stringSys, id) {
-	return edgeSys.findByTail(ids.name, id)
+export function getNames(dictSys, stringSys, id) {
+	return dictSys.getHead(id, ids.name)
 		.then(tails => stringSys.getMany(...tails));
 }
 
-export default function build({ dictSys, edgeSys, stringSys }) {
+export default function build({ dictSys, stringSys }) {
 	return {
 		name: name.bind(this, dictSys, stringSys),
-		getNodes: getNodes.bind(this, edgeSys, stringSys),
-		getNames: getNames.bind(this, edgeSys, stringSys)
+		getNodes: getNodes.bind(this, dictSys, stringSys),
+		getNames: getNames.bind(this, dictSys, stringSys)
 	};
 }

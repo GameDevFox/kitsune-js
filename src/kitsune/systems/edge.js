@@ -17,12 +17,6 @@ export function search(db, criteria) {
 	return allP(db, query, args);
 }
 
-export function get(db, ...ids) {
-	ids = _.flatten(ids);
-	let query = `SELECT * FROM ${edgeTable} WHERE id IN (${qMarks(ids)});`;
-	return allP(db, query, ids);
-}
-
 export function create(db, heads, tails) {
 
 	let edgePairs;
@@ -61,29 +55,18 @@ export function create(db, heads, tails) {
 		.then(() => result);
 }
 
+export function get(db, ...ids) {
+	ids = _.flatten(ids);
+	let query = `SELECT * FROM ${edgeTable} WHERE id IN (${qMarks(ids)});`;
+	return allP(db, query, ids);
+}
+
 export function del(db, ...ids) {
 	let query = `DELETE FROM ${edgeTable} WHERE id IN (${qMarks(ids)});`;
 	return runP(db, query, ids);
 }
 
 // QUERIES
-
-// TODO: Condidate for dict module ???
-function assign(db, edgeType, head, tail) {
-	let first;
-	return create(db, head, tail)
-		.then(edgeId => {
-			first = edgeId;
-			return create(db, edgeType, edgeId);
-		})
-		.then(edgeId => {
-			return {
-				id: edgeId,
-				head: edgeType,
-				tail: first
-			};
-		});
-}
 
 // TODO: Condidate for node module
 export function getTails(db, head) {
@@ -99,37 +82,16 @@ export function getHeads(db, tail) {
 		.then(heads => _.map(heads, "head"));
 }
 
-// TODO: This query may return nodes that aren't edge nodes
-let edgeTypeQuery = `SELECT tail FROM ${edgeTable} WHERE head = ?`;
-
-// TODO: Candidate for dict module
-export function findByTail(db, edgeType, tail) {
-	let query = `SELECT head FROM ${edgeTable} WHERE id IN (${edgeTypeQuery}) AND tail = ?`;
-	return allP(db, query, [edgeType, tail])
-		.then(heads => _.map(heads, "head"));
-}
-
-export function findByHead(db, edgeType, head) {
-	let query = `SELECT tail FROM ${edgeTable} WHERE id IN (${edgeTypeQuery}) AND head = ?`;
-	return allP(db, query, [edgeType, head])
-		.then(tails => _.map(tails, "tail"));
-}
-
 // default export
 export default function bind(db) {
 	return {
 		search: search.bind(this, db), // GET
-		get: get.bind(this, db), // GET (multi)
 
 		create: create.bind(this, db), // CREATE
+		get: get.bind(this, db), // GET (multi)
 		del: del.bind(this, db), // DELETE /:id
 
-		assign: assign.bind(this, db),
 		getTails: getTails.bind(this, db),
 		getHeads: getHeads.bind(this, db),
-
-		findByTail: findByTail.bind(this, db),
-		findByHead: findByHead.bind(this, db)
-
 	};
 }
