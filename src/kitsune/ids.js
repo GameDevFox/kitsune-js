@@ -49,7 +49,6 @@ export let types = [
 	ids.query
 ];
 
-
 let edgeTable = "t"+ids.edge;
 
 export let typeQs = {
@@ -57,7 +56,6 @@ export let typeQs = {
 	edge: `SELECT id FROM ${edgeTable} WHERE id IS NOT NULL`,
 	head: `SELECT DISTINCT head AS id FROM ${edgeTable} WHERE head IS NOT NULL`,
 	tail: `SELECT DISTINCT tail AS id FROM ${edgeTable} WHERE tail IS NOT NULL`,
-
 };
 
 export let opQs = {

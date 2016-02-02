@@ -19,7 +19,7 @@ import buildMapSys from "kitsune/systems/map";
 import buildChainSys from "kitsune/systems/chain";
 import buildNameSys from "kitsune/systems/name";
 
-import { logP } from "kitsune/util";
+// import { logP, createIds } from "kitsune/util";
 
 export default function initDB(sqliteDB) {
 	var systems = buildSystems(sqliteDB);
@@ -113,6 +113,7 @@ export function buildSystems(sqliteDB) {
 
 	let dbSys = bindDB(sqliteDB);
 
+	// TODO: Inject dbSys in here and refactor
 	let nodeSys = bindNodeSys(sqliteDB);
 	let edgeSys = bindEdgeSys(sqliteDB);
 	let stringSys = bindStrSys(sqliteDB);
