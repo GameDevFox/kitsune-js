@@ -15,7 +15,7 @@ import bindEdgeSys from "kitsune/systems/edge";
 import bindTypeSys from "kitsune/systems/type";
 import bindStrSys from "kitsune/systems/string";
 
-import buildDictSys from "kitsune/systems/dict";
+import buildMapSys from "kitsune/systems/map";
 import buildNameSys from "kitsune/systems/name";
 
 import { logP } from "kitsune/util";
@@ -42,13 +42,13 @@ export function init(systems) {
 		.catch(console.error);
 }
 
-function createTables({ dbSys: { alias, create }, dictSys }) {
+function createTables({ dbSys: { alias, create }, mapSys }) {
 	var promises = _.map(tables, (table, name) => {
 		let tableId = "t"+table.id;
 		return create(tableId, table.columns)
 			.then(alias(tableId, name))
 			// Mark tables
-			.then(dictSys.put(ids.table, ids.is, table.id));
+			.then(mapSys.put(ids.table, ids.is, table.id));
 	});
 	return Promise.all(promises);
 }
@@ -117,8 +117,8 @@ export function buildSystems(sqliteDB) {
 	let stringSys = bindStrSys(sqliteDB);
 	let typeSys = bindTypeSys(sqliteDB);
 
-	let dictSys = buildDictSys(dbSys, edgeSys);
-	let nameSys = buildNameSys({ dictSys, edgeSys, stringSys });
+	let mapSys = buildMapSys(dbSys, edgeSys);
+	let nameSys = buildNameSys({ mapSys, edgeSys, stringSys });
 
 	return {
 		dbSys,
@@ -128,7 +128,7 @@ export function buildSystems(sqliteDB) {
 		stringSys,
 		typeSys,
 
-		dictSys,
+		mapSys,
 		nameSys
 	};
 }

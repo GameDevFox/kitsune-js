@@ -6,23 +6,23 @@ import { createIds, one } from "kitsune/util";
 
 let sqliteDB = getDB();
 
-let edgeSys, dictSys;
+let edgeSys, mapSys;
 
 before(done => sqliteDB.initP
 	   .then(systems => {
 		   edgeSys = systems.edgeSys;
-		   dictSys = systems.dictSys;
+		   mapSys = systems.mapSys;
 	   })
 	   .then(() => done(), done));
 
-describe("kitsune/systems/dict", function() {
+describe("kitsune/systems/map", function() {
 
 	describe("put(node, key, value)", function() {
 		it('should create a "key" type relationship between "node" and "value"', function(done) {
 
 			let [node, key, value] = createIds(3);
 
-			dictSys.put(node, key, value)
+			mapSys.put(node, key, value)
 				.then(edge => {
 					expect(edge).to.contain({ head: node, tail: value });
 					return edgeSys.getHeads(edge.id);
@@ -41,10 +41,10 @@ describe("kitsune/systems/dict", function() {
 			let [node, key, valueA, valueB] = createIds(4);
 
 			Promise.all([
-				dictSys.put(node, key, valueA),
-				dictSys.put(node, key, valueB)
+				mapSys.put(node, key, valueA),
+				mapSys.put(node, key, valueB)
 			])
-				.then((val) => dictSys.get(node, key))
+				.then((val) => mapSys.get(node, key))
 				.then(values => {
 					expect(values).to.have.members([valueA, valueB]);
 				})
@@ -58,10 +58,10 @@ describe("kitsune/systems/dict", function() {
 			let [node, keyA, keyB, value] = createIds(4);
 
 			Promise.all([
-				dictSys.put(node, keyA, value),
-				dictSys.put(node, keyB, value),
+				mapSys.put(node, keyA, value),
+				mapSys.put(node, keyB, value),
 			])
-				.then((val) => dictSys.getKey(node, value))
+				.then((val) => mapSys.getKey(node, value))
 				.then(keys => {
 					expect(keys).to.have.members([keyA, keyB]);
 				})
@@ -75,10 +75,10 @@ describe("kitsune/systems/dict", function() {
 			let [nodeA, nodeB, key, value] = createIds(4);
 
 			Promise.all([
-				dictSys.put(nodeA, key, value),
-				dictSys.put(nodeB, key, value)
+				mapSys.put(nodeA, key, value),
+				mapSys.put(nodeB, key, value)
 			])
-				.then(() => dictSys.getHead(value, key))
+				.then(() => mapSys.getHead(value, key))
 				.then(ids => {
 					expect(ids).to.have.members([nodeA, nodeB]);
 				})

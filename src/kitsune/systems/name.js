@@ -1,25 +1,25 @@
 import ids from "kitsune/ids";
 import { logP } from "kitsune/util";
 
-export function name(dictSys, stringSys, id, nameStr) {
+export function name(mapSys, stringSys, id, nameStr) {
 	return stringSys.put(nameStr)
-		.then(nameId => dictSys.put(nameId, ids.name, id));
+		.then(nameId => mapSys.put(nameId, ids.name, id));
 }
 
-export function getNodes(dictSys, stringSys, nameStr) {
+export function getNodes(mapSys, stringSys, nameStr) {
 	return stringSys.put(nameStr)
-		.then(nameId => dictSys.get(nameId, ids.name));
+		.then(nameId => mapSys.get(nameId, ids.name));
 }
 
-export function getNames(dictSys, stringSys, id) {
-	return dictSys.getHead(id, ids.name)
+export function getNames(mapSys, stringSys, id) {
+	return mapSys.getHead(id, ids.name)
 		.then(tails => stringSys.getMany(...tails));
 }
 
-export default function build({ dictSys, stringSys }) {
+export default function build({ mapSys, stringSys }) {
 	return {
-		name: name.bind(this, dictSys, stringSys),
-		getNodes: getNodes.bind(this, dictSys, stringSys),
-		getNames: getNames.bind(this, dictSys, stringSys)
+		name: name.bind(this, mapSys, stringSys),
+		getNodes: getNodes.bind(this, mapSys, stringSys),
+		getNames: getNames.bind(this, mapSys, stringSys)
 	};
 }

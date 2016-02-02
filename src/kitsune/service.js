@@ -38,8 +38,7 @@ sqliteDB.initP.then(systems => {
 	});
 
 	// node service
-	// TODO - Organize these under another path
-	// Such as "/types/:typeName"
+	// TODO - Organize these under another path such as "/types/:typeName"
 	app.get("/nodes", sendP((req, res) => nodeSys.search(req.query)));
 		app.get("/nodes/:id/types", sendP((req, res) => typeSys.getTypes(req.params.id)));
 		app.get("/nodes/:id/tails", sendP((req, res) => edgeSys.getTails(req.params.id)));

@@ -17,7 +17,6 @@ export function search(db, criteria) {
 }
 
 export function put(db, str) {
-
 	let shaHash = createHash('sha1');
 	shaHash.update(str);
 	var hash = shaHash.digest("hex");
