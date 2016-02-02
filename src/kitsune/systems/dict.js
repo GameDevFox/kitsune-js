@@ -22,18 +22,25 @@ export function put(edgeSys, node, key, value) {
 }
 
 // TODO: This query may return nodes that aren't edge nodes
-let edgeTypeQuery = `SELECT tail FROM ${edgeTable} WHERE head = ?`;
+let keyQuery = `SELECT tail FROM ${edgeTable} WHERE head = ?`;
 
 export function get(dbSys, node, key) {
-	let query = `SELECT tail FROM ${edgeTable} WHERE id IN (${edgeTypeQuery}) AND head = ?`;
+	let query = `SELECT tail AS id FROM ${edgeTable} WHERE id IN (${keyQuery}) AND head = ?`;
 	return dbSys.allP(query, [key, node])
-		.then(tails => _.map(tails, "tail"));
+		.then(ids => _.map(ids, "id"));
+}
+
+export function getKey(dbSys, node, value) {
+	let edgeQuery = `SELECT id FROM ${edgeTable} WHERE head = ? AND tail = ?`;
+	let query = `SELECT head AS id FROM ${edgeTable} WHERE tail IN (${edgeQuery})`;
+	return dbSys.allP(query, [node, value])
+		.then(ids => _.map(ids, "id"));
 }
 
 export function getHead(dbSys, value, key) {
-	let query = `SELECT head FROM ${edgeTable} WHERE id IN (${edgeTypeQuery}) AND tail = ?`;
+	let query = `SELECT head AS id FROM ${edgeTable} WHERE id IN (${keyQuery}) AND tail = ?`;
 	return dbSys.allP(query, [key, value])
-		.then(heads => _.map(heads, "head"));
+		.then(ids => _.map(ids, "id"));
 }
 
 export default function bind(dbSys, edgeSys) {
@@ -41,8 +48,7 @@ export default function bind(dbSys, edgeSys) {
 		put: put.bind(this, edgeSys),
 		get: get.bind(this, dbSys), // getValue(node, key)
 
-		// TODO: Implement "getKey(node, value)"
-		// getKey(node, value)
+		getKey: getKey.bind(this, dbSys),
 		getHead: getHead.bind(this, dbSys)
 	};
 }

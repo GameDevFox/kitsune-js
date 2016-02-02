@@ -52,6 +52,23 @@ describe("kitsune/systems/dict", function() {
 		});
 	});
 
+	describe("getKey(node, value)", function() {
+		it("resolves a list of key nodes that map node to value", function(done) {
+
+			let [node, keyA, keyB, value] = createIds(4);
+
+			Promise.all([
+				dictSys.put(node, keyA, value),
+				dictSys.put(node, keyB, value),
+			])
+				.then((val) => dictSys.getKey(node, value))
+				.then(keys => {
+					expect(keys).to.have.members([keyA, keyB]);
+				})
+				.then(done, done);
+		});
+	});
+
 	describe("getHead(value, key)", function() {
 		it("resolves a list of nodes that have \"key\" edges to value", function(done) {
 
