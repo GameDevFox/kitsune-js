@@ -43,7 +43,7 @@ export function getHead(dbSys, value, key) {
 		.then(ids => _.map(ids, "id"));
 }
 
-export default function bind(dbSys, edgeSys) {
+export default function bind({ dbSys, edgeSys }) {
 	return {
 		put: put.bind(this, edgeSys),
 		get: get.bind(this, dbSys), // getValue(node, key)

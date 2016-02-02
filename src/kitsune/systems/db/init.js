@@ -117,8 +117,8 @@ export function buildSystems(sqliteDB) {
 	let stringSys = bindStrSys(sqliteDB);
 	let typeSys = bindTypeSys(sqliteDB);
 
-	let mapSys = buildMapSys(dbSys, edgeSys);
-	let nameSys = buildNameSys({ mapSys, edgeSys, stringSys });
+	let mapSys = buildMapSys({ dbSys, edgeSys });
+	let nameSys = buildNameSys({ mapSys, stringSys });
 
 	return {
 		dbSys,
