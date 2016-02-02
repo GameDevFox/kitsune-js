@@ -43,12 +43,19 @@ export function getHead(dbSys, value, key) {
 		.then(ids => _.map(ids, "id"));
 }
 
+export function getEdge(dbSys, node, key) {
+	let query = `SELECT id AS id FROM ${edgeTable} WHERE id IN (${keyQuery}) AND head = ?`;
+	return dbSys.allP(query, [key, node])
+		.then(ids => _.map(ids, "id"));
+}
+
 export default function bind({ dbSys, edgeSys }) {
 	return {
 		put: put.bind(this, edgeSys),
 		get: get.bind(this, dbSys), // getValue(node, key)
 
 		getKey: getKey.bind(this, dbSys),
-		getHead: getHead.bind(this, dbSys)
+		getHead: getHead.bind(this, dbSys),
+		getEdge: getEdge.bind(this, dbSys)
 	};
 }

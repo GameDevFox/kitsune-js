@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 import { expect } from "chai";
 import sqlite3 from "sqlite3";
 
@@ -85,4 +87,25 @@ describe("kitsune/systems/map", function() {
 				.then(done, done);
 		});
 	});
+
+	describe("getEdge(node, key)", function() {
+		it("resolves a list of edges that map \"nodes\" to \"values\"", function(done) {
+			let edgeIds;
+			let [node, key, valueA, valueB] = createIds(4);
+
+			Promise.all([
+				mapSys.put(node, key, valueA),
+				mapSys.put(node, key, valueB)
+			])
+				.then((edges) => {
+					edgeIds = _.flatten(_.map(edges, "id"));
+					return mapSys.getEdge(node, key);
+				})
+				.then(values => {
+					expect(values).to.have.members(edgeIds);
+				})
+				.then(done, done);
+		});
+	});
+
 });
