@@ -9,7 +9,7 @@ export function put(edgeSys, node, key, value) {
 	let edge;
 	return edgeSys.create(node, value)
 		.then(edgeId => {
-			edge = edgeId;
+			edge = edgeId[0];
 			return edgeSys.create(key, edge);
 		})
 		.then(edgeId => {
@@ -44,9 +44,8 @@ export function getHead(dbSys, value, key) {
 }
 
 export function getEdge(dbSys, node, key) {
-	let query = `SELECT id AS id FROM ${edgeTable} WHERE id IN (${keyQuery}) AND head = ?`;
-	return dbSys.allP(query, [key, node])
-		.then(ids => _.map(ids, "id"));
+	let query = `SELECT id, head, tail FROM ${edgeTable} WHERE id IN (${keyQuery}) AND head = ?`;
+	return dbSys.allP(query, [key, node]);
 }
 
 export default function bind({ dbSys, edgeSys }) {

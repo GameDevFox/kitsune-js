@@ -23,6 +23,9 @@ export let ids = {
 	// properties
 	name: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", //
 
+	// chain
+	chain: "f6dca3a59be505e556331717fc119e6c1adfbf90",
+
 	// description: "4b8d5a08dc648d9f1aa7c8208ecca1a93f18a8f7",
 	// classifier: "e18591bab26442f44693abed553350b1e50b2081",
 	// view: "2d96db1064077326fe67700330fbb32c8e4b9060",

@@ -98,14 +98,14 @@ describe("kitsune/systems/map", function() {
 				mapSys.put(node, key, valueB)
 			])
 				.then((edges) => {
-					edgeIds = _.flatten(_.map(edges, "id"));
+					edgeIds = _.map(edges, "id");
 					return mapSys.getEdge(node, key);
 				})
 				.then(values => {
-					expect(values).to.have.members(edgeIds);
+					let ids = _.map(values, "id");
+					expect(ids).to.have.members(edgeIds);
 				})
 				.then(done, done);
 		});
 	});
-
 });

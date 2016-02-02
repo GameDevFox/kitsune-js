@@ -16,6 +16,7 @@ import bindTypeSys from "kitsune/systems/type";
 import bindStrSys from "kitsune/systems/string";
 
 import buildMapSys from "kitsune/systems/map";
+import buildChainSys from "kitsune/systems/chain";
 import buildNameSys from "kitsune/systems/name";
 
 import { logP } from "kitsune/util";
@@ -118,6 +119,7 @@ export function buildSystems(sqliteDB) {
 	let typeSys = bindTypeSys(sqliteDB);
 
 	let mapSys = buildMapSys({ dbSys, edgeSys });
+	let chainSys = buildChainSys({ mapSys });
 	let nameSys = buildNameSys({ mapSys, stringSys });
 
 	return {
@@ -129,6 +131,7 @@ export function buildSystems(sqliteDB) {
 		typeSys,
 
 		mapSys,
+		chainSys,
 		nameSys
 	};
 }
