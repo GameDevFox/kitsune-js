@@ -3,36 +3,15 @@ import { createHash } from "crypto";
 import { runP, getP, allP } from "kitsune/systems/db";
 import ids from "kitsune/ids";
 import { logP } from "kitsune/util";
-import { qMarks } from "kitsune/systems/db/util";
+import { qMarks, whereClause } from "kitsune/systems/db/util";
 
 let strTable = `t${ids.string}`;
 
 export function search(db, criteria) {
 	let query = `SELECT * FROM ${strTable}`;
 
-	// TODO: Extract some query where builder
-	let wheres = [];
-	let args = [];
-
-	if(criteria.id) {
-		wheres.push("id = $id");
-		args.push(criteria.id);
-	}
-	if(criteria.string) {
-		wheres.push("string = $string");
-		args.push(criteria.string);
-	}
-
-	if(wheres.length) {
-		query += " WHERE";
-		for(let i=0; i<wheres.length; i++) {
-			if(i)
-				query += " AND";
-
-			let where = wheres[i];
-			query += " " + where;
-		}
-	}
+	let { sql: whereSql, args } = whereClause(criteria);
+	query += whereSql;
 
 	return allP(db, query, args);
 }
