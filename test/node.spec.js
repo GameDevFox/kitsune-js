@@ -8,12 +8,11 @@ import { buildQuery } from "kitsune/systems/db/util";
 
 let sqliteDB = getDB();
 
-let allP;
+let nodeSys;
 
 before((done) => sqliteDB.initP
 	   .then(systems => {
-		   let dbSys = systems.dbSys;
-		   allP = dbSys.allP;
+		   nodeSys = systems.nodeSys;
 	   })
 	   .then(() => done(), done));
 
@@ -21,8 +20,13 @@ describe("kitsune/node", function() {
 
 	describe("search(criteria)", function() {
 
-		it.skip("should work", function() {
-			expect(false).to.equal(true);
+		it("should return a complete list of all nodes", function(done) {
+			nodeSys.search()
+				.then(nodes => {
+					expect(_.isArray(nodes)).to.equal(true);
+					expect(nodes.length).to.not.equal(0);
+				})
+				.then(done, done);
 		});
 	});
 });

@@ -20,7 +20,7 @@ export function search(db, criteria) {
 export function create(db, heads, tails) {
 
 	let edgePairs;
-	if(!tails) {
+	if(_.isArray(heads) && !tails) {
 		// Many
 		edgePairs = heads;
 	} else if(!_.isArray(heads) && !_.isArray(tails)) {

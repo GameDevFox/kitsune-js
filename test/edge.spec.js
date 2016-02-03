@@ -98,16 +98,6 @@ describe("kitsune/edge", function() {
 				})
 				.then(done, done);
 		});
-
-		it.skip("FIXME: should not allow null heads or tails", function(done) {
-			let head = createId();
-			edgeSys.create(head)
-				.then(edgeId => edgeSys.get(edgeId).then(one))
-				.then(edge => {
-					expect(edge).to.contain({ head: head, tail: null });
-				})
-				.then(done, done);
-		});
 	});
 
 	describe("get(ids)", function() {

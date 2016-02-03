@@ -3,12 +3,9 @@ import _ from "lodash";
 import { runP, getP, allP } from "kitsune/systems/db";
 import ids from "kitsune/ids";
 
-export function search(db, { type }) {
-	let query = `SELECT id FROM t${ids.node}`;
-	return allP(db, query)
-		.then(results => _.map(results, result => result.id));
+export function search(db) {
+	return listIdTable(db, ids.node);
 }
-
 export function points(db) {
 	return listIdTable(db, ids.point);
 }
