@@ -10,12 +10,10 @@ import ids from "kitsune/ids";
 import { one } from "kitsune/util";
 
 let sqliteDB = getDB();
-let app = express.createServer();
+let app = express();
 
-app.configure(() => {
-	app.use(bodyParser.text());
-	app.use(bodyParser.json());
-});
+app.use(bodyParser.text());
+app.use(bodyParser.json());
 
 function sendP(func) {
 	return (req, res) => {
