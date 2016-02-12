@@ -32,11 +32,25 @@ export function one(arr) {
 	});
 }
 
-export function logP(msg="") {
+export function logP(msg=null, border=false) {
 	return function(value) {
-		console.log(msg+" ===============");
+		if(msg) {
+			if(!border) {
+				console.log(msg+": "+value);
+				return;
+			}
+
+			console.log("===================");
+			console.log(" "+msg+": ");
+		}
+
+		if(border)
+			console.log(msg ? "-------------------" : "===================");
+
 		console.log(value);
-		console.log("===================");
+
+		if(border)
+			console.log("===================");
 		return value;
 	};
 }

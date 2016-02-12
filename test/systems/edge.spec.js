@@ -3,15 +3,16 @@ import _ from "lodash";
 import sqlite3 from "sqlite3";
 
 import getDB from "kitsune/systems/db/cache";
-import ids from "kitsune/ids";
-import bindEdge from "kitsune/systems/edge";
 import { createId, createIds, one } from "kitsune/util";
 
 let sqliteDB = getDB();
 
-let edgeSys = bindEdge(sqliteDB);
-
-before((done) => sqliteDB.initP.then(() => done(), done));
+let edgeSys;
+before((done) => sqliteDB.initP
+	   .then(systems => {
+		   edgeSys = systems.edgeSys;
+	   })
+	   .then(() => done(), done));
 
 describe("kitsune/edge", function() {
 
