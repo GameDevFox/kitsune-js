@@ -6,7 +6,7 @@ import { noop } from "katana/func";
 import { log } from "katana/system";
 
 import ids from "kitsune/ids";
-import { aliases, tables, typeQs, opQs as ops, types, views } from "kitsune/ids";
+import { aliases, tables, typeQs, opQs as ops, types, views, funcs } from "kitsune/ids";
 import bindDB from "kitsune/systems/db";
 import { buildQuery, queryBuilder as q } from "kitsune/systems/db/util";
 
@@ -39,6 +39,7 @@ export function init(systems) {
 		.then(() => markTypes(edgeSys))
 		.then(() => markTables(edgeSys))
 		.then(() => insertQueries(edgeSys, stringSys))
+		.then(() => createFuncs(systems))
 		.then(() => systems)
 		.catch(console.error);
 }
@@ -94,6 +95,20 @@ function insertQueries(edgeSys, stringSys) {
 			.then(queryId => {
 				return edgeSys.create(ids.query, queryId);
 			});
+	});
+	return Promise.all(promises);
+}
+
+function createFuncs({ edgeSys, nameSys, stringSys, mapSys }) {
+	let promises = _.map(funcs, ({ id, code }, name) => {
+		// Mark as function
+		return Promise.all([
+			// Get id for code
+			stringSys.put(code),
+			// Name Function
+			nameSys.name(id, name)
+		])
+			.then(([codeId]) => mapSys.put(id, ids.functionCode, codeId));
 	});
 	return Promise.all(promises);
 }

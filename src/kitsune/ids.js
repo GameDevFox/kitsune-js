@@ -30,6 +30,12 @@ export let ids = {
 	// classifier: "e18591bab26442f44693abed553350b1e50b2081",
 	// view: "2d96db1064077326fe67700330fbb32c8e4b9060",
 	// is: "bc1169765ce4e2d03e224ac040e15d89189369bb",
+
+	functionCode: "619f3e6a0d8d4d930a31ddd3d8ec48043ed05433",
+
+	funcs: {
+		test: "d8076ac8e972e7b7985d9fc77d4d589207e282be",
+	}
 };
 
 export let tables = {
@@ -100,6 +106,17 @@ export let views = {
 	name: {
 		id: ids.name,
 		query: nameSql // `SELECT head FROM ${edgeTable} WHERE id IN (SELECT tail FROM ${edgeTable} WHERE head = '${ids.name}')`
+	}
+};
+
+export let funcs = {
+	test: {
+		id: ids.funcs.test,
+		code: `
+(function() {
+	console.log("Hello World");
+	return 123;
+})`
 	}
 };
 
