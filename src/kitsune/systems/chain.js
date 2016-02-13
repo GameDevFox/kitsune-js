@@ -1,6 +1,14 @@
 import { ids } from "kitsune/data";
 import { createId, logP, one } from "kitsune/util";
 
+function chainNextFn(mapSys, nodeList) {
+	return edge => {
+		var result = mapSys.put(edge.id, ids.chain, nodeList[0]);
+		nodeList.splice(0, 1);
+		return result;
+	};
+}
+
 export function create(mapSys, nodes) {
 	let head = createId();
 	let nodeList = [head];
@@ -11,11 +19,8 @@ export function create(mapSys, nodes) {
 	nodeList.splice(0, 2);
 
 	for(var i=0; i<nodeList.length; i++) {
-		p = p.then(edge => {
-			var result = mapSys.put(edge.id, ids.chain, nodeList[0]);
-			nodeList.splice(0, 1);
-			return result;
-		});
+		var next = chainNextFn(mapSys, nodeList);
+		p = p.then(next);
 	}
 
 	return p.then(() => head);
