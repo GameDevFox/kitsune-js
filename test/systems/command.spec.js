@@ -25,8 +25,9 @@ describe("kitsune/command", function() {
 				.then(one)
 				.then(codeId => stringSys.get(codeId))
 				.then(code => {
-					let func = eval(code);
-					var result = func();
+					/* jshint evil: true */
+					let func = new Function("a", code);
+					var result = func({ x:100, y:23 });
 					expect(result).to.equal(123);
 				})
 				.then(done, done);

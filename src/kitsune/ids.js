@@ -113,10 +113,8 @@ export let funcs = {
 	test: {
 		id: ids.funcs.test,
 		code: `
-(function() {
 	console.log("Hello World");
-	return 123;
-})`
+	return a.x + a.y;`
 	}
 };
 
