@@ -2,8 +2,8 @@ import { expect } from "chai";
 import _ from "lodash";
 import sqlite3 from "sqlite3";
 
+import { ids } from "kitsune/data";
 import getDB from "kitsune/systems/db/cache";
-import ids from "kitsune/ids";
 import bindEdge from "kitsune/systems/edge";
 import { createId, createIds, one } from "kitsune/util";
 

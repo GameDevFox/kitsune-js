@@ -1,7 +1,7 @@
 import _ from "lodash";
 
+import { ids } from "kitsune/data";
 import { runP, getP, allP } from "kitsune/systems/db";
-import ids from "kitsune/ids";
 
 export function search(db) {
 	return listIdTable(db, ids.node);

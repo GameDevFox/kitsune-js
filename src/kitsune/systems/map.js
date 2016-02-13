@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-import ids from "kitsune/ids";
+import { ids } from "kitsune/data";
 
 let edgeTable = `t${ids.edge}`;
 

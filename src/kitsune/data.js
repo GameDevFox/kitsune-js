@@ -102,5 +102,3 @@ export let views = {
 		query: nameSql // `SELECT head FROM ${edgeTable} WHERE id IN (SELECT tail FROM ${edgeTable} WHERE head = '${ids.name}')`
 	}
 };
-
-export default ids;

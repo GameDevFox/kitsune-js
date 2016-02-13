@@ -1,8 +1,8 @@
 import _ from "lodash";
 
+import { ids } from "kitsune/data";
 import { runP, getP, allP } from "kitsune/systems/db";
 import { qMarks, whereClause } from "kitsune/systems/db/util";
-import ids from "kitsune/ids";
 import * as util from "kitsune/util";
 
 let edgeTable = `t${ids.edge}`;

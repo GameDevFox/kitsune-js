@@ -1,4 +1,4 @@
-import { ids } from "kitsune/ids";
+import { ids } from "kitsune/data";
 import { createId, logP, one } from "kitsune/util";
 
 export function create(mapSys, nodes) {

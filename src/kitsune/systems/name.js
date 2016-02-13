@@ -1,4 +1,4 @@
-import ids from "kitsune/ids";
+import { ids } from "kitsune/data";
 import { logP } from "kitsune/util";
 
 export function name(mapSys, stringSys, id, nameStr) {
