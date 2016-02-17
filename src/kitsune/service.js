@@ -5,7 +5,6 @@ import bodyParser from "body-parser";
 import express from "express";
 import sqlite3 from "sqlite3";
 
-import { ids } from "kitsune/data";
 import getDB from "kitsune/systems/db/cache";
 import { one } from "kitsune/util";
 
