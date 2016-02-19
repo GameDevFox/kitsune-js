@@ -1,0 +1,1 @@
+./bin/update-file-list data/file-list $(find src/kitsune/systems -type f -depth 1)

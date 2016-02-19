@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+// -*- mode: js2 -*-
+
+var _ = require("lodash");
+
+var fs = require("fs");
+var exec = require("child_process").execSync;
+
+var fileListPath = process.argv[2];
+var fileList = readJSON(fileListPath);
+
+_.each(fileList, function(value) {
+	var cmd = "ln -s ../"+value.path + " system/"+value.id;
+	console.log(cmd);
+	exec(cmd);
+});
+
+function readJSON(path, defaultVal) {
+	var json;
+	try {
+		var jsonStr = fs.readFileSync(path).toString();
+		json = JSON.parse(jsonStr);
+	} catch(e) {
+		json = defaultVal;
+	}
+	return json;
+}

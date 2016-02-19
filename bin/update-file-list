@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+// -*- mode: js2 -*-
+var _ = require("lodash");
+var fs = require("fs");
+var createId = require("kitsune/util").createId;
+
+var paths = process.argv.slice(2);
+
+var fileListPath = paths.splice(0, 1)[0];
+var fileList = readJSON(fileListPath, []);
+
+var fileListPaths = _.map(fileList, "path");
+var newFiles = _.difference(paths, fileListPaths);
+var removedFiles = _.difference(fileListPaths, paths);
+
+console.log("Adding:");
+console.log(newFiles);
+console.log();
+
+console.log("Removing:");
+console.log(removedFiles);
+console.log();
+
+// Add new entries
+var newEntries = _.map(newFiles, function(path) {
+	var id = createId();
+	return { id: id, path: path };
+});
+fileList = fileList.concat(newEntries);
+
+// Remove missing entries
+_.remove(fileList, function(entry) {
+	return removedFiles.indexOf(entry.path) != -1;
+});
+
+// Write to disk
+var fileListStr = JSON.stringify(fileList, null, 1)+"\n";
+console.log("Output:");
+console.log(fileListStr);
+fs.writeFileSync(fileListPath, fileListStr);
+
+function readJSON(path, defaultVal) {
+	var json;
+	try {
+		var jsonStr = fs.readFileSync(path).toString();
+		json = JSON.parse(jsonStr);
+	} catch(e) {
+		json = defaultVal;
+	}
+	return json;
+}

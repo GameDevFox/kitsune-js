@@ -1,0 +1,1 @@
+find system -type l -delete
