@@ -42,7 +42,7 @@ gulp.task("build", "Builds project", function() {
 	var input = gulp.src(appSrcPath, { base: "./src" })
 			.pipe(g.cached("build"))
 	return buildStream(input, "build")
-		.pipe(gulp.dest("./build"));
+		.pipe(gulp.dest("./node_modules"));
 });
 
 gulp.task("build-test", g.sequence(["build-test-kitsune", "build-test-katana"]));
@@ -108,7 +108,7 @@ gulp.task("start-run", function() {
 	if(proc != null)
 		proc.kill();
 
-	proc = spawn("node", ["build/kitsune/service.js"]);
+	proc = spawn("node", ["node_modules/kitsune/service.js"]);
 	proc.stdout.on("data", function(data) {
 		process.stdout.write("service: " + data.toString());
 	});
