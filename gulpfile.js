@@ -35,12 +35,12 @@ var buildStream = function(stream, debugTitle) {
 		.pipe(g.jshint({ esnext: true }))
 		.pipe(g.jshint.reporter(jshintStylish))
 		.pipe(g.jshint.reporter("fail"))
-		.pipe(g.babel({ sourceMaps: "inline", optional: ["runtime"] }))
+		.pipe(g.babel({ sourceMaps: "inline", optional: ["runtime"] }));
 };
 
 gulp.task("build", "Builds project", function() {
 	var input = gulp.src(appSrcPath, { base: "./src" })
-			.pipe(g.cached("build"))
+		.pipe(g.cached("build"));
 	return buildStream(input, "build")
 		.pipe(gulp.dest("./node_modules"));
 });
@@ -48,13 +48,13 @@ gulp.task("build", "Builds project", function() {
 gulp.task("build-test", g.sequence(["build-test-kitsune", "build-test-katana"]));
 gulp.task("build-test-kitsune", function() {
 	var input = gulp.src(kitsuneTestPath)
-		.pipe(g.cached("kitsune-src"))
+		.pipe(g.cached("kitsune-src"));
 	return buildStream(input, "kistune-test-build")
 		.pipe(gulp.dest("./build/test/kitsune"));
 });
 gulp.task("build-test-katana", function() {
 	var input = gulp.src(katanaTestPath)
-		.pipe(g.cached("katana-src"))
+		.pipe(g.cached("katana-src"));
 	return buildStream(input, "katana-test-build")
 		.pipe(gulp.dest("./build/test/katana"));
 });
