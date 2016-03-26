@@ -55,15 +55,15 @@ export function create(db, heads, tails) {
 		.then(() => result);
 }
 
-export function get(db, ...ids) {
-	ids = _.flatten(ids);
-	let query = `SELECT * FROM ${edgeTable} WHERE id IN (${qMarks(ids)});`;
-	return allP(db, query, ids);
+export function get(db, ...idList) {
+	idList = _.flatten(idList);
+	let query = `SELECT * FROM ${edgeTable} WHERE id IN (${qMarks(idList)});`;
+	return allP(db, query, idList);
 }
 
-export function del(db, ...ids) {
-	let query = `DELETE FROM ${edgeTable} WHERE id IN (${qMarks(ids)});`;
-	return runP(db, query, ids);
+export function del(db, ...idList) {
+	let query = `DELETE FROM ${edgeTable} WHERE id IN (${qMarks(idList)});`;
+	return runP(db, query, idList);
 }
 
 // QUERIES
