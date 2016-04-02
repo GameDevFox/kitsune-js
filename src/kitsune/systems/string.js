@@ -37,15 +37,15 @@ export function get(db, id) {
 		.then(result => (result ? result.string : undefined));
 }
 
-export function getMany(db, ...ids) {
-	var query = `SELECT * FROM ${strTable} WHERE id IN (${qMarks(ids)})`;
-	return allP(db, query, ids)
+export function getMany(db, ...idList) {
+	var query = `SELECT * FROM ${strTable} WHERE id IN (${qMarks(idList)})`;
+	return allP(db, query, idList)
 		.then(result => result.map((row) => row.string));
 }
 
-export function del(db, ...ids) {
-	var query = `DELETE FROM ${strTable} WHERE id IN (${qMarks(ids)})`;
-	return runP(db, query, ids);
+export function del(db, ...idList) {
+	var query = `DELETE FROM ${strTable} WHERE id IN (${qMarks(idList)})`;
+	return runP(db, query, idList);
 }
 
 export default function bind(db) {
