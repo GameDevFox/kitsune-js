@@ -1,0 +1,47 @@
+{
+  "graph": [
+    {
+      "id": "0556ed8c0c8a8029b8134ba1b5a535fbe0c719bf",
+      "head": "66564ec14ed18fb88965140fc644d7b813121c78",
+      "tail": "31d21eb2620a8f353a250ad2edd4587958faf3b1"
+    },
+    {
+      "id": "fb131dcba3def08ede10e01b28fe260bdecc8d68",
+      "head": "66564ec14ed18fb88965140fc644d7b813121c78",
+      "tail": "fe60fc76f26f8dce6c5f68bbb0ea0c51efef3dff"
+    },
+    {
+      "id": "379a2310a95806c38ec402f7fe516823450ebd5b",
+      "head": "66564ec14ed18fb88965140fc644d7b813121c78",
+      "tail": "d2875fcaa91079d5c4065d7d887e747b7e170f66"
+    },
+    {
+      "id": "06fb4f1c39b31f2e9fb3d7f7fad116adf88cff3d",
+      "head": "66564ec14ed18fb88965140fc644d7b813121c78",
+      "tail": "8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f"
+    },
+    {
+      "id": "4b4c08b4cbeeb5c2170071d87aa5f58bbf25f093",
+      "head": "66564ec14ed18fb88965140fc644d7b813121c78",
+      "tail": "a73b64eba9daa07051815ca7151ba009789616e2"
+    }
+  ],
+  "string": [
+    {
+      "id": "6576d3ae606465f2272dc5f1053ecc315b159724",
+      "string": "system-loader"
+    },
+    {
+      "id": "de4e5e1fec757a1f6446924aaddc472a18093d55",
+      "string": "loki-control"
+    },
+    {
+      "id": "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb",
+      "string": "test-data"
+    },
+    {
+      "id": "911b601087190a41d0b744d9b402a30f2e2de206",
+      "string": "string-autoPut"
+    }
+  ]
+}

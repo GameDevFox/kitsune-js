@@ -14,7 +14,7 @@ var del = require("del");
 var jshintStylish = require("jshint-stylish");
 var browserSync = require("browser-sync").create();
 
-var appSrcPath = ["./src/kitsune/**/*.js", "./src/katana/*.js"];
+var appSrcPath = ["./src/kitsune/**/*.js", "./src/kitsune-core/*", "./src/katana/*.js"];
 
 var kitsuneTestPath = "./test/**/*.spec.js";
 var katanaTestPath = "./src/katana/test/**/*.spec.js";
@@ -25,7 +25,13 @@ var testBuildPath = ["./build/test/katana/**/*.spec.js", "./build/test/kitsune/*
 gulp.task("default", 'runs "clean" and "build"', g.sequence("clean", ["build", "build-test-kitsune", "build-test-katana"], "test-run"));
 
 gulp.task("clean", 'Cleans up (deletes) all build files', function(done) {
-	del(["./build", "./coverage"], done);
+    del([
+        "./node_modules/kitsune",
+        "./node_modules/kitsune-core",
+        "./node_modules/katana",
+        "./build",
+        "./coverage"
+    ], done);
 });
 
 var buildStream = function(stream, debugTitle) {

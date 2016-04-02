@@ -1,0 +1,20 @@
+// -*- mode: js2 -*-
+export default function main(path) {
+    return load.bind(this, path);
+}
+
+export function load(path, ...systemIds) {
+    let promises = systemIds.map(systemId => {
+        return new Promise((resolve, reject) => {
+            let systemPath = path+"/"+systemId;
+            try {
+                let system = require(systemPath);
+                resolve(system);
+            } catch(e) {
+                reject(e);
+            }
+        });
+    });
+
+    return Promise.all(promises);
+}

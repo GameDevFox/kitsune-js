@@ -1,0 +1,12 @@
+// -*- mode: js2 -*-
+module.exports = function() {
+    var result =
+    // json wrapper-top
+    [
+        [ "1", "2", "3" ],
+        [ "4", "5", "6" ]
+    ]
+    // json wrapper-bottom
+    ;
+    return result;
+};
