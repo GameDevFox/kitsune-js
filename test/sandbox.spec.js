@@ -9,7 +9,7 @@ let loader = bind(systemLoader, { path: "kitsune-core" });
 
 describe("sandbox", function() {
     it("should have sand in it", function(done) {
-        let systemIds = ["fe60fc76f26f8dce6c5f68bbb0ea0c51efef3dff", // loki-control
+        let systemIds = ["fe60fc76f26f8dce6c5f68bbb0ea0c51efef3dff", // loki-collection
                          "a73b64eba9daa07051815ca7151ba009789616e2", // graph-autoPut
                          "8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f"]; // string-autoPut
         
@@ -17,19 +17,18 @@ describe("sandbox", function() {
         Promise.all(promises)
             .then(systems => {
                 let [
-                    buildControl,
+                    lokiColl,
                     graphAutoPut,
                     stringAutoPut
                 ] = systems;
                 
-                var { graph, string } = readData(buildControl);
+                var { graph, string } = readData(lokiColl);
                 graph.autoPut = graphAutoPut(graph.put);
                 string.autoPut = stringAutoPut(string.put);
-                
+
                 let group = graph.find({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
                 console.log("=== System files ===");
                 console.log(group.map(x => x.tail).sort());
-                // DO STUFF HERE
                 
                 writeData({ graph, string });
             })
@@ -46,8 +45,6 @@ function bind(func, bindParams) {
         for(let key in partParams)
             fullParams[key] = partParams[key];
 
-        console.log(fullParams);
-        
         return func(fullParams);
     };
     return f;
@@ -64,18 +61,20 @@ function logLoki(data) {
     console.log(json);
 }
 
-function readData(buildControl) {
+function readData(lokiColl) {
     let json = fs.readFileSync("data.json");
     let data = JSON.parse(json);
-
+    
     let controls = _.mapValues(data, collData => {
         let coll = new Collection();
-        var control = buildControl(coll);
-
-        collData.forEach(value => {
-            control.put(value);
+        var control = _.mapValues(lokiColl(), (func, name) => {
+            return bind(func, { db: coll });
         });
 
+        collData.forEach(value => {
+            control.put({ element: value });
+        });
+        
         return control;
     });
     return controls;

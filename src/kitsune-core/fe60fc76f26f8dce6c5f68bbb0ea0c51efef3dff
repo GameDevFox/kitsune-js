@@ -1,10 +1,10 @@
 // -*- mode: js2 -*-
-export function put(db, element) {
+export function put({ db, element }) {
     db.insert(element);
     return element.id;
 }
 
-export function find(db, where) {
+export function find({ db, where }) {
     let criteria = [];
 
     let count = 0;
@@ -24,15 +24,11 @@ export function find(db, where) {
     return db.find(criteria);
 }
 
-export function remove(db, elementId) {
+export function remove({ db, elementId }) {
     db.removeWhere({ id: elementId });
 }
 
-export default function main(db, data) {
-    return {
-        put: put.bind(this, db),
-        find: find.bind(this, db),
-        remove: remove.bind(this, db)
-    };
+export default function main() {
+    return { put, find, remove };
 }
 module.exports = main;
