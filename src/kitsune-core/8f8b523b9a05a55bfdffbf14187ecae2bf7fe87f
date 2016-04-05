@@ -1,14 +1,8 @@
 // -*- mode: js2 -*-
 import { hash } from "kitsune/util";
 
-export default function autoPut({ put, element }) {
-    if(typeof element == "string") {
-        let id = hash(element);
-        element = { id: id, string: element };
-    } else if(!element.id) {
-        let id = hash(element.string);
-        element.id = id;
-    }
-    return put({ element });
+export default function autoPut({ stringPut, string }) {
+    let id = hash(string);
+    return stringPut({ element: { id, string } });
 }
 module.exports = autoPut;

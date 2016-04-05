@@ -1,0 +1,8 @@
+// -*- mode: js2 -*-
+import { createId } from "kitsune/util";
+
+export default function name({ stringAutoPut, graphAssign, head, name }) {
+    var nameNode = stringAutoPut({ string: name });
+    graphAssign({ head, type: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", tail: nameNode });
+}
+module.exports = name;

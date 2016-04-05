@@ -1,11 +1,8 @@
 // -*- mode: js2 -*-
 import { createId } from "kitsune/util";
 
-export default function assign({ autoPut, head, type, tail }) {
-    var element = { head, tail };
-    var edge = autoPut({ element });
-
-    var element = { head: type, tail: edge };
-    return autoPut({ element });
+export default function assign({ graphAutoPut, head, type, tail }) {
+    var edge = graphAutoPut({ head, tail });
+    return graphAutoPut({ head: type, tail: edge });
 }
 module.exports = assign;

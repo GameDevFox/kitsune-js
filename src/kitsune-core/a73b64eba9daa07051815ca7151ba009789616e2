@@ -1,11 +1,8 @@
 // -*- mode: js2 -*-
 import { createId } from "kitsune/util";
 
-export default function autoPut({ put, element }) {
-    if(!element.id) {
-        var id = createId();
-        element.id = id;
-    }
-    return put({ element });
+export default function autoPut({ graphPut, head, tail }) {
+    var id = createId();
+    return graphPut({ element: { id, head, tail } });
 }
 module.exports = autoPut;
