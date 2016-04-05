@@ -1,3 +1,5 @@
+require('source-map-support').install();
+
 import fs from "fs";
 import _ from "lodash";
 import { expect } from "chai";
@@ -12,7 +14,7 @@ describe("sandbox", function() {
         let systemIds = ["fe60fc76f26f8dce6c5f68bbb0ea0c51efef3dff", // loki-collection
                          "a73b64eba9daa07051815ca7151ba009789616e2", // graph-autoPut
                          "8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f"]; // string-autoPut
-        
+
         let promises = systemIds.map(id => loader({ id }));
         Promise.all(promises)
             .then(systems => {
@@ -21,15 +23,18 @@ describe("sandbox", function() {
                     graphAutoPut,
                     stringAutoPut
                 ] = systems;
-                
-                var { graph, string } = readData(lokiColl);
-                graph.autoPut = graphAutoPut(graph.put);
-                string.autoPut = stringAutoPut(string.put);
 
-                let group = graph.find({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
+                var { graph, string } = readData(lokiColl);
+                graph.autoPut = bind(graphAutoPut, { put: graph.put });
+                string.autoPut = bind(stringAutoPut, { put: string.put });
+
+                graph.autoPut({ element: { head: "YourMom", tail: "YourDad" } });
+                string.autoPut({ element: { string: "String" } });
+
+                let group = graph.find({ where: { head: "66564ec14ed18fb88965140fc644d7b813121c78" } });
                 console.log("=== System files ===");
                 console.log(group.map(x => x.tail).sort());
-                
+
                 writeData({ graph, string });
             })
             .then(done, done);
@@ -38,7 +43,7 @@ describe("sandbox", function() {
 
 function bind(func, bindParams) {
     var f = function(partParams) {
-        var fullParams = {}; 
+        var fullParams = {};
         for(let key in bindParams)
             fullParams[key] = bindParams[key];
 
@@ -64,7 +69,7 @@ function logLoki(data) {
 function readData(lokiColl) {
     let json = fs.readFileSync("data.json");
     let data = JSON.parse(json);
-    
+
     let controls = _.mapValues(data, collData => {
         let coll = new Collection();
         var control = _.mapValues(lokiColl(), (func, name) => {
@@ -74,7 +79,7 @@ function readData(lokiColl) {
         collData.forEach(value => {
             control.put({ element: value });
         });
-        
+
         return control;
     });
     return controls;

@@ -5,6 +5,7 @@ export function put({ db, element }) {
 }
 
 export function find({ db, where }) {
+
     let criteria = [];
 
     let count = 0;
@@ -29,6 +30,7 @@ export function remove({ db, elementId }) {
 }
 
 export default function main() {
-    return { put, find, remove };
+    var result = { put, find, remove };
+    return result;
 }
 module.exports = main;
