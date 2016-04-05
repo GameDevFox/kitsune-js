@@ -13,7 +13,9 @@ describe("sandbox", function() {
     it("should have sand in it", function(done) {
         let systemIds = ["fe60fc76f26f8dce6c5f68bbb0ea0c51efef3dff", // loki-collection
                          "a73b64eba9daa07051815ca7151ba009789616e2", // graph-autoPut
-                         "8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f"]; // string-autoPut
+                         "6c877bef62bc8f57eb55265c62e75b36515ef458", // graph-assign
+                         "8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f", // string-autoPut
+                        ];
 
         let promises = systemIds.map(id => loader({ id }));
         Promise.all(promises)
@@ -21,14 +23,20 @@ describe("sandbox", function() {
                 let [
                     lokiColl,
                     graphAutoPut,
+                    graphAssign,
                     stringAutoPut
                 ] = systems;
 
                 var { graph, string } = readData(lokiColl);
+
                 graph.autoPut = bind(graphAutoPut, { put: graph.put });
+                graph.assign = bind(graphAssign, { autoPut: graph.autoPut });
+
                 string.autoPut = bind(stringAutoPut, { put: string.put });
 
-                graph.autoPut({ element: { head: "YourMom", tail: "YourDad" } });
+                graph.autoPut({ element: { head: "Head", tail: "Tail" } });
+                graph.assign({ head: "AFox", type: "name", "tail": "kit" });
+
                 string.autoPut({ element: { string: "String" } });
 
                 let group = graph.find({ where: { head: "66564ec14ed18fb88965140fc644d7b813121c78" } });

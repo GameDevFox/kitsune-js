@@ -3,7 +3,7 @@ import { createId } from "kitsune/util";
 
 export default function autoPut({ put, element }) {
     if(!element.id) {
-        var id = createId(element);
+        var id = createId();
         element.id = id;
     }
     return put({ element });

@@ -1,0 +1,11 @@
+// -*- mode: js2 -*-
+import { createId } from "kitsune/util";
+
+export default function assign({ autoPut, head, type, tail }) {
+    var element = { head, tail };
+    var edge = autoPut({ element });
+
+    var element = { head: type, tail: edge };
+    return autoPut({ element });
+}
+module.exports = assign;
