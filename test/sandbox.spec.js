@@ -44,36 +44,44 @@ describe("sandbox", function() {
                 // string.autoPut({ string: "String" });
                 // name({ head: "NameThis", name: "This is my name" });
 
-                graph.assign({ head: "personA", type: "name", "tail": "James" });
-                graph.assign({ head: "personB", type: "name", "tail": "Alex" });
-                graph.assign({ head: "personC", type: "name", "tail": "James" });
-                graph.assign({ head: "personA", type: "age", "tail": "21" });
-                graph.assign({ head: "personA", type: "luckyNumber", "tail": "21" });
-                graph.assign({ head: "personB", type: "age", "tail": "21" });
-                graph.assign({ head: "personC", type: "age", "tail": "18" });
-                graph.assign({ head: "personA", type: "color", "tail": "red" });
-                graph.assign({ head: "personA", type: "color", "tail": "white" });
-                graph.assign({ head: "personC", type: "color", "tail": "blue" });
+                // graph.assign({ head: "personA", type: "name", "tail": "James" });
+                // graph.assign({ head: "personB", type: "name", "tail": "Alex" });
+                // graph.assign({ head: "personC", type: "name", "tail": "James" });
+                // graph.assign({ head: "personA", type: "age", "tail": "21" });
+                // graph.assign({ head: "personA", type: "luckyNumber", "tail": "21" });
+                // graph.assign({ head: "personB", type: "age", "tail": "21" });
+                // graph.assign({ head: "personC", type: "age", "tail": "18" });
+                // graph.assign({ head: "personA", type: "color", "tail": "red" });
+                // graph.assign({ head: "personA", type: "color", "tail": "white" });
+                // graph.assign({ head: "personC", type: "color", "tail": "blue" });
 
-                let factor = graph.factor({ head: ["personA", "personB"] }).map(value => ({
-                    head: value.head,
-                    type: value.type,
-                    tail: value.tail
-                }));
-                console.log(factor);
+                // let factor = graph.factor({ head: ["personA", "personB"] }).map(value => ({
+                //     head: value.head,
+                //     type: value.type,
+                //     tail: value.tail
+                // }));
+                // console.log(factor);
 
-                // let group = graph.find({ where: { head: "66564ec14ed18fb88965140fc644d7b813121c78" } });
-                // let systemFiles = group.map(x => x.tail).sort();
-                // console.log("=== System files ===");
-                // console.log(systemFiles);
+                // printTable(graph.find);
 
-                // let systemMap = graph.factor({ head: systemFiles, type: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" });
-                // console.log(systemMap.tail);
-                // let names = systemMap.tail.map(id => string.find({ where: { id } }));
-                // console.log(names.map(name => name[0].string));
+                let group = graph.find({ where: { head: "66564ec14ed18fb88965140fc644d7b813121c78" } });
+                let systemFiles = group.map(x => x.tail).sort();
+                console.log("=== System files ===");
+                console.log(systemFiles);
 
-                // Save Data
-                writeData({ graph, string });
+                let systemMap = graph.factor({ head: systemFiles, type: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" });
+                systemMap.forEach(value => {
+                    var names = string.find({ where: { id: value.tail } });
+                    value.name = names[0].string;
+                });
+                systemMap = systemMap.map(value => ({ head: value.head, name: value.name }));
+                systemMap = _.sortBy(systemMap, ["head"]);
+                console.log(systemMap);
+
+                // Sort and save Data
+                let graphData = _.sortBy(graph.find(), ["head", "tail"]);
+                let stringData = _.sortBy(string.find(), ["string"]);
+                writeData({ graph: graphData, string: stringData });
             })
             .then(done, done);
     });
@@ -134,8 +142,13 @@ function readData(lokiColl) {
 
 function writeData(data) {
     data = _.mapValues(data, coll => {
-        var data = coll.find();
-        return cleanLoki(data);
+        return cleanLoki(coll);
     });
     fs.writeFileSync("out.json", JSON.stringify(data, null, 2)+"\n");
+}
+
+function printTable(graphFind) {
+    let table = graphFind();
+    table = _.sortBy(table, ["head", "tail"]);
+    table.forEach(x => console.log(x.id, x.head, x.tail));
 }
