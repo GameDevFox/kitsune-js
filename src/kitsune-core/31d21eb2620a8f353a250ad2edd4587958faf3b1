@@ -1,12 +1,6 @@
 // -*- mode: js2 -*-
 export default function load({ path, id }) {
-    return new Promise((resolve, reject) => {
-        let systemPath = path+"/"+id;
-        try {
-            let system = require(systemPath);
-            resolve(system);
-        } catch(e) {
-            reject(e);
-        }
-    });
+    let systemPath = path+"/"+id;
+    let system = require(systemPath);
+    return system;
 }
