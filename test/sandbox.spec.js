@@ -4,22 +4,12 @@ import { expect } from "chai";
 
 import { Collection } from "lokijs";
 
+import { createId } from "kitsune/util";
 import systemLoader from "kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
 let loader = bind(systemLoader, { path: "kitsune-core" });
 
 describe("sandbox", function() {
     it.only("should have sand in it", function() {
-
-        let data;
-        try {
-            let json = fs.readFileSync("data.json");
-            data = JSON.parse(json);
-        } catch(e) {
-            data = {
-                graph: [],
-                string: []
-            };
-        }
 
         let systemIds = [
             "fe60fc76f26f8dce6c5f68bbb0ea0c51efef3dff", // loki-collection
@@ -29,6 +19,7 @@ describe("sandbox", function() {
             "b7916f86301a6bc2af32f402f6515809bac75b03", // graph-listNodes
             "8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f", // string-autoPut
             "ddfe7d402ff26c18785bcc899fa69183b3170a7d", // name
+            "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266", // getNames
         ];
 
         let systems = systemIds.map(id => loader({ id }));
@@ -40,10 +31,12 @@ describe("sandbox", function() {
             graphFactor,
             graphListNodes,
             stringAutoPut,
-            name
+            name,
+            getNames
         ] = systems;
 
-        var { graph, string } = readData(data, lokiColl);
+        let data = readData();
+        let { graph, string } = loadData(data, lokiColl);
 
         // Build systems
         graph.autoPut = bind(graphAutoPut, { graphPut: graph.put });
@@ -52,26 +45,43 @@ describe("sandbox", function() {
         graph.listNodes = bind(graphListNodes, { graphFind: graph.find });
         string.autoPut = bind(stringAutoPut, { stringPut: string.put });
         name = bind(name, { stringAutoPut: string.autoPut, graphAssign: graph.assign });
+        getNames = bind(getNames, { graphFactor: graph.factor, stringFind: string.find });
 
         // Execute systems
-        // var nodes = graph.listNodes();
-        // console.log(nodes.sort());
 
-        // printTable(graph.find);
+        // REPORTS //
+
+        // FILE REPORTS
+        console.log("=== System File Report ===");
+        let coreNodes = fs.readdirSync("node_modules/kitsune-core");
+
+        // // Create new node
+        // let newSystemId = createId();
+        // coreNodes.push(newSystemId);
+        // graph.autoPut({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: newSystemId });
+        // name({ head: newSystemId, name: "NEW-SYSTEM" });
 
         let group = graph.find({ where: { head: "66564ec14ed18fb88965140fc644d7b813121c78" } });
         let systemFiles = group.map(x => x.tail).sort();
-        console.log("=== System files ===");
-        console.log(systemFiles);
 
-        let systemMap = graph.factor({ head: systemFiles, type: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" });
-        systemMap.forEach(value => {
-            var names = string.find({ where: { id: value.tail } });
-            value.name = names[0].string;
+        let names = getNames({ head: coreNodes });
+        names.forEach(value => {
+            let isInGroup = systemFiles.indexOf(value.head) != -1;
+            console.log("["+(isInGroup ? "X" : " ")+"] "+value.head+": "+JSON.stringify(value.name));
         });
-        systemMap = systemMap.map(value => ({ head: value.head, name: value.name }));
-        systemMap = _.sortBy(systemMap, ["head"]);
-        console.log(systemMap);
+
+        // CREATE LINKS
+        
+        
+        // GRAPH REPORT
+        let edges = graph.find();
+        let nodes = graph.listNodes();
+        let nodePercent = (edges.length/nodes.length*100).toPrecision(4);
+
+        console.log("== Graph Report ==");
+        console.log("Nodes: "+nodes.length);
+        console.log("Edges: "+edges.length+" ("+nodePercent+"%)");
+        console.log("==================");
 
         // Sort and save Data
         let graphData = _.sortBy(graph.find(), ["head", "tail"]);
@@ -81,8 +91,8 @@ describe("sandbox", function() {
 });
 
 function bind(func, bindParams) {
-    var f = function(partParams) {
-        var fullParams = {};
+    let f = function(partParams) {
+        let fullParams = {};
         for(let key in bindParams)
             fullParams[key] = bindParams[key];
 
@@ -105,10 +115,24 @@ function logLoki(data) {
     console.log(json);
 }
 
-function readData(data, lokiColl) {
+function readData() {
+    let data;
+    try {
+        let json = fs.readFileSync("data.json");
+        data = JSON.parse(json);
+    } catch(e) {
+        data = {
+            graph: [],
+            string: []
+        };
+    }
+    return data;
+}
+
+function loadData(data, lokiColl) {
     let controls = _.mapValues(data, collData => {
         let coll = new Collection();
-        var control = _.mapValues(lokiColl(), (func, name) => {
+        let control = _.mapValues(lokiColl(), (func, name) => {
             return bind(func, { db: coll });
         });
 
