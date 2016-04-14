@@ -37,7 +37,7 @@ describe("sandbox", function() {
             getNames
         ] = systems;
 
-        let data = readData();
+        let data = readData("data.json");
         let { graph, string } = loadData(data, lokiColl);
 
         // Build systems
@@ -49,13 +49,10 @@ describe("sandbox", function() {
         name = bind(name, { stringAutoPut: string.autoPut, graphAssign: graph.assign });
         getNames = bind(getNames, { graphFactor: graph.factor, stringFind: string.find });
 
-        // Execute systems
+        let createSystemFile = bind(_createSystemFile, { graphAutoPut: graph.autoPut, nameFn: name });
 
-        // // Create new node
-        // let newSystemId = createId();
-        // exec("cp src/kitsune-core/ddfe7d402ff26c18785bcc899fa69183b3170a7d src/kitsune-core/"+newSystemId);
-        // graph.autoPut({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: newSystemId });
-        // name({ head: newSystemId, name: "NEW-SYSTEM" });
+        // Execute systems
+        // createSystemFile({ name: "new-system" });
 
         // System file report
         console.log("=== System File Report ===");
@@ -95,6 +92,13 @@ describe("sandbox", function() {
     });
 });
 
+function _createSystemFile({ graphAutoPut, nameFn, name }) {
+    let newSystemId = createId();
+    exec("cp src/kitsune-core/ddfe7d402ff26c18785bcc899fa69183b3170a7d src/kitsune-core/"+newSystemId);
+    graphAutoPut({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: newSystemId });
+    nameFn({ head: newSystemId, name: name });
+}
+
 function bind(func, bindParams) {
     let f = function(partParams) {
         let fullParams = {};
@@ -120,10 +124,10 @@ function logLoki(data) {
     console.log(json);
 }
 
-function readData() {
+function readData(fileName) {
     let data;
     try {
-        let json = fs.readFileSync("data.json");
+        let json = fs.readFileSync(fileName);
         data = JSON.parse(json);
     } catch(e) {
         data = {
