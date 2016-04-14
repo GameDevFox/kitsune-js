@@ -1,4 +1,5 @@
-{
+var data = function() {
+    return {
   "graph": [
     {
       "id": "ad095725ca2fec00a1036b60cb5ebf6ff8115939",
@@ -29,6 +30,11 @@
       "id": "df9fc5cf88b921ea6833b1e890b0f578b71e1e7c",
       "head": "66564ec14ed18fb88965140fc644d7b813121c78",
       "tail": "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266"
+    },
+    {
+      "id": "4c741c8bc128e62397a198d1695406bac353adf0",
+      "head": "66564ec14ed18fb88965140fc644d7b813121c78",
+      "tail": "844836a52a90135097ca793b6ac249e570229fd8"
     },
     {
       "id": "be35557c1d195f78b82fb1774e1ab1441c70dc50",
@@ -69,6 +75,11 @@
       "id": "2552d882aee59773373438b9330c6f6fde4ba5b2",
       "head": "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266",
       "tail": "39d5f90701406c2f6bd4beb5687c4f71a88fb256"
+    },
+    {
+      "id": "da17ae5aca96e2563ac8b03f43ed5a7c7f740a7b",
+      "head": "844836a52a90135097ca793b6ac249e570229fd8",
+      "tail": "875fdeca2e42aca6e7bc98ef6c925ffc139c9414"
     },
     {
       "id": "84936be5cc42f84e6f92c5efe62cdd17b6f41077",
@@ -136,6 +147,11 @@
       "tail": "ad095725ca2fec00a1036b60cb5ebf6ff8115939"
     },
     {
+      "id": "8563523d8bf094e663acfa021c43c6a349421916",
+      "head": "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0",
+      "tail": "da17ae5aca96e2563ac8b03f43ed5a7c7f740a7b"
+    },
+    {
       "id": "b8cb1d11dd08f22bde9cde6a2a38d1258a7bd0b9",
       "head": "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0",
       "tail": "eccf703edd7dbfc05aa37a0cb87c9e5f9c2e916e"
@@ -173,6 +189,10 @@
       "string": "graph-listNodes"
     },
     {
+      "id": "875fdeca2e42aca6e7bc98ef6c925ffc139c9414",
+      "string": "init-data"
+    },
+    {
       "id": "21f059cb4351479bb9c4f5c904fd7784fbdbdbd7",
       "string": "loki-collection"
     },
@@ -193,4 +213,6 @@
       "string": "test-data"
     }
   ]
-}
+};
+};
+module.exports = data;

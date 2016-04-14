@@ -14,6 +14,8 @@ describe("sandbox", function() {
     it.only("should have sand in it", function() {
 
         let systemIds = [
+            "844836a52a90135097ca793b6ac249e570229fd8", // init-data
+
             "fe60fc76f26f8dce6c5f68bbb0ea0c51efef3dff", // loki-collection
             "a73b64eba9daa07051815ca7151ba009789616e2", // graph-autoPut
             "6c877bef62bc8f57eb55265c62e75b36515ef458", // graph-assign
@@ -27,6 +29,8 @@ describe("sandbox", function() {
         let systems = systemIds.map(id => loader({ id }));
 
         let [
+            initData,
+
             lokiColl,
             graphAutoPut,
             graphAssign,
@@ -37,7 +41,7 @@ describe("sandbox", function() {
             getNames
         ] = systems;
 
-        let data = readData("data.json");
+        let data = initData();
         let { graph, string } = loadData(data, lokiColl);
 
         // Build systems
@@ -113,17 +117,6 @@ function bind(func, bindParams) {
     return f;
 }
 
-function cleanLoki(data) {
-    let result = data.map(value => _.omit(value, "meta", "$loki"));
-    return result;
-}
-
-function logLoki(data) {
-    let cleanData = cleanLoki(data);
-    let json = JSON.stringify(cleanData, null, 2);
-    console.log(json);
-}
-
 function readData(fileName) {
     let data;
     try {
@@ -154,11 +147,26 @@ function loadData(data, lokiColl) {
     return controls;
 }
 
+function cleanLoki(data) {
+    let result = data.map(value => _.omit(value, "meta", "$loki"));
+    return result;
+}
+
+function wrapData(data) {
+    return `var data = function() {
+    return ${data};
+};
+module.exports = data;
+`;
+}
+
 function writeData(data) {
     data = _.mapValues(data, coll => {
         return cleanLoki(coll);
     });
-    fs.writeFileSync("out.json", JSON.stringify(data, null, 2)+"\n");
+    let json = JSON.stringify(data, null, 2);
+    let finalData = wrapData(json);
+    fs.writeFileSync("out.js", finalData);
 }
 
 function printTable(graphFind) {
