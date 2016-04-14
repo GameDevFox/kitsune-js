@@ -24,6 +24,8 @@ describe("sandbox", function() {
             "8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f", // string-autoPut
             "ddfe7d402ff26c18785bcc899fa69183b3170a7d", // name
             "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266", // getNames
+
+            "d2f544f574dae26adb5ed3ee70c71e302b2575fa", // is-in-collection
         ];
 
         let systems = systemIds.map(id => loader({ id }));
@@ -38,7 +40,9 @@ describe("sandbox", function() {
             graphListNodes,
             stringAutoPut,
             name,
-            getNames
+            getNames,
+
+            isInCollection
         ] = systems;
 
         let data = initData();
@@ -54,13 +58,17 @@ describe("sandbox", function() {
         getNames = bind(getNames, { graphFactor: graph.factor, stringFind: string.find });
 
         let createSystemFile = bind(_createSystemFile, { graphAutoPut: graph.autoPut, nameFn: name });
+        let isEdge = bind(isInCollection, { graphFind: graph.find });
 
         // Execute systems
-        // createSystemFile({ name: "new-system" });
+        // createSystemFile({ name: "is-edge" });
+        console.log("Is edge: " + isEdge({ node: "6c3c049ef6f92393570beccc10dd67f2f155377c" }));
+        console.log("Is edge: " + isEdge({ node: "d2f544f574dae26adb5ed3ee70c71e302b2575fa" }));
 
         // System file report
         console.log("=== System File Report ===");
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
+        console.log("System files: "+coreNodes.length);
 
         let group = graph.find({ where: { head: "66564ec14ed18fb88965140fc644d7b813121c78" } });
         let systemFiles = group.map(x => x.tail).sort();
