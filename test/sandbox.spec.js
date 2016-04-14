@@ -1,4 +1,6 @@
+import { execSync as exec } from "child_process";
 import fs from "fs";
+
 import _ from "lodash";
 import { expect } from "chai";
 
@@ -49,17 +51,15 @@ describe("sandbox", function() {
 
         // Execute systems
 
-        // REPORTS //
-
-        // FILE REPORTS
-        console.log("=== System File Report ===");
-        let coreNodes = fs.readdirSync("node_modules/kitsune-core");
-
         // // Create new node
         // let newSystemId = createId();
-        // coreNodes.push(newSystemId);
+        // exec("cp src/kitsune-core/ddfe7d402ff26c18785bcc899fa69183b3170a7d src/kitsune-core/"+newSystemId);
         // graph.autoPut({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: newSystemId });
         // name({ head: newSystemId, name: "NEW-SYSTEM" });
+
+        // System file report
+        console.log("=== System File Report ===");
+        let coreNodes = fs.readdirSync("node_modules/kitsune-core");
 
         let group = graph.find({ where: { head: "66564ec14ed18fb88965140fc644d7b813121c78" } });
         let systemFiles = group.map(x => x.tail).sort();
@@ -70,10 +70,15 @@ describe("sandbox", function() {
             console.log("["+(isInGroup ? "X" : " ")+"] "+value.head+": "+JSON.stringify(value.name));
         });
 
-        // CREATE LINKS
-        
-        
-        // GRAPH REPORT
+        // Recreate links
+        exec("rm -rf src/kitsune-core-src");
+        exec("mkdir -p src/kitsune-core-src");
+        names.forEach(value => {
+            let id = value.head; let name = value.name[0];
+            exec("ln -s ../../src/kitsune-core/"+id+" src/kitsune-core-src/"+name);
+        });
+
+        // Graph report
         let edges = graph.find();
         let nodes = graph.listNodes();
         let nodePercent = (edges.length/nodes.length*100).toPrecision(4);
