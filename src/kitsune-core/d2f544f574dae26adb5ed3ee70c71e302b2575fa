@@ -1,6 +1,6 @@
 // -*- mode: js2 -*-
-export default function isEdge({ graphFind, node }) {
-    var result = graphFind({ where: { id: node } });
+export default function isInCollection({ collFind, node }) {
+    var result = collFind({ where: { id: node } });
     return result.length > 0;
 }
-module.exports = isEdge;
+module.exports = isInCollection;

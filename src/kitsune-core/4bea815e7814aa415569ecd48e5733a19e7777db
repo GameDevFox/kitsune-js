@@ -1,0 +1,13 @@
+// -*- mode: js2 -*-
+export default function describe({ node, types }) {
+    let result = [];
+    for(let key in types) {
+        let fn = types[key];
+        let isA = fn({ node: node });
+        if(isA)
+            result.push(key);
+    }
+
+    return result;
+}
+module.exports = describe;

@@ -24,8 +24,9 @@ describe("sandbox", function() {
             "8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f", // string-autoPut
             "ddfe7d402ff26c18785bcc899fa69183b3170a7d", // name
             "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266", // getNames
-
             "d2f544f574dae26adb5ed3ee70c71e302b2575fa", // is-in-collection
+            "4bea815e7814aa415569ecd48e5733a19e7777db", // describe-node
+            "a3fd8e7c0d51f13671ebbb6f9758833ff6120b42", // is-in-group
         ];
 
         let systems = systemIds.map(id => loader({ id }));
@@ -41,8 +42,9 @@ describe("sandbox", function() {
             stringAutoPut,
             name,
             getNames,
-
-            isInCollection
+            isInCollection,
+            describe,
+            isInGroup
         ] = systems;
 
         let data = initData();
@@ -58,12 +60,40 @@ describe("sandbox", function() {
         getNames = bind(getNames, { graphFactor: graph.factor, stringFind: string.find });
 
         let createSystemFile = bind(_createSystemFile, { graphAutoPut: graph.autoPut, nameFn: name });
-        let isEdge = bind(isInCollection, { graphFind: graph.find });
+        let isEdge = bind(isInCollection, { collFind: graph.find });
+        let isString = bind(isInCollection, { collFind: string.find });
 
         // Execute systems
-        // createSystemFile({ name: "is-edge" });
-        console.log("Is edge: " + isEdge({ node: "6c3c049ef6f92393570beccc10dd67f2f155377c" }));
-        console.log("Is edge: " + isEdge({ node: "d2f544f574dae26adb5ed3ee70c71e302b2575fa" }));
+        // createSystemFile({ name: "is-in-group" });
+
+        // name({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", name: "core-node" });
+        // name({ head: "66564ec14ed18fb88965140fc644d7b813121c78", name: "system-files" });
+        // name({ head: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", name: "name" });
+
+        graph.autoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
+        graph.autoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: "66564ec14ed18fb88965140fc644d7b813121c78" });
+        graph.autoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" });
+
+        function and({ types, node }) {
+            var notA = types.find(type => {
+                let notA = !type({ node: node });
+                return notA;
+            });
+            return !notA;
+        }
+
+        let isCoreNode = bind(isInGroup, { graphFind: graph.find, group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
+        let isSystemFile = bind(isInGroup, { graphFind: graph.find, group: "66564ec14ed18fb88965140fc644d7b813121c78" });
+        let isInNameGroup = bind(isInGroup, { graphFind: graph.find, group: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" });
+        let isNameEdge = bind(and, { types: [ isEdge, isInNameGroup ] });
+
+        let typeMap = { isEdge, isString, /*isCoreNode,*/ isSystemFile, isNameEdge };
+        let nodeList = graph.listNodes();
+
+        nodeList.forEach(node => {
+            let types = describe({ node: node, types: typeMap });
+            console.log(node+" => "+JSON.stringify(types));
+        });
 
         // System file report
         console.log("=== System File Report ===");
