@@ -1,8 +1,14 @@
 // -*- mode: js2 -*-
 import { hash } from "kitsune/util";
 
-export default function autoPut({ stringPut, string }) {
+export default function autoPut({ stringFind, stringPut, string }) {
+    // Make sure the string isn't stored already
+    let search = stringFind({ where: { string: string } });
+    if(search.length > 0)
+        return search[0].id;
+
     let id = hash(string);
-    return stringPut({ element: { id, string } });
+    let result = stringPut({ element: { id, string } });
+    return result;
 }
 module.exports = autoPut;

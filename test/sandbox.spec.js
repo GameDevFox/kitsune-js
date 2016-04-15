@@ -55,7 +55,7 @@ describe("sandbox", function() {
         graph.assign = bind(graphAssign, { graphAutoPut: graph.autoPut });
         graph.factor = bind(graphFactor, { graphFind: graph.find });
         graph.listNodes = bind(graphListNodes, { graphFind: graph.find });
-        string.autoPut = bind(stringAutoPut, { stringPut: string.put });
+        string.autoPut = bind(stringAutoPut, { stringFind: string.find, stringPut: string.put });
         name = bind(name, { stringAutoPut: string.autoPut, graphAssign: graph.assign });
         getNames = bind(getNames, { graphFactor: graph.factor, stringFind: string.find });
 
@@ -65,14 +65,9 @@ describe("sandbox", function() {
 
         // Execute systems
         // createSystemFile({ name: "is-in-group" });
-
-        // name({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", name: "core-node" });
-        // name({ head: "66564ec14ed18fb88965140fc644d7b813121c78", name: "system-files" });
-        // name({ head: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", name: "name" });
-
-        graph.autoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
-        graph.autoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: "66564ec14ed18fb88965140fc644d7b813121c78" });
-        graph.autoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" });
+        // name({ node: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", name: "core-node" });
+        // name({ node: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", name: "name" });
+        // name({ node: "66564ec14ed18fb88965140fc644d7b813121c78", name: "system-files" });
 
         function and({ types, node }) {
             var notA = types.find(type => {
@@ -87,7 +82,7 @@ describe("sandbox", function() {
         let isInNameGroup = bind(isInGroup, { graphFind: graph.find, group: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" });
         let isNameEdge = bind(and, { types: [ isEdge, isInNameGroup ] });
 
-        let typeMap = { isEdge, isString, /*isCoreNode,*/ isSystemFile, isNameEdge };
+        let typeMap = { isEdge, isString, isCoreNode, isSystemFile, isNameEdge };
         let nodeList = graph.listNodes();
 
         nodeList.forEach(node => {
@@ -103,18 +98,22 @@ describe("sandbox", function() {
         let group = graph.find({ where: { head: "66564ec14ed18fb88965140fc644d7b813121c78" } });
         let systemFiles = group.map(x => x.tail).sort();
 
-        let names = getNames({ head: coreNodes });
-        names.forEach(value => {
-            let isInGroup = systemFiles.indexOf(value.head) != -1;
-            console.log("["+(isInGroup ? "X" : " ")+"] "+value.head+": "+JSON.stringify(value.name));
+        coreNodes.forEach(node => {
+            let isInGroup = systemFiles.indexOf(node) != -1;
+            let myNames = getNames({ node });
+            let nameStr = myNames ? JSON.stringify(myNames) : "[]";
+            console.log("["+(isInGroup ? "X" : " ")+"] "+node+": "+nameStr);
         });
 
         // Recreate links
         exec("rm -rf src/kitsune-core-src");
         exec("mkdir -p src/kitsune-core-src");
-        names.forEach(value => {
-            let id = value.head; let name = value.name[0];
-            exec("ln -s ../../src/kitsune-core/"+id+" src/kitsune-core-src/"+name);
+        coreNodes.forEach(node => {
+            let myNames = getNames({ node });
+            if(myNames && myNames.length > 0) {
+                let cmdStr = "ln -s ../../src/kitsune-core/"+node+" src/kitsune-core-src/"+myNames[0];
+                exec(cmdStr);
+            }
         });
 
         // Graph report
@@ -179,6 +178,8 @@ function loadData(data, lokiColl) {
         collData.forEach(value => {
             control.put({ element: value });
         });
+
+        control.coll = coll;
 
         return control;
     });
