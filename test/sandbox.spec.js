@@ -11,7 +11,7 @@ import systemLoader from "kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1"
 let loader = bind(systemLoader, { path: "kitsune-core" });
 
 describe("sandbox", function() {
-    it.only("should have sand in it", function() {
+    it("should have sand in it", function() {
 
         let systemIds = [
             "844836a52a90135097ca793b6ac249e570229fd8", // init-data
