@@ -27,6 +27,7 @@ describe("sandbox", function() {
             "d2f544f574dae26adb5ed3ee70c71e302b2575fa", // is-in-collection
             "4bea815e7814aa415569ecd48e5733a19e7777db", // describe-node
             "a3fd8e7c0d51f13671ebbb6f9758833ff6120b42", // is-in-group
+            "90184a3d0c84658aac411637f7442f80b3fe0040", // and-is
         ];
 
         let systems = systemIds.map(id => loader({ id }));
@@ -44,7 +45,8 @@ describe("sandbox", function() {
             getNames,
             isInCollection,
             describe,
-            isInGroup
+            isInGroup,
+            andIs
         ] = systems;
 
         let data = initData();
@@ -64,23 +66,12 @@ describe("sandbox", function() {
         let isString = bind(isInCollection, { collFind: string.find });
 
         // Execute systems
-        // createSystemFile({ name: "is-in-group" });
-        // name({ node: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", name: "core-node" });
-        // name({ node: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", name: "name" });
-        // name({ node: "66564ec14ed18fb88965140fc644d7b813121c78", name: "system-files" });
-
-        function and({ types, node }) {
-            var notA = types.find(type => {
-                let notA = !type({ node: node });
-                return notA;
-            });
-            return !notA;
-        }
+        // createSystemFile({ name: "and-is" });
 
         let isCoreNode = bind(isInGroup, { graphFind: graph.find, group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
         let isSystemFile = bind(isInGroup, { graphFind: graph.find, group: "66564ec14ed18fb88965140fc644d7b813121c78" });
         let isInNameGroup = bind(isInGroup, { graphFind: graph.find, group: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" });
-        let isNameEdge = bind(and, { types: [ isEdge, isInNameGroup ] });
+        let isNameEdge = bind(andIs, { types: [ isEdge, isInNameGroup ] });
 
         let typeMap = { isEdge, isString, isCoreNode, isSystemFile, isNameEdge };
         let nodeList = graph.listNodes();
@@ -137,7 +128,7 @@ function _createSystemFile({ graphAutoPut, nameFn, name }) {
     let newSystemId = createId();
     exec("cp src/kitsune-core/ddfe7d402ff26c18785bcc899fa69183b3170a7d src/kitsune-core/"+newSystemId);
     graphAutoPut({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: newSystemId });
-    nameFn({ head: newSystemId, name: name });
+    nameFn({ node: newSystemId, name: name });
 }
 
 function bind(func, bindParams) {
