@@ -4,7 +4,6 @@
   "description": "Experimental programming system",
   "main": "index.js",
   "scripts": {
-    "preinstall": "git submodule init && git submodule update",
     "test": "gulp test",
     "start": "node server.js"
   },

@@ -2,9 +2,6 @@
 import _ from "lodash";
 import sqlite3 from "sqlite3";
 
-import { noop } from "katana/func";
-import { log } from "katana/system";
-
 import { ids, aliases, tables, typeQs, opQs as ops, types, views } from "kitsune/data";
 import bindDB from "kitsune/systems/db";
 import { buildQuery, queryBuilder as q } from "kitsune/systems/db/util";
