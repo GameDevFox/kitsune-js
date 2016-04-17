@@ -17,19 +17,13 @@ describe("sandbox", function() {
         // let systemLoaderId = "31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
 
         // INIT DATA SYSTEM
-        let initDataId = "844836a52a90135097ca793b6ac249e570229fd8"; // init-data
-        let initDataSystemId = "fe60fc76f26f8dce6c5f68bbb0ea0c51efef3dff"; // loki-collection
-        let dataSystem = loader({ id: initDataId });
-        let lokiColl = loader({ id: initDataSystemId });
-
         let graphDataId = "24c045b912918d65c9e9aaea9993e9ab56f50d2e";
         let stringDataId = "1cd179d6e63660fba96d54fe71693d1923e3f4f1";
         let graphData = loader({ id: graphDataId });
         let stringData = loader({ id: stringDataId });
 
-        // TODO: remove "init-date" for "graph-data" and "string-data"
-        // let data = dataSystem();
-        // let { graph, string } = loadData(data, lokiColl);
+        let initDataSystemId = "fe60fc76f26f8dce6c5f68bbb0ea0c51efef3dff"; // loki-collection
+        let lokiColl = loader({ id: initDataSystemId });
         let graph = loadData(graphData(), lokiColl);
         let string = loadData(stringData(), lokiColl);
 
@@ -78,7 +72,7 @@ describe("sandbox", function() {
         let isString = bind(isInCollection, { collFind: string.find });
 
         // Execute systems
-        // createSystemFile({ name: "string-data" });
+        // createSystemFile({ name: "dummy" });
 
         let isCoreNode = bind(isInGroup, { graphFind: graph.find, group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
         let isSystemFile = bind(isInGroup, { graphFind: graph.find, group: "66564ec14ed18fb88965140fc644d7b813121c78" });
@@ -132,7 +126,8 @@ describe("sandbox", function() {
         // Sort and save Data
         let sortedGraphData = _.sortBy(graph.find(), ["head", "tail"]);
         let sortedStringData = _.sortBy(string.find(), ["string"]);
-        writeData({ graph: sortedGraphData, string: sortedStringData });
+        writeData(sortedGraphData, "graph.js");
+        writeData(sortedStringData, "string.js");
     });
 });
 
@@ -200,13 +195,11 @@ module.exports = data;
 `;
 }
 
-function writeData(data) {
-    data = _.mapValues(data, coll => {
-        return cleanLoki(coll);
-    });
+function writeData(data, filename) {
+    data = cleanLoki(data);
     let json = JSON.stringify(data, null, 2);
     let finalData = wrapData(json);
-    fs.writeFileSync("out.js", finalData);
+    fs.writeFileSync(filename, finalData);
 }
 
 function printTable(graphFind) {
