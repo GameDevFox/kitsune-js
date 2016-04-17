@@ -1,8 +1,8 @@
 // -*- mode: js2 -*-
 export default function and({ types, node }) {
-    var notA = types.find(type => {
-        let notA = !type({ node: node });
-        return notA;
+    let notA = types.find(type => {
+        let isA = !type({ node: node });
+        return isA;
     });
     return !notA;
 }
