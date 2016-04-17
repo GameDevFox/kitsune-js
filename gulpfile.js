@@ -21,6 +21,8 @@ var testSrcPath = [kitsuneTestPath];
 
 var testBuildPath = ["./build/test/kitsune/**/*.spec.js"];
 
+var softTestFail = false;
+
 gulp.task("default", 'runs "clean" and "build"', g.sequence("clean", ["build", "build-test-kitsune"], "test-run"));
 
 gulp.task("clean", 'Cleans up (deletes) all build files', function(done) {
@@ -63,13 +65,18 @@ var mochaOpts = {
 
 gulp.task("test", "Runs tests", g.sequence(["build", "build-test-kitsune"], "test-run"));
 gulp.task("test-run", function() {
-	return gulp.src(testBuildPath)
-		.pipe(g.cached("mocha"))
-		.pipe(g.mocha(mochaOpts))
-		.on("error", function(e) {
-			g.util.log(e.stack);
-			this.emit("end");
-		});
+    var stream = gulp.src(testBuildPath)
+	    .pipe(g.cached("mocha"))
+	    .pipe(g.mocha(mochaOpts));
+
+    if(softTestFail) {
+	stream.on("error", function(e) {
+	    g.util.log(e.stack);
+	    this.emit("end");
+	});
+    }
+
+    return stream;
 });
 
 gulp.task("coverage", "Creates coverage report", g.sequence("clean", ["build", "build-test-kitsune"], "coverage-run"));
@@ -122,7 +129,11 @@ gulp.task("start-run", function() {
 
 // Watch tasks
 gulp.task("watch", 'Runs app in "development mode", reloading app and running tests on files changes',
-		  g.sequence("clean", ["build", "build-test-kitsune"], "test-run", "start-run", ["watch-src", "watch-test"]));
+          g.sequence("watch-flag", "clean", ["build", "build-test-kitsune"], "test-run", "start-run", ["watch-src", "watch-test"]));
+
+gulp.task("watch-flag", function() {
+    softTestFail = true;
+});
 
 gulp.task("watch-src", function() {	gulp.watch(appSrcPath, ["watch-src-run"]); });
 gulp.task("watch-src-run", function(cb) {
