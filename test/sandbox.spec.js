@@ -126,8 +126,10 @@ describe("sandbox", function() {
         // Sort and save Data
         let sortedGraphData = _.sortBy(graph.find(), ["head", "tail"]);
         let sortedStringData = _.sortBy(string.find(), ["string"]);
-        writeData(sortedGraphData, "graph.js");
-        writeData(sortedStringData, "string.js");
+
+        exec("mkdir -p out/data");
+        writeData(sortedGraphData, "out/data/graph.js");
+        writeData(sortedStringData, "out/data/string.js");
     });
 });
 
