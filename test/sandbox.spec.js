@@ -72,35 +72,20 @@ describe("sandbox", function() {
         let isString = bind(isInCollection, { collFind: string.find });
 
         // Execute systems
-        // createSystemFile({ name: "dummy" });
+        // createSystemFile({ name: "yourmom" });
 
-        let isCoreNode = bind(isInGroup, { graphFind: graph.find, group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
-        let isSystemFile = bind(isInGroup, { graphFind: graph.find, group: "66564ec14ed18fb88965140fc644d7b813121c78" });
-        let isInNameGroup = bind(isInGroup, { graphFind: graph.find, group: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" });
-        let isNameEdge = bind(andIs, { types: [ isEdge, isInNameGroup ] });
-
-        let typeMap = { isEdge, isString, isCoreNode, isSystemFile, isNameEdge };
-        let nodeList = graph.listNodes();
-
-        nodeList.forEach(node => {
-            let types = describe({ node: node, types: typeMap });
-            console.log(node+" => "+JSON.stringify(types));
-        });
-
-        // System file report
-        console.log("=== System File Report ===");
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
-        console.log("System files: "+coreNodes.length);
+        // REPORTS //
+        {
+            // Node description report
+            // nodeDescReport({ isInGroup, graph, andIs, isEdge, isString, describe });
 
-        let group = graph.find({ where: { head: "66564ec14ed18fb88965140fc644d7b813121c78" } });
-        let systemFiles = group.map(x => x.tail).sort();
+            // System file report
+            systemFileReport({ coreNodes, graph, getNames });
 
-        coreNodes.forEach(node => {
-            let isInGroup = systemFiles.indexOf(node) != -1;
-            let myNames = getNames({ node });
-            let nameStr = myNames ? JSON.stringify(myNames) : "[]";
-            console.log("["+(isInGroup ? "X" : " ")+"] "+node+": "+nameStr);
-        });
+            // Graph report
+            graphReport({ graph });
+        }
 
         // Recreate links
         exec("rm -rf src/kitsune-core-src");
@@ -113,16 +98,6 @@ describe("sandbox", function() {
             }
         });
 
-        // Graph report
-        let edges = graph.find();
-        let nodes = graph.listNodes();
-        let nodePercent = (edges.length/nodes.length*100).toPrecision(4);
-
-        console.log("== Graph Report ==");
-        console.log("Nodes: "+nodes.length);
-        console.log("Edges: "+edges.length+" ("+nodePercent+"%)");
-        console.log("==================");
-
         // Sort and save Data
         let sortedGraphData = _.sortBy(graph.find(), ["head", "tail"]);
         let sortedStringData = _.sortBy(string.find(), ["string"]);
@@ -132,6 +107,47 @@ describe("sandbox", function() {
         writeData(sortedStringData, "out/data/string.js");
     });
 });
+
+function nodeDescReport({ isInGroup, graph, andIs, isEdge, isString, describe }) {
+    let isCoreNode = bind(isInGroup, { graphFind: graph.find, group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
+    let isSystemFile = bind(isInGroup, { graphFind: graph.find, group: "66564ec14ed18fb88965140fc644d7b813121c78" });
+    let isInNameGroup = bind(isInGroup, { graphFind: graph.find, group: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" });
+    let isNameEdge = bind(andIs, { types: [ isEdge, isInNameGroup ] });
+
+    let typeMap = { isEdge, isString, isCoreNode, isSystemFile, isNameEdge };
+    let nodeList = graph.listNodes();
+
+    nodeList.forEach(node => {
+        let types = describe({ node: node, types: typeMap });
+        console.log(node+" => "+JSON.stringify(types));
+    });
+}
+
+function systemFileReport({ coreNodes, graph, getNames }) {
+    console.log("=== System File Report ===");
+    console.log("System files: "+coreNodes.length);
+
+    let group = graph.find({ where: { head: "66564ec14ed18fb88965140fc644d7b813121c78" } });
+    let systemFiles = group.map(x => x.tail).sort();
+
+    coreNodes.forEach(node => {
+        let isInGroup = systemFiles.indexOf(node) != -1;
+        let myNames = getNames({ node });
+        let nameStr = myNames ? JSON.stringify(myNames) : "[]";
+        console.log("["+(isInGroup ? "X" : " ")+"] "+node+": "+nameStr);
+    });
+}
+
+function graphReport({ graph }) {
+    let edges = graph.find();
+    let nodes = graph.listNodes();
+    let nodePercent = (edges.length/nodes.length*100).toPrecision(4);
+
+    console.log("== Graph Report ==");
+    console.log("Nodes: "+nodes.length);
+    console.log("Edges: "+edges.length+" ("+nodePercent+"%)");
+    console.log("==================");
+}
 
 function _createSystemFile({ graphAutoPut, nameFn, name }) {
     let newSystemId = createId();
