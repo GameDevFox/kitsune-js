@@ -4,28 +4,41 @@ import fs from "fs";
 import _ from "lodash";
 import { expect } from "chai";
 
-import { Collection } from "lokijs";
-
 import { createId } from "kitsune/util";
 import systemLoader from "kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
-let loader = bind(systemLoader, { path: "kitsune-core" });
 
 describe("sandbox", function() {
-    it("should have sand in it", function() {
+    it.only("should have sand in it", function() {
 
         // INIT LOADER SYSTEM - already loaded, just here for reference
         // let systemLoaderId = "31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
+        let bind = systemLoader({ path: "kitsune-core", id: "878c8ef64d31a194159765945fc460cb6b3f486f" }); // bind
+        let loader = bind({ func: systemLoader, params: { path: "kitsune-core" }});
 
-        // INIT DATA SYSTEM
-        let graphDataId = "24c045b912918d65c9e9aaea9993e9ab56f50d2e";
-        let stringDataId = "1cd179d6e63660fba96d54fe71693d1923e3f4f1";
-        let graphData = loader({ id: graphDataId });
-        let stringData = loader({ id: stringDataId });
+        // MANUAL LOADING
+        let graphData = loader({ id: "24c045b912918d65c9e9aaea9993e9ab56f50d2e" }); // graph-data
+        let stringData = loader({ id: "1cd179d6e63660fba96d54fe71693d1923e3f4f1" }); // string-data
 
-        let initDataSystemId = "fe60fc76f26f8dce6c5f68bbb0ea0c51efef3dff"; // loki-collection
-        let lokiColl = loader({ id: initDataSystemId });
-        let graph = loadData(graphData(), lokiColl);
-        let string = loadData(stringData(), lokiColl);
+        let lokiColl = loader({ id: "0741c54e604ad973eb41c02ab59c5aabdf2c6bc3" }); // ... same
+        let lokiCollPlus = loader({ id: "fe60fc76f26f8dce6c5f68bbb0ea0c51efef3dff" }); // loki-collection
+
+        // INIT DATA SYSTEMS
+        var data = { graph: graphData(), string: stringData() };
+
+        data = _.mapValues(data, (dataSet, systemName) => {
+            let coll = lokiColl();
+            let control = _.mapValues(lokiCollPlus(), (func, name) => {
+                return bind({ func: func, params: { db: coll }});
+            });
+
+            dataSet.forEach(value => {
+                control.put({ element: value });
+            });
+
+            return control;
+        });
+
+        let { graph, string } = data;
 
         // INIT SYSTEMS
         let systemIds = [
@@ -59,20 +72,27 @@ describe("sandbox", function() {
         ] = systems;
 
         // Build systems
-        graph.autoPut = bind(graphAutoPut, { graphPut: graph.put });
-        graph.assign = bind(graphAssign, { graphAutoPut: graph.autoPut });
-        graph.factor = bind(graphFactor, { graphFind: graph.find });
-        graph.listNodes = bind(graphListNodes, { graphFind: graph.find });
-        string.autoPut = bind(stringAutoPut, { stringFind: string.find, stringPut: string.put });
-        name = bind(name, { stringAutoPut: string.autoPut, graphAssign: graph.assign });
-        getNames = bind(getNames, { graphFactor: graph.factor, stringFind: string.find });
+        graph.autoPut = bind({ func: graphAutoPut, params: { graphPut: graph.put }});
+        graph.assign = bind({ func: graphAssign, params: { graphAutoPut: graph.autoPut }});
+        graph.factor = bind({ func: graphFactor, params: { graphFind: graph.find }});
+        graph.listNodes = bind({ func: graphListNodes, params: { graphFind: graph.find }});
+        string.autoPut = bind({ func: stringAutoPut, params: { stringFind: string.find, stringPut: string.put }});
+        name = bind({ func: name, params: { stringAutoPut: string.autoPut, graphAssign: graph.assign }});
+        getNames = bind({ func: getNames, params: { graphFactor: graph.factor, stringFind: string.find }});
 
-        let createSystemFile = bind(_createSystemFile, { graphAutoPut: graph.autoPut, nameFn: name });
-        let isEdge = bind(isInCollection, { collFind: graph.find });
-        let isString = bind(isInCollection, { collFind: string.find });
+        let createSystemFile = bind({ func: _createSystemFile, params: { graphAutoPut: graph.autoPut, nameFn: name }});
+        let isEdge = bind({ func: isInCollection, params: { collFind: graph.find }});
+        let isString = bind({ func: isInCollection, params: { collFind: string.find }});
 
         // Execute systems
-        // createSystemFile({ name: "yourmom" });
+        // createSystemFile({ name: "loki-collection" });
+
+        // name({ node: "fe60fc76f26f8dce6c5f68bbb0ea0c51efef3dff", name: "old-loki-collection" });
+
+        // console.log(systemIds.length);
+        // console.log(systems);
+        // let group = graph.find({ where: { head: "66564ec14ed18fb88965140fc644d7b813121c78" } });
+        // console.log(_.map(group, "tail"));
 
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
         // REPORTS //
@@ -93,8 +113,12 @@ describe("sandbox", function() {
         coreNodes.forEach(node => {
             let myNames = getNames({ node });
             if(myNames && myNames.length > 0) {
-                let cmdStr = "ln -s ../../src/kitsune-core/"+node+" src/kitsune-core-src/"+myNames[0];
-                exec(cmdStr);
+                try {
+                    let cmdStr = "ln -s ../../src/kitsune-core/"+node+" src/kitsune-core-src/"+myNames[0];
+                    exec(cmdStr);
+                } catch(e) {
+                    console.log("Already a link for "+myNames[0]);
+                }
             }
         });
 
@@ -108,11 +132,12 @@ describe("sandbox", function() {
     });
 });
 
+// Report functions
 function nodeDescReport({ isInGroup, graph, andIs, isEdge, isString, describe }) {
-    let isCoreNode = bind(isInGroup, { graphFind: graph.find, group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
-    let isSystemFile = bind(isInGroup, { graphFind: graph.find, group: "66564ec14ed18fb88965140fc644d7b813121c78" });
-    let isInNameGroup = bind(isInGroup, { graphFind: graph.find, group: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" });
-    let isNameEdge = bind(andIs, { types: [ isEdge, isInNameGroup ] });
+    let isCoreNode = bind({ func: isInGroup, params: { graphFind: graph.find, group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" }});
+    let isSystemFile = bind({ func: isInGroup, params: { graphFind: graph.find, group: "66564ec14ed18fb88965140fc644d7b813121c78" }});
+    let isInNameGroup = bind({ func: isInGroup, params: { graphFind: graph.find, group: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" }});
+    let isNameEdge = bind({ func: andIs, params: { types: [ isEdge, isInNameGroup ] }});
 
     let typeMap = { isEdge, isString, isCoreNode, isSystemFile, isNameEdge };
     let nodeList = graph.listNodes();
@@ -149,6 +174,7 @@ function graphReport({ graph }) {
     console.log("==================");
 }
 
+// Local utils - don't need to make system files out of these
 function _createSystemFile({ graphAutoPut, nameFn, name }) {
     let newSystemId = createId();
     exec("cp src/kitsune-core/ddfe7d402ff26c18785bcc899fa69183b3170a7d src/kitsune-core/"+newSystemId);
@@ -156,47 +182,10 @@ function _createSystemFile({ graphAutoPut, nameFn, name }) {
     nameFn({ node: newSystemId, name: name });
 }
 
-function bind(func, bindParams) {
-    let f = function(partParams) {
-        let fullParams = {};
-        for(let key in bindParams)
-            fullParams[key] = bindParams[key];
-
-        for(let key in partParams)
-            fullParams[key] = partParams[key];
-
-        return func(fullParams);
-    };
-    return f;
-}
-
-function readData(fileName) {
-    let data;
-    try {
-        let json = fs.readFileSync(fileName);
-        data = JSON.parse(json);
-    } catch(e) {
-        data = {
-            graph: [],
-            string: []
-        };
-    }
-    return data;
-}
-
-function loadData(data, lokiColl) {
-    let coll = new Collection();
-    let control = _.mapValues(lokiColl(), (func, name) => {
-        return bind(func, { db: coll });
-    });
-
-    data.forEach(value => {
-        control.put({ element: value });
-    });
-
-    control.coll = coll;
-
-    return control;
+function removeName({ tail, graphFactor, graphRemove }) {
+        let fac = graphFactor({ tail });
+        graphRemove({ id: fac[0].id });
+        graphRemove({ id: fac[0].typeEdge });
 }
 
 function cleanLoki(data) {
@@ -218,10 +207,4 @@ function writeData(data, filename) {
     let json = JSON.stringify(data, null, 2);
     let finalData = wrapData(json);
     fs.writeFileSync(filename, finalData);
-}
-
-function printTable(graphFind) {
-    let table = graphFind();
-    table = _.sortBy(table, ["head", "tail"]);
-    table.forEach(x => console.log(x.id, x.head, x.tail));
 }

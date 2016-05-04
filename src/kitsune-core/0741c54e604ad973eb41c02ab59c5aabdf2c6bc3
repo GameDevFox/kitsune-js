@@ -1,0 +1,7 @@
+// -*- mode: js2 -*-
+import { Collection } from "lokijs";
+
+export default function lokiColl() {
+    return new Collection();
+}
+module.exports = lokiColl;

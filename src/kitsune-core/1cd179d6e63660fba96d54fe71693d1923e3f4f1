@@ -6,6 +6,10 @@ var data = function() {
     "string": "and-is"
   },
   {
+    "id": "6bdd4db977b0f96aaf3bff2e4300153c648ca382",
+    "string": "bind"
+  },
+  {
     "id": "ab53755e1c9f705798ac7812c20962a510275dff",
     "string": "core-node"
   },
@@ -56,6 +60,10 @@ var data = function() {
   {
     "id": "6ae999552a0d2dca14d62e2bc8b764d377b1dd6c",
     "string": "name"
+  },
+  {
+    "id": "2e1710b4afb9409b193930d3d858522a417a5a7f",
+    "string": "old-loki-collection"
   },
   {
     "id": "911b601087190a41d0b744d9b402a30f2e2de206",

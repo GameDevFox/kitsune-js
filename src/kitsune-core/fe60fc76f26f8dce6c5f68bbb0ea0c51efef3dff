@@ -11,7 +11,11 @@ export function find({ db, where }) {
     let count = 0;
     for(let i in where) {
         var obj = {};
-        obj[i] = { $in: where[i] };
+
+        if(typeof where[i] == "object")
+            obj[i] = { $in: where[i] };
+        else
+            obj[i] = { $eq: where[i] };
 
         criteria.push(obj);
         count++;
@@ -25,8 +29,8 @@ export function find({ db, where }) {
     return db.find(criteria);
 }
 
-export function remove({ db, elementId }) {
-    db.removeWhere({ id: elementId });
+export function remove({ db, id }) {
+    db.removeWhere({ id });
 }
 
 export default function main() {
