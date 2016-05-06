@@ -107,13 +107,9 @@ describe("sandbox", function() {
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
         // REPORTS //
         {
-            // Node description report
             // nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode });
-
-            // System file report
+            coreNodeReport({ graphFind: graph.find, getNames });
             systemFileReport({ coreNodes, graph, getNames });
-
-            // Graph report
             graphReport({ graph });
         }
 
@@ -143,6 +139,16 @@ describe("sandbox", function() {
 });
 
 // Report functions
+function coreNodeReport({ graphFind, getNames }) {
+    console.log("=== Core Node Report ===");
+    let coreNodeEdges = graphFind({ where: { head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" }});
+    let coreNodes = _.map(coreNodeEdges, "tail");
+    coreNodes.forEach(node => {
+        let names = getNames({ node: node });
+        console.log(`${node}: ${JSON.stringify(names)}`);
+    });
+}
+
 function nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode }) {
     let isCoreNode = bind({ func: isInGroup, params: { graphFind: graph.find, group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" }});
     let isSystemFile = bind({ func: isInGroup, params: { graphFind: graph.find, group: "66564ec14ed18fb88965140fc644d7b813121c78" }});
@@ -168,8 +174,7 @@ function systemFileReport({ coreNodes, graph, getNames }) {
     coreNodes.forEach(node => {
         let isInGroup = systemFiles.indexOf(node) != -1;
         let myNames = getNames({ node });
-        let nameStr = myNames ? JSON.stringify(myNames) : "[]";
-        console.log("["+(isInGroup ? "X" : " ")+"] "+node+": "+nameStr);
+        console.log(`[${isInGroup ? "X" : " "}] ${node}: ${JSON.stringify(myNames)}`);
     });
 }
 
