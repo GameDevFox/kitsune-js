@@ -1,11 +1,5 @@
 // -*- mode: js2 -*-
-export function put({ db, element }) {
-    db.insert(element);
-    return element.id;
-}
-
-export function find({ db, where }) {
-
+export default function lokiFind({ db, where }) {
     let criteria = [];
 
     let count = 0;
@@ -28,13 +22,4 @@ export function find({ db, where }) {
 
     return db.find(criteria);
 }
-
-export function remove({ db, id }) {
-    db.removeWhere({ id });
-}
-
-export default function main() {
-    var result = { put, find, remove };
-    return result;
-}
-module.exports = main;
+module.exports = lokiFind;

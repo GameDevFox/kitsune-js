@@ -1,0 +1,6 @@
+// -*- mode: js2 -*-
+export default function lokiPut({ db, element }) {
+    db.insert(element);
+    return element.id;
+}
+module.exports = lokiPut;
