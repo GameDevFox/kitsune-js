@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-module.exports = function() {
+export default function testData() {
     var result =
     // json wrapper-top
     [
@@ -9,4 +9,5 @@ module.exports = function() {
     // json wrapper-bottom
     ;
     return result;
-};
+}
+module.exports = testData;

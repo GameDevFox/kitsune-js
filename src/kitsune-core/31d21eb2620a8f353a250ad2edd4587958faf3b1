@@ -4,3 +4,4 @@ export default function load({ path, id }) {
     let system = require(systemPath);
     return system;
 }
+module.exports = load;
