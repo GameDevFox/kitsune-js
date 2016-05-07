@@ -25,7 +25,7 @@ describe("sandbox", function() {
         let autoParam = loader({ id: "b69aeff3eb1a14156b1a9c52652544bcf89761e2" }); // auto-param
 
         let graphFactor = loader({ id: "4163d1cd63d3949b79c37223bd7da04ad6cd36c8" }); // graph-factor
-        let getNames = loader({ id: "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266" }); // getNames
+        let nameList = loader({ id: "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266" }); // nameList
 
         // INIT DATA SYSTEMS
         var data = { graph: graphData(), string: stringData() };
@@ -55,7 +55,7 @@ describe("sandbox", function() {
 
         // Auto load systems
         graph.factor = bind({ func: graphFactor, params: { graphFind: graph.find }});
-        getNames = bind({ func: getNames, params: { graphFactor: graph.factor, stringFind: string.find }});
+        nameList = bind({ func: nameList, params: { graphFactor: graph.factor, stringFind: string.find }});
 
         let group = graph.find({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
         let groupIds = _.map(group, "tail");
@@ -63,7 +63,7 @@ describe("sandbox", function() {
         let systems = {};
         let systemsByName = {};
         groupIds.forEach(id => {
-            let names = getNames({ node: id });
+            let names = nameList({ node: id });
             let system = loader({ id });
 
             systems[id] = system;
@@ -106,35 +106,30 @@ describe("sandbox", function() {
         groupList = bind({ func: groupList, params: { graphFind: graph.find }});
 
         let createSystemFile = bind({ func: _createSystemFile, params: { graphAutoPut: graph.autoPut, nameFn: name }});
+        let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind: string.find, graphListNodes: graph.listNodes, stringRemove: string.remove }});
         let isEdge = bind({ func: isInCollection, params: { collFind: graph.find }});
         let isString = bind({ func: isInCollection, params: { collFind: string.find }});
 
         // Execute systems
-        // createSystemFile({ name: "rename" });
+        // createSystemFile({ name: "removeName" });
 
-        // console.log(getNames({ node: "d2f544f574dae26adb5ed3ee70c71e302b2575fa" }));
-        // name({ node: "d2f544f574dae26adb5ed3ee70c71e302b2575fa", name: "another-name" });
-        // name({ node: "d2f544f574dae26adb5ed3ee70c71e302b2575fa", name: "one-more" });
-        // console.log(getNames({ node: "d2f544f574dae26adb5ed3ee70c71e302b2575fa" }));
-        // removeName({ node: "d2f544f574dae26adb5ed3ee70c71e302b2575fa", name: "another-name" });
-        // console.log(getNames({ node: "d2f544f574dae26adb5ed3ee70c71e302b2575fa" }));
-        // removeName({ node: "d2f544f574dae26adb5ed3ee70c71e302b2575fa", name: "one-more" });
-        // console.log(getNames({ node: "d2f544f574dae26adb5ed3ee70c71e302b2575fa" }));
+        // name({ node: "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266", name: "name-list" });
+        // removeName({ node: "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266", name: "nameListg" });
 
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
         // REPORTS //
         {
             // nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode });
-            coreNodeReport({ groupList, getNames });
-            systemFileReport({ coreNodes, groupList, getNames });
-            graphReport({ graph });
+            // coreNodeReport({ groupList, nameList });
+            // systemFileReport({ coreNodes, groupList, nameList });
+            // graphReport({ graph });
         }
 
         // Recreate links
         exec("rm -rf src/kitsune-core-src");
         exec("mkdir -p src/kitsune-core-src");
         coreNodes.forEach(node => {
-            let myNames = getNames({ node });
+            let myNames = nameList({ node });
             if(myNames && myNames.length > 0) {
                 try {
                     let cmdStr = "ln -s ../../src/kitsune-core/"+node+" src/kitsune-core-src/"+myNames[0];
@@ -156,11 +151,11 @@ describe("sandbox", function() {
 });
 
 // Report functions
-function coreNodeReport({ groupList, getNames }) {
+function coreNodeReport({ groupList, nameList }) {
     console.log("=== Core Node Report ===");
     let coreNodes = groupList({ group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
     coreNodes.forEach(node => {
-        let names = getNames({ node: node });
+        let names = nameList({ node: node });
         console.log(`${node}: ${JSON.stringify(names)}`);
     });
 }
@@ -180,7 +175,7 @@ function nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, descr
     });
 }
 
-function systemFileReport({ coreNodes, groupList, getNames }) {
+function systemFileReport({ coreNodes, groupList, nameList }) {
     console.log("=== System File Report ===");
     console.log("System files: "+coreNodes.length);
 
@@ -189,7 +184,7 @@ function systemFileReport({ coreNodes, groupList, getNames }) {
 
     coreNodes.forEach(node => {
         let isInGroup = systemFiles.indexOf(node) != -1;
-        let myNames = getNames({ node });
+        let myNames = nameList({ node });
         console.log(`[${isInGroup ? "X" : " "}] ${node}: ${JSON.stringify(myNames)}`);
     });
 }
@@ -221,6 +216,15 @@ function removeSystemFile({ graphFind, graphRemove, stringFind, stringRemove, gr
         removeName({ node: groupEdge[0].tail });
         let stringNode = stringFind({ string: systemFileName });
         stringRemove({ id: stringNode[0].id });
+}
+
+function _cleanStringSystem({ stringFind, graphListNodes, stringRemove }) {
+        let stringIds = stringFind({}).map(value => value.id);
+        let graphNodes = graphListNodes();
+        let diff = _.difference(stringIds, graphNodes);
+        diff.forEach(id => {
+            stringRemove({ id });
+        });
 }
 
 function cleanLoki(data) {

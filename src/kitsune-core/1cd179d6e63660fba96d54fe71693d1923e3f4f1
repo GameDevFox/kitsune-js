@@ -22,10 +22,6 @@ var data = function() {
     "string": "describe-node"
   },
   {
-    "id": "39d5f90701406c2f6bd4beb5687c4f71a88fb256",
-    "string": "getNames"
-  },
-  {
     "id": "a37fa8901cbd5d96eab6cd37187fbc498bc973b6",
     "string": "graph-assign"
   },
@@ -48,10 +44,6 @@ var data = function() {
   {
     "id": "072ee751f6d7c926f56fd81b3ed1a355dc4d2ae9",
     "string": "group-list"
-  },
-  {
-    "id": "8f65641814e35fec0e6196a6f56674eb56e5e19e",
-    "string": "is-edge"
   },
   {
     "id": "aa233bb14b0b75084bd435c4e857a10c955e948c",
@@ -82,8 +74,12 @@ var data = function() {
     "string": "name"
   },
   {
-    "id": "d99d3bd921ad560e3bb1a1f448eeb83c78b418a6",
-    "string": "removeName"
+    "id": "65f2de48b1a587fc6cd805333c505f65ba043ec1",
+    "string": "name-list"
+  },
+  {
+    "id": "7543ffc495a6559897c670173f119ef0255391b1",
+    "string": "remove-name"
   },
   {
     "id": "911b601087190a41d0b744d9b402a30f2e2de206",
