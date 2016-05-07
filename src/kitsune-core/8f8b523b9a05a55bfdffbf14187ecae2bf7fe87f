@@ -3,7 +3,7 @@ import { hash } from "kitsune/util";
 
 export default function autoPut({ stringFind, stringPut, string }) {
     // Make sure the string isn't stored already
-    let search = stringFind({ where: { string: string } });
+    let search = stringFind({ string: string });
     if(search.length > 0)
         return search[0].id;
 

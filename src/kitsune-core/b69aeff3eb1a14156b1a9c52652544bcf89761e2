@@ -1,0 +1,9 @@
+// -*- mode: js2 -*-
+export default function autoParam({ func, paramName }) {
+    return function(param) {
+        var params = {};
+        params[paramName] = param;
+        return func(params);
+    };
+}
+module.exports = autoParam;

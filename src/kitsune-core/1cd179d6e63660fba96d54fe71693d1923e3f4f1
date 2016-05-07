@@ -6,6 +6,10 @@ var data = function() {
     "string": "and-is"
   },
   {
+    "id": "28d7928eb3d439ec5c8d296c53effc885337da50",
+    "string": "auto-param"
+  },
+  {
     "id": "6bdd4db977b0f96aaf3bff2e4300153c648ca382",
     "string": "bind"
   },

@@ -13,7 +13,7 @@ export default function factor({ graphFind, head, type, tail }) {
         if(tail)
             criteria.tail = tail;
 
-        edges = graphFind({ where: criteria });
+        edges = graphFind(criteria);
         edgeIds = edges.map(edge => edge.id);
     }
 
@@ -23,7 +23,7 @@ export default function factor({ graphFind, head, type, tail }) {
     if(type)
         typeCriteria.head = type;
 
-    let typeEdges = graphFind({ where: typeCriteria });
+    let typeEdges = graphFind(typeCriteria);
     let typeTails = typeEdges.map(edge => edge.tail);
 
     // filter edges by type tails
@@ -32,7 +32,7 @@ export default function factor({ graphFind, head, type, tail }) {
             return (typeTails.indexOf(edge.id) != -1);
         });
     } else
-        edges = graphFind({ where: { id: typeTails } });
+        edges = graphFind({ id: typeTails });
 
     let result = typeEdges.map(typeEdge => {
         var edge = edges.find(edge => edge.id == typeEdge.tail);

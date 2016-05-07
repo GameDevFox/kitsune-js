@@ -22,6 +22,7 @@ describe("sandbox", function() {
         let lokiColl = loader({ id: "0741c54e604ad973eb41c02ab59c5aabdf2c6bc3" }); // loki-collection
         let lokiPut = loader({ id: "f45ccdaba9fdca2234be7ded1a5578dd17c2374e" }); // loki-put
         let lokiFind = loader({ id: "30dee1b715bcfe60afeaadbb0e3e66019140686a" }); // loki-find
+        let autoParam = loader({ id: "b69aeff3eb1a14156b1a9c52652544bcf89761e2" }); // auto-param
 
         let graphFactor = loader({ id: "4163d1cd63d3949b79c37223bd7da04ad6cd36c8" }); // graph-factor
         let getNames = loader({ id: "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266" }); // getNames
@@ -36,7 +37,10 @@ describe("sandbox", function() {
             // Bind dataSystem functions
             let control = {};
             control.put = bind({ func: lokiPut, params: { db: coll }});
-            control.find = bind({ func: lokiFind, params: { db: coll }});
+
+            let find = bind({ func: lokiFind, params: { db: coll }});
+            control.find = autoParam({ func: find, paramName: "where" });
+
             control.coll = coll;
 
             // Insert data
@@ -53,7 +57,7 @@ describe("sandbox", function() {
         graph.factor = bind({ func: graphFactor, params: { graphFind: graph.find }});
         getNames = bind({ func: getNames, params: { graphFactor: graph.factor, stringFind: string.find }});
 
-        let group = graph.find({ where: { head: "66564ec14ed18fb88965140fc644d7b813121c78" } });
+        let group = graph.find({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
         let groupIds = _.map(group, "tail");
 
         let systems = {};
@@ -101,7 +105,7 @@ describe("sandbox", function() {
         let isString = bind({ func: isInCollection, params: { collFind: string.find }});
 
         // Execute systems
-        // createSystemFile({ name: "loki-put" });
+        // createSystemFile({ name: "auto-param" });
         // name({ node: "d2f544f574dae26adb5ed3ee70c71e302b2575fa", name: "another-name" });
 
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
@@ -141,7 +145,7 @@ describe("sandbox", function() {
 // Report functions
 function coreNodeReport({ graphFind, getNames }) {
     console.log("=== Core Node Report ===");
-    let coreNodeEdges = graphFind({ where: { head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" }});
+    let coreNodeEdges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
     let coreNodes = _.map(coreNodeEdges, "tail");
     coreNodes.forEach(node => {
         let names = getNames({ node: node });
@@ -168,7 +172,7 @@ function systemFileReport({ coreNodes, graph, getNames }) {
     console.log("=== System File Report ===");
     console.log("System files: "+coreNodes.length);
 
-    let group = graph.find({ where: { head: "66564ec14ed18fb88965140fc644d7b813121c78" } });
+    let group = graph.find({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
     let systemFiles = group.map(x => x.tail).sort();
 
     coreNodes.forEach(node => {
@@ -199,11 +203,10 @@ function _createSystemFile({ graphAutoPut, nameFn, name }) {
 
 function removeSystemFile({ graphFind, graphRemove, graphFactor, stringFind, stringRemove,
                             groupId, systemFileId, systemFileName }) {
-        let groupEdge = graphFind({ where: { head: groupId,
-                                            tail: systemFileId }});
+        let groupEdge = graphFind({ head: groupId, tail: systemFileId });
         graphRemove({ id: groupEdge[0].id });
         removeName({ tail: groupEdge[0].tail, graphFactor: graphFactor, graphRemove: graphRemove });
-        let stringNode = stringFind({ where: { string: systemFileName }});
+        let stringNode = stringFind({ string: systemFileName });
         stringRemove({ id: stringNode[0].id });
 }
 

@@ -2,7 +2,7 @@
 export default function getNames({ graphFactor, stringFind, node }) {
     let names = graphFactor({ type: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", tail: node });
     let result = names.map(node => {
-        let strings = stringFind({ where: { id: node.head } }).map(result => result.string);
+        let strings = stringFind({ id: node.head }).map(result => result.string);
         return strings[0];
     });
     return result;
