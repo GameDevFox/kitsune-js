@@ -82,6 +82,10 @@ var data = function() {
     "string": "name"
   },
   {
+    "id": "d99d3bd921ad560e3bb1a1f448eeb83c78b418a6",
+    "string": "removeName"
+  },
+  {
     "id": "911b601087190a41d0b744d9b402a30f2e2de206",
     "string": "string-autoPut"
   },
