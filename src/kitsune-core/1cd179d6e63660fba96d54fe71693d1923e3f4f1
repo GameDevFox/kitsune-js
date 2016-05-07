@@ -46,6 +46,10 @@ var data = function() {
     "string": "graph-listNodes"
   },
   {
+    "id": "072ee751f6d7c926f56fd81b3ed1a355dc4d2ae9",
+    "string": "group-list"
+  },
+  {
     "id": "8f65641814e35fec0e6196a6f56674eb56e5e19e",
     "string": "is-edge"
   },
