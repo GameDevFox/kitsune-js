@@ -1,0 +1,14 @@
+// -*- mode: js2 -*-
+export default function returnProperty({ func, propertyName }) {
+    let newFunc = function(input) {
+        let output = func(input);
+
+        let result = output[propertyName];
+        if(!result)
+            throw new Error(`output does not have property: ${propertyName}`);
+
+        return result;
+    };
+    return newFunc;
+}
+module.exports = returnProperty;

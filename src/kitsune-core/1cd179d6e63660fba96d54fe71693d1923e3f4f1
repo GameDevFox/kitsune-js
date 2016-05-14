@@ -86,6 +86,10 @@ var data = function() {
     "string": "return-first"
   },
   {
+    "id": "179e8ff5659db6eb4519e09ab588f1525b74584f",
+    "string": "return-property"
+  },
+  {
     "id": "911b601087190a41d0b744d9b402a30f2e2de206",
     "string": "string-autoPut"
   },

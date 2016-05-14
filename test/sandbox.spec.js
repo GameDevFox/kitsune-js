@@ -83,6 +83,7 @@ describe("sandbox", function() {
             andIs,
             describeNode,
             returnFirst,
+            returnProperty,
             graphAssign,
             graphAutoPut,
             graphListNodes,
@@ -103,9 +104,13 @@ describe("sandbox", function() {
         graph.listNodes = bind({ func: graphListNodes, params: { graphFind: graph.find }});
 
         let _stringGetString = autoParam({ func: string.find, paramName: "id" });
-        string.getString = returnFirst(_stringGetString);
+        _stringGetString = returnFirst(_stringGetString);
+        string.getString = returnProperty({ func: _stringGetString, propertyName: "string" });
+
         let _stringGetId = autoParam({ func: string.find, paramName: "string" });
-        string.getId = returnFirst(_stringGetId);
+        _stringGetId = returnFirst(_stringGetId);
+        string.getId = returnProperty({ func: _stringGetId, propertyName: "id" });
+
         string.remove = bind({ func: lokiRemove, params: { db: string.coll }});
         let _stringAutoPut = bind({ func: stringAutoPut, params: { stringFind: string.find, stringPut: string.put }});
         string.autoPut = autoParam({ func: _stringAutoPut, paramName: "string" });
@@ -122,15 +127,15 @@ describe("sandbox", function() {
         let isString = bind({ func: isInCollection, params: { collFind: string.find }});
 
         // Execute systems
-        // createSystemFile({ name: "return-first" });
+        // createSystemFile({ name: "return-property" });
 
         let argumentId = "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2";
 
         let str = string.getString("911b601087190a41d0b744d9b402a30f2e2de206");
-        console.log(str.string);
+        console.log(str);
 
-        let ids = string.getId("loki-collection");
-        console.log(ids.id);
+        let strId = string.getId("loki-collection");
+        console.log(strId);
 
         // name({ node: "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266", name: "name-list" });
         // removeName({ node: "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266", name: "nameListg" });
