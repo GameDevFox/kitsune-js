@@ -78,8 +78,8 @@ var data = function() {
     "string": "name-list"
   },
   {
-    "id": "7543ffc495a6559897c670173f119ef0255391b1",
-    "string": "remove-name"
+    "id": "7c32d0157c9d62dd28c63e9d8869ad8f933dce45",
+    "string": "name-remove"
   },
   {
     "id": "40e834bf73db510d13dab70ff96a300962037d31",

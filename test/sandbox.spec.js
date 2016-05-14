@@ -98,7 +98,7 @@ describe("sandbox", function() {
             isInGroup,
             lokiRemove,
             name,
-            removeName,
+            nameRemove,
             stringAutoPut,
         } = systemsByName;
 
@@ -118,7 +118,7 @@ describe("sandbox", function() {
         string.autoPut = autoParam({ func: _stringAutoPut, paramName: "string" });
 
         name = bind({ func: name, params: { stringAutoPut: string.autoPut, graphAssign: graph.assign }});
-        removeName = bind({ func: removeName, params: { stringGetId: string.getId, graphFactor: graph.factor, graphRemove: graph.remove }});
+        nameRemove = bind({ func: nameRemove, params: { stringGetId: string.getId, graphFactor: graph.factor, graphRemove: graph.remove }});
 
         let _groupList = bind({ func: groupList, params: { graphFind: graph.find }});
         groupList = autoParam({ func: _groupList, paramName: "group" });
@@ -133,8 +133,9 @@ describe("sandbox", function() {
 
         let argumentId = "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2";
 
-        // name({ node: "7087272f7205fdac70e1f29d3d4b9e170d99a431:", name: "name-remove" });
-        // removeName({ node: "7087272f7205fdac70e1f29d3d4b9e170d99a431:", name: "remove-name" });
+        // name({ node: "7087272f7205fdac70e1f29d3d4b9e170d99a431", name: "name-remove" });
+        // nameRemove({ node: "7087272f7205fdac70e1f29d3d4b9e170d99a431", name: "remove-name" });
+        // cleanStringSystem();
 
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
         // REPORTS //
@@ -240,12 +241,12 @@ function _createSystemFile({ graphAutoPut, nameFn, name }) {
 }
 
 function removeSystemFile({ graphFind, graphRemove, stringFind, stringRemove, groupId,
-                            systemFileId, systemFileName, removeName }) {
+                            systemFileId, systemFileName, nameRemove }) {
     // TODO: Fix this, it's broken
     let groupEdge = graphFind({ head: "66564ec14ed18fb88965140fc644d7b813121c78",
                                 tail: systemFileId });
         graphRemove({ id: groupEdge[0].id });
-        removeName({ node: groupEdge[0].tail });
+        nameRemove({ node: groupEdge[0].tail });
         let stringNode = stringFind({ string: systemFileName });
         stringRemove({ id: stringNode[0].id });
 }
