@@ -133,17 +133,8 @@ describe("sandbox", function() {
 
         let argumentId = "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2";
 
-        let str = string.getString("911b601087190a41d0b744d9b402a30f2e2de206");
-        console.log(str);
-
-        let missingStr = string.getString("1234567890");
-        console.log(missingStr);
-
-        let strId = string.getId("loki-collection");
-        console.log(strId);
-
-        // name({ node: "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266", name: "name-list" });
-        // removeName({ node: "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266", name: "nameListg" });
+        // name({ node: "7087272f7205fdac70e1f29d3d4b9e170d99a431:", name: "name-remove" });
+        // removeName({ node: "7087272f7205fdac70e1f29d3d4b9e170d99a431:", name: "remove-name" });
 
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
         // REPORTS //
@@ -211,11 +202,22 @@ function systemFileReport({ coreNodes, groupList, nameList }) {
     let group = groupList("66564ec14ed18fb88965140fc644d7b813121c78");
     let systemFiles = group.sort();
 
-    coreNodes.forEach(node => {
+    let list = coreNodes.map(node => {
         let isInGroup = systemFiles.indexOf(node) != -1;
         let myNames = nameList({ node });
-        console.log(`[${isInGroup ? "X" : " "}] ${node}: ${JSON.stringify(myNames)}`);
+        return {
+            node,
+            isInGroup,
+            names: myNames
+        };
     });
+
+    list.sort((a, b) => a.names[0].localeCompare(b.names[0]));
+
+    list.forEach(({isInGroup, node, names}) => {
+        console.log(`[${isInGroup ? "X" : " "}] ${node}: ${JSON.stringify(names)}`);
+    });
+
 }
 
 function graphReport({ graph }) {
