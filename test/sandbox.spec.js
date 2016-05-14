@@ -29,6 +29,9 @@ describe("sandbox", function() {
         let graphFactor = loader("4163d1cd63d3949b79c37223bd7da04ad6cd36c8"); // graph-factor
         let nameList = loader("81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266"); // nameList
 
+        let returnFirst = loader("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51"); // return-first
+        let returnProperty = loader("c1020aea14a46b72c6f8a4b7fa57acc14a73a64e"); // return-property
+
         // INIT DATA SYSTEMS
         var data = { graph: graphData(), string: stringData() };
 
@@ -57,7 +60,12 @@ describe("sandbox", function() {
 
         // Auto load systems
         graph.factor = bind({ func: graphFactor, params: { graphFind: graph.find }});
-        nameList = bind({ func: nameList, params: { graphFactor: graph.factor, stringFind: string.find }});
+
+        let _stringGetString = autoParam({ func: string.find, paramName: "id" });
+        _stringGetString = returnFirst(_stringGetString);
+        string.getString = returnProperty({ func: _stringGetString, propertyName: "string" });
+
+        nameList = bind({ func: nameList, params: { graphFactor: graph.factor, stringGetString: string.getString }});
 
         let group = graph.find({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
         let groupIds = _.map(group, "tail");
@@ -82,8 +90,6 @@ describe("sandbox", function() {
         let {
             andIs,
             describeNode,
-            returnFirst,
-            returnProperty,
             graphAssign,
             graphAutoPut,
             graphListNodes,
@@ -102,10 +108,6 @@ describe("sandbox", function() {
         graph.autoPut = bind({ func: graphAutoPut, params: { graphPut: graph.put }});
         graph.assign = bind({ func: graphAssign, params: { graphAutoPut: graph.autoPut }});
         graph.listNodes = bind({ func: graphListNodes, params: { graphFind: graph.find }});
-
-        let _stringGetString = autoParam({ func: string.find, paramName: "id" });
-        _stringGetString = returnFirst(_stringGetString);
-        string.getString = returnProperty({ func: _stringGetString, propertyName: "string" });
 
         let _stringGetId = autoParam({ func: string.find, paramName: "string" });
         _stringGetId = returnFirst(_stringGetId);
@@ -133,6 +135,9 @@ describe("sandbox", function() {
 
         let str = string.getString("911b601087190a41d0b744d9b402a30f2e2de206");
         console.log(str);
+
+        let missingStr = string.getString("1234567890");
+        console.log(missingStr);
 
         let strId = string.getId("loki-collection");
         console.log(strId);

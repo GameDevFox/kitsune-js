@@ -1,11 +1,10 @@
 // -*- mode: js2 -*-
 export default function returnFirst(func) {
     let newFunc = function(input) {
-        let output = func(input);
+        let result = func(input);
 
-        let result = output[0];
-        if(!result)
-            throw new Error("output does not have a first element");
+        if(result)
+            result = result[0];
 
         return result;
     };

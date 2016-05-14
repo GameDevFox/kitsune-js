@@ -1,10 +1,7 @@
 // -*- mode: js2 -*-
-export default function nameList({ graphFactor, stringFind, node }) {
+export default function nameList({ graphFactor, stringGetString, node }) {
     let names = graphFactor({ type: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", tail: node });
-    let result = names.map(node => {
-        let strings = stringFind({ id: node.head }).map(result => result.string);
-        return strings[0];
-    });
+    let result = names.map(node => stringGetString(node.head));
     return result;
 }
 module.exports = nameList;
