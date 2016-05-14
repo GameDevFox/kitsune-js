@@ -12,7 +12,7 @@ export default function removeName({ node, name, stringFind, graphFactor, graphR
 
     fac = fac[0];
 
-    graphRemove({ id: fac.id });
-    graphRemove({ id: fac.typeEdge });
+    graphRemove(fac.id);
+    graphRemove(fac.typeEdge);
 }
 module.exports = removeName;

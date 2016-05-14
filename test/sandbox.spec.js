@@ -14,18 +14,20 @@ describe("sandbox", function() {
         // let systemLoaderId = "31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
         let bind = systemLoader({ path: "kitsune-core", id: "878c8ef64d31a194159765945fc460cb6b3f486f" }); // bind
         let loader = bind({ func: systemLoader, params: { path: "kitsune-core" }});
-
-        // MANUAL LOADING
-        let graphData = loader({ id: "24c045b912918d65c9e9aaea9993e9ab56f50d2e" }); // graph-data
-        let stringData = loader({ id: "1cd179d6e63660fba96d54fe71693d1923e3f4f1" }); // string-data
-
-        let lokiColl = loader({ id: "0741c54e604ad973eb41c02ab59c5aabdf2c6bc3" }); // loki-collection
-        let lokiPut = loader({ id: "f45ccdaba9fdca2234be7ded1a5578dd17c2374e" }); // loki-put
-        let lokiFind = loader({ id: "30dee1b715bcfe60afeaadbb0e3e66019140686a" }); // loki-find
         let autoParam = loader({ id: "b69aeff3eb1a14156b1a9c52652544bcf89761e2" }); // auto-param
 
-        let graphFactor = loader({ id: "4163d1cd63d3949b79c37223bd7da04ad6cd36c8" }); // graph-factor
-        let nameList = loader({ id: "81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266" }); // nameList
+        loader = autoParam({ func: loader, paramName: "id" });
+
+        // MANUAL LOADING
+        let graphData = loader("24c045b912918d65c9e9aaea9993e9ab56f50d2e"); // graph-data
+        let stringData = loader("1cd179d6e63660fba96d54fe71693d1923e3f4f1"); // string-data
+
+        let lokiColl = loader("0741c54e604ad973eb41c02ab59c5aabdf2c6bc3"); // loki-collection
+        let lokiPut = loader("f45ccdaba9fdca2234be7ded1a5578dd17c2374e"); // loki-put
+        let lokiFind = loader("30dee1b715bcfe60afeaadbb0e3e66019140686a"); // loki-find
+
+        let graphFactor = loader("4163d1cd63d3949b79c37223bd7da04ad6cd36c8"); // graph-factor
+        let nameList = loader("81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266"); // nameList
 
         // INIT DATA SYSTEMS
         var data = { graph: graphData(), string: stringData() };
@@ -64,7 +66,7 @@ describe("sandbox", function() {
         let systemsByName = {};
         groupIds.forEach(id => {
             let names = nameList({ node: id });
-            let system = loader({ id });
+            let system = loader(id);
 
             systems[id] = system;
 
@@ -78,32 +80,36 @@ describe("sandbox", function() {
 
         // Build systems
         let {
-            lokiRemove,
-            graphAutoPut,
+            andIs,
+            describeNode,
             graphAssign,
+            graphAutoPut,
             graphListNodes,
-            stringAutoPut,
+            groupList,
+            isInCollection,
+            isInGroup,
+            lokiRemove,
             name,
             removeName,
-            isInCollection,
-            describeNode,
-            isInGroup,
-            andIs,
-            groupList
+            stringAutoPut,
         } = systemsByName;
 
-        graph.remove = bind({ func: lokiRemove, params: { db: graph.coll }});
+        let graphRemove = bind({ func: lokiRemove, params: { db: graph.coll }});
+        graph.remove = autoParam({ func: graphRemove, paramName: "id" });
+
         graph.autoPut = bind({ func: graphAutoPut, params: { graphPut: graph.put }});
         graph.assign = bind({ func: graphAssign, params: { graphAutoPut: graph.autoPut }});
         graph.listNodes = bind({ func: graphListNodes, params: { graphFind: graph.find }});
 
         string.remove = bind({ func: lokiRemove, params: { db: string.coll }});
-        string.autoPut = bind({ func: stringAutoPut, params: { stringFind: string.find, stringPut: string.put }});
+        let _stringAutoPut = bind({ func: stringAutoPut, params: { stringFind: string.find, stringPut: string.put }});
+        string.autoPut = autoParam({ func: _stringAutoPut, paramName: "string" });
 
         name = bind({ func: name, params: { stringAutoPut: string.autoPut, graphAssign: graph.assign }});
         removeName = bind({ func: removeName, params: { stringFind: string.find, graphFactor: graph.factor, graphRemove: graph.remove }});
 
-        groupList = bind({ func: groupList, params: { graphFind: graph.find }});
+        let _groupList = bind({ func: groupList, params: { graphFind: graph.find }});
+        groupList = autoParam({ func: _groupList, paramName: "group" });
 
         let createSystemFile = bind({ func: _createSystemFile, params: { graphAutoPut: graph.autoPut, nameFn: name }});
         let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind: string.find, graphListNodes: graph.listNodes, stringRemove: string.remove }});
@@ -120,9 +126,9 @@ describe("sandbox", function() {
         // REPORTS //
         {
             // nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode });
-            // coreNodeReport({ groupList, nameList });
-            // systemFileReport({ coreNodes, groupList, nameList });
-            // graphReport({ graph });
+            coreNodeReport({ groupList, nameList });
+            systemFileReport({ coreNodes, groupList, nameList });
+            graphReport({ graph });
         }
 
         // Recreate links
@@ -153,7 +159,7 @@ describe("sandbox", function() {
 // Report functions
 function coreNodeReport({ groupList, nameList }) {
     console.log("=== Core Node Report ===");
-    let coreNodes = groupList({ group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
+    let coreNodes = groupList("7f82d45a6ffb5c345f84237a621de35dd8b7b0e3");
     coreNodes.forEach(node => {
         let names = nameList({ node: node });
         console.log(`${node}: ${JSON.stringify(names)}`);
@@ -179,7 +185,7 @@ function systemFileReport({ coreNodes, groupList, nameList }) {
     console.log("=== System File Report ===");
     console.log("System files: "+coreNodes.length);
 
-    let group = groupList({ group: "66564ec14ed18fb88965140fc644d7b813121c78" });
+    let group = groupList("66564ec14ed18fb88965140fc644d7b813121c78");
     let systemFiles = group.sort();
 
     coreNodes.forEach(node => {
