@@ -1,12 +1,11 @@
 // -*- mode: js2 -*-
-export default function removeName({ node, name, stringFind, graphFactor, graphRemove }) {
-    let stringNode = stringFind({ string: name });
-    if(stringNode.length === 0)
+export default function removeName({ node, name, stringGetId, graphFactor, graphRemove }) {
+    let strId = stringGetId({ string: name });
+
+    if(!strId)
         return;
 
-    stringNode = stringNode[0].id;
-
-    let fac = graphFactor({ head: stringNode, tail: node });
+    let fac = graphFactor({ head: strId, tail: node });
     if(fac.length === 0)
         return;
 

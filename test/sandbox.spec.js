@@ -118,7 +118,7 @@ describe("sandbox", function() {
         string.autoPut = autoParam({ func: _stringAutoPut, paramName: "string" });
 
         name = bind({ func: name, params: { stringAutoPut: string.autoPut, graphAssign: graph.assign }});
-        removeName = bind({ func: removeName, params: { stringFind: string.find, graphFactor: graph.factor, graphRemove: graph.remove }});
+        removeName = bind({ func: removeName, params: { stringGetId: string.getId, graphFactor: graph.factor, graphRemove: graph.remove }});
 
         let _groupList = bind({ func: groupList, params: { graphFind: graph.find }});
         groupList = autoParam({ func: _groupList, paramName: "group" });
@@ -239,6 +239,7 @@ function _createSystemFile({ graphAutoPut, nameFn, name }) {
 
 function removeSystemFile({ graphFind, graphRemove, stringFind, stringRemove, groupId,
                             systemFileId, systemFileName, removeName }) {
+    // TODO: Fix this, it's broken
     let groupEdge = graphFind({ head: "66564ec14ed18fb88965140fc644d7b813121c78",
                                 tail: systemFileId });
         graphRemove({ id: groupEdge[0].id });
