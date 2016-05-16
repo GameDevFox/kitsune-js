@@ -54,6 +54,10 @@ var data = function() {
     "string": "is-in-group"
   },
   {
+    "id": "7babc233de26ab19ead1b9c278128d5c434910ee",
+    "string": "log"
+  },
+  {
     "id": "21f059cb4351479bb9c4f5c904fd7784fbdbdbd7",
     "string": "loki-collection"
   },

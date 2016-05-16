@@ -70,13 +70,13 @@ describe("sandbox", function() {
         let group = graph.find({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
         let groupIds = _.map(group, "tail");
 
-        let systems = {};
+        let systemsList = {};
         let systemsByName = {};
         groupIds.forEach(id => {
             let names = nameList({ node: id });
             let system = loader(id);
 
-            systems[id] = system;
+            systemsList[id] = system;
 
             names.forEach(name => {
                 let camelName = name
@@ -129,9 +129,41 @@ describe("sandbox", function() {
         let isString = bind({ func: isInCollection, params: { collFind: string.find }});
 
         // Execute systems
-        // createSystemFile({ name: "return-property" });
+        // createSystemFile({ name: "log" });
 
+        let nodeFunctionId = "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda";
         let argumentId = "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2";
+
+        let identity = function(input) {
+            return input;
+        };
+
+        let objFunc = function(obj) {
+            return function(input) {
+                let output = obj[input];
+                return output;
+            };
+        };
+
+        systemsList["08f8db63b1843f7dea016e488bd547555f345c59"] = string.getString;
+        systemsList["cbe19bb69c2de7695864a7923dd3891843a5e43c"] = identity;
+
+        let systems = objFunc(systemsList);
+
+        var callNodeFunc = function({ funcSys, funcId, argId }) {
+            let func = funcSys(funcId);
+            return func(argId);
+        };
+
+        execFunc({
+            callNodeFunc,
+            funcSys: systems,
+            funcId:     "cbe19bb69c2de7695864a7923dd3891843a5e43c", // log
+            argId:      "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb", // "test-data" string
+            argFuncId:  "08f8db63b1843f7dea016e488bd547555f345c59"  // stringGetStr
+        });
+
+        // console.log(result);
 
         // name({ node: "7087272f7205fdac70e1f29d3d4b9e170d99a431", name: "name-remove" });
         // nameRemove({ node: "7087272f7205fdac70e1f29d3d4b9e170d99a431", name: "remove-name" });
@@ -170,6 +202,19 @@ describe("sandbox", function() {
         writeData(sortedStringData, "out/data/string.js");
     });
 });
+
+function execFunc({ callNodeFunc, funcSys, funcId, argId, argFuncId }) {
+    let nodeFuncResult = callNodeFunc({
+        funcSys,
+        funcId: argFuncId,
+        argId
+    });
+
+    let primaryFunc = funcSys(funcId);
+
+    let result = primaryFunc(nodeFuncResult);
+    return result;
+}
 
 // Report functions
 function coreNodeReport({ groupList, nameList }) {
