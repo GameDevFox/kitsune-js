@@ -32,6 +32,8 @@ describe("sandbox", function() {
         let returnFirst = loader("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51"); // return-first
         let returnProperty = loader("c1020aea14a46b72c6f8a4b7fa57acc14a73a64e"); // return-property
 
+        let dictFunc = loader("30c8959d5d7804fb80cc9236edec97e04e5c4c3d"); // dictionary-function
+
         // INIT DATA SYSTEMS
         var data = { graph: graphData(), string: stringData() };
 
@@ -85,6 +87,7 @@ describe("sandbox", function() {
                 systemsByName[camelName] = system;
             });
         });
+        let systems = dictFunc(systemList);
 
         // Build systems
         let {
@@ -100,7 +103,7 @@ describe("sandbox", function() {
             name,
             nameRemove,
             stringAutoPut,
-            dictionaryFunction
+            callNodeFunction
         } = systemsByName;
 
         let graphRemove = bind({ func: lokiRemove, params: { db: graph.coll }});
@@ -130,7 +133,7 @@ describe("sandbox", function() {
         let isString = bind({ func: isInCollection, params: { collFind: string.find }});
 
         // Execute systems
-        // createSystemFile({ name: "dictionary-function" });
+        // createSystemFile({ name: "call-node-function" });
 
         let nodeFunctionId = "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda";
         let argumentId = "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2";
@@ -139,15 +142,8 @@ describe("sandbox", function() {
         // TODO: Automate building "home-made" systems
         systemList["08f8db63b1843f7dea016e488bd547555f345c59"] = string.getString;
 
-        let systems = dictionaryFunction(systemList);
-
-        var callNodeFunc = function({ funcSys, funcId, argId }) {
-            let func = funcSys(funcId);
-            return func(argId);
-        };
-
         execFunc({
-            callNodeFunc,
+            callNodeFunc: callNodeFunction,
             funcSys: systems,
             funcId:     "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", // log
             argId:      "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb", // "test-data" string

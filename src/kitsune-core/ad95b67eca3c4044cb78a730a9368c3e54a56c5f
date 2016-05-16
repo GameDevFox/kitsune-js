@@ -1,0 +1,6 @@
+// -*- mode: js2 -*-
+export default function callNodeFunc({ funcSys, funcId, argId }) {
+    let func = funcSys(funcId);
+    return func(argId);
+}
+module.exports = callNodeFunc;
