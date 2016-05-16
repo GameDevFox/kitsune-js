@@ -70,13 +70,13 @@ describe("sandbox", function() {
         let group = graph.find({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
         let groupIds = _.map(group, "tail");
 
-        let systemsList = {};
+        let systemList = {};
         let systemsByName = {};
         groupIds.forEach(id => {
             let names = nameList({ node: id });
             let system = loader(id);
 
-            systemsList[id] = system;
+            systemList[id] = system;
 
             names.forEach(name => {
                 let camelName = name
@@ -129,14 +129,10 @@ describe("sandbox", function() {
         let isString = bind({ func: isInCollection, params: { collFind: string.find }});
 
         // Execute systems
-        // createSystemFile({ name: "log" });
+        // createSystemFile({ name: "identity" });
 
         let nodeFunctionId = "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda";
         let argumentId = "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2";
-
-        let identity = function(input) {
-            return input;
-        };
 
         let objFunc = function(obj) {
             return function(input) {
@@ -145,10 +141,11 @@ describe("sandbox", function() {
             };
         };
 
-        systemsList["08f8db63b1843f7dea016e488bd547555f345c59"] = string.getString;
-        systemsList["cbe19bb69c2de7695864a7923dd3891843a5e43c"] = identity;
+        // Append systemList with "home-made" system
+        // TODO: Automate building "home-made" systems
+        systemList["08f8db63b1843f7dea016e488bd547555f345c59"] = string.getString;
 
-        let systems = objFunc(systemsList);
+        let systems = objFunc(systemList);
 
         var callNodeFunc = function({ funcSys, funcId, argId }) {
             let func = funcSys(funcId);
@@ -158,7 +155,7 @@ describe("sandbox", function() {
         execFunc({
             callNodeFunc,
             funcSys: systems,
-            funcId:     "cbe19bb69c2de7695864a7923dd3891843a5e43c", // log
+            funcId:     "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", // log
             argId:      "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb", // "test-data" string
             argFuncId:  "08f8db63b1843f7dea016e488bd547555f345c59"  // stringGetStr
         });

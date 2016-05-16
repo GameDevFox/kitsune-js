@@ -1,0 +1,5 @@
+// -*- mode: js2 -*-
+export default function identity(input) {
+    return input;
+}
+module.exports = identity;

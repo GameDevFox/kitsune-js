@@ -46,6 +46,10 @@ var data = function() {
     "string": "group-list"
   },
   {
+    "id": "1db089a9f84e14e95f11dcb5c57fa10d60aa84bb",
+    "string": "identity"
+  },
+  {
     "id": "aa233bb14b0b75084bd435c4e857a10c955e948c",
     "string": "is-in-collection"
   },
