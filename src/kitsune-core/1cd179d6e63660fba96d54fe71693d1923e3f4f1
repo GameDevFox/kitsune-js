@@ -22,6 +22,10 @@ var data = function() {
     "string": "describe-node"
   },
   {
+    "id": "b478fbeae9d00581d83aff3070e93d759d23f59c",
+    "string": "dictionary-function"
+  },
+  {
     "id": "a37fa8901cbd5d96eab6cd37187fbc498bc973b6",
     "string": "graph-assign"
   },
