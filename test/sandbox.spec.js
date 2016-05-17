@@ -164,21 +164,10 @@ describe("sandbox", function() {
             systemFileReport({ coreNodes, groupList, nameList });
             graphReport({ graph });
         }
+        // END REPORTS //
 
         // Recreate links
-        exec("rm -rf src/kitsune-core-src");
-        exec("mkdir -p src/kitsune-core-src");
-        coreNodes.forEach(node => {
-            let myNames = nameList({ node });
-            if(myNames && myNames.length > 0) {
-                try {
-                    let cmdStr = "ln -s ../../src/kitsune-core/"+node+" src/kitsune-core-src/"+myNames[0];
-                    exec(cmdStr);
-                } catch(e) {
-                    console.log("Already a link for "+myNames[0]);
-                }
-            }
-        });
+        recreateLinks({ coreNodes, nameList });
 
         // Sort and save Data
         let sortedGraphData = _.sortBy(graph.find(), ["head", "tail"]);
@@ -189,6 +178,22 @@ describe("sandbox", function() {
         writeData(sortedStringData, "out/data/string.js");
     });
 });
+
+function recreateLinks({ coreNodes, nameList }) {
+    exec("rm -rf src/kitsune-core-src");
+    exec("mkdir -p src/kitsune-core-src");
+    coreNodes.forEach(node => {
+        let myNames = nameList({ node });
+        if(myNames && myNames.length > 0) {
+            try {
+                let cmdStr = "ln -s ../../src/kitsune-core/"+node+" src/kitsune-core-src/"+myNames[0];
+                exec(cmdStr);
+            } catch(e) {
+                console.log("Already a link for "+myNames[0]);
+            }
+        }
+    });
+}
 
 function execFunc({ callNodeFunc, funcSys, funcId, argId, argFuncId }) {
     let nodeFuncResult = callNodeFunc({
