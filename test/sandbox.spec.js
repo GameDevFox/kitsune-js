@@ -93,6 +93,7 @@ describe("sandbox", function() {
         let {
             andIs,
             describeNode,
+            executeFunction,
             graphAssign,
             graphAutoPut,
             graphListNodes,
@@ -133,7 +134,7 @@ describe("sandbox", function() {
         let isString = bind({ func: isInCollection, params: { collFind: string.find }});
 
         // Execute systems
-        // createSystemFile({ name: "call-node-function" });
+        // createSystemFile({ name: "exec-func" });
 
         let nodeFunctionId = "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda";
         let argumentId = "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2";
@@ -142,18 +143,18 @@ describe("sandbox", function() {
         // TODO: Automate building "home-made" systems
         systemList["08f8db63b1843f7dea016e488bd547555f345c59"] = string.getString;
 
-        execFunc({
+        executeFunction({
             callNodeFunc: callNodeFunction,
             funcSys: systems,
             funcId:     "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", // log
-            argId:      "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb", // "test-data" string
-            argFuncId:  "08f8db63b1843f7dea016e488bd547555f345c59"  // stringGetStr
+            argFuncId:  "08f8db63b1843f7dea016e488bd547555f345c59",  // stringGetStr
+            argId:      "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb"  // "test-data" string
         });
 
         // console.log(result);
 
-        // name({ node: "7087272f7205fdac70e1f29d3d4b9e170d99a431", name: "name-remove" });
-        // nameRemove({ node: "7087272f7205fdac70e1f29d3d4b9e170d99a431", name: "remove-name" });
+        // name({ node: "db7ab44b273faf81159baba0e847aaf0e46a406b", name: "execute-function" });
+        // nameRemove({ node: "db7ab44b273faf81159baba0e847aaf0e46a406b", name: "exec-func" });
         // cleanStringSystem();
 
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
@@ -193,19 +194,6 @@ function recreateLinks({ coreNodes, nameList }) {
             }
         }
     });
-}
-
-function execFunc({ callNodeFunc, funcSys, funcId, argId, argFuncId }) {
-    let nodeFuncResult = callNodeFunc({
-        funcSys,
-        funcId: argFuncId,
-        argId
-    });
-
-    let primaryFunc = funcSys(funcId);
-
-    let result = primaryFunc(nodeFuncResult);
-    return result;
 }
 
 // Report functions
@@ -253,7 +241,7 @@ function systemFileReport({ coreNodes, groupList, nameList }) {
     list.sort((a, b) => a.names[0].localeCompare(b.names[0]));
 
     list.forEach(({isInGroup, node, names}) => {
-        console.log(`[${isInGroup ? "X" : " "}] ${node}: ${JSON.stringify(names)}`);
+        console.log(`[${isInGroup ? "X" : " "}] ${node} ${JSON.stringify(names)}`);
     });
 
 }
