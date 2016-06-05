@@ -143,31 +143,30 @@ describe("sandbox", function() {
         // TODO: Automate building "home-made" systems
         systemList["08f8db63b1843f7dea016e488bd547555f345c59"] = string.getString;
 
-        // createCoreNode({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
-        // createCoreNode({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
-
+        // RUN THIS AFTER REPORT //
         let afterReports = function() {
+
+            let str = string.getString("b4239885728788227d10ced1e59da66130eaea8f");
+            console.log(str);
+
             executeFunction({
                 funcSys: systems,
                 funcId:     "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", // log
                 argFuncId:  "08f8db63b1843f7dea016e488bd547555f345c59",  // stringGetStr
                 argId:      "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb"  // "test-data" string
             });
+
         };
-
-        // console.log(result);
-
-        // name({ node: "db7ab44b273faf81159baba0e847aaf0e46a406b", name: "execute-function" });
-        // nameRemove({ node: "db7ab44b273faf81159baba0e847aaf0e46a406b", name: "exec-func" });
-        // cleanStringSystem();
+        ///////////////////////////
 
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
         // REPORTS //
         {
             // nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode });
             coreNodeReport({ groupList, nameList });
-            systemFileReport({ coreNodes, groupList, nameList });
+            // systemFileReport({ coreNodes, groupList, nameList });
             graphReport({ graph });
+            stringReport({ string });
         }
         console.log("== AFTER REPORTS ==");
         afterReports();
@@ -219,11 +218,11 @@ function coreNodeReport({ groupList, nameList }) {
 
     // Sort by first name
     nodesAndNames = _.sortBy(nodesAndNames, value => {
-        return value.names[0]; 
+        return value.names[0];
     });
-    
+
     nodesAndNames.forEach(({ node, names }) => {
-        console.log(`${node}: ${JSON.stringify(names)}`);
+        console.log(`${node} ${JSON.stringify(names)}`);
     });
 }
 
@@ -277,6 +276,15 @@ function graphReport({ graph }) {
     console.log("Edges: "+edges.length+" ("+nodePercent+"%)");
 }
 
+function stringReport({ string }) {
+    let strings = string.find();
+
+    console.log("== String Report ==");
+    strings.forEach(value => {
+        console.log(`${value.id} => ${value.string}`);
+    });
+}
+
 // Local utils - don't need to make system files out of these
 function _createSystemFile({ graphAutoPut, nameFn, name }) {
     let newSystemId = createId();
@@ -288,7 +296,7 @@ function _createSystemFile({ graphAutoPut, nameFn, name }) {
 function _createCoreNode({ node, name, graphAutoPut, nameFn }) {
     graphAutoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: node });
     nameFn({ node: node, name: name });
-};
+}
 
 function removeSystemFile({ graphFind, graphRemove, stringFind, stringRemove, groupId,
                             systemFileId, systemFileName, nameRemove }) {
