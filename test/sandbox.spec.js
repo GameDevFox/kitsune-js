@@ -129,27 +129,31 @@ describe("sandbox", function() {
         groupList = autoParam({ func: _groupList, paramName: "group" });
 
         let createSystemFile = bind({ func: _createSystemFile, params: { graphAutoPut: graph.autoPut, nameFn: name }});
+        let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut: graph.autoPut, nameFn: name }});
         let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind: string.find, graphListNodes: graph.listNodes, stringRemove: string.remove }});
         let isEdge = bind({ func: isInCollection, params: { collFind: graph.find }});
         let isString = bind({ func: isInCollection, params: { collFind: string.find }});
 
+        executeFunction = bind({ func: executeFunction, params: { callNodeFunc: callNodeFunction }});
+
         // Execute systems
         // createSystemFile({ name: "exec-func" });
-
-        let nodeFunctionId = "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda";
-        let argumentId = "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2";
 
         // Append systemList with "home-made" system
         // TODO: Automate building "home-made" systems
         systemList["08f8db63b1843f7dea016e488bd547555f345c59"] = string.getString;
 
-        executeFunction({
-            callNodeFunc: callNodeFunction,
-            funcSys: systems,
-            funcId:     "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", // log
-            argFuncId:  "08f8db63b1843f7dea016e488bd547555f345c59",  // stringGetStr
-            argId:      "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb"  // "test-data" string
-        });
+        // createCoreNode({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
+        // createCoreNode({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
+
+        let afterReports = function() {
+            executeFunction({
+                funcSys: systems,
+                funcId:     "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", // log
+                argFuncId:  "08f8db63b1843f7dea016e488bd547555f345c59",  // stringGetStr
+                argId:      "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb"  // "test-data" string
+            });
+        };
 
         // console.log(result);
 
@@ -165,6 +169,10 @@ describe("sandbox", function() {
             systemFileReport({ coreNodes, groupList, nameList });
             graphReport({ graph });
         }
+        console.log("== AFTER REPORTS ==");
+        afterReports();
+        console.log("===================");
+
         // END REPORTS //
 
         // Recreate links
@@ -200,8 +208,21 @@ function recreateLinks({ coreNodes, nameList }) {
 function coreNodeReport({ groupList, nameList }) {
     console.log("=== Core Node Report ===");
     let coreNodes = groupList("7f82d45a6ffb5c345f84237a621de35dd8b7b0e3");
+    let nodesAndNames = [];
     coreNodes.forEach(node => {
         let names = nameList({ node: node });
+        nodesAndNames.push({
+            node,
+            names
+        });
+    });
+
+    // Sort by first name
+    nodesAndNames = _.sortBy(nodesAndNames, value => {
+        return value.names[0]; 
+    });
+    
+    nodesAndNames.forEach(({ node, names }) => {
         console.log(`${node}: ${JSON.stringify(names)}`);
     });
 }
@@ -254,7 +275,6 @@ function graphReport({ graph }) {
     console.log("== Graph Report ==");
     console.log("Nodes: "+nodes.length);
     console.log("Edges: "+edges.length+" ("+nodePercent+"%)");
-    console.log("==================");
 }
 
 // Local utils - don't need to make system files out of these
@@ -264,6 +284,11 @@ function _createSystemFile({ graphAutoPut, nameFn, name }) {
     graphAutoPut({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: newSystemId });
     nameFn({ node: newSystemId, name: name });
 }
+
+function _createCoreNode({ node, name, graphAutoPut, nameFn }) {
+    graphAutoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: node });
+    nameFn({ node: node, name: name });
+};
 
 function removeSystemFile({ graphFind, graphRemove, stringFind, stringRemove, groupId,
                             systemFileId, systemFileName, nameRemove }) {

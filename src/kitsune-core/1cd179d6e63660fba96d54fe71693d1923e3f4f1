@@ -34,6 +34,14 @@ var data = function() {
     "string": "execute-function"
   },
   {
+    "id": "cab154c2ee1cd8ddc18af9d5fe9c85a5fceef620",
+    "string": "function-argument"
+  },
+  {
+    "id": "b4239885728788227d10ced1e59da66130eaea8f",
+    "string": "function-argument-function"
+  },
+  {
     "id": "a37fa8901cbd5d96eab6cd37187fbc498bc973b6",
     "string": "graph-assign"
   },
