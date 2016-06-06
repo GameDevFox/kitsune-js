@@ -19,20 +19,18 @@ describe("sandbox", function() {
         loader = autoParam({ func: loader, paramName: "id" });
 
         // MANUAL LOADING
+        let dictFunc = loader("30c8959d5d7804fb80cc9236edec97e04e5c4c3d"); // dictionary-function
         let graphData = loader("24c045b912918d65c9e9aaea9993e9ab56f50d2e"); // graph-data
-        let stringData = loader("1cd179d6e63660fba96d54fe71693d1923e3f4f1"); // string-data
-
-        let lokiColl = loader("0741c54e604ad973eb41c02ab59c5aabdf2c6bc3"); // loki-collection
-        let lokiPut = loader("f45ccdaba9fdca2234be7ded1a5578dd17c2374e"); // loki-put
-        let lokiFind = loader("30dee1b715bcfe60afeaadbb0e3e66019140686a"); // loki-find
-
         let graphFactor = loader("4163d1cd63d3949b79c37223bd7da04ad6cd36c8"); // graph-factor
+        let lokiColl = loader("0741c54e604ad973eb41c02ab59c5aabdf2c6bc3"); // loki-collection
+        let lokiFind = loader("30dee1b715bcfe60afeaadbb0e3e66019140686a"); // loki-find
+        let lokiPut = loader("f45ccdaba9fdca2234be7ded1a5578dd17c2374e"); // loki-put
         let nameList = loader("81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266"); // nameList
-
         let returnFirst = loader("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51"); // return-first
         let returnProperty = loader("c1020aea14a46b72c6f8a4b7fa57acc14a73a64e"); // return-property
-
-        let dictFunc = loader("30c8959d5d7804fb80cc9236edec97e04e5c4c3d"); // dictionary-function
+        let stringData = loader("1cd179d6e63660fba96d54fe71693d1923e3f4f1"); // string-data
+        let value = loader("4c135d591fc67df7b652431515bd82ac5f31367a"); // value
+        let valueFunc = loader("62126ce823b700cf7441b5179a3848149c9d8c89"); // value-function
 
         // INIT DATA SYSTEMS
         var data = { graph: graphData(), string: stringData() };
@@ -69,16 +67,25 @@ describe("sandbox", function() {
 
         nameList = bind({ func: nameList, params: { graphFactor: graph.factor, stringGetString: string.getString }});
 
-        let group = graph.find({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
-        let groupIds = _.map(group, "tail");
+        let systemFileEdges = graph.find({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
+        let systemFileIds = _.map(systemFileEdges, "tail");
 
-        let systemList = {};
+        // Build System List
+        let systemList = _.zipObject(systemFileIds, _.map(systemFileIds, loader));
+
+        // Append systemList with "home-made" system
+        systemList.a12b68854a0ae8cf1ae2a986aac15677a0aab605 = valueFunc(graph);
+        systemList.eace59cae90b00e292779b7bd4b18a033598ac73 = valueFunc(string);
+
+        systemList["7e5e764e118960318d513920a0f33e4c5ae64b50"] = graph.put;
+        systemList.a1e815356dceab7fded042f3032925489407c93e = graph.find;
+        systemList.b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385 = string.put;
+        systemList["8b1f2122a8c08b5c1314b3f42a9f462e35db05f7"] = string.find;
+
+        // Build systemsByName
         let systemsByName = {};
-        groupIds.forEach(id => {
+        _.map(systemList, (system, id) => {
             let names = nameList({ node: id });
-            let system = loader(id);
-
-            systemList[id] = system;
 
             names.forEach(name => {
                 let camelName = name
@@ -87,6 +94,7 @@ describe("sandbox", function() {
                 systemsByName[camelName] = system;
             });
         });
+
         let systems = dictFunc(systemList);
 
         // Build systems
@@ -137,9 +145,8 @@ describe("sandbox", function() {
         executeFunction = bind({ func: executeFunction, params: { callNodeFunc: callNodeFunction }});
 
         // Execute systems
-        // createSystemFile({ name: "exec-func" });
+        // createSystemFile({ name: "value" });
 
-        // Append systemList with "home-made" system
         // TODO: Automate building "home-made" systems
         systemList["08f8db63b1843f7dea016e488bd547555f345c59"] = string.getString;
 
@@ -164,9 +171,9 @@ describe("sandbox", function() {
         {
             // nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode });
             coreNodeReport({ groupList, nameList });
-            // systemFileReport({ coreNodes, groupList, nameList });
+            systemFileReport({ coreNodes, groupList, nameList });
             graphReport({ graph });
-            stringReport({ string });
+            // stringReport({ string });
         }
         console.log("== AFTER REPORTS ==");
         afterReports();
