@@ -1,0 +1,8 @@
+// -*- mode: js2 -*-
+import crypto from "crypto";
+
+export default function hashString(string) {
+    let result = crypto.createHash("sha1").update(string).digest("hex");
+	return result;
+}
+module.exports = hashString;

@@ -46,7 +46,7 @@ describe("sandbox", function() {
             let find = bind({ func: lokiFind, params: { db: coll }});
             control.find = autoParam({ func: find, paramName: "where" });
 
-            control.coll = coll;
+            control.coll = valueFunc(coll);
 
             // Insert data
             dataSet.forEach(value => {
@@ -71,16 +71,37 @@ describe("sandbox", function() {
         let systemFileIds = _.map(systemFileEdges, "tail");
 
         // Build System List
-        let systemList = _.zipObject(systemFileIds, _.map(systemFileIds, loader));
+        let systemList = {};
+        var putSystem = function({ systemList, id, system }) {
+            if(!id && !system.id)
+                throw new Error("No id found in param or on system");
+
+            if(!system.id)
+                system.id = id;
+            else
+                id = system.id;
+
+            systemList[id] = system;
+        };
+        putSystem = bind({ func: putSystem, params: { systemList }});
+
+        // Load systems into list
+        _.each(systemFileIds, id => {
+            let system = loader(id);
+            putSystem({ id, system });
+        });
 
         // Append systemList with "home-made" system
-        systemList.a12b68854a0ae8cf1ae2a986aac15677a0aab605 = valueFunc(graph);
-        systemList.eace59cae90b00e292779b7bd4b18a033598ac73 = valueFunc(string);
+        putSystem({ id: "adf6b91bb7c0472237e4764c044733c4328b1e55", system: graph.coll });
+        putSystem({ id: "ce6de1160131bddb4e214f52e895a68583105133", system: string.coll });
 
-        systemList["7e5e764e118960318d513920a0f33e4c5ae64b50"] = graph.put;
-        systemList.a1e815356dceab7fded042f3032925489407c93e = graph.find;
-        systemList.b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385 = string.put;
-        systemList["8b1f2122a8c08b5c1314b3f42a9f462e35db05f7"] = string.find;
+        putSystem({ id: "7e5e764e118960318d513920a0f33e4c5ae64b50", system: graph.put });
+        putSystem({ id: "a1e815356dceab7fded042f3032925489407c93e", system: graph.find });
+        putSystem({ id: "b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385", system: string.put });
+        putSystem({ id: "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", system: string.find });
+
+        // putSystem({ id: "a12b68854a0ae8cf1ae2a986aac15677a0aab605", system: valueFunc(graph) });
+        // putSystem({ id: "eace59cae90b00e292779b7bd4b18a033598ac73", system: valueFunc(string) });
 
         // Build systemsByName
         let systemsByName = {};
@@ -106,6 +127,8 @@ describe("sandbox", function() {
             graphAutoPut,
             graphListNodes,
             groupList,
+            hashRandom,
+            hashString,
             isInCollection,
             isInGroup,
             lokiRemove,
@@ -116,7 +139,7 @@ describe("sandbox", function() {
         } = systemsByName;
 
         // Graph
-        let graphRemove = bind({ func: lokiRemove, params: { db: graph.coll }});
+        let graphRemove = bind({ func: lokiRemove, params: { db: graph.coll() }});
         graph.remove = autoParam({ func: graphRemove, paramName: "id" });
 
         graph.autoPut = bind({ func: graphAutoPut, params: { graphPut: graph.put }});
@@ -128,7 +151,7 @@ describe("sandbox", function() {
         _stringGetId = returnFirst(_stringGetId);
         string.getId = returnProperty({ func: _stringGetId, propertyName: "id" });
 
-        string.remove = bind({ func: lokiRemove, params: { db: string.coll }});
+        string.remove = bind({ func: lokiRemove, params: { db: string.coll() }});
         let _stringAutoPut = bind({ func: stringAutoPut, params: { stringFind: string.find, stringPut: string.put }});
         string.autoPut = autoParam({ func: _stringAutoPut, paramName: "string" });
 
@@ -141,6 +164,8 @@ describe("sandbox", function() {
         groupList = autoParam({ func: _groupList, paramName: "group" });
 
         // Other
+        hashRandom = bind({ func: hashRandom, params: { hashString }});
+
         let createSystemFile = bind({ func: _createSystemFile, params: { graphAutoPut: graph.autoPut, nameFn: name }});
         let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut: graph.autoPut, nameFn: name }});
         let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind: string.find, graphListNodes: graph.listNodes, stringRemove: string.remove }});
@@ -162,30 +187,138 @@ describe("sandbox", function() {
         };
 
         // Execute systems
-        // createSystemFile({ name: "" });
+        // createSystemFile({ name: "hash-random" });
         // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
         // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
-        // let edges = graph.find({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });        
+        // let edges = graph.find({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
         // edges.forEach(edge => graph.remove(edge.id));
 
         // TODO: Automate building "home-made" systems
-        systemList["08f8db63b1843f7dea016e488bd547555f345c59"] = string.getString;
+        putSystem({ id: "08f8db63b1843f7dea016e488bd547555f345c59", system: string.getString });
+        putSystem({ id: "ab3c2b8f8ef49a450344437801bbadef765caf69", system: systems });
+
+        var putObject = function self({ graphAssign, stringAutoPut, createId, id, object }) {
+
+            let types = {};
+            let invalids = [];
+            for(let key in object) {
+                let value = object[key];
+
+                if(_.isString(value))
+                    types[key] = "string";
+                else if(_.isFunction(value))
+                    types[key] = "function";
+                else if(_.isPlainObject(value))
+                    types[key] = "object";
+                else
+                    invalids.push(key);
+            }
+
+            if(invalids.length > 0) {
+                throw new Error("The following properties can not be stored " +
+                    "in the system: " + invalids);
+            }
+
+            for(let key in types) {
+                let value = object[key];
+                let type = types[key];
+
+                let valueId;
+                switch(type) {
+                    case "string":
+                        let stringId = stringAutoPut(value);
+                        valueId = graph.autoPut({
+                            head: "08f8db63b1843f7dea016e488bd547555f345c59",
+                            tail: stringId
+                        });
+                        break;
+                    case "function":
+                        let funcId = value.id;
+                        valueId = graph.autoPut({
+                            head: "ab3c2b8f8ef49a450344437801bbadef765caf69",
+                            tail: funcId
+                        });
+                        break;
+                    // case "object":
+                    //     let objId = randomHash();
+                    //     self({ graphAssign, stringAutoPut, id: objId, object: value });
+                    //     valueId = graph.autoPut({
+                    //         head: "ab3c2b8f8ef49a450344437801bbadef765caf69",
+                    //         tail: objId
+                    //     });
+                    //     break;
+                }
+
+                let nameId = stringAutoPut(key);
+                let args = { head: id, type: nameId, tail: valueId };
+                graphAssign(args);
+            }
+        };
+
+        var getObject = function({ graphFactor, stringGetString, node }) {
+            let children = graphFactor({ head: node });
+
+            let result = {};
+            children.forEach(child => {
+                // Get key
+                let key = stringGetString(child.type);
+
+                // Get Value
+                let { head, tail } = graph.find({ id: child.tail })[0];
+                let value = nodeFunc({ funcId: head, argId: tail });
+
+                result[key] = value;
+            });
+            return result;
+        };
+
 
         // RUN THIS AFTER REPORT //
         let afterReports = function() {
 
-            let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", argId: "b4239885728788227d10ced1e59da66130eaea8f" });
-            console.log(a);
+            console.log(hashString("hello"));
+            console.log(hashString("hello"));
+            console.log(hashString("hello2"));
 
-            let str = string.getString("b4239885728788227d10ced1e59da66130eaea8f");
-            console.log(str);
+            console.log(hashRandom());
+            console.log(hashRandom());
+            console.log(hashRandom());
 
-            executeFunction({
-                funcSys: systems,
-                funcId:     "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", // log
-                argFuncId:  "08f8db63b1843f7dea016e488bd547555f345c59",  // stringGetStr
-                argId:      "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb"  // "test-data" string
-            });
+            // let obj = {
+            //     name: "james",
+            //     partner: "hime",
+            //     func: systems
+            // };
+            // putObject({
+            //     graphAssign: graph.assign,
+            //     stringAutoPut: string.autoPut,
+            //     id: "e3d8797320e82983ccf0293c1fbf1429de9abd44",
+            //     object: obj
+            // });
+            //
+            // /////////////////////////////////////
+            //
+            // let objData = getObject({
+            //     graphFactor: graph.factor,
+            //     stringGetString: string.getString,
+            //     node: "e3d8797320e82983ccf0293c1fbf1429de9abd44"
+            // });
+            // console.log(objData);
+            //
+            // console.log((9007199254740991).toString(16));
+
+            // let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", argId: "b4239885728788227d10ced1e59da66130eaea8f" });
+            // console.log(a);
+            //
+            // let str = string.getString("b4239885728788227d10ced1e59da66130eaea8f");
+            // console.log(str);
+            //
+            // executeFunction({
+            //     funcSys: systems,
+            //     funcId:     "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", // log
+            //     argFuncId:  "08f8db63b1843f7dea016e488bd547555f345c59",  // stringGetStr
+            //     argId:      "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb"  // "test-data" string
+            // });
 
         };
         ///////////////////////////

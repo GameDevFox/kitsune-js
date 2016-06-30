@@ -1,0 +1,6 @@
+// -*- mode: js2 -*-
+export default function hashRandom({ hashString }) {
+    let result = hashString(Math.random().toString());
+    return result;
+}
+module.exports = hashRandom;

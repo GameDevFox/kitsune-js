@@ -70,6 +70,14 @@ var data = function() {
     "string": "group-list"
   },
   {
+    "id": "ca721c39fbca7a36d87d92561b3a0211d9bf665c",
+    "string": "hash-random"
+  },
+  {
+    "id": "dbdc0a9d387abf3a42d27f988a9e1c32fad9a514",
+    "string": "hash-string"
+  },
+  {
     "id": "1db089a9f84e14e95f11dcb5c57fa10d60aa84bb",
     "string": "identity"
   },
