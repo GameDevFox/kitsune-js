@@ -73,7 +73,7 @@ describe("sandbox", function() {
         // Build System List
         let systemList = {};
         var putSystem = function({ systemList, id, system }) {
-            if(!id && !system.id)
+            if(!id && (!system || !system.id))
                 throw new Error("No id found in param or on system");
 
             if(!system.id)
@@ -197,7 +197,7 @@ describe("sandbox", function() {
         putSystem({ id: "08f8db63b1843f7dea016e488bd547555f345c59", system: string.getString });
         putSystem({ id: "ab3c2b8f8ef49a450344437801bbadef765caf69", system: systems });
 
-        var putObject = function self({ graphAssign, stringAutoPut, createId, id, object }) {
+        var putObject = function self({ graphAssign, stringAutoPut, hashRandom, createId, id, object }) {
 
             let types = {};
             let invalids = [];
@@ -239,14 +239,14 @@ describe("sandbox", function() {
                             tail: funcId
                         });
                         break;
-                    // case "object":
-                    //     let objId = randomHash();
-                    //     self({ graphAssign, stringAutoPut, id: objId, object: value });
-                    //     valueId = graph.autoPut({
-                    //         head: "ab3c2b8f8ef49a450344437801bbadef765caf69",
-                    //         tail: objId
-                    //     });
-                    //     break;
+                    case "object":
+                        let objId = hashRandom();
+                        self({ graphAssign, stringAutoPut, hashRandom, id: objId, object: value });
+                        valueId = graph.autoPut({
+                            head: "d7f80b3486eee7b142c190a895c5496242519608",
+                            tail: objId
+                        });
+                        break;
                 }
 
                 let nameId = stringAutoPut(key);
@@ -271,41 +271,36 @@ describe("sandbox", function() {
             });
             return result;
         };
-
+        getObject = bind({ func: getObject, params: {
+            graphFactor: graph.factor,
+            stringGetString: string.getString
+        }});
+        getObject = autoParam({ func: getObject, paramName: "node" });
+        putSystem({ id: "d7f80b3486eee7b142c190a895c5496242519608", system: getObject });
 
         // RUN THIS AFTER REPORT //
         let afterReports = function() {
 
-            console.log(hashString("hello"));
-            console.log(hashString("hello"));
-            console.log(hashString("hello2"));
+            let obj = {
+                name: "james",
+                partner: "hime",
+                func: systems,
+                sub: {
+                    another: "one"
+                }
+            };
+            putObject({
+                graphAssign: graph.assign,
+                stringAutoPut: string.autoPut,
+                hashRandom,
+                id: "e3d8797320e82983ccf0293c1fbf1429de9abd44",
+                object: obj
+            });
 
-            console.log(hashRandom());
-            console.log(hashRandom());
-            console.log(hashRandom());
+            /////////////////////////////////////
 
-            // let obj = {
-            //     name: "james",
-            //     partner: "hime",
-            //     func: systems
-            // };
-            // putObject({
-            //     graphAssign: graph.assign,
-            //     stringAutoPut: string.autoPut,
-            //     id: "e3d8797320e82983ccf0293c1fbf1429de9abd44",
-            //     object: obj
-            // });
-            //
-            // /////////////////////////////////////
-            //
-            // let objData = getObject({
-            //     graphFactor: graph.factor,
-            //     stringGetString: string.getString,
-            //     node: "e3d8797320e82983ccf0293c1fbf1429de9abd44"
-            // });
-            // console.log(objData);
-            //
-            // console.log((9007199254740991).toString(16));
+            let objData = getObject("e3d8797320e82983ccf0293c1fbf1429de9abd44");
+            console.log(objData);
 
             // let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", argId: "b4239885728788227d10ced1e59da66130eaea8f" });
             // console.log(a);
