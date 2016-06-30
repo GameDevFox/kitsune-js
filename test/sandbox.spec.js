@@ -115,6 +115,7 @@ describe("sandbox", function() {
             callNodeFunction
         } = systemsByName;
 
+        // Graph
         let graphRemove = bind({ func: lokiRemove, params: { db: graph.coll }});
         graph.remove = autoParam({ func: graphRemove, paramName: "id" });
 
@@ -122,6 +123,7 @@ describe("sandbox", function() {
         graph.assign = bind({ func: graphAssign, params: { graphAutoPut: graph.autoPut }});
         graph.listNodes = bind({ func: graphListNodes, params: { graphFind: graph.find }});
 
+        // String
         let _stringGetId = autoParam({ func: string.find, paramName: "string" });
         _stringGetId = returnFirst(_stringGetId);
         string.getId = returnProperty({ func: _stringGetId, propertyName: "id" });
@@ -130,28 +132,50 @@ describe("sandbox", function() {
         let _stringAutoPut = bind({ func: stringAutoPut, params: { stringFind: string.find, stringPut: string.put }});
         string.autoPut = autoParam({ func: _stringAutoPut, paramName: "string" });
 
+        // Name
         name = bind({ func: name, params: { stringAutoPut: string.autoPut, graphAssign: graph.assign }});
         nameRemove = bind({ func: nameRemove, params: { stringGetId: string.getId, graphFactor: graph.factor, graphRemove: graph.remove }});
 
+        // Group
         let _groupList = bind({ func: groupList, params: { graphFind: graph.find }});
         groupList = autoParam({ func: _groupList, paramName: "group" });
 
+        // Other
         let createSystemFile = bind({ func: _createSystemFile, params: { graphAutoPut: graph.autoPut, nameFn: name }});
         let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut: graph.autoPut, nameFn: name }});
         let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind: string.find, graphListNodes: graph.listNodes, stringRemove: string.remove }});
         let isEdge = bind({ func: isInCollection, params: { collFind: graph.find }});
         let isString = bind({ func: isInCollection, params: { collFind: string.find }});
 
+        // Function
+        let nodeFunc = bind({ func: callNodeFunction, params: { funcSys: systems }});
         executeFunction = bind({ func: executeFunction, params: { callNodeFunc: callNodeFunction }});
 
+        let traceAssign = function({ graphFind, assignId }) {
+            let typeEdge = graphFind({ id: assignId })[0];
+            let edge = graphFind({ id: typeEdge.tail })[0];
+            return {
+                type: typeEdge.head,
+                head: edge.head,
+                tail: edge.tail
+            };
+        };
+
         // Execute systems
-        // createSystemFile({ name: "value" });
+        // createSystemFile({ name: "" });
+        // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
+        // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
+        // let edges = graph.find({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });        
+        // edges.forEach(edge => graph.remove(edge.id));
 
         // TODO: Automate building "home-made" systems
         systemList["08f8db63b1843f7dea016e488bd547555f345c59"] = string.getString;
 
         // RUN THIS AFTER REPORT //
         let afterReports = function() {
+
+            let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", argId: "b4239885728788227d10ced1e59da66130eaea8f" });
+            console.log(a);
 
             let str = string.getString("b4239885728788227d10ced1e59da66130eaea8f");
             console.log(str);
@@ -172,7 +196,7 @@ describe("sandbox", function() {
             // nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode });
             coreNodeReport({ groupList, nameList });
             systemFileReport({ coreNodes, groupList, nameList });
-            graphReport({ graph });
+            // graphReport({ graph });
             // stringReport({ string });
         }
         console.log("== AFTER REPORTS ==");
