@@ -199,14 +199,16 @@ describe("sandbox", function() {
         putSystem({ id: "08f8db63b1843f7dea016e488bd547555f345c59", system: string.getString });
         putSystem({ id: "ab3c2b8f8ef49a450344437801bbadef765caf69", system: systems });
 
-        var putObject = function self({ graphAssign, stringAutoPut, hashRandom, createId, id, object }) {
+        var putObject = function self({ graphAssign, graphAutoPut, hashInteger, stringAutoPut, hashRandom, createId, id, object }) {
 
             let types = {};
             let invalids = [];
             for(let key in object) {
                 let value = object[key];
 
-                if(_.isString(value))
+                if(_.isInteger(value))
+                    types[key] = "integer";
+                else if(_.isString(value))
                     types[key] = "string";
                 else if(_.isFunction(value))
                     types[key] = "function";
@@ -227,24 +229,31 @@ describe("sandbox", function() {
 
                 let valueId;
                 switch(type) {
+                    case "integer":
+                        let intId = hashInteger(value);
+                        valueId = graphAutoPut({
+                            head: "a3cb3210c4688aabf0772e5a7dec9c9922247194",
+                            tail: intId
+                        });
+                        break;
                     case "string":
                         let stringId = stringAutoPut(value);
-                        valueId = graph.autoPut({
+                        valueId = graphAutoPut({
                             head: "08f8db63b1843f7dea016e488bd547555f345c59",
                             tail: stringId
                         });
                         break;
                     case "function":
                         let funcId = value.id;
-                        valueId = graph.autoPut({
+                        valueId = graphAutoPut({
                             head: "ab3c2b8f8ef49a450344437801bbadef765caf69",
                             tail: funcId
                         });
                         break;
                     case "object":
                         let objId = hashRandom();
-                        self({ graphAssign, stringAutoPut, hashRandom, id: objId, object: value });
-                        valueId = graph.autoPut({
+                        self({ graphAssign, graphAutoPut, hashInteger, stringAutoPut, hashRandom, id: objId, object: value });
+                        valueId = graphAutoPut({
                             head: "d7f80b3486eee7b142c190a895c5496242519608",
                             tail: objId
                         });
@@ -256,8 +265,11 @@ describe("sandbox", function() {
                 graphAssign(args);
             }
         };
+
         putObject = bind({ func: putObject, params: {
             graphAssign: graph.assign,
+            graphAutoPut: graph.autoPut,
+            hashInteger,
             stringAutoPut: string.autoPut,
             hashRandom,
         }});
@@ -288,32 +300,25 @@ describe("sandbox", function() {
         // RUN THIS AFTER REPORT //
         let afterReports = function() {
 
-            console.log(hashInteger(255));
-            console.log(hashInteger(12341324));
-            console.log(hashInteger(256));
+            putObject({
+                id: "e3d8797320e82983ccf0293c1fbf1429de9abd44",
+                object: {
+                    name: "james",
+                    gold: 2000,
+                    func: systems,
+                    sub: {
+                        final: {
+                            last: "thing",
+                            what: "up",
+                            code: 123
+                        },
+                        another: "one"
+                    }
+                }
+            });
 
-            console.log(readInteger("00000000000000000000000000000000000000ff"));
-            console.log(readInteger("0000000000000000000000000000000000bc504c"));
-            console.log(readInteger("0000000000000000000000000000000000000100"));
-
-            // putObject({
-            //     id: "e3d8797320e82983ccf0293c1fbf1429de9abd44",
-            //     object: {
-            //         name: "james",
-            //         partner: "hime",
-            //         func: systems,
-            //         sub: {
-            //             final: {
-            //                 last: "thing",
-            //                 what: "up"
-            //             },
-            //             another: "one"
-            //         }
-            //     }
-            // });
-            //
-            // let objData = getObject("e3d8797320e82983ccf0293c1fbf1429de9abd44");
-            // console.log(objData);
+            let objData = getObject("e3d8797320e82983ccf0293c1fbf1429de9abd44");
+            console.log(objData);
 
             // let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", argId: "b4239885728788227d10ced1e59da66130eaea8f" });
             // console.log(a);
