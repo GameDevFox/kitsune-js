@@ -127,6 +127,7 @@ describe("sandbox", function() {
             graphAutoPut,
             graphListNodes,
             groupList,
+            hashInteger,
             hashRandom,
             hashString,
             isInCollection,
@@ -134,6 +135,7 @@ describe("sandbox", function() {
             lokiRemove,
             name,
             nameRemove,
+            readInteger,
             stringAutoPut,
             callNodeFunction
         } = systemsByName;
@@ -187,7 +189,7 @@ describe("sandbox", function() {
         };
 
         // Execute systems
-        // createSystemFile({ name: "hash-random" });
+        // createSystemFile({ name: "read-integer" });
         // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
         // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
         // let edges = graph.find({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
@@ -254,6 +256,11 @@ describe("sandbox", function() {
                 graphAssign(args);
             }
         };
+        putObject = bind({ func: putObject, params: {
+            graphAssign: graph.assign,
+            stringAutoPut: string.autoPut,
+            hashRandom,
+        }});
 
         var getObject = function({ graphFactor, stringGetString, node }) {
             let children = graphFactor({ head: node });
@@ -281,26 +288,32 @@ describe("sandbox", function() {
         // RUN THIS AFTER REPORT //
         let afterReports = function() {
 
-            let obj = {
-                name: "james",
-                partner: "hime",
-                func: systems,
-                sub: {
-                    another: "one"
-                }
-            };
-            putObject({
-                graphAssign: graph.assign,
-                stringAutoPut: string.autoPut,
-                hashRandom,
-                id: "e3d8797320e82983ccf0293c1fbf1429de9abd44",
-                object: obj
-            });
+            console.log(hashInteger(255));
+            console.log(hashInteger(12341324));
+            console.log(hashInteger(256));
 
-            /////////////////////////////////////
+            console.log(readInteger("00000000000000000000000000000000000000ff"));
+            console.log(readInteger("0000000000000000000000000000000000bc504c"));
+            console.log(readInteger("0000000000000000000000000000000000000100"));
 
-            let objData = getObject("e3d8797320e82983ccf0293c1fbf1429de9abd44");
-            console.log(objData);
+            // putObject({
+            //     id: "e3d8797320e82983ccf0293c1fbf1429de9abd44",
+            //     object: {
+            //         name: "james",
+            //         partner: "hime",
+            //         func: systems,
+            //         sub: {
+            //             final: {
+            //                 last: "thing",
+            //                 what: "up"
+            //             },
+            //             another: "one"
+            //         }
+            //     }
+            // });
+            //
+            // let objData = getObject("e3d8797320e82983ccf0293c1fbf1429de9abd44");
+            // console.log(objData);
 
             // let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", argId: "b4239885728788227d10ced1e59da66130eaea8f" });
             // console.log(a);

@@ -1,0 +1,6 @@
+// -*- mode: js2 -*-
+export default function readInteger(id) {
+    let result = parseInt(id, 16);
+    return result;
+}
+module.exports = readInteger;

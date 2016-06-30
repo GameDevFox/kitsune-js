@@ -70,6 +70,10 @@ var data = function() {
     "string": "group-list"
   },
   {
+    "id": "099e0e5f27696b903efd607709006226c0f54436",
+    "string": "hash-integer"
+  },
+  {
     "id": "ca721c39fbca7a36d87d92561b3a0211d9bf665c",
     "string": "hash-random"
   },
@@ -120,6 +124,10 @@ var data = function() {
   {
     "id": "7c32d0157c9d62dd28c63e9d8869ad8f933dce45",
     "string": "name-remove"
+  },
+  {
+    "id": "3fc738a31d3c6ab7adb3637b88c20b79831183ed",
+    "string": "read-integer"
   },
   {
     "id": "40e834bf73db510d13dab70ff96a300962037d31",

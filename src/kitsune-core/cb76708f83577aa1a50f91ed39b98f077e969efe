@@ -1,0 +1,10 @@
+// -*- mode: js2 -*-
+let _ = require("lodash");
+
+export default function hashInteger(integer) {
+    let result = integer.toString(16);
+    result = _.padStart(result, 40, "0");
+
+    return result;
+}
+module.exports = hashInteger;
