@@ -42,6 +42,10 @@ var data = function() {
     "string": "function-argument-function"
   },
   {
+    "id": "f91af1f6dde52876197ebc34f6a9fe651fc78b33",
+    "string": "function-call"
+  },
+  {
     "id": "a37fa8901cbd5d96eab6cd37187fbc498bc973b6",
     "string": "graph-assign"
   },
