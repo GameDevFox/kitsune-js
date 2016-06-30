@@ -274,7 +274,7 @@ describe("sandbox", function() {
             hashRandom,
         }});
 
-        var getObject = function({ graphFactor, stringGetString, node }) {
+        var readObject = function({ graphFactor, stringGetString, node }) {
             let children = graphFactor({ head: node });
 
             let result = {};
@@ -290,12 +290,12 @@ describe("sandbox", function() {
             });
             return result;
         };
-        getObject = bind({ func: getObject, params: {
+        readObject = bind({ func: readObject, params: {
             graphFactor: graph.factor,
             stringGetString: string.getString
         }});
-        getObject = autoParam({ func: getObject, paramName: "node" });
-        putSystem({ id: "d7f80b3486eee7b142c190a895c5496242519608", system: getObject });
+        readObject = autoParam({ func: readObject, paramName: "node" });
+        putSystem({ id: "d7f80b3486eee7b142c190a895c5496242519608", system: readObject });
 
         // RUN THIS AFTER REPORT //
         let afterReports = function() {
@@ -317,7 +317,7 @@ describe("sandbox", function() {
                 }
             });
 
-            let objData = getObject("e3d8797320e82983ccf0293c1fbf1429de9abd44");
+            let objData = readObject("e3d8797320e82983ccf0293c1fbf1429de9abd44");
             console.log(objData);
 
             // let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", argId: "b4239885728788227d10ced1e59da66130eaea8f" });
