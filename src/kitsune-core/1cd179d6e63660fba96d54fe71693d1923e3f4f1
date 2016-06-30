@@ -34,14 +34,6 @@ var data = function() {
     "string": "execute-function"
   },
   {
-    "id": "cab154c2ee1cd8ddc18af9d5fe9c85a5fceef620",
-    "string": "function-argument"
-  },
-  {
-    "id": "b4239885728788227d10ced1e59da66130eaea8f",
-    "string": "function-argument-function"
-  },
-  {
     "id": "f91af1f6dde52876197ebc34f6a9fe651fc78b33",
     "string": "function-call"
   },
