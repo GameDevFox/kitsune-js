@@ -61,11 +61,11 @@ describe("sandbox", function() {
         // Auto load systems
         graph.factor = bind({ func: graphFactor, params: { graphFind: graph.find }});
 
-        let _stringGetString = autoParam({ func: string.find, paramName: "id" });
-        _stringGetString = returnFirst(_stringGetString);
-        string.getString = returnProperty({ func: _stringGetString, propertyName: "string" });
+        let _stringReadString = autoParam({ func: string.find, paramName: "id" });
+        _stringReadString = returnFirst(_stringReadString);
+        string.readString = returnProperty({ func: _stringReadString, propertyName: "string" });
 
-        nameList = bind({ func: nameList, params: { graphFactor: graph.factor, stringGetString: string.getString }});
+        nameList = bind({ func: nameList, params: { graphFactor: graph.factor, stringReadString: string.readString }});
 
         let systemFileEdges = graph.find({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
         let systemFileIds = _.map(systemFileEdges, "tail");
@@ -100,7 +100,7 @@ describe("sandbox", function() {
         putSystem({ id: "b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385", system: string.put });
         putSystem({ id: "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", system: string.find });
 
-        putSystem({ id: "08f8db63b1843f7dea016e488bd547555f345c59", system: string.getString });
+        putSystem({ id: "08f8db63b1843f7dea016e488bd547555f345c59", system: string.readString });
 
         // Build systemsByName
         let systemsByName = {};
@@ -175,7 +175,7 @@ describe("sandbox", function() {
         // Object
         readObject = bind({ func: readObject, params: {
             graphFactor: graph.factor,
-            stringGetString: string.getString,
+            stringReadString: string.readString,
             graphReadEdge: graph.readEdge,
             nodeFunc
         }});
@@ -208,107 +208,121 @@ describe("sandbox", function() {
         // let edges = graph.find({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
         // edges.forEach(edge => graph.remove(edge.id));
 
-        var putObject = function self({ graphAssign, graphAutoPut, hashInteger, stringAutoPut, hashRandom, createId, id, object }) {
-
+        var putObject = function self({ graphAssign, graphAutoPut,
+            stringAutoPut, valueMappings, id, object }) {
+            // Gather types of all children
             let types = {};
             let invalids = [];
             for(let key in object) {
                 let value = object[key];
 
-                if(_.isInteger(value))
-                    types[key] = "integer";
-                else if(_.isString(value))
-                    types[key] = "string";
-                else if(_.isFunction(value))
-                    types[key] = "function";
-                else if(_.isPlainObject(value))
-                    types[key] = "object";
+                let type;
+                for(let mKey in valueMappings) {
+                    let mapping = valueMappings[mKey];
+                    if(mapping.typeFunc(value)) {
+                        type = mKey;
+                        break;
+                    }
+                }
+
+                if(type)
+                    types[key] = type;
                 else
                     invalids.push(key);
             }
 
-            if(invalids.length > 0) {
+            if(invalids.length > 0)
                 throw new Error("The following properties can not be stored " +
                     "in the system: " + invalids);
-            }
 
+            // Put all values
             for(let key in types) {
                 let value = object[key];
-                let type = types[key];
 
-                let valueId;
-                switch(type) {
-                    case "integer":
-                        let intId = hashInteger(value);
-                        valueId = graphAutoPut({
-                            head: "a3cb3210c4688aabf0772e5a7dec9c9922247194",
-                            tail: intId
-                        });
-                        break;
-                    case "string":
-                        let stringId = stringAutoPut(value);
-                        valueId = graphAutoPut({
-                            head: "08f8db63b1843f7dea016e488bd547555f345c59",
-                            tail: stringId
-                        });
-                        break;
-                    case "function":
-                        let funcId = value.id;
-                        valueId = graphAutoPut({
-                            head: "ab3c2b8f8ef49a450344437801bbadef765caf69",
-                            tail: funcId
-                        });
-                        break;
-                    case "object":
-                        let objId = hashRandom();
-                        self({ graphAssign, graphAutoPut, hashInteger, stringAutoPut, hashRandom, id: objId, object: value });
-                        valueId = graphAutoPut({
-                            head: "d7f80b3486eee7b142c190a895c5496242519608",
-                            tail: objId
-                        });
-                        break;
-                }
+                let type = types[key];
+                let mapping = valueMappings[type];
+
+                let argId = mapping.putFunc(value);
+                let valueId = graphAutoPut({
+                    head: mapping.readFuncId,
+                    tail: argId
+                });
 
                 let nameId = stringAutoPut(key);
+
                 let args = { head: id, type: nameId, tail: valueId };
                 graphAssign(args);
             }
         };
+
+        let valueMappings = {
+            "integer": {
+                typeFunc: _.isInteger,
+                putFunc: hashInteger,
+                readFuncId: "a3cb3210c4688aabf0772e5a7dec9c9922247194"
+            },
+            "string": {
+                typeFunc: _.isString,
+                putFunc: string.autoPut,
+                readFuncId: "08f8db63b1843f7dea016e488bd547555f345c59"
+            },
+            "function": {
+                typeFunc: _.isFunction,
+                putFunc: value =>  value.id,
+                readFuncId: "ab3c2b8f8ef49a450344437801bbadef765caf69"
+            },
+            "object": {
+                typeFunc: _.isPlainObject,
+                putFunc: null, // Placeholder
+                readFuncId: "d7f80b3486eee7b142c190a895c5496242519608"
+            }
+        };
+
         putObject = bind({ func: putObject, params: {
             graphAssign: graph.assign,
             graphAutoPut: graph.autoPut,
-            hashInteger,
             stringAutoPut: string.autoPut,
-            hashRandom,
+            valueMappings
         }});
+        let autoPutObject = function(object) {
+            let id = hashRandom();
+            putObject({ id, object });
+            return id;
+        };
+
+        // Fill Placeholder
+        valueMappings.object.putFunc = autoPutObject;
 
         // RUN THIS AFTER REPORT //
         let afterReports = function() {
 
+            let inObj = {
+                name: "james",
+                gold: 2000,
+                func: systems,
+                sub: {
+                    final: {
+                        last: "thing",
+                        what: "up",
+                        code: 123
+                    },
+                    another: "one"
+                }
+            };
             putObject({
                 id: "e3d8797320e82983ccf0293c1fbf1429de9abd44",
-                object: {
-                    name: "james",
-                    gold: 2000,
-                    func: systems,
-                    sub: {
-                        final: {
-                            last: "thing",
-                            what: "up",
-                            code: 123
-                        },
-                        another: "one"
-                    }
-                }
+                object: inObj
             });
 
-            let objData = readObject("e3d8797320e82983ccf0293c1fbf1429de9abd44");
-            console.log(objData);
+            let outObj = readObject("e3d8797320e82983ccf0293c1fbf1429de9abd44");
+            console.log(outObj);
+
+            console.log(_.isEqual(inObj, outObj));
 
             // let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", argId: "b4239885728788227d10ced1e59da66130eaea8f" });
             // console.log(a);
             //
-            // let str = string.getString("b4239885728788227d10ced1e59da66130eaea8f");
+            // let str = string.readString("b4239885728788227d10ced1e59da66130eaea8f");
             // console.log(str);
             //
             // executeFunction({
