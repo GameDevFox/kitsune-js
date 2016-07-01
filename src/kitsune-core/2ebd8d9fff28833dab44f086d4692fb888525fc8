@@ -1,5 +1,6 @@
 // -*- mode: js2 -*-
 export default function lokiRemove({ db, id }) {
-    db.removeWhere({ id });
+    let dataB = db();
+    dataB.removeWhere({ id });
 }
 module.exports = lokiRemove;

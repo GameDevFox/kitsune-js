@@ -9,7 +9,7 @@ children.forEach(child => {
 
     // Get Value
     let { head, tail } = graphReadEdge({ id: child.tail });
-    let value = nodeFunc({ funcId: head, argId: tail });
+    let value = nodeFunc({ funcId: head, id: tail });
 
     result[key] = value;
 });

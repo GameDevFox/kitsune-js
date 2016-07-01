@@ -144,7 +144,7 @@ describe("sandbox", function() {
         // Graph
         graph.readEdge = returnFirst(graph.find);
 
-        let graphRemove = bind({ func: lokiRemove, params: { db: graph.coll() }});
+        let graphRemove = bind({ func: lokiRemove, params: { db: graph.coll }});
         graph.remove = autoParam({ func: graphRemove, paramName: "id" });
 
         graph.autoPut = bind({ func: graphAutoPut, params: { graphPut: graph.put }});
@@ -156,7 +156,7 @@ describe("sandbox", function() {
         _stringGetId = returnFirst(_stringGetId);
         string.getId = returnProperty({ func: _stringGetId, propertyName: "id" });
 
-        string.remove = bind({ func: lokiRemove, params: { db: string.coll() }});
+        string.remove = bind({ func: lokiRemove, params: { db: string.coll }});
         let _stringAutoPut = bind({ func: stringAutoPut, params: { stringFind: string.find, stringPut: string.put }});
         string.autoPut = autoParam({ func: _stringAutoPut, paramName: "string" });
 
@@ -173,18 +173,19 @@ describe("sandbox", function() {
         executeFunction = bind({ func: executeFunction, params: { callNodeFunc: callNodeFunction }});
 
         // Object
-        let valueMappings = createValueMappings({ hashInteger, stringAutoPut: string.autoPut });
+        let typeMappings = createTypeMappings({ hashInteger, stringAutoPut: string.autoPut });
         objectPut = bind({ func: objectPut, params: {
             graphAssign: graph.assign,
             graphAutoPut: graph.autoPut,
             stringAutoPut: string.autoPut,
-            valueMappings
+            typeMappings
         }});
         let objectAutoPut = function(object) {
             let id = hashRandom();
             objectPut({ id, object });
             return id;
         };
+        typeMappings.object.putFunc = objectAutoPut; // Fill Placeholder
 
         readObject = bind({ func: readObject, params: {
             graphFactor: graph.factor,
@@ -221,22 +222,62 @@ describe("sandbox", function() {
         // let edges = graph.find({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
         // edges.forEach(edge => graph.remove(edge.id));
 
-        // Fill Placeholder
-        valueMappings.object.putFunc = objectAutoPut;
+        let valuePut = function({ typeMappings, value }) {
+            let id;
+            let funcId;
+            for(let key in typeMappings) {
+                let mapping = typeMappings[key];
+
+                let typeFunc = mapping.typeFunc;
+                if(typeFunc(value)) {
+                    let putFunc = mapping.putFunc;
+                    id = putFunc(value);
+                    funcId = mapping.readFuncId;
+                    break;
+                }
+            }
+            return { id, funcId };
+        };
+        valuePut = bind({ func: valuePut, params: { typeMappings }});
+        valuePut = autoParam({ func: valuePut, paramName: "value" });
+
+        let functionCallPut = function({ objectAutoPut, func, param }) {
+            if(typeof func == "function")
+                func = func.id;
+        };
 
         // RUN THIS AFTER REPORT //
         let afterReports = function() {
 
-            let objId = objectAutoPut({
-                    name: "james", gold: 2000, func: systems,
-                    sub: {
-                        final: { last: "thing", what: "up", code: 123 },
-                        another: "one" }});
+            // {
+            //     graph.readEdge = returnFirst(graph.find);
+            //     let graphRemove = bind({ func: lokiRemove, params: { db: graph.coll }});
+            // }
 
-            let outObj = readObject(objId);
-            console.log(outObj);
+            let graphRemoveBindArg = { func: lokiRemove, params: { db: graph.coll }};
 
-            // let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", argId: "b4239885728788227d10ced1e59da66130eaea8f" });
+            let ref = valuePut(1234);
+            console.log(ref);
+            console.log(nodeFunc(ref));
+            console.log("================");
+
+            ref = valuePut("Hello");
+            console.log(ref);
+            console.log(nodeFunc(ref));
+            console.log("================");
+
+            ref = valuePut(describeNode);
+            console.log(ref);
+            console.log(nodeFunc(ref));
+            console.log("================");
+
+            ref = valuePut(graphRemoveBindArg);
+            console.log(ref);
+            console.log(nodeFunc(ref));
+            console.log("================");
+            console.log(readObject(ref.id));
+
+            // let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", id: "b4239885728788227d10ced1e59da66130eaea8f" });
             // console.log(a);
             //
             // let str = string.readString("b4239885728788227d10ced1e59da66130eaea8f");
@@ -432,7 +473,7 @@ function writeData(data, filename) {
     fs.writeFileSync(filename, finalData);
 }
 
-function createValueMappings({ hashInteger, stringAutoPut }) {
+function createTypeMappings({ hashInteger, stringAutoPut }) {
     return {
         "integer": {
             typeFunc: _.isInteger,

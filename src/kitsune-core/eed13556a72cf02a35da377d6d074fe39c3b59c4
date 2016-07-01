@@ -1,6 +1,6 @@
 // -*- mode: js2 -*-
 export default function objectPut({ graphAssign, graphAutoPut,stringAutoPut,
-    valueMappings, id, object }) {
+    typeMappings, id, object }) {
     // TODO: There must be serveral ways to break this method down
 
     // Gather types of all children
@@ -10,8 +10,8 @@ export default function objectPut({ graphAssign, graphAutoPut,stringAutoPut,
         let value = object[key];
 
         let type;
-        for(let mKey in valueMappings) {
-            let mapping = valueMappings[mKey];
+        for(let mKey in typeMappings) {
+            let mapping = typeMappings[mKey];
             if(mapping.typeFunc(value)) {
                 type = mKey;
                 break;
@@ -31,9 +31,9 @@ export default function objectPut({ graphAssign, graphAutoPut,stringAutoPut,
     // Put all values
     for(let key in types) {
         let value = object[key];
-        let type = types[key];
-        let mapping = valueMappings[type];
 
+        let type = types[key];
+        let mapping = typeMappings[type];
         let argId = mapping.putFunc(value);
         let valueId = graphAutoPut({
             head: mapping.readFuncId,
