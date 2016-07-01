@@ -100,12 +100,11 @@ describe("sandbox", function() {
         putSystem({ id: "b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385", system: string.put });
         putSystem({ id: "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", system: string.find });
 
-        // putSystem({ id: "a12b68854a0ae8cf1ae2a986aac15677a0aab605", system: valueFunc(graph) });
-        // putSystem({ id: "eace59cae90b00e292779b7bd4b18a033598ac73", system: valueFunc(string) });
+        putSystem({ id: "08f8db63b1843f7dea016e488bd547555f345c59", system: string.getString });
 
         // Build systemsByName
         let systemsByName = {};
-        _.map(systemList, (system, id) => {
+        _.forEach(systemList, (system, id) => {
             let names = nameList({ node: id });
 
             names.forEach(name => {
@@ -117,6 +116,7 @@ describe("sandbox", function() {
         });
 
         let systems = dictFunc(systemList);
+        putSystem({ id: "ab3c2b8f8ef49a450344437801bbadef765caf69", system: systems });
 
         // Build systems
         let {
@@ -136,11 +136,14 @@ describe("sandbox", function() {
             name,
             nameRemove,
             readInteger,
+            readObject,
             stringAutoPut,
             callNodeFunction
         } = systemsByName;
 
         // Graph
+        graph.readEdge = returnFirst(graph.find);
+
         let graphRemove = bind({ func: lokiRemove, params: { db: graph.coll() }});
         graph.remove = autoParam({ func: graphRemove, paramName: "id" });
 
@@ -165,6 +168,20 @@ describe("sandbox", function() {
         let _groupList = bind({ func: groupList, params: { graphFind: graph.find }});
         groupList = autoParam({ func: _groupList, paramName: "group" });
 
+        // Function
+        let nodeFunc = bind({ func: callNodeFunction, params: { funcSys: systems }});
+        executeFunction = bind({ func: executeFunction, params: { callNodeFunc: callNodeFunction }});
+
+        // Object
+        readObject = bind({ func: readObject, params: {
+            graphFactor: graph.factor,
+            stringGetString: string.getString,
+            graphReadEdge: graph.readEdge,
+            nodeFunc
+        }});
+        readObject = autoParam({ func: readObject, paramName: "node" });
+        putSystem({ id: "d7f80b3486eee7b142c190a895c5496242519608", system: readObject });
+
         // Other
         hashRandom = bind({ func: hashRandom, params: { hashString }});
 
@@ -174,13 +191,9 @@ describe("sandbox", function() {
         let isEdge = bind({ func: isInCollection, params: { collFind: graph.find }});
         let isString = bind({ func: isInCollection, params: { collFind: string.find }});
 
-        // Function
-        let nodeFunc = bind({ func: callNodeFunction, params: { funcSys: systems }});
-        executeFunction = bind({ func: executeFunction, params: { callNodeFunc: callNodeFunction }});
-
-        let traceAssign = function({ graphFind, assignId }) {
-            let typeEdge = graphFind({ id: assignId })[0];
-            let edge = graphFind({ id: typeEdge.tail })[0];
+        let traceAssign = function({ graphReadEdge, assignId }) {
+            let typeEdge = graphReadEdge({ id: assignId });
+            let edge = graphReadEdge({ id: typeEdge.tail });
             return {
                 type: typeEdge.head,
                 head: edge.head,
@@ -189,15 +202,11 @@ describe("sandbox", function() {
         };
 
         // Execute systems
-        // createSystemFile({ name: "read-integer" });
+        // createSystemFile({ name: "read-object" });
         // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
         // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
         // let edges = graph.find({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
         // edges.forEach(edge => graph.remove(edge.id));
-
-        // TODO: Automate building "home-made" systems
-        putSystem({ id: "08f8db63b1843f7dea016e488bd547555f345c59", system: string.getString });
-        putSystem({ id: "ab3c2b8f8ef49a450344437801bbadef765caf69", system: systems });
 
         var putObject = function self({ graphAssign, graphAutoPut, hashInteger, stringAutoPut, hashRandom, createId, id, object }) {
 
@@ -265,7 +274,6 @@ describe("sandbox", function() {
                 graphAssign(args);
             }
         };
-
         putObject = bind({ func: putObject, params: {
             graphAssign: graph.assign,
             graphAutoPut: graph.autoPut,
@@ -273,29 +281,6 @@ describe("sandbox", function() {
             stringAutoPut: string.autoPut,
             hashRandom,
         }});
-
-        var readObject = function({ graphFactor, stringGetString, node }) {
-            let children = graphFactor({ head: node });
-
-            let result = {};
-            children.forEach(child => {
-                // Get key
-                let key = stringGetString(child.type);
-
-                // Get Value
-                let { head, tail } = graph.find({ id: child.tail })[0];
-                let value = nodeFunc({ funcId: head, argId: tail });
-
-                result[key] = value;
-            });
-            return result;
-        };
-        readObject = bind({ func: readObject, params: {
-            graphFactor: graph.factor,
-            stringGetString: string.getString
-        }});
-        readObject = autoParam({ func: readObject, paramName: "node" });
-        putSystem({ id: "d7f80b3486eee7b142c190a895c5496242519608", system: readObject });
 
         // RUN THIS AFTER REPORT //
         let afterReports = function() {

@@ -122,6 +122,10 @@ var data = function() {
     "string": "read-integer"
   },
   {
+    "id": "059d992ad1d669e2473be81f0c4c5bd5128c5c8c",
+    "string": "read-object"
+  },
+  {
     "id": "40e834bf73db510d13dab70ff96a300962037d31",
     "string": "return-first"
   },
