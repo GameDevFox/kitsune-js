@@ -134,6 +134,7 @@ describe("sandbox", function() {
             lokiRemove,
             name,
             nameRemove,
+            objectPut,
             readInteger,
             readObject,
             stringAutoPut,
@@ -172,6 +173,19 @@ describe("sandbox", function() {
         executeFunction = bind({ func: executeFunction, params: { callNodeFunc: callNodeFunction }});
 
         // Object
+        let valueMappings = createValueMappings({ hashInteger, stringAutoPut: string.autoPut });
+        objectPut = bind({ func: objectPut, params: {
+            graphAssign: graph.assign,
+            graphAutoPut: graph.autoPut,
+            stringAutoPut: string.autoPut,
+            valueMappings
+        }});
+        let objectAutoPut = function(object) {
+            let id = hashRandom();
+            objectPut({ id, object });
+            return id;
+        };
+
         readObject = bind({ func: readObject, params: {
             graphFactor: graph.factor,
             stringReadString: string.readString,
@@ -201,122 +215,26 @@ describe("sandbox", function() {
         };
 
         // Execute systems
-        // createSystemFile({ name: "my-random" });
+        // createSystemFile({ name: "object-put" });
         // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
         // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
         // let edges = graph.find({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
         // edges.forEach(edge => graph.remove(edge.id));
 
-        var putObject = function self({ graphAssign, graphAutoPut,
-            stringAutoPut, valueMappings, id, object }) {
-            // Gather types of all children
-            let types = {};
-            let invalids = [];
-            for(let key in object) {
-                let value = object[key];
-
-                let type;
-                for(let mKey in valueMappings) {
-                    let mapping = valueMappings[mKey];
-                    if(mapping.typeFunc(value)) {
-                        type = mKey;
-                        break;
-                    }
-                }
-
-                if(type)
-                    types[key] = type;
-                else
-                    invalids.push(key);
-            }
-
-            if(invalids.length > 0)
-                throw new Error("The following properties can not be stored " +
-                    "in the system: " + invalids);
-
-            // Put all values
-            for(let key in types) {
-                let value = object[key];
-
-                let type = types[key];
-                let mapping = valueMappings[type];
-
-                let argId = mapping.putFunc(value);
-                let valueId = graphAutoPut({
-                    head: mapping.readFuncId,
-                    tail: argId
-                });
-
-                let nameId = stringAutoPut(key);
-
-                let args = { head: id, type: nameId, tail: valueId };
-                graphAssign(args);
-            }
-        };
-
-        let valueMappings = {
-            "integer": {
-                typeFunc: _.isInteger,
-                putFunc: hashInteger,
-                readFuncId: "a3cb3210c4688aabf0772e5a7dec9c9922247194"
-            },
-            "string": {
-                typeFunc: _.isString,
-                putFunc: string.autoPut,
-                readFuncId: "08f8db63b1843f7dea016e488bd547555f345c59"
-            },
-            "function": {
-                typeFunc: _.isFunction,
-                putFunc: value =>  value.id,
-                readFuncId: "ab3c2b8f8ef49a450344437801bbadef765caf69"
-            },
-            "object": {
-                typeFunc: _.isPlainObject,
-                putFunc: null, // Placeholder
-                readFuncId: "d7f80b3486eee7b142c190a895c5496242519608"
-            }
-        };
-
-        putObject = bind({ func: putObject, params: {
-            graphAssign: graph.assign,
-            graphAutoPut: graph.autoPut,
-            stringAutoPut: string.autoPut,
-            valueMappings
-        }});
-        let autoPutObject = function(object) {
-            let id = hashRandom();
-            putObject({ id, object });
-            return id;
-        };
-
         // Fill Placeholder
-        valueMappings.object.putFunc = autoPutObject;
+        valueMappings.object.putFunc = objectAutoPut;
 
         // RUN THIS AFTER REPORT //
         let afterReports = function() {
 
-            // let inObj = {
-            //     name: "james",
-            //     gold: 2000,
-            //     func: systems,
-            //     sub: {
-            //         final: {
-            //             last: "thing",
-            //             what: "up",
-            //             code: 123
-            //         },
-            //         another: "one"
-            //     }
-            // };
-            // putObject({
-            //     id: "e3d8797320e82983ccf0293c1fbf1429de9abd44",
-            //     object: inObj
-            // });
-            //
-            // let outObj = readObject("e3d8797320e82983ccf0293c1fbf1429de9abd44");
-            // console.log(outObj);
-            //
-            // console.log(_.isEqual(inObj, outObj));
+            let objId = objectAutoPut({
+                    name: "james", gold: 2000, func: systems,
+                    sub: {
+                        final: { last: "thing", what: "up", code: 123 },
+                        another: "one" }});
+
+            let outObj = readObject(objId);
+            console.log(outObj);
 
             // let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", argId: "b4239885728788227d10ced1e59da66130eaea8f" });
             // console.log(a);
@@ -512,4 +430,29 @@ function writeData(data, filename) {
     let json = JSON.stringify(data, null, 2);
     let finalData = wrapData(json);
     fs.writeFileSync(filename, finalData);
+}
+
+function createValueMappings({ hashInteger, stringAutoPut }) {
+    return {
+        "integer": {
+            typeFunc: _.isInteger,
+            putFunc: hashInteger,
+            readFuncId: "a3cb3210c4688aabf0772e5a7dec9c9922247194"
+        },
+        "string": {
+            typeFunc: _.isString,
+            putFunc: stringAutoPut,
+            readFuncId: "08f8db63b1843f7dea016e488bd547555f345c59"
+        },
+        "function": {
+            typeFunc: _.isFunction,
+            putFunc: value =>  value.id,
+            readFuncId: "ab3c2b8f8ef49a450344437801bbadef765caf69"
+        },
+        "object": {
+            typeFunc: _.isPlainObject,
+            putFunc: null, // Placeholder
+            readFuncId: "d7f80b3486eee7b142c190a895c5496242519608"
+        }
+    };
 }
