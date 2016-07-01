@@ -4,7 +4,6 @@ import fs from "fs";
 import _ from "lodash";
 import { expect } from "chai";
 
-import { createId } from "kitsune/util";
 import systemLoader from "kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
 
 describe("sandbox", function() {
@@ -185,7 +184,7 @@ describe("sandbox", function() {
         // Other
         hashRandom = bind({ func: hashRandom, params: { hashString }});
 
-        let createSystemFile = bind({ func: _createSystemFile, params: { graphAutoPut: graph.autoPut, nameFn: name }});
+        let createSystemFile = bind({ func: _createSystemFile, params: { hashRandom, graphAutoPut: graph.autoPut, nameFn: name }});
         let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut: graph.autoPut, nameFn: name }});
         let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind: string.find, graphListNodes: graph.listNodes, stringRemove: string.remove }});
         let isEdge = bind({ func: isInCollection, params: { collFind: graph.find }});
@@ -202,7 +201,7 @@ describe("sandbox", function() {
         };
 
         // Execute systems
-        // createSystemFile({ name: "read-object" });
+        // createSystemFile({ name: "my-random" });
         // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
         // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
         // let edges = graph.find({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
@@ -296,28 +295,28 @@ describe("sandbox", function() {
         // RUN THIS AFTER REPORT //
         let afterReports = function() {
 
-            let inObj = {
-                name: "james",
-                gold: 2000,
-                func: systems,
-                sub: {
-                    final: {
-                        last: "thing",
-                        what: "up",
-                        code: 123
-                    },
-                    another: "one"
-                }
-            };
-            putObject({
-                id: "e3d8797320e82983ccf0293c1fbf1429de9abd44",
-                object: inObj
-            });
-
-            let outObj = readObject("e3d8797320e82983ccf0293c1fbf1429de9abd44");
-            console.log(outObj);
-
-            console.log(_.isEqual(inObj, outObj));
+            // let inObj = {
+            //     name: "james",
+            //     gold: 2000,
+            //     func: systems,
+            //     sub: {
+            //         final: {
+            //             last: "thing",
+            //             what: "up",
+            //             code: 123
+            //         },
+            //         another: "one"
+            //     }
+            // };
+            // putObject({
+            //     id: "e3d8797320e82983ccf0293c1fbf1429de9abd44",
+            //     object: inObj
+            // });
+            //
+            // let outObj = readObject("e3d8797320e82983ccf0293c1fbf1429de9abd44");
+            // console.log(outObj);
+            //
+            // console.log(_.isEqual(inObj, outObj));
 
             // let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", argId: "b4239885728788227d10ced1e59da66130eaea8f" });
             // console.log(a);
@@ -462,8 +461,8 @@ function stringReport({ string }) {
 }
 
 // Local utils - don't need to make system files out of these
-function _createSystemFile({ graphAutoPut, nameFn, name }) {
-    let newSystemId = createId();
+function _createSystemFile({ hashRandom, graphAutoPut, nameFn, name }) {
+    let newSystemId = hashRandom();
     exec("cp src/kitsune-core/ddfe7d402ff26c18785bcc899fa69183b3170a7d src/kitsune-core/"+newSystemId);
     graphAutoPut({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: newSystemId });
     nameFn({ node: newSystemId, name: name });
