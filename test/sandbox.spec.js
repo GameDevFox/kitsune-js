@@ -227,13 +227,6 @@ describe("sandbox", function() {
             return result;
         };
 
-        // Execute systems
-        // createSystemFile({ name: "object-put" });
-        // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
-        // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
-        // let edges = graph.find({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
-        // edges.forEach(edge => graph.remove(edge.id));
-
         let valuePut = function({ typeMappings, value }) {
             let id;
             let funcId;
@@ -271,60 +264,44 @@ describe("sandbox", function() {
         };
         putFuncCall = bind({ func: putFuncCall, params: { valuePut, graphAssign: graph.assign }});
 
+        // Execute systems
+        // createSystemFile({ name: "object-put" });
+        // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
+        // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
+        // let edges = graph.find({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
+        // edges.forEach(edge => graph.remove(edge.id));
+
         putSystem({ id: "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", system: console.log });
 
         // Create function calls
-        let funcCallId = putFuncCall({ func: console.log, param: "Hello World" });
         let graphRemoveId = putFuncCall({ func: bind, param: { func: lokiRemove, params: { db: graph.coll }}});
         let graphRemove2Id = putFuncCall({ func: autoParam, param: { func: fRef(graphRemoveId), paramName: "id" }});
 
-        // Read and invoke function calls
-        let buildCodeRemove = readFuncCall(graphRemoveId);
-        let myGraphRemove = executeFunction(buildCodeRemove);
-        putSystem({ id: graphRemoveId, system: myGraphRemove });
+        let loadSystem = function({ readFuncCall, executeFunction, id }) {
+            let funcCall = readFuncCall(id);
+            let func = executeFunction(funcCall);
 
-        let buildCodeRemove2 = readFuncCall(graphRemove2Id);
-        let myGraphRemove2 = executeFunction(buildCodeRemove2);
-        putSystem({ id: graphRemove2Id, system: myGraphRemove2 });
+            putSystem({ id, system: func });
+
+            return func;
+        };
+        loadSystem = bind({ func: loadSystem, params: { readFuncCall, executeFunction }});
+        loadSystem = autoParam({ func: loadSystem, paramName: "id" });
+
+        // Read and invoke function calls
+        loadSystem(graphRemoveId);
+        loadSystem(graphRemove2Id);
 
         let node = graph.find({
             head: "66564ec14ed18fb88965140fc644d7b813121c78",
             tail: "2f7ff34b09a1fb23b9a5d4fbdd8bb44abbe2007a"
         })[0];
-        console.log(node);
-
-        console.log(myGraphRemove2);
-        myGraphRemove2(node.id);
+        let myGraphRemove = systems(graphRemove2Id);
+        myGraphRemove(node.id);
 
         // RUN THIS AFTER REPORT //
         let afterReports = function() {
-
-            let funcCall = readFuncCall(funcCallId);
-            executeFunction(funcCall);
-
-            // console.log(2);
-            // let removeFunc = executeFunction(buildCodeRemove);
-            // console.log(3);
-            // console.log(removeFunc);
-
-            // let graphRemoveBindArg = { func: lokiRemove, params: { db: graph.coll }};
-            //
-            // let ref = valuePut(graphRemoveBindArg);
-            // console.log(ref);
-            // console.log(nodeFunc(ref));
-
-            // let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", id: "b4239885728788227d10ced1e59da66130eaea8f" });
-            // console.log(a);
-            //
-            // let str = string.readString("b4239885728788227d10ced1e59da66130eaea8f");
-            // console.log(str);
-
-            // executeFunction({
-            //     funcId:     "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", // log
-            //     argFuncId:  "08f8db63b1843f7dea016e488bd547555f345c59",  // stringGetStr
-            //     argId:      "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb"  // "test-data" string
-            // });
-
+            console.log(node.id);
         };
         ///////////////////////////
 
