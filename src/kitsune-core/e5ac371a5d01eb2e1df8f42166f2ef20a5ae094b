@@ -1,18 +1,19 @@
 // -*- mode: js2 -*-
 export default function readObject({ graphFactor, stringReadString, graphReadEdge, nodeFunc, node }) {
-let children = graphFactor({ head: node });
 
-let result = {};
-children.forEach(child => {
-    // Get key
-    let key = stringReadString(child.type);
+    let result = {};
 
-    // Get Value
-    let { head, tail } = graphReadEdge({ id: child.tail });
-    let value = nodeFunc({ funcId: head, id: tail });
+    let children = graphFactor({ head: node });
+    children.forEach(child => {
+        // Get key
+        let key = stringReadString(child.type);
 
-    result[key] = value;
-});
-return result;
+        // Get Value
+        let { head, tail } = graphReadEdge({ id: child.tail });
+        let value = nodeFunc({ funcId: head, argId: tail });
+
+        result[key] = value;
+    });
+    return result;
 }
 module.exports = readObject;

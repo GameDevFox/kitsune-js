@@ -170,7 +170,8 @@ describe("sandbox", function() {
 
         // Function
         let nodeFunc = bind({ func: callNodeFunction, params: { funcSys: systems }});
-        executeFunction = bind({ func: executeFunction, params: { callNodeFunc: callNodeFunction }});
+        executeFunction = bind({ func: executeFunction, params: {
+            callNodeFunc: callNodeFunction, funcSys: systems }});
 
         // Object
         let typeMappings = createTypeMappings({ hashInteger, stringAutoPut: string.autoPut });
@@ -205,14 +206,25 @@ describe("sandbox", function() {
         let isEdge = bind({ func: isInCollection, params: { collFind: graph.find }});
         let isString = bind({ func: isInCollection, params: { collFind: string.find }});
 
-        let traceAssign = function({ graphReadEdge, assignId }) {
-            let typeEdge = graphReadEdge({ id: assignId });
+        let readAssign = function({ graphReadEdge, id }) {
+            let typeEdge = graphReadEdge({ id });
             let edge = graphReadEdge({ id: typeEdge.tail });
             return {
                 type: typeEdge.head,
                 head: edge.head,
                 tail: edge.tail
             };
+        };
+        readAssign = bind({ func: readAssign, params: { graphReadEdge: graph.readEdge }});
+        readAssign = autoParam({ func: readAssign, paramName: "id" });
+        let readFuncCall = function(input) {
+            let assign = readAssign(input);
+            let result = {
+                funcId: assign.type,
+                argFuncId: assign.head,
+                argId: assign.tail
+            };
+            return result;
         };
 
         // Execute systems
@@ -241,50 +253,73 @@ describe("sandbox", function() {
         valuePut = bind({ func: valuePut, params: { typeMappings }});
         valuePut = autoParam({ func: valuePut, paramName: "value" });
 
-        let functionCallPut = function({ objectAutoPut, func, param }) {
+        var fRef = function(id) {
+            let result = function() {};
+            result.id = id;
+            return result;
+        };
+
+        let putFuncCall = function({ valuePut, graphAssign, func, param }) {
             if(typeof func == "function")
                 func = func.id;
+
+            let ref = valuePut(param);
+            let args = { head: ref.funcId, type: func, tail: ref.id };
+
+            let result = graphAssign(args);
+            return result;
         };
+        putFuncCall = bind({ func: putFuncCall, params: { valuePut, graphAssign: graph.assign }});
+
+        putSystem({ id: "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", system: console.log });
+
+        // Create function calls
+        let funcCallId = putFuncCall({ func: console.log, param: "Hello World" });
+        let graphRemoveId = putFuncCall({ func: bind, param: { func: lokiRemove, params: { db: graph.coll }}});
+        let graphRemove2Id = putFuncCall({ func: autoParam, param: { func: fRef(graphRemoveId), paramName: "id" }});
+
+        // Read and invoke function calls
+        let buildCodeRemove = readFuncCall(graphRemoveId);
+        let myGraphRemove = executeFunction(buildCodeRemove);
+        putSystem({ id: graphRemoveId, system: myGraphRemove });
+
+        let buildCodeRemove2 = readFuncCall(graphRemove2Id);
+        let myGraphRemove2 = executeFunction(buildCodeRemove2);
+        putSystem({ id: graphRemove2Id, system: myGraphRemove2 });
+
+        let node = graph.find({
+            head: "66564ec14ed18fb88965140fc644d7b813121c78",
+            tail: "2f7ff34b09a1fb23b9a5d4fbdd8bb44abbe2007a"
+        })[0];
+        console.log(node);
+
+        console.log(myGraphRemove2);
+        myGraphRemove2(node.id);
 
         // RUN THIS AFTER REPORT //
         let afterReports = function() {
 
-            // {
-            //     graph.readEdge = returnFirst(graph.find);
-            //     let graphRemove = bind({ func: lokiRemove, params: { db: graph.coll }});
-            // }
+            let funcCall = readFuncCall(funcCallId);
+            executeFunction(funcCall);
 
-            let graphRemoveBindArg = { func: lokiRemove, params: { db: graph.coll }};
+            // console.log(2);
+            // let removeFunc = executeFunction(buildCodeRemove);
+            // console.log(3);
+            // console.log(removeFunc);
 
-            let ref = valuePut(1234);
-            console.log(ref);
-            console.log(nodeFunc(ref));
-            console.log("================");
-
-            ref = valuePut("Hello");
-            console.log(ref);
-            console.log(nodeFunc(ref));
-            console.log("================");
-
-            ref = valuePut(describeNode);
-            console.log(ref);
-            console.log(nodeFunc(ref));
-            console.log("================");
-
-            ref = valuePut(graphRemoveBindArg);
-            console.log(ref);
-            console.log(nodeFunc(ref));
-            console.log("================");
-            console.log(readObject(ref.id));
+            // let graphRemoveBindArg = { func: lokiRemove, params: { db: graph.coll }};
+            //
+            // let ref = valuePut(graphRemoveBindArg);
+            // console.log(ref);
+            // console.log(nodeFunc(ref));
 
             // let a = nodeFunc({ funcId: "08f8db63b1843f7dea016e488bd547555f345c59", id: "b4239885728788227d10ced1e59da66130eaea8f" });
             // console.log(a);
             //
             // let str = string.readString("b4239885728788227d10ced1e59da66130eaea8f");
             // console.log(str);
-            //
+
             // executeFunction({
-            //     funcSys: systems,
             //     funcId:     "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", // log
             //     argFuncId:  "08f8db63b1843f7dea016e488bd547555f345c59",  // stringGetStr
             //     argId:      "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb"  // "test-data" string
