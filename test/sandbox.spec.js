@@ -135,6 +135,7 @@ describe("sandbox", function() {
             name,
             nameRemove,
             objectPut,
+            readAssign,
             readInteger,
             readObject,
             stringAutoPut,
@@ -143,6 +144,7 @@ describe("sandbox", function() {
 
         // Graph
         graph.readEdge = returnFirst(graph.find);
+        graph.readEdge = autoParam({ func: graph.readEdge, paramName: "id" });
 
         let graphRemove = bind({ func: lokiRemove, params: { db: graph.coll }});
         graph.remove = autoParam({ func: graphRemove, paramName: "id" });
@@ -206,15 +208,6 @@ describe("sandbox", function() {
         let isEdge = bind({ func: isInCollection, params: { collFind: graph.find }});
         let isString = bind({ func: isInCollection, params: { collFind: string.find }});
 
-        let readAssign = function({ graphReadEdge, id }) {
-            let typeEdge = graphReadEdge({ id });
-            let edge = graphReadEdge({ id: typeEdge.tail });
-            return {
-                type: typeEdge.head,
-                head: edge.head,
-                tail: edge.tail
-            };
-        };
         readAssign = bind({ func: readAssign, params: { graphReadEdge: graph.readEdge }});
         readAssign = autoParam({ func: readAssign, paramName: "id" });
         let readFuncCall = function(input) {
@@ -265,7 +258,7 @@ describe("sandbox", function() {
         putFuncCall = bind({ func: putFuncCall, params: { valuePut, graphAssign: graph.assign }});
 
         // Execute systems
-        // createSystemFile({ name: "object-put" });
+        // createSystemFile({ name: "read-assign" });
         // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
         // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
         // let edges = graph.find({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
@@ -274,6 +267,8 @@ describe("sandbox", function() {
         putSystem({ id: "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", system: console.log });
 
         // Create function calls
+        let graphReadEdgeId = putFuncCall({ func: returnFirst, param: graph.find });
+
         let graphRemoveId = putFuncCall({ func: bind, param: { func: lokiRemove, params: { db: graph.coll }}});
         let graphRemove2Id = putFuncCall({ func: autoParam, param: { func: fRef(graphRemoveId), paramName: "id" }});
 
@@ -289,8 +284,11 @@ describe("sandbox", function() {
         loadSystem = autoParam({ func: loadSystem, paramName: "id" });
 
         // Read and invoke function calls
-        loadSystem(graphRemoveId);
-        loadSystem(graphRemove2Id);
+        [
+            graphReadEdgeId,
+            graphRemoveId,
+            graphRemove2Id
+        ].forEach(loadSystem);
 
         let node = graph.find({
             head: "66564ec14ed18fb88965140fc644d7b813121c78",
@@ -302,6 +300,10 @@ describe("sandbox", function() {
         // RUN THIS AFTER REPORT //
         let afterReports = function() {
             console.log(node.id);
+
+            let graphReadEdge = systems(graphReadEdgeId);
+            let edge = graph.find({ tail: "90184a3d0c84658aac411637f7442f80b3fe0040" })[0];
+            console.log(edge);
         };
         ///////////////////////////
 

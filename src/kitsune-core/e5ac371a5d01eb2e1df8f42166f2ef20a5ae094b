@@ -9,7 +9,7 @@ export default function readObject({ graphFactor, stringReadString, graphReadEdg
         let key = stringReadString(child.type);
 
         // Get Value
-        let { head, tail } = graphReadEdge({ id: child.tail });
+        let { head, tail } = graphReadEdge(child.tail);
         let value = nodeFunc({ funcId: head, argId: tail });
 
         result[key] = value;

@@ -1,6 +1,6 @@
 // -*- mode: js2 -*-
 export default function bind({ func, params }) {
-    let f = function(partParams) {
+    let bindF = function(partParams) {
         let fullParams = {};
         for(let key in params)
             fullParams[key] = params[key];
@@ -10,6 +10,6 @@ export default function bind({ func, params }) {
 
         return func(fullParams);
     };
-    return f;
+    return bindF;
 }
 module.exports = bind;

@@ -122,6 +122,10 @@ var data = function() {
     "string": "object-put"
   },
   {
+    "id": "ed10bf5848c3c8f60eef0f389b02e6d160a6da4a",
+    "string": "read-assign"
+  },
+  {
     "id": "3fc738a31d3c6ab7adb3637b88c20b79831183ed",
     "string": "read-integer"
   },
