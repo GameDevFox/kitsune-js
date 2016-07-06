@@ -269,47 +269,55 @@ describe("sandbox", function() {
         };
         putFuncCall = bind({ func: putFuncCall, params: { valuePut, graphAssign }});
 
-        // Execute systems
-        // createSystemFile({ name: "read-assign" });
-        // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
-        // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
-        // let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
-        // edges.forEach(edge => graphRemove(edge.id));
+        // OUTER SCOPE //
+        let node;
+        let graphReadEdgeId;
+        /////////////////
 
-        putSystem({ id: "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", system: console.log });
+        // BEFORE REPORT //
+        let beforeReports = function() {
+            // createSystemFile({ name: "read-assign" });
+            // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
+            // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
+            // let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
+            // edges.forEach(edge => graphRemove(edge.id));
 
-        // Create function calls
-        let graphReadEdgeId = putFuncCall({ func: returnFirst, param: graphFind });
+            putSystem({ id: "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", system: console.log });
 
-        let graphRemoveId = putFuncCall({ func: bind, param: { func: lokiRemove, params: { db: graphColl }}});
-        let graphRemove2Id = putFuncCall({ func: autoParam, param: { func: fRef(graphRemoveId), paramName: "id" }});
+            // Create function calls
+            graphReadEdgeId = putFuncCall({ func: returnFirst, param: graphFind });
 
-        let loadSystem = function({ readFuncCall, executeFunction, id }) {
-            let funcCall = readFuncCall(id);
-            let func = executeFunction(funcCall);
+            let graphRemoveId = putFuncCall({ func: bind, param: { func: lokiRemove, params: { db: graphColl }}});
+            let graphRemove2Id = putFuncCall({ func: autoParam, param: { func: fRef(graphRemoveId), paramName: "id" }});
 
-            putSystem({ id, system: func });
+            let loadSystem = function({ readFuncCall, executeFunction, id }) {
+                let funcCall = readFuncCall(id);
+                let func = executeFunction(funcCall);
 
-            return func;
+                putSystem({ id, system: func });
+
+                return func;
+            };
+            loadSystem = bind({ func: loadSystem, params: { readFuncCall, executeFunction }});
+            loadSystem = autoParam({ func: loadSystem, paramName: "id" });
+
+            // Read and invoke function calls
+            [
+                graphReadEdgeId,
+                graphRemoveId,
+                graphRemove2Id
+            ].forEach(loadSystem);
+
+            node = graphFind({
+                head: "66564ec14ed18fb88965140fc644d7b813121c78",
+                tail: "2f7ff34b09a1fb23b9a5d4fbdd8bb44abbe2007a"
+            })[0];
+            let myGraphRemove = systems(graphRemove2Id);
+            myGraphRemove(node.id);
         };
-        loadSystem = bind({ func: loadSystem, params: { readFuncCall, executeFunction }});
-        loadSystem = autoParam({ func: loadSystem, paramName: "id" });
+        /////////////////////
 
-        // Read and invoke function calls
-        [
-            graphReadEdgeId,
-            graphRemoveId,
-            graphRemove2Id
-        ].forEach(loadSystem);
-
-        let node = graphFind({
-            head: "66564ec14ed18fb88965140fc644d7b813121c78",
-            tail: "2f7ff34b09a1fb23b9a5d4fbdd8bb44abbe2007a"
-        })[0];
-        let myGraphRemove = systems(graphRemove2Id);
-        myGraphRemove(node.id);
-
-        // RUN THIS AFTER REPORT //
+        // AFTER REPORT //
         let afterReports = function() {
             console.log(node.id);
 
@@ -319,8 +327,10 @@ describe("sandbox", function() {
         };
         ///////////////////////////
 
-        let coreNodes = fs.readdirSync("node_modules/kitsune-core");
         // REPORTS //
+        console.log("== BEFORE REPORTS ==");
+        beforeReports();
+        let coreNodes = fs.readdirSync("node_modules/kitsune-core");
         {
             // nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode });
             coreNodeReport({ groupList, nameList });
