@@ -55,16 +55,8 @@ describe("sandbox", function() {
         });
 
         let {
-            graph: {
-                coll: graphColl,
-                put: graphPut,
-                find: graphFind
-            },
-            string: {
-                coll: stringColl,
-                put: stringPut,
-                find: stringFind
-            }
+            graph: { coll: graphColl, put: graphPut, find: graphFind },
+            string: { coll: stringColl, put: stringPut,  find: stringFind }
         } = data;
 
         // Auto load systems
@@ -75,6 +67,7 @@ describe("sandbox", function() {
         stringReadString = returnProperty({ func: stringReadString, propertyName: "string" });
 
         nameList = bind({ func: nameList, params: { graphFactor, stringReadString }});
+        nameList = autoParam({ func: nameList, paramName: "node" });
 
         let systemFileEdges = graphFind({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
         let systemFileIds = _.map(systemFileEdges, "tail");
@@ -114,7 +107,7 @@ describe("sandbox", function() {
         // Build systemsByName
         let systemsByName = {};
         _.forEach(systemList, (system, id) => {
-            let names = nameList({ node: id });
+            let names = nameList(id);
 
             names.forEach(name => {
                 let camelName = name
@@ -356,7 +349,7 @@ function recreateLinks({ coreNodes, nameList }) {
     exec("rm -rf src/kitsune-core-src");
     exec("mkdir -p src/kitsune-core-src");
     coreNodes.forEach(node => {
-        let myNames = nameList({ node });
+        let myNames = nameList(node);
         if(myNames && myNames.length > 0) {
             try {
                 let cmdStr = "ln -s ../../src/kitsune-core/"+node+" src/kitsune-core-src/"+myNames[0];
@@ -374,7 +367,7 @@ function coreNodeReport({ groupList, nameList }) {
     let coreNodes = groupList("7f82d45a6ffb5c345f84237a621de35dd8b7b0e3");
     let nodesAndNames = [];
     coreNodes.forEach(node => {
-        let names = nameList({ node: node });
+        let names = nameList(node);
         nodesAndNames.push({
             node,
             names
@@ -415,7 +408,7 @@ function systemFileReport({ coreNodes, groupList, nameList }) {
 
     let list = coreNodes.map(node => {
         let isInGroup = systemFiles.indexOf(node) != -1;
-        let myNames = nameList({ node });
+        let myNames = nameList(node);
         return {
             node,
             isInGroup,
