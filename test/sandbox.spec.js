@@ -38,14 +38,13 @@ describe("sandbox", function() {
             // Create loki collection
             let coll = lokiColl();
 
+            let find = bind({ func: lokiFind, params: { db: coll }});
+
             // Bind dataSystem functions
             let control = {};
-            control.put = bind({ func: lokiPut, params: { db: coll }});
-
-            let find = bind({ func: lokiFind, params: { db: coll }});
-            control.find = autoParam({ func: find, paramName: "where" });
-
             control.coll = valueFunc(coll);
+            control.put = bind({ func: lokiPut, params: { db: coll }});
+            control.find = autoParam({ func: find, paramName: "where" });
 
             // Insert data
             dataSet.forEach(value => {
@@ -133,6 +132,7 @@ describe("sandbox", function() {
             andIs,
             describeNode,
             executeFunction,
+            functionReference: fRef,
             graphAssign,
             graphAutoPut,
             graphListNodes,
@@ -251,12 +251,6 @@ describe("sandbox", function() {
         valuePut = bind({ func: valuePut, params: { typeMappings }});
         valuePut = autoParam({ func: valuePut, paramName: "value" });
 
-        var fRef = function(id) {
-            let result = function() {};
-            result.id = id;
-            return result;
-        };
-
         let putFuncCall = function({ valuePut, graphAssign, func, param }) {
             if(typeof func == "function")
                 func = func.id;
@@ -274,13 +268,14 @@ describe("sandbox", function() {
         let graphReadEdgeId;
         /////////////////
 
+        // createSystemFile({ name: "function-reference" });
+        // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
+        // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
+        // let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
+        // edges.forEach(edge => graphRemove(edge.id));
+
         // BEFORE REPORT //
         let beforeReports = function() {
-            // createSystemFile({ name: "read-assign" });
-            // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
-            // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
-            // let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
-            // edges.forEach(edge => graphRemove(edge.id));
 
             putSystem({ id: "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", system: console.log });
 
@@ -329,7 +324,7 @@ describe("sandbox", function() {
 
         // REPORTS //
         console.log("== BEFORE REPORTS ==");
-        beforeReports();
+        // beforeReports();
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
         {
             // nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode });
@@ -339,7 +334,7 @@ describe("sandbox", function() {
             // stringReport({ string });
         }
         console.log("== AFTER REPORTS ==");
-        afterReports();
+        // afterReports();
         console.log("===================");
 
         // END REPORTS //
