@@ -109,6 +109,7 @@ describe("sandbox", function() {
         // Build systems
         let {
             andIs,
+            callNodeFunction,
             describeNode,
             executeFunction,
             functionReference: fRef,
@@ -130,7 +131,7 @@ describe("sandbox", function() {
             readInteger,
             readObject,
             stringAutoPut,
-            callNodeFunction
+            writeValue
         } = systemsByName;
 
         // Graph
@@ -203,43 +204,27 @@ describe("sandbox", function() {
         readAssign = bind({ func: readAssign, params: { graphReadEdge }});
         readAssign = autoParam({ func: readAssign, paramName: "id" });
 
-        let valuePut = function({ typeMappings, value }) {
-            let id;
-            let funcId;
-            for(let key in typeMappings) {
-                let mapping = typeMappings[key];
+        writeValue = bind({ func: writeValue, params: { typeMappings }});
+        writeValue = autoParam({ func: writeValue, paramName: "value" });
 
-                let typeFunc = mapping.typeFunc;
-                if(typeFunc(value)) {
-                    let putFunc = mapping.putFunc;
-                    id = putFunc(value);
-                    funcId = mapping.readFuncId;
-                    break;
-                }
-            }
-            return { id, funcId };
-        };
-        valuePut = bind({ func: valuePut, params: { typeMappings }});
-        valuePut = autoParam({ func: valuePut, paramName: "value" });
-
-        let putFuncCall = function({ valuePut, graphAssign, func, param }) {
+        let putFuncCall = function({ writeValue, graphAssign, func, param }) {
             if(typeof func == "function")
                 func = func.id;
 
-            let ref = valuePut(param);
+            let ref = writeValue(param);
             let args = { head: ref.funcId, type: func, tail: ref.id };
 
             let result = graphAssign(args);
             return result;
         };
-        putFuncCall = bind({ func: putFuncCall, params: { valuePut, graphAssign }});
+        putFuncCall = bind({ func: putFuncCall, params: { writeValue, graphAssign }});
 
         // OUTER SCOPE //
         let node;
         let graphReadEdgeId;
         /////////////////
 
-        // createSystemFile({ name: "read-function-call" });
+        // createSystemFile({ name: "write-value" });
         // nameRemove({ node: "eed13556a72cf02a35da377d6d074fe39c3b59c4", name: "object-put" });
         // name({ node: "eed13556a72cf02a35da377d6d074fe39c3b59c4", name: "write-object" });
         // let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });

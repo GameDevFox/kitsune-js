@@ -180,6 +180,10 @@ var data = function() {
   {
     "id": "90625a7940d4425591c41e527d8523b1eb17c9ff",
     "string": "value-function"
+  },
+  {
+    "id": "d6045152174d13cb13a1c96d7bb8e2b72d0b8470",
+    "string": "write-value"
   }
 ];
 };
