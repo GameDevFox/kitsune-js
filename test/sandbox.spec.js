@@ -103,7 +103,25 @@ describe("sandbox", function() {
             });
         });
 
-        let systems = dictFunc(systemList);
+        let systemSources = [];
+
+        let firstPhaseSystem = dictFunc(systemList);
+        systemSources.push(firstPhaseSystem);
+
+        let systems = function({ systemSources, id }) {
+            let system;
+            for(let key in systemSources) {
+                let source = systemSources[key];
+                system = source(id);
+
+                if(system)
+                    break;
+            }
+            return system;
+        };
+        systems = bind({ func: systems, params: { systemSources }});
+        systems = autoParam({ func: systems, paramName: "id" });
+
         putSystem({ id: "ab3c2b8f8ef49a450344437801bbadef765caf69", system: systems });
 
         // Build systems
@@ -248,19 +266,25 @@ describe("sandbox", function() {
                 let funcCall = readFuncCall(id);
                 let func = executeFunction(funcCall);
 
-                putSystem({ id, system: func });
-
                 return func;
             };
             loadSystem = bind({ func: loadSystem, params: { readFuncCall, executeFunction }});
             loadSystem = autoParam({ func: loadSystem, paramName: "id" });
 
-            // Read and invoke function calls
-            [
-                graphReadEdgeId,
-                graphRemoveId,
-                graphRemove2Id
-            ].forEach(loadSystem);
+            let funcCallSystems = function({ loadSystem, putSystem, id }) {
+                let system = loadSystem(id);
+
+                if(system)
+                    putSystem({ id, system });
+
+                return system;
+            };
+            funcCallSystems = bind({ func: funcCallSystems, params: {
+                loadSystem,
+                putSystem
+            }});
+            funcCallSystems = autoParam({ func: funcCallSystems, paramName: "id" });
+            systemSources.push(funcCallSystems);
 
             node = graphFind({
                 head: "66564ec14ed18fb88965140fc644d7b813121c78",
