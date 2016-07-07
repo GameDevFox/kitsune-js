@@ -24,7 +24,8 @@ describe("sandbox", function() {
         let lokiColl = loader("0741c54e604ad973eb41c02ab59c5aabdf2c6bc3"); // loki-collection
         let lokiFind = loader("30dee1b715bcfe60afeaadbb0e3e66019140686a"); // loki-find
         let lokiPut = loader("f45ccdaba9fdca2234be7ded1a5578dd17c2374e"); // loki-put
-        let nameList = loader("81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266"); // nameList
+        let nameList = loader("81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266"); // name-list
+        var putSystem = loader("d1e484530280752dd99b7e64a854f96cf66dd502"); // put-system
         let returnFirst = loader("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51"); // return-first
         let returnProperty = loader("c1020aea14a46b72c6f8a4b7fa57acc14a73a64e"); // return-property
         let stringData = loader("1cd179d6e63660fba96d54fe71693d1923e3f4f1"); // string-data
@@ -69,25 +70,13 @@ describe("sandbox", function() {
         nameList = bind({ func: nameList, params: { graphFactor, stringReadString }});
         nameList = autoParam({ func: nameList, paramName: "node" });
 
+        let systemList = {};
+        putSystem = bind({ func: putSystem, params: { systemList }});
+
+        // Build System List
         let systemFileEdges = graphFind({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
         let systemFileIds = _.map(systemFileEdges, "tail");
 
-        // Build System List
-        let systemList = {};
-        var putSystem = function({ systemList, id, system }) {
-            if(!id && (!system || !system.id))
-                throw new Error("No id found in param or on system");
-
-            if(!system.id)
-                system.id = id;
-            else
-                id = system.id;
-
-            systemList[id] = system;
-        };
-        putSystem = bind({ func: putSystem, params: { systemList }});
-
-        // Load systems into list
         _.each(systemFileIds, id => {
             let system = loader(id);
             putSystem({ id, system });
@@ -95,10 +84,10 @@ describe("sandbox", function() {
 
         // Append systemList with "home-made" system
         putSystem({ id: "adf6b91bb7c0472237e4764c044733c4328b1e55", system: graphColl });
-        putSystem({ id: "ce6de1160131bddb4e214f52e895a68583105133", system: stringColl });
-
         putSystem({ id: "7e5e764e118960318d513920a0f33e4c5ae64b50", system: graphPut });
         putSystem({ id: "a1e815356dceab7fded042f3032925489407c93e", system: graphFind });
+
+        putSystem({ id: "ce6de1160131bddb4e214f52e895a68583105133", system: stringColl });
         putSystem({ id: "b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385", system: stringPut });
         putSystem({ id: "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", system: stringFind });
 
@@ -261,9 +250,9 @@ describe("sandbox", function() {
         let graphReadEdgeId;
         /////////////////
 
-        // createSystemFile({ name: "function-reference" });
-        // nameRemove({ node: "fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", name: "function-argument" });
-        // nameRemove({ node: "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda", name: "function-argument-function" });
+        // createSystemFile({ name: "put-system" });
+        // nameRemove({ node: "eed13556a72cf02a35da377d6d074fe39c3b59c4", name: "object-put" });
+        // name({ node: "eed13556a72cf02a35da377d6d074fe39c3b59c4", name: "write-object" });
         // let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
         // edges.forEach(edge => graphRemove(edge.id));
 
