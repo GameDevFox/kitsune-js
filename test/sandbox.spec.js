@@ -188,12 +188,8 @@ describe("sandbox", function() {
 
         // Object
         let typeMappings = createTypeMappings({ hashInteger, stringAutoPut });
-        objectPut = bind({ func: objectPut, params: {
-            graphAssign,
-            graphAutoPut,
-            stringAutoPut,
-            typeMappings
-        }});
+        objectPut = bind({ func: objectPut, params: { graphAssign, graphAutoPut,
+            stringAutoPut, typeMappings }});
         let objectAutoPut = function(object) {
             let id = hashRandom();
             objectPut({ id, object });
@@ -201,12 +197,8 @@ describe("sandbox", function() {
         };
         typeMappings.object.putFunc = objectAutoPut; // Fill Placeholder
 
-        readObject = bind({ func: readObject, params: {
-            graphFactor,
-            stringReadString,
-            graphReadEdge,
-            nodeFunc
-        }});
+        readObject = bind({ func: readObject, params: { graphFactor, stringReadString,
+            graphReadEdge, nodeFunc }});
         readObject = autoParam({ func: readObject, paramName: "node" });
         putSystem({ id: "d7f80b3486eee7b142c190a895c5496242519608", system: readObject });
 
@@ -230,16 +222,27 @@ describe("sandbox", function() {
                 func = func.id;
 
             let ref = writeValue(param);
-            let args = { head: ref.funcId, type: func, tail: ref.id };
 
+            let args = { head: ref.funcId, type: func, tail: ref.id };
             let result = graphAssign(args);
+
             return result;
         };
         writeFuncCall = bind({ func: writeFuncCall, params: { writeValue, graphAssign }});
 
+        let writeAndNameFuncCall = function({ nameFn, func, param, name }) {
+            let id = writeFuncCall({ func, param });
+            graphAutoPut({ head: "d2cd5a6f99428baaa05394cf1fe3afa17fb59aff", tail: id });
+            nameFn({ node: id, name });
+            return id;
+        };
+        writeAndNameFuncCall = bind({ func: writeAndNameFuncCall, params: { nameFn: name }});
+
         // OUTER SCOPE //
         let node;
-        let graphReadEdgeId;
+        let nodeSearch;
+        let graphFindOneId;
+        let readEdgeId;
         /////////////////
 
         // createSystemFile({ name: "write-value" });
@@ -254,10 +257,18 @@ describe("sandbox", function() {
             putSystem({ id: "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", system: console.log });
 
             // Create function calls
-            graphReadEdgeId = writeFuncCall({ func: returnFirst, param: graphFind });
+            graphFindOneId = writeAndNameFuncCall({ func: returnFirst, param: graphFind,
+                name: "graph-find-one" });
+            readEdgeId = writeAndNameFuncCall({ func: autoParam,
+                param: { func: fRef(graphFindOneId), paramName: "id" },
+                name: "read-edge" });
 
-            let graphRemoveId = writeFuncCall({ func: bind, param: { func: lokiRemove, params: { db: graphColl }}});
-            let graphRemove2Id = writeFuncCall({ func: autoParam, param: { func: fRef(graphRemoveId), paramName: "id" }});
+            let graphRemoveBind = writeAndNameFuncCall({ func: bind,
+                param: { func: lokiRemove, params: { db: graphColl }},
+                name: "graph-remove-bind" });
+            let graphRemove = writeAndNameFuncCall({ func: autoParam,
+                param: { func: fRef(graphRemoveBind), paramName: "id" },
+                name: "graph-remove" });
 
             readFuncCall = bind({ func: readFuncCall, params: { readAssign }});
             readFuncCall = autoParam({ func: readFuncCall, paramName: "id" });
@@ -286,12 +297,13 @@ describe("sandbox", function() {
             funcCallSystems = autoParam({ func: funcCallSystems, paramName: "id" });
             systemSources.push(funcCallSystems);
 
-            node = graphFind({
+            nodeSearch = {
                 head: "66564ec14ed18fb88965140fc644d7b813121c78",
                 tail: "2f7ff34b09a1fb23b9a5d4fbdd8bb44abbe2007a"
-            })[0];
-            let myGraphRemove = systems(graphRemove2Id);
-            myGraphRemove(node.id);
+            };
+            node = graphFind(nodeSearch)[0];
+            // let myGraphRemove = systems(graphRemove);
+            // myGraphRemove(node.id);
         };
         /////////////////////
 
@@ -299,9 +311,14 @@ describe("sandbox", function() {
         let afterReports = function() {
             console.log(node.id);
 
-            let graphReadEdge = systems(graphReadEdgeId);
-            let edge = graphFind({ tail: "90184a3d0c84658aac411637f7442f80b3fe0040" })[0];
+            let edge = graphFind(nodeSearch)[0];
             console.log(edge);
+
+            let graphFindOne = systems(graphFindOneId);
+            console.log(graphFindOne(nodeSearch));
+
+            let readEdge = systems(readEdgeId);
+            console.log(readEdge(node.id));
         };
         ///////////////////////////
 
@@ -312,6 +329,7 @@ describe("sandbox", function() {
         {
             // nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode });
             coreNodeReport({ groupList, nameList });
+            functionCallReport({ groupList, nameList });
             systemFileReport({ coreNodes, groupList, nameList });
             // graphReport({ graph });
             // stringReport({ string });
@@ -352,9 +370,26 @@ function recreateLinks({ coreNodes, nameList }) {
 }
 
 // Report functions
+function printReport(report) {
+    report.forEach(({ node, names }) => {
+        console.log(`${node} ${JSON.stringify(names)}`);
+    });
+}
+
 function coreNodeReport({ groupList, nameList }) {
     console.log("=== Core Node Report ===");
-    let coreNodes = groupList("7f82d45a6ffb5c345f84237a621de35dd8b7b0e3");
+    let report = groupReport({ groupList, nameList, groupId: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
+    printReport(report);
+}
+
+function functionCallReport({ groupList, nameList }) {
+    console.log("=== Function Call Report ===");
+    let report = groupReport({ groupList, nameList, groupId: "d2cd5a6f99428baaa05394cf1fe3afa17fb59aff" });
+    printReport(report);
+}
+
+function groupReport({ groupList, nameList, groupId }) {
+    let coreNodes = groupList(groupId);
     let nodesAndNames = [];
     coreNodes.forEach(node => {
         let names = nameList(node);
@@ -369,9 +404,7 @@ function coreNodeReport({ groupList, nameList }) {
         return value.names[0];
     });
 
-    nodesAndNames.forEach(({ node, names }) => {
-        console.log(`${node} ${JSON.stringify(names)}`);
-    });
+    return nodesAndNames;
 }
 
 function nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode }) {
