@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function readFuncCall(id) {
+export default function readFuncCall({ readAssign, id }) {
     let assign = readAssign(id);
     return {
         funcId: assign.type,

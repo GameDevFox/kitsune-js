@@ -207,7 +207,7 @@ describe("sandbox", function() {
         writeValue = bind({ func: writeValue, params: { typeMappings }});
         writeValue = autoParam({ func: writeValue, paramName: "value" });
 
-        let putFuncCall = function({ writeValue, graphAssign, func, param }) {
+        let writeFuncCall = function({ writeValue, graphAssign, func, param }) {
             if(typeof func == "function")
                 func = func.id;
 
@@ -217,7 +217,7 @@ describe("sandbox", function() {
             let result = graphAssign(args);
             return result;
         };
-        putFuncCall = bind({ func: putFuncCall, params: { writeValue, graphAssign }});
+        writeFuncCall = bind({ func: writeFuncCall, params: { writeValue, graphAssign }});
 
         // OUTER SCOPE //
         let node;
@@ -236,10 +236,13 @@ describe("sandbox", function() {
             putSystem({ id: "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", system: console.log });
 
             // Create function calls
-            graphReadEdgeId = putFuncCall({ func: returnFirst, param: graphFind });
+            graphReadEdgeId = writeFuncCall({ func: returnFirst, param: graphFind });
 
-            let graphRemoveId = putFuncCall({ func: bind, param: { func: lokiRemove, params: { db: graphColl }}});
-            let graphRemove2Id = putFuncCall({ func: autoParam, param: { func: fRef(graphRemoveId), paramName: "id" }});
+            let graphRemoveId = writeFuncCall({ func: bind, param: { func: lokiRemove, params: { db: graphColl }}});
+            let graphRemove2Id = writeFuncCall({ func: autoParam, param: { func: fRef(graphRemoveId), paramName: "id" }});
+
+            readFuncCall = bind({ func: readFuncCall, params: { readAssign }});
+            readFuncCall = autoParam({ func: readFuncCall, paramName: "id" });
 
             let loadSystem = function({ readFuncCall, executeFunction, id }) {
                 let funcCall = readFuncCall(id);
@@ -280,7 +283,7 @@ describe("sandbox", function() {
 
         // REPORTS //
         console.log("== BEFORE REPORTS ==");
-        // beforeReports();
+        beforeReports();
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
         {
             // nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode });
@@ -290,7 +293,7 @@ describe("sandbox", function() {
             // stringReport({ string });
         }
         console.log("== AFTER REPORTS ==");
-        // afterReports();
+        afterReports();
         console.log("===================");
 
         // END REPORTS //
