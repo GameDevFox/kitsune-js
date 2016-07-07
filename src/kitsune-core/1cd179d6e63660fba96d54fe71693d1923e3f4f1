@@ -134,6 +134,10 @@ var data = function() {
     "string": "read-assign"
   },
   {
+    "id": "d1430d76372ec2fb0cec20037cc2bb9ae93f3333",
+    "string": "read-function-call"
+  },
+  {
     "id": "3fc738a31d3c6ab7adb3637b88c20b79831183ed",
     "string": "read-integer"
   },

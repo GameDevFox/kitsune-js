@@ -1,0 +1,10 @@
+// -*- mode: js2 -*-
+export default function readFuncCall(id) {
+    let assign = readAssign(id);
+    return {
+        funcId: assign.type,
+        argFuncId: assign.head,
+        argId: assign.tail
+    };
+}
+module.exports = readFuncCall;

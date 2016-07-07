@@ -98,11 +98,8 @@ describe("sandbox", function() {
         _.forEach(systemList, (system, id) => {
             let names = nameList(id);
 
-            names.forEach(name => {
-                let camelName = name
-                        .replace(/-(.)/g, capture => capture.toUpperCase())
-                        .replace(/-/g, '');
-                systemsByName[camelName] = system;
+            names.map(hyphenNameToCamelCase).forEach(name => {
+                systemsByName[name] = system;
             });
         });
 
@@ -129,6 +126,7 @@ describe("sandbox", function() {
             nameRemove,
             objectPut,
             readAssign,
+            readFunctionCall: readFuncCall,
             readInteger,
             readObject,
             stringAutoPut,
@@ -204,15 +202,6 @@ describe("sandbox", function() {
 
         readAssign = bind({ func: readAssign, params: { graphReadEdge }});
         readAssign = autoParam({ func: readAssign, paramName: "id" });
-        let readFuncCall = function(input) {
-            let assign = readAssign(input);
-            let result = {
-                funcId: assign.type,
-                argFuncId: assign.head,
-                argId: assign.tail
-            };
-            return result;
-        };
 
         let valuePut = function({ typeMappings, value }) {
             let id;
@@ -250,7 +239,7 @@ describe("sandbox", function() {
         let graphReadEdgeId;
         /////////////////
 
-        // createSystemFile({ name: "put-system" });
+        // createSystemFile({ name: "read-function-call" });
         // nameRemove({ node: "eed13556a72cf02a35da377d6d074fe39c3b59c4", name: "object-put" });
         // name({ node: "eed13556a72cf02a35da377d6d074fe39c3b59c4", name: "write-object" });
         // let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
@@ -483,6 +472,13 @@ function writeData(data, filename) {
     let json = JSON.stringify(data, null, 2);
     let finalData = wrapData(json);
     fs.writeFileSync(filename, finalData);
+}
+
+function hyphenNameToCamelCase(name) {
+    let result = name
+            .replace(/-(.)/g, capture => capture.toUpperCase())
+            .replace(/-/g, '');
+    return result;
 }
 
 function createTypeMappings({ hashInteger, stringAutoPut }) {
