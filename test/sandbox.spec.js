@@ -17,42 +17,6 @@ function buildLoader({ bind, autoParam }) {
 }
 
 // STEP 2
-function buildDataSystems({ loader, bind, autoParam }) {
-
-    let graphData = loader("24c045b912918d65c9e9aaea9993e9ab56f50d2e"); // graph-data
-    let stringData = loader("1cd179d6e63660fba96d54fe71693d1923e3f4f1"); // string-data
-
-    let lokiColl = loader("0741c54e604ad973eb41c02ab59c5aabdf2c6bc3"); // loki-collection
-    let lokiPut = loader("f45ccdaba9fdca2234be7ded1a5578dd17c2374e"); // loki-put
-    let lokiFind = loader("30dee1b715bcfe60afeaadbb0e3e66019140686a"); // loki-find
-
-    let valueFunc = loader("62126ce823b700cf7441b5179a3848149c9d8c89"); // value-function
-
-    let dataSystems = { graph: graphData(), string: stringData() };
-    let data = _.mapValues(dataSystems, (dataSet, systemName) => {
-        // Create loki collection
-        let coll = lokiColl();
-
-        let find = bind({ func: lokiFind, params: { db: coll }});
-
-        // Bind dataSystem functions
-        let control = {};
-        control.coll = valueFunc(coll);
-        control.put = bind({ func: lokiPut, params: { db: coll }});
-        control.find = autoParam({ func: find, paramName: "where" });
-
-        // Insert data
-        dataSet.forEach(value => {
-            control.put({ element: value });
-        });
-
-        return control;
-    });
-
-    return data;
-}
-
-// STEP 3
 function buildCache({ loader, bind }) {
     let systemList = {};
 
@@ -65,7 +29,7 @@ function buildCache({ loader, bind }) {
     return { cache, putSystem };
 }
 
-// STEP 4
+// STEP 3
 function buildCore({ cache, modules, putSystem, bind, autoParam }) {
     let systems = function({ cache, modules, id }) {
 
@@ -89,6 +53,47 @@ function buildCore({ cache, modules, putSystem, bind, autoParam }) {
     return systems;
 }
 
+// STEP 4
+function loadDataSystems({ loader, bind, autoParam, putSystem }) {
+
+    let graphData = loader("24c045b912918d65c9e9aaea9993e9ab56f50d2e"); // graph-data
+    let stringData = loader("1cd179d6e63660fba96d54fe71693d1923e3f4f1"); // string-data
+
+    let lokiColl = loader("0741c54e604ad973eb41c02ab59c5aabdf2c6bc3"); // loki-collection
+    let lokiPut = loader("f45ccdaba9fdca2234be7ded1a5578dd17c2374e"); // loki-put
+    let lokiFind = loader("30dee1b715bcfe60afeaadbb0e3e66019140686a"); // loki-find
+
+    let valueFunc = loader("62126ce823b700cf7441b5179a3848149c9d8c89"); // value-function
+
+    var insertData = function({ data, put }) {
+        data().forEach(value => {
+            put({ element: value });
+        });
+    };
+
+    // Graph
+    let graphColl = lokiColl();
+    putSystem({ id: "adf6b91bb7c0472237e4764c044733c4328b1e55", system: valueFunc(graphColl) });
+    let graphPut = bind({ func: lokiPut, params: { db: graphColl }});
+    putSystem({ id: "7e5e764e118960318d513920a0f33e4c5ae64b50", system: graphPut });
+        let graphFind = bind({ func: lokiFind, params: { db: graphColl }});
+    graphFind = autoParam({ func: graphFind, paramName: "where" });
+    putSystem({ id: "a1e815356dceab7fded042f3032925489407c93e", system: graphFind });
+    insertData({ data: graphData, put: graphPut });
+
+    // String
+    let stringColl = lokiColl();
+    let stringPut = bind({ func: lokiPut, params: { db: stringColl }});
+    putSystem({ id: "b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385", system: stringPut });
+        let stringFind = bind({ func: lokiFind, params: { db: stringColl }});
+    stringFind = autoParam({ func: stringFind, paramName: "where" });
+    putSystem({ id: "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", system: stringFind });
+    insertData({ data: stringData, put: stringPut });
+    putSystem({ id: "ce6de1160131bddb4e214f52e895a68583105133", system: valueFunc(stringColl) });
+
+    return { graphFind, stringPut, stringFind };
+}
+
 function bootstrap() {
 
     // STEP 1: LOADER
@@ -96,33 +101,20 @@ function bootstrap() {
     let autoParam = systemLoader({ path: "kitsune-core", id: "b69aeff3eb1a14156b1a9c52652544bcf89761e2" }); // auto-param
     let loader = buildLoader({ bind, autoParam });
 
-    // STEP 2: DATA
-    let data = buildDataSystems({ loader, bind, autoParam });
-
-    // STEP 3: CACHE MODULE
+    // STEP 2: CACHE MODULE
     let { cache, putSystem } = buildCache({ loader, bind });
     putSystem({ id: "a26808f06030bb4c165ecbfe43d9d200672a0878", system: putSystem });
 
-    // STEP 4: CREATE CORE
+    // STEP 3: CREATE CORE
     let modules = [loader];
     let systems = buildCore({ cache, modules, putSystem, bind, autoParam });
     putSystem({ id: "ab3c2b8f8ef49a450344437801bbadef765caf69", system: systems });
 
-    // STEP 5: DATA FUNCTIONS
+    // STEP 4: DATA FUNCTIONS
     // TODO: See which of these are IMMEDIATELY nessisary
     let {
-        graph: { coll: graphColl, put: graphPut, find: graphFind },
-        string: { coll: stringColl, put: stringPut,  find: stringFind }
-    } = data;
-
-    // Append systemList with "home-made" system
-    putSystem({ id: "adf6b91bb7c0472237e4764c044733c4328b1e55", system: graphColl });
-    putSystem({ id: "7e5e764e118960318d513920a0f33e4c5ae64b50", system: graphPut });
-    putSystem({ id: "a1e815356dceab7fded042f3032925489407c93e", system: graphFind });
-    //
-    putSystem({ id: "ce6de1160131bddb4e214f52e895a68583105133", system: stringColl });
-    // putSystem({ id: "b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385", system: stringPut });
-    putSystem({ id: "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", system: stringFind });
+        graphFind, stringPut, stringFind
+    } = loadDataSystems({ loader, bind, autoParam, putSystem });
 
         let stringAutoPut = loader("8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f");
         stringAutoPut = bind({ func: stringAutoPut, params: { stringFind, stringPut }});
