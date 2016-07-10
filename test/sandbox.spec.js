@@ -6,188 +6,202 @@ import { expect } from "chai";
 
 import systemLoader from "kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
 
-describe("sandbox", function() {
-    it.only("should have sand in it", function() {
+// STEP 1
+function buildLoader({ bind, autoParam }) {
+    // INIT LOADER SYSTEM - already loaded, just here for reference
+    // let systemLoaderId = "31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
+    let loader = bind({ func: systemLoader, params: { path: "kitsune-core" }});
+    loader = autoParam({ func: loader, paramName: "id" });
 
-        // INIT LOADER SYSTEM - already loaded, just here for reference
-        // let systemLoaderId = "31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
-        let bind = systemLoader({ path: "kitsune-core", id: "878c8ef64d31a194159765945fc460cb6b3f486f" }); // bind
-        let loader = bind({ func: systemLoader, params: { path: "kitsune-core" }});
-        let autoParam = loader({ id: "b69aeff3eb1a14156b1a9c52652544bcf89761e2" }); // auto-param
+    return loader;
+}
 
-        loader = autoParam({ func: loader, paramName: "id" });
+// STEP 2
+function buildDataSystems({ loader, bind, autoParam }) {
 
-        // MANUAL LOADING
-        let dictFunc = loader("30c8959d5d7804fb80cc9236edec97e04e5c4c3d"); // dictionary-function
-        let graphData = loader("24c045b912918d65c9e9aaea9993e9ab56f50d2e"); // graph-data
-        let graphFactor = loader("4163d1cd63d3949b79c37223bd7da04ad6cd36c8"); // graph-factor
-        let lokiColl = loader("0741c54e604ad973eb41c02ab59c5aabdf2c6bc3"); // loki-collection
-        let lokiFind = loader("30dee1b715bcfe60afeaadbb0e3e66019140686a"); // loki-find
-        let lokiPut = loader("f45ccdaba9fdca2234be7ded1a5578dd17c2374e"); // loki-put
-        let nameList = loader("81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266"); // name-list
-        var putSystem = loader("d1e484530280752dd99b7e64a854f96cf66dd502"); // put-system
-        let returnFirst = loader("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51"); // return-first
-        let returnProperty = loader("c1020aea14a46b72c6f8a4b7fa57acc14a73a64e"); // return-property
-        let stringData = loader("1cd179d6e63660fba96d54fe71693d1923e3f4f1"); // string-data
-        let value = loader("4c135d591fc67df7b652431515bd82ac5f31367a"); // value
-        let valueFunc = loader("62126ce823b700cf7441b5179a3848149c9d8c89"); // value-function
+    let graphData = loader("24c045b912918d65c9e9aaea9993e9ab56f50d2e"); // graph-data
+    let stringData = loader("1cd179d6e63660fba96d54fe71693d1923e3f4f1"); // string-data
 
-        // INIT DATA SYSTEMS
-        var data = { graph: graphData(), string: stringData() };
+    let lokiColl = loader("0741c54e604ad973eb41c02ab59c5aabdf2c6bc3"); // loki-collection
+    let lokiPut = loader("f45ccdaba9fdca2234be7ded1a5578dd17c2374e"); // loki-put
+    let lokiFind = loader("30dee1b715bcfe60afeaadbb0e3e66019140686a"); // loki-find
 
-        data = _.mapValues(data, (dataSet, systemName) => {
-            // Create loki collection
-            let coll = lokiColl();
+    let valueFunc = loader("62126ce823b700cf7441b5179a3848149c9d8c89"); // value-function
 
-            let find = bind({ func: lokiFind, params: { db: coll }});
+    let dataSystems = { graph: graphData(), string: stringData() };
+    let data = _.mapValues(dataSystems, (dataSet, systemName) => {
+        // Create loki collection
+        let coll = lokiColl();
 
-            // Bind dataSystem functions
-            let control = {};
-            control.coll = valueFunc(coll);
-            control.put = bind({ func: lokiPut, params: { db: coll }});
-            control.find = autoParam({ func: find, paramName: "where" });
+        let find = bind({ func: lokiFind, params: { db: coll }});
 
-            // Insert data
-            dataSet.forEach(value => {
-                control.put({ element: value });
-            });
+        // Bind dataSystem functions
+        let control = {};
+        control.coll = valueFunc(coll);
+        control.put = bind({ func: lokiPut, params: { db: coll }});
+        control.find = autoParam({ func: find, paramName: "where" });
 
-            return control;
+        // Insert data
+        dataSet.forEach(value => {
+            control.put({ element: value });
         });
 
-        let {
-            graph: { coll: graphColl, put: graphPut, find: graphFind },
-            string: { coll: stringColl, put: stringPut,  find: stringFind }
-        } = data;
+        return control;
+    });
 
-        // Auto load systems
-        graphFactor = bind({ func: graphFactor, params: { graphFind }});
+    return data;
+}
 
-        let stringReadString = autoParam({ func: stringFind, paramName: "id" });
-        stringReadString = returnFirst(stringReadString);
-        stringReadString = returnProperty({ func: stringReadString, propertyName: "string" });
+// STEP 3
+function buildCache({ loader, bind }) {
+    let systemList = {};
 
-        nameList = bind({ func: nameList, params: { graphFactor, stringReadString }});
-        nameList = autoParam({ func: nameList, paramName: "node" });
+    let dictFunc = loader("30c8959d5d7804fb80cc9236edec97e04e5c4c3d"); // dictionary-function
+    let cache = dictFunc(systemList);
 
-        let systemList = {};
-        putSystem = bind({ func: putSystem, params: { systemList }});
+    var putSystem = loader("d1e484530280752dd99b7e64a854f96cf66dd502"); // put-system
+    putSystem = bind({ func: putSystem, params: { systemList }});
 
-        // Build System List
-        let systemFileEdges = graphFind({ head: "66564ec14ed18fb88965140fc644d7b813121c78" });
-        let systemFileIds = _.map(systemFileEdges, "tail");
+    return { cache, putSystem };
+}
 
-        _.each(systemFileIds, id => {
-            let system = loader(id);
-            putSystem({ id, system });
-        });
+// STEP 4
+function buildCore({ cache, modules, putSystem, bind, autoParam }) {
+    let systems = function({ cache, modules, id }) {
 
-        // Append systemList with "home-made" system
-        putSystem({ id: "adf6b91bb7c0472237e4764c044733c4328b1e55", system: graphColl });
-        putSystem({ id: "7e5e764e118960318d513920a0f33e4c5ae64b50", system: graphPut });
-        putSystem({ id: "a1e815356dceab7fded042f3032925489407c93e", system: graphFind });
+        let system = cache(id);
 
-        putSystem({ id: "ce6de1160131bddb4e214f52e895a68583105133", system: stringColl });
-        putSystem({ id: "b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385", system: stringPut });
-        putSystem({ id: "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", system: stringFind });
-
-        putSystem({ id: "08f8db63b1843f7dea016e488bd547555f345c59", system: stringReadString });
-
-        // Build systemsByName
-        let systemsByName = {};
-        _.forEach(systemList, (system, id) => {
-            let names = nameList(id);
-
-            names.map(hyphenNameToCamelCase).forEach(name => {
-                systemsByName[name] = system;
-            });
-        });
-
-        let systemSources = [];
-
-        let firstPhaseSystem = dictFunc(systemList);
-        systemSources.push(firstPhaseSystem);
-
-        let systems = function({ systemSources, id }) {
-            let system;
-            for(let key in systemSources) {
-                let source = systemSources[key];
-                system = source(id);
+        if(!system) {
+            for(let key in modules) {
+                let module = modules[key];
+                system = module(id);
 
                 if(system)
                     break;
             }
-            return system;
+            putSystem({ id, system });
+        }
+        return system;
+    };
+    systems = bind({ func: systems, params: { cache, modules }});
+    systems = autoParam({ func: systems, paramName: "id" });
+
+    return systems;
+}
+
+function bootstrap() {
+
+    // STEP 1: LOADER
+    let bind = systemLoader({ path: "kitsune-core", id: "878c8ef64d31a194159765945fc460cb6b3f486f" }); // bind
+    let autoParam = systemLoader({ path: "kitsune-core", id: "b69aeff3eb1a14156b1a9c52652544bcf89761e2" }); // auto-param
+    let loader = buildLoader({ bind, autoParam });
+
+    // STEP 2: DATA
+    let data = buildDataSystems({ loader, bind, autoParam });
+
+    // STEP 3: CACHE MODULE
+    let { cache, putSystem } = buildCache({ loader, bind });
+    putSystem({ id: "a26808f06030bb4c165ecbfe43d9d200672a0878", system: putSystem });
+
+    // STEP 4: CREATE CORE
+    let modules = [loader];
+    let systems = buildCore({ cache, modules, putSystem, bind, autoParam });
+    putSystem({ id: "ab3c2b8f8ef49a450344437801bbadef765caf69", system: systems });
+
+    // STEP 5: DATA FUNCTIONS
+    // TODO: See which of these are IMMEDIATELY nessisary
+    let {
+        graph: { coll: graphColl, put: graphPut, find: graphFind },
+        string: { coll: stringColl, put: stringPut,  find: stringFind }
+    } = data;
+
+    // Append systemList with "home-made" system
+    putSystem({ id: "adf6b91bb7c0472237e4764c044733c4328b1e55", system: graphColl });
+    putSystem({ id: "7e5e764e118960318d513920a0f33e4c5ae64b50", system: graphPut });
+    putSystem({ id: "a1e815356dceab7fded042f3032925489407c93e", system: graphFind });
+    //
+    putSystem({ id: "ce6de1160131bddb4e214f52e895a68583105133", system: stringColl });
+    // putSystem({ id: "b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385", system: stringPut });
+    putSystem({ id: "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", system: stringFind });
+
+        let stringAutoPut = loader("8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f");
+        stringAutoPut = bind({ func: stringAutoPut, params: { stringFind, stringPut }});
+    stringAutoPut = autoParam({ func: stringAutoPut, paramName: "string" });
+    putSystem({ id: "4e63843a9bee61351b80fac49f4182bd582907b4", system: stringAutoPut });
+        let graphFactor = loader("4163d1cd63d3949b79c37223bd7da04ad6cd36c8"); // graph-factor
+    graphFactor = bind({ func: graphFactor, params: { graphFind }});
+    putSystem({ id: "c83cd0ab78a1d57609f9224f851bde6d230711d0", system: graphFactor });
+
+    // STEP 6: NAME LOADER
+        // TODO: Fix this or simplify, we just need the hash of the string instead of "stringAutoPut"
+        let nameListIds = function({ stringAutoPut, graphFactor, name }) {
+            let nameId = stringAutoPut(name);
+            let factor = graphFactor({ type: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", head: nameId });
+            let result = factor.map(node => node.tail);
+            return result;
         };
-        systems = bind({ func: systems, params: { systemSources }});
-        systems = autoParam({ func: systems, paramName: "id" });
+        nameListIds = bind({ func: nameListIds, params: { stringAutoPut, graphFactor }});
+    nameListIds = autoParam({ func: nameListIds, paramName: "name" });
 
-        putSystem({ id: "ab3c2b8f8ef49a450344437801bbadef765caf69", system: systems });
+    let nameLoader = function({ nameListIds, core, name }) {
+        let ids = nameListIds(name);
 
-        // Build systems
-        let {
-            andIs,
-            callNodeFunction,
-            describeNode,
-            executeFunction,
-            functionReference: fRef,
-            graphAssign,
-            graphAutoPut,
-            graphListNodes,
-            groupList,
-            hashInteger,
-            hashRandom,
-            hashString,
-            isInCollection,
-            isInGroup,
-            lokiRemove,
-            name,
-            nameRemove,
-            objectPut,
-            readAssign,
-            readFunctionCall: readFuncCall,
-            readInteger,
-            readObject,
-            stringAutoPut,
-            writeValue
-        } = systemsByName;
+        let system;
+        for(let key in ids) {
+            let id = ids[key];
+            system = core(id);
+            if(system)
+                break;
+        }
+
+        return system;
+    };
+    nameLoader = bind({ func: nameLoader, params: { nameListIds, core: systems }});
+    nameLoader = autoParam({ func: nameLoader, paramName: "name" });
+
+    return { systems, modules, nameLoader };
+}
+
+describe("sandbox", function() {
+    it.only("should have sand in it", function() {
+
+        console.log("== BOOTSTRAP ==");
+        let { systems, modules, nameLoader } = bootstrap();
+
+        let putSystem = systems("a26808f06030bb4c165ecbfe43d9d200672a0878");
+
+        let bind = nameLoader("bind");
+        let autoParam = nameLoader("auto-param");
 
         // Graph
-        let graphReadEdge = returnFirst(graphFind);
+        let returnFirst = nameLoader("return-first");
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+            let graphReadEdge = returnFirst(graphFind);
         graphReadEdge = autoParam({ func: graphReadEdge, paramName: "id" });
 
-        let graphRemove = bind({ func: lokiRemove, params: { db: graphColl }});
-        graphRemove = autoParam({ func: graphRemove, paramName: "id" });
-
+            let graphAutoPut = nameLoader("graph-autoPut");
+            let graphPut = systems("7e5e764e118960318d513920a0f33e4c5ae64b50");
         graphAutoPut = bind({ func: graphAutoPut, params: { graphPut }});
+            let graphAssign = nameLoader("graph-assign");
         graphAssign = bind({ func: graphAssign, params: { graphAutoPut }});
-        graphListNodes = bind({ func: graphListNodes, params: { graphFind }});
-
-        // String
-        let stringGetId = autoParam({ func: stringFind, paramName: "string" });
-        stringGetId = returnFirst(stringGetId);
-        stringGetId = returnProperty({ func: stringGetId, propertyName: "id" });
-
-        let stringRemove = bind({ func: lokiRemove, params: { db: stringColl }});
-
-        stringAutoPut = bind({ func: stringAutoPut, params: { stringFind, stringPut }});
-        stringAutoPut = autoParam({ func: stringAutoPut, paramName: "string" });
 
         // Name
+            // TODO: Fix this -> let name = nameLoader("name");
+            let name = systems("ddfe7d402ff26c18785bcc899fa69183b3170a7d");
+            let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
         name = bind({ func: name, params: { stringAutoPut, graphAssign }});
-        nameRemove = bind({ func: nameRemove, params: { stringGetId, graphFactor, graphRemove }});
-
-        // Group
-        let _groupList = bind({ func: groupList, params: { graphFind }});
-        groupList = autoParam({ func: _groupList, paramName: "group" });
 
         // Function
+            let callNodeFunction = nameLoader("call-node-function");
         let nodeFunc = bind({ func: callNodeFunction, params: { funcSys: systems }});
+            let executeFunction = nameLoader("execute-function");
         executeFunction = bind({ func: executeFunction, params: {
             callNodeFunc: callNodeFunction, funcSys: systems }});
 
         // Object
+            let hashInteger = nameLoader("hash-integer");
         let typeMappings = createTypeMappings({ hashInteger, stringAutoPut });
+            let objectPut = nameLoader("object-put");
         objectPut = bind({ func: objectPut, params: { graphAssign, graphAutoPut,
             stringAutoPut, typeMappings }});
         let objectAutoPut = function(object) {
@@ -197,29 +211,62 @@ describe("sandbox", function() {
         };
         typeMappings.object.putFunc = objectAutoPut; // Fill Placeholder
 
-        readObject = bind({ func: readObject, params: { graphFactor, stringReadString,
-            graphReadEdge, nodeFunc }});
+            let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
+            let stringReadString = autoParam({ func: stringFind, paramName: "id" });
+            stringReadString = returnFirst(stringReadString);
+            let returnProperty = systems("c1020aea14a46b72c6f8a4b7fa57acc14a73a64e"); // return-property
+        stringReadString = returnProperty({ func: stringReadString, propertyName: "string" });
+        putSystem({ id: "08f8db63b1843f7dea016e488bd547555f345c59", system: stringReadString });
+
+            let readObject = nameLoader("read-object");
+            let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+            readObject = bind({ func: readObject, params: { graphFactor, stringReadString,
+                graphReadEdge, nodeFunc }});
         readObject = autoParam({ func: readObject, paramName: "node" });
         putSystem({ id: "d7f80b3486eee7b142c190a895c5496242519608", system: readObject });
 
         // Other
+            let hashRandom = nameLoader("hash-random");
+            let hashString = nameLoader("hash-string");
         hashRandom = bind({ func: hashRandom, params: { hashString }});
 
-        let createSystemFile = bind({ func: _createSystemFile, params: { hashRandom, graphAutoPut, nameFn: name }});
-        let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut, nameFn: name }});
-        let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind, graphListNodes, stringRemove }});
-        let isEdge = bind({ func: isInCollection, params: { collFind: graphFind }});
-        let isString = bind({ func: isInCollection, params: { collFind: stringFind }});
-
-        readAssign = bind({ func: readAssign, params: { graphReadEdge }});
+            let readAssign = nameLoader("read-assign");
+            readAssign = bind({ func: readAssign, params: { graphReadEdge }});
         readAssign = autoParam({ func: readAssign, paramName: "id" });
 
-        writeValue = bind({ func: writeValue, params: { typeMappings }});
+        // LOWER //
+        // Low priority //
+            let lokiRemove = nameLoader("loki-remove");
+            let graphColl = systems("adf6b91bb7c0472237e4764c044733c4328b1e55");
+            let graphRemove = bind({ func: lokiRemove, params: { db: graphColl }});
+        graphRemove = autoParam({ func: graphRemove, paramName: "id" });
+            let graphListNodes = nameLoader("graph-list-nodes");
+        graphListNodes = bind({ func: graphListNodes, params: { graphFind }});
+
+            let stringGetId = autoParam({ func: stringFind, paramName: "string" });
+            stringGetId = returnFirst(stringGetId);
+        stringGetId = returnProperty({ func: stringGetId, propertyName: "id" });
+            let stringColl = systems("ce6de1160131bddb4e214f52e895a68583105133");
+        let stringRemove = bind({ func: lokiRemove, params: { db: stringColl }});
+
+            let groupList = nameLoader("group-list");
+            groupList = bind({ func: groupList, params: { graphFind }});
+        groupList = autoParam({ func: groupList, paramName: "group" });
+
+            let nameRemove = nameLoader("name-remove");
+        nameRemove = bind({ func: nameRemove, params: { stringGetId, graphFactor, graphRemove }});
+
+        // Write func call Stuff
+            let writeValue = nameLoader("write-value");
+            writeValue = bind({ func: writeValue, params: { typeMappings }});
         writeValue = autoParam({ func: writeValue, paramName: "value" });
 
         let writeFuncCall = function({ writeValue, graphAssign, func, param }) {
             if(typeof func == "function")
                 func = func.id;
+
+            if(!func)
+                throw new Error("funcId must not be null or must have an id");
 
             let ref = writeValue(param);
 
@@ -230,13 +277,26 @@ describe("sandbox", function() {
         };
         writeFuncCall = bind({ func: writeFuncCall, params: { writeValue, graphAssign }});
 
-        let writeAndNameFuncCall = function({ nameFn, func, param, name }) {
+        let writeAndNameFuncCall = function({ writeFuncCall, nameFn, func, param, name }) {
             let id = writeFuncCall({ func, param });
             graphAutoPut({ head: "d2cd5a6f99428baaa05394cf1fe3afa17fb59aff", tail: id });
             nameFn({ node: id, name });
             return id;
         };
-        writeAndNameFuncCall = bind({ func: writeAndNameFuncCall, params: { nameFn: name }});
+        writeAndNameFuncCall = bind({ func: writeAndNameFuncCall, params: { writeFuncCall, nameFn: name }});
+
+        // Report Stuff
+            let nameList = systems("81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266"); // name-list
+            nameList = bind({ func: nameList, params: { graphFactor, stringReadString }});
+        nameList = autoParam({ func: nameList, paramName: "node" });
+
+        let isInCollection = nameLoader("is-in-collection");
+        let isEdge = bind({ func: isInCollection, params: { collFind: graphFind }});
+        let isString = bind({ func: isInCollection, params: { collFind: stringFind }});
+
+        let createSystemFile = bind({ func: _createSystemFile, params: { hashRandom, graphAutoPut, nameFn: name }});
+        let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut, nameFn: name }});
+        let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind, graphListNodes, stringRemove }});
 
         // OUTER SCOPE //
         let node;
@@ -257,8 +317,10 @@ describe("sandbox", function() {
             putSystem({ id: "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", system: console.log });
 
             // Create function calls
-            graphFindOneId = writeAndNameFuncCall({ func: returnFirst, param: graphFind,
+            graphFindOneId = writeAndNameFuncCall({ func: returnFirst,
+                param: graphFind,
                 name: "graph-find-one" });
+            let fRef = nameLoader("function-reference");
             readEdgeId = writeAndNameFuncCall({ func: autoParam,
                 param: { func: fRef(graphFindOneId), paramName: "id" },
                 name: "read-edge" });
@@ -270,32 +332,34 @@ describe("sandbox", function() {
                 param: { func: fRef(graphRemoveBind), paramName: "id" },
                 name: "graph-remove" });
 
-            readFuncCall = bind({ func: readFuncCall, params: { readAssign }});
+            // Loading function calls
+                let readFuncCall = nameLoader("read-function-call");
+                readFuncCall = bind({ func: readFuncCall, params: { readAssign }});
             readFuncCall = autoParam({ func: readFuncCall, paramName: "id" });
 
-            let loadSystem = function({ readFuncCall, executeFunction, id }) {
-                let funcCall = readFuncCall(id);
-                let func = executeFunction(funcCall);
+                let loadSystem = function({ readFuncCall, executeFunction, id }) {
+                    let funcCall = readFuncCall(id);
+                    let func = executeFunction(funcCall);
 
-                return func;
-            };
-            loadSystem = bind({ func: loadSystem, params: { readFuncCall, executeFunction }});
+                    return func;
+                };
+                loadSystem = bind({ func: loadSystem, params: { readFuncCall, executeFunction }});
             loadSystem = autoParam({ func: loadSystem, paramName: "id" });
 
-            let funcCallSystems = function({ loadSystem, putSystem, id }) {
-                let system = loadSystem(id);
+                let funcCallSystems = function({ loadSystem, putSystem, id }) {
+                    let system = loadSystem(id);
 
-                if(system)
-                    putSystem({ id, system });
+                    if(system)
+                        putSystem({ id, system });
 
-                return system;
-            };
-            funcCallSystems = bind({ func: funcCallSystems, params: {
-                loadSystem,
-                putSystem
-            }});
+                    return system;
+                };
+                funcCallSystems = bind({ func: funcCallSystems, params: {
+                    loadSystem,
+                    putSystem
+                }});
             funcCallSystems = autoParam({ func: funcCallSystems, paramName: "id" });
-            systemSources.push(funcCallSystems);
+            modules.splice(0, 0, funcCallSystems);
 
             nodeSearch = {
                 head: "66564ec14ed18fb88965140fc644d7b813121c78",
@@ -527,6 +591,7 @@ function hyphenNameToCamelCase(name) {
 }
 
 function createTypeMappings({ hashInteger, stringAutoPut }) {
+
     return {
         "integer": {
             typeFunc: _.isInteger,
