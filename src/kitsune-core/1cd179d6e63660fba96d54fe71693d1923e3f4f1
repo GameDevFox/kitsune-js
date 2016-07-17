@@ -118,6 +118,10 @@ var data = function() {
     "string": "name-list"
   },
   {
+    "id": "2103b686457cd7ee8bac26d1c7eaea79e445fb10",
+    "string": "name-list-ids"
+  },
+  {
     "id": "7c32d0157c9d62dd28c63e9d8869ad8f933dce45",
     "string": "name-remove"
   },

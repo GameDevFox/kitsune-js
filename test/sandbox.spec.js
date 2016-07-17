@@ -44,6 +44,7 @@ describe("sandbox", function() {
             callNodeFunc: callNodeFunction, funcSys: systems }});
 
         // Object
+            let hashRandom = nameLoader("hash-random");
             let hashInteger = nameLoader("hash-integer");
         let typeMappings = createTypeMappings({ hashInteger, stringAutoPut });
             let objectPut = nameLoader("object-put");
@@ -71,7 +72,6 @@ describe("sandbox", function() {
         putSystem({ id: "d7f80b3486eee7b142c190a895c5496242519608", system: readObject });
 
         // Other
-            let hashRandom = nameLoader("hash-random");
             let hashString = nameLoader("hash-string");
         hashRandom = bind({ func: hashRandom, params: { hashString }});
 
@@ -85,7 +85,7 @@ describe("sandbox", function() {
             let graphColl = systems("adf6b91bb7c0472237e4764c044733c4328b1e55");
             let graphRemove = bind({ func: lokiRemove, params: { db: graphColl }});
         graphRemove = autoParam({ func: graphRemove, paramName: "id" });
-            let graphListNodes = nameLoader("graph-listNodes");
+            let graphListNodes = nameLoader("graph-list-nodes");
         graphListNodes = bind({ func: graphListNodes, params: { graphFind }});
 
             let stringGetId = autoParam({ func: stringFind, paramName: "string" });
@@ -151,7 +151,7 @@ describe("sandbox", function() {
         let readEdgeId;
         /////////////////
 
-        // createSystemFile({ name: "write-value" });
+        // createSystemFile({ name: "name-list-ids" });
         // let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
         // edges.forEach(edge => graphRemove(edge.id));
         // nameRemove({ node: "b7916f86301a6bc2af32f402f6515809bac75b03", name: "graph-listNodes" });
@@ -235,7 +235,7 @@ describe("sandbox", function() {
 
         // REPORTS //
         console.log("== BEFORE REPORTS ==");
-        // beforeReports();
+        beforeReports();
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
         {
             // nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode });
@@ -246,7 +246,7 @@ describe("sandbox", function() {
             // stringReport({ string });
         }
         console.log("== AFTER REPORTS ==");
-        // afterReports();
+        afterReports();
         console.log("===================");
 
         // END REPORTS //
@@ -271,14 +271,8 @@ function buildNameLoader({ systems }) {
     let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
     let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
 
-        // TODO: Fix this or simplify, we just need the hash of the string instead of "stringAutoPut"
-        let nameListIds = function({ stringAutoPut, graphFactor, name }) {
-            let nameId = stringAutoPut(name);
-            let factor = graphFactor({ type: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", head: nameId });
-            let result = factor.map(node => node.tail);
-            return result;
-        };
-        nameListIds = bind({ func: nameListIds, params: { stringAutoPut, graphFactor }});
+    	let nameListIds = systems("c4863daa27736a3fb94fa536fcf17bab5fce25bf");
+    	nameListIds = bind({ func: nameListIds, params: { stringAutoPut, graphFactor }});
     nameListIds = autoParam({ func: nameListIds, paramName: "name" });
 
     let nameLoader = function({ nameListIds, core, name }) {
