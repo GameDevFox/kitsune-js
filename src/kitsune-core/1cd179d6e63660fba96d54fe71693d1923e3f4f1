@@ -58,8 +58,8 @@ var data = function() {
     "string": "graph-factor"
   },
   {
-    "id": "7ff9f438e7c45aaa145086569c08377834a63f94",
-    "string": "graph-listNodes"
+    "id": "9281f6a97b1c5b7c373f3624bf1d388228e33820",
+    "string": "graph-list-nodes"
   },
   {
     "id": "072ee751f6d7c926f56fd81b3ed1a355dc4d2ae9",

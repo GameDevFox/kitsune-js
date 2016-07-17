@@ -10,7 +10,7 @@ describe("sandbox", function() {
     it.only("should have sand in it", function() {
 
         console.log("== BOOTSTRAP ==");
-        let { systems, modules } = bootstrap();
+        let { modules, systems } = bootstrap();
         let nameLoader = buildNameLoader({ systems });
 
         let putSystem = systems("a26808f06030bb4c165ecbfe43d9d200672a0878");
@@ -85,7 +85,7 @@ describe("sandbox", function() {
             let graphColl = systems("adf6b91bb7c0472237e4764c044733c4328b1e55");
             let graphRemove = bind({ func: lokiRemove, params: { db: graphColl }});
         graphRemove = autoParam({ func: graphRemove, paramName: "id" });
-            let graphListNodes = nameLoader("graph-list-nodes");
+            let graphListNodes = nameLoader("graph-listNodes");
         graphListNodes = bind({ func: graphListNodes, params: { graphFind }});
 
             let stringGetId = autoParam({ func: stringFind, paramName: "string" });
@@ -141,6 +141,7 @@ describe("sandbox", function() {
 
         let createSystemFile = bind({ func: _createSystemFile, params: { hashRandom, graphAutoPut, nameFn: name }});
         let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut, nameFn: name }});
+        console.log({ stringFind, graphListNodes, stringRemove });
         let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind, graphListNodes, stringRemove }});
 
         // OUTER SCOPE //
@@ -151,10 +152,11 @@ describe("sandbox", function() {
         /////////////////
 
         // createSystemFile({ name: "write-value" });
-        // nameRemove({ node: "eed13556a72cf02a35da377d6d074fe39c3b59c4", name: "object-put" });
-        // name({ node: "eed13556a72cf02a35da377d6d074fe39c3b59c4", name: "write-object" });
         // let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
         // edges.forEach(edge => graphRemove(edge.id));
+        // nameRemove({ node: "b7916f86301a6bc2af32f402f6515809bac75b03", name: "graph-listNodes" });
+        // name({ node: "b7916f86301a6bc2af32f402f6515809bac75b03", name: "graph-list-nodes" });
+        // cleanStringSystem();
 
         // BEFORE REPORT //
         let beforeReports = function() {
@@ -233,7 +235,7 @@ describe("sandbox", function() {
 
         // REPORTS //
         console.log("== BEFORE REPORTS ==");
-        beforeReports();
+        // beforeReports();
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
         {
             // nodeDescReport({ bind, isInGroup, graph, andIs, isEdge, isString, describeNode });
@@ -244,7 +246,7 @@ describe("sandbox", function() {
             // stringReport({ string });
         }
         console.log("== AFTER REPORTS ==");
-        afterReports();
+        // afterReports();
         console.log("===================");
 
         // END REPORTS //
@@ -569,7 +571,7 @@ function loadDataSystems({ loader, bind, autoParam, putSystem }) {
     let graphPut = bind({ func: lokiPut, params: { db: graphColl }});
     putSystem({ id: "7e5e764e118960318d513920a0f33e4c5ae64b50", system: graphPut });
 
-    	let graphFind = bind({ func: lokiFind, params: { db: graphColl }});
+        let graphFind = bind({ func: lokiFind, params: { db: graphColl }});
     graphFind = autoParam({ func: graphFind, paramName: "where" });
     putSystem({ id: "a1e815356dceab7fded042f3032925489407c93e", system: graphFind });
 
@@ -580,7 +582,7 @@ function loadDataSystems({ loader, bind, autoParam, putSystem }) {
     let stringPut = bind({ func: lokiPut, params: { db: stringColl }});
     putSystem({ id: "b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385", system: stringPut });
 
-    	let stringFind = bind({ func: lokiFind, params: { db: stringColl }});
+        let stringFind = bind({ func: lokiFind, params: { db: stringColl }});
     stringFind = autoParam({ func: stringFind, paramName: "where" });
     putSystem({ id: "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", system: stringFind });
 
@@ -594,12 +596,12 @@ function loadDataSystems({ loader, bind, autoParam, putSystem }) {
 // BOOTSTRAP - STEP 5
 function manuallyBuildSystems({ loader, bind, autoParam, stringFind, stringPut, graphFind, putSystem }) {
 
-    	let stringAutoPut = loader("8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f");
+        let stringAutoPut = loader("8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f");
         stringAutoPut = bind({ func: stringAutoPut, params: { stringFind, stringPut }});
     stringAutoPut = autoParam({ func: stringAutoPut, paramName: "string" });
     putSystem({ id: "4e63843a9bee61351b80fac49f4182bd582907b4", system: stringAutoPut });
 
-    	let graphFactor = loader("4163d1cd63d3949b79c37223bd7da04ad6cd36c8"); // graph-factor
+        let graphFactor = loader("4163d1cd63d3949b79c37223bd7da04ad6cd36c8"); // graph-factor
     graphFactor = bind({ func: graphFactor, params: { graphFind }});
     putSystem({ id: "c83cd0ab78a1d57609f9224f851bde6d230711d0", system: graphFactor });
 }
@@ -625,6 +627,6 @@ function bootstrap() {
 
     // STEP 5: MANUALLY BUILD SYSTEMS
     manuallyBuildSystems({ loader, bind, autoParam, stringFind, stringPut, graphFind, putSystem });
-    
+
     return { modules, systems };
 }
