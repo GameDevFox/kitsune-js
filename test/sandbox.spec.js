@@ -111,10 +111,7 @@ function bootstrap() {
     putSystem({ id: "ab3c2b8f8ef49a450344437801bbadef765caf69", system: systems });
 
     // STEP 4: DATA FUNCTIONS
-    // TODO: See which of these are IMMEDIATELY nessisary
-    let {
-        graphFind, stringPut, stringFind
-    } = loadDataSystems({ loader, bind, autoParam, putSystem });
+    let { graphFind, stringPut, stringFind } = loadDataSystems({ loader, bind, autoParam, putSystem });
 
         let stringAutoPut = loader("8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f");
         stringAutoPut = bind({ func: stringAutoPut, params: { stringFind, stringPut }});
@@ -124,7 +121,16 @@ function bootstrap() {
     graphFactor = bind({ func: graphFactor, params: { graphFind }});
     putSystem({ id: "c83cd0ab78a1d57609f9224f851bde6d230711d0", system: graphFactor });
 
-    // STEP 6: NAME LOADER
+    return { systems, modules };
+}
+
+function buildNameLoader({ systems }) {
+
+    let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
+    let autoParam = systems("b69aeff3eb1a14156b1a9c52652544bcf89761e2");
+    let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
+    let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+
         // TODO: Fix this or simplify, we just need the hash of the string instead of "stringAutoPut"
         let nameListIds = function({ stringAutoPut, graphFactor, name }) {
             let nameId = stringAutoPut(name);
@@ -151,14 +157,15 @@ function bootstrap() {
     nameLoader = bind({ func: nameLoader, params: { nameListIds, core: systems }});
     nameLoader = autoParam({ func: nameLoader, paramName: "name" });
 
-    return { systems, modules, nameLoader };
+    return nameLoader;
 }
 
 describe("sandbox", function() {
     it.only("should have sand in it", function() {
 
         console.log("== BOOTSTRAP ==");
-        let { systems, modules, nameLoader } = bootstrap();
+        let { systems, modules } = bootstrap();
+        let nameLoader = buildNameLoader({ systems });
 
         let putSystem = systems("a26808f06030bb4c165ecbfe43d9d200672a0878");
 
