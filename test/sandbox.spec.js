@@ -205,8 +205,8 @@ describe("sandbox", function() {
             coreNodeReport({ groupList, nameList });
             functionCallReport({ groupList, nameList });
             systemFileReport({ coreNodes, groupList, nameList });
-            // graphReport({ graph });
-            // stringReport({ string });
+            // graphReport({ graphFind, graphListNodes });
+            // stringReport({ stringFind });
         }
         console.log("== AFTER REPORTS ==");
         afterReports();
@@ -350,7 +350,7 @@ function systemFileReport({ coreNodes, groupList, nameList }) {
     });
 }
 
-function graphReport({ graph }) {
+function graphReport({ graphFind, graphListNodes }) {
     let edges = graphFind();
     let nodes = graphListNodes();
     let nodePercent = (edges.length/nodes.length*100).toPrecision(4);
@@ -360,7 +360,7 @@ function graphReport({ graph }) {
     console.log("Edges: "+edges.length+" ("+nodePercent+"%)");
 }
 
-function stringReport({ string }) {
+function stringReport({ stringFind }) {
     let strings = stringFind();
 
     console.log("== String Report ==");
@@ -581,6 +581,7 @@ function buildFuncCallLoader(systems) {
     executeFunction = bind({ func: executeFunction, params: {callNodeFunc: callNodeFunction, funcSys: systems }});
 
     // 1
+    // TODO: Make a file system
     let loadSystem = function({ readFuncCall, executeFunction, id }) {
         let funcCall = readFuncCall(id);
 
@@ -595,6 +596,7 @@ function buildFuncCallLoader(systems) {
     loadSystem = autoParam({ func: loadSystem, paramName: "id" });
 
     // 0
+    // TODO: Make a file system
     let funcCallSystems = function({ loadSystem, putSystem, id }) {
 
         let system = loadSystem(id);
