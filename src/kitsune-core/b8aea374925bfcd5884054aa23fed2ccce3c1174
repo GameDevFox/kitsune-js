@@ -1,6 +1,10 @@
 // -*- mode: js2 -*-
 export default function readAssign({ graphReadEdge, id }) {
     let typeEdge = graphReadEdge(id);
+
+    if(!typeEdge)
+        return null;
+
     let edge = graphReadEdge(typeEdge.tail);
     return {
         type: typeEdge.head,

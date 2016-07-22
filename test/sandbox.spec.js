@@ -13,10 +13,9 @@ describe("sandbox", function() {
         let { modules, systems } = bootstrap();
         let nameLoader = buildNameLoader({ systems });
 
-        let putSystem = systems("a26808f06030bb4c165ecbfe43d9d200672a0878");
-
         let bind = nameLoader("bind");
         let autoParam = nameLoader("auto-param");
+        let putSystem = systems("a26808f06030bb4c165ecbfe43d9d200672a0878");
 
         // Graph
         let returnFirst = nameLoader("return-first");
@@ -37,11 +36,8 @@ describe("sandbox", function() {
         name = bind({ func: name, params: { stringAutoPut, graphAssign }});
 
         // Function
-            let callNodeFunction = nameLoader("call-node-function");
-        let nodeFunc = bind({ func: callNodeFunction, params: { funcSys: systems }});
-            let executeFunction = nameLoader("execute-function");
-        executeFunction = bind({ func: executeFunction, params: {
-            callNodeFunc: callNodeFunction, funcSys: systems }});
+        let callNodeFunction = systems("ad95b67eca3c4044cb78a730a9368c3e54a56c5f");
+        callNodeFunction = bind({ func: callNodeFunction, params: { funcSys: systems }});
 
         // Object
             let hashRandom = nameLoader("hash-random");
@@ -66,18 +62,13 @@ describe("sandbox", function() {
 
             let readObject = nameLoader("read-object");
             let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
-            readObject = bind({ func: readObject, params: { graphFactor, stringReadString,
-                graphReadEdge, nodeFunc }});
+            readObject = bind({ func: readObject, params: { graphFactor, stringReadString, graphReadEdge, nodeFunc: callNodeFunction }});
         readObject = autoParam({ func: readObject, paramName: "node" });
         putSystem({ id: "d7f80b3486eee7b142c190a895c5496242519608", system: readObject });
 
         // Other
             let hashString = nameLoader("hash-string");
         hashRandom = bind({ func: hashRandom, params: { hashString }});
-
-            let readAssign = nameLoader("read-assign");
-            readAssign = bind({ func: readAssign, params: { graphReadEdge }});
-        readAssign = autoParam({ func: readAssign, paramName: "id" });
 
         // LOWER //
         // Low priority //
@@ -141,7 +132,6 @@ describe("sandbox", function() {
 
         let createSystemFile = bind({ func: _createSystemFile, params: { hashRandom, graphAutoPut, nameFn: name }});
         let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut, nameFn: name }});
-        console.log({ stringFind, graphListNodes, stringRemove });
         let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind, graphListNodes, stringRemove }});
 
         // OUTER SCOPE //
@@ -180,33 +170,6 @@ describe("sandbox", function() {
                 name: "graph-remove" });
 
             // Loading function calls
-                let readFuncCall = nameLoader("read-function-call");
-                readFuncCall = bind({ func: readFuncCall, params: { readAssign }});
-            readFuncCall = autoParam({ func: readFuncCall, paramName: "id" });
-
-                let loadSystem = function({ readFuncCall, executeFunction, id }) {
-                    let funcCall = readFuncCall(id);
-                    let func = executeFunction(funcCall);
-
-                    return func;
-                };
-                loadSystem = bind({ func: loadSystem, params: { readFuncCall, executeFunction }});
-            loadSystem = autoParam({ func: loadSystem, paramName: "id" });
-
-                let funcCallSystems = function({ loadSystem, putSystem, id }) {
-                    let system = loadSystem(id);
-
-                    if(system)
-                        putSystem({ id, system });
-
-                    return system;
-                };
-                funcCallSystems = bind({ func: funcCallSystems, params: {
-                    loadSystem,
-                    putSystem
-                }});
-            funcCallSystems = autoParam({ func: funcCallSystems, paramName: "id" });
-            modules.splice(0, 0, funcCallSystems);
 
             nodeSearch = {
                 head: "66564ec14ed18fb88965140fc644d7b813121c78",
@@ -271,8 +234,8 @@ function buildNameLoader({ systems }) {
     let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
     let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
 
-    	let nameListIds = systems("c4863daa27736a3fb94fa536fcf17bab5fce25bf");
-    	nameListIds = bind({ func: nameListIds, params: { stringAutoPut, graphFactor }});
+        let nameListIds = systems("c4863daa27736a3fb94fa536fcf17bab5fce25bf");
+        nameListIds = bind({ func: nameListIds, params: { stringAutoPut, graphFactor }});
     nameListIds = autoParam({ func: nameListIds, paramName: "name" });
 
     let nameLoader = function({ nameListIds, core, name }) {
@@ -588,14 +551,76 @@ function loadDataSystems({ loader, bind, autoParam, putSystem }) {
 }
 
 // BOOTSTRAP - STEP 5
-function manuallyBuildSystems({ loader, bind, autoParam, stringFind, stringPut, graphFind, putSystem }) {
+function buildFuncCallLoader(systems) {
 
-        let stringAutoPut = loader("8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f");
+    let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
+    let autoParam = systems("b69aeff3eb1a14156b1a9c52652544bcf89761e2");
+    let putSystem = systems("a26808f06030bb4c165ecbfe43d9d200672a0878");
+
+    // 4
+    let returnFirst = systems("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51");
+    let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+    let graphReadEdge = returnFirst(graphFind);
+    graphReadEdge = autoParam({ func: graphReadEdge, paramName: "id" });
+
+    // 3
+    let readAssign = systems("b8aea374925bfcd5884054aa23fed2ccce3c1174");
+    readAssign = bind({ func: readAssign, params: { graphReadEdge }});
+    readAssign = autoParam({ func: readAssign, paramName: "id" });
+
+    let callNodeFunction = systems("ad95b67eca3c4044cb78a730a9368c3e54a56c5f");
+    // TODO: Figure out why this isn't needed
+    // callNodeFunction = bind({ func: callNodeFunction, params: { funcSys: systems }});
+
+    // 2
+    let readFuncCall = systems("2751294a2da41ad516a23054f3273a9f3bd028b4");
+    readFuncCall = bind({ func: readFuncCall, params: { readAssign }});
+    readFuncCall = autoParam({ func: readFuncCall, paramName: "id" });
+
+    let executeFunction = systems("db7ab44b273faf81159baba0e847aaf0e46a406b");
+    executeFunction = bind({ func: executeFunction, params: {callNodeFunc: callNodeFunction, funcSys: systems }});
+
+    // 1
+    let loadSystem = function({ readFuncCall, executeFunction, id }) {
+        let funcCall = readFuncCall(id);
+
+        if(!funcCall)
+            return null;
+
+        let func = executeFunction(funcCall);
+
+        return func;
+    };
+    loadSystem = bind({ func: loadSystem, params: { readFuncCall, executeFunction }});
+    loadSystem = autoParam({ func: loadSystem, paramName: "id" });
+
+    // 0
+    let funcCallSystems = function({ loadSystem, putSystem, id }) {
+
+        let system = loadSystem(id);
+
+        if(system)
+            putSystem({ id, system });
+
+        return system;
+    };
+    funcCallSystems = bind({ func: funcCallSystems, params: {
+        loadSystem,
+        putSystem
+    }});
+    funcCallSystems = autoParam({ func: funcCallSystems, paramName: "id" });
+    return funcCallSystems;
+}
+
+// BOOTSTRAP - STEP 6
+function manuallyBuildSystems({ bind, autoParam, systems, stringFind, stringPut, graphFind, putSystem }) {
+
+        let stringAutoPut = systems("8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f");
         stringAutoPut = bind({ func: stringAutoPut, params: { stringFind, stringPut }});
     stringAutoPut = autoParam({ func: stringAutoPut, paramName: "string" });
     putSystem({ id: "4e63843a9bee61351b80fac49f4182bd582907b4", system: stringAutoPut });
 
-        let graphFactor = loader("4163d1cd63d3949b79c37223bd7da04ad6cd36c8"); // graph-factor
+        let graphFactor = systems("4163d1cd63d3949b79c37223bd7da04ad6cd36c8"); // graph-factor
     graphFactor = bind({ func: graphFactor, params: { graphFind }});
     putSystem({ id: "c83cd0ab78a1d57609f9224f851bde6d230711d0", system: graphFactor });
 }
@@ -619,8 +644,12 @@ function bootstrap() {
     // STEP 4: LOAD DATA SYSTEMS
     let { graphFind, stringPut, stringFind } = loadDataSystems({ loader, bind, autoParam, putSystem });
 
-    // STEP 5: MANUALLY BUILD SYSTEMS
-    manuallyBuildSystems({ loader, bind, autoParam, stringFind, stringPut, graphFind, putSystem });
+    // STEP 5: FUNCTION CALL SYSTEMS
+    let funcCallSystems = buildFuncCallLoader(systems);
+    modules.splice(0, 0, funcCallSystems);
+
+    // STEP 6: MANUALLY BUILD SYSTEMS
+    manuallyBuildSystems({ bind, autoParam, systems, stringFind, stringPut, graphFind, putSystem });
 
     return { modules, systems };
 }
