@@ -13,52 +13,50 @@ describe("sandbox", function() {
         let { modules, systems } = bootstrap();
         let nameLoader = buildNameLoader({ systems });
 
-        let bind = nameLoader("bind");
-        let autoParam = nameLoader("auto-param");
         let putSystem = systems("a26808f06030bb4c165ecbfe43d9d200672a0878");
 
-        // Graph
+        let bind = nameLoader("bind");
+        let autoParam = nameLoader("auto-param");
         let returnFirst = nameLoader("return-first");
+
+        // Manually Build
+        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
+            let stringReadString = autoParam({ func: stringFind, paramName: "id" });
+        stringReadString = returnFirst(stringReadString);
+        let returnProperty = systems("c1020aea14a46b72c6f8a4b7fa57acc14a73a64e"); // return-property
+        stringReadString = returnProperty({ func: stringReadString, propertyName: "string" });
+        putSystem({ id: "08f8db63b1843f7dea016e488bd547555f345c59", system: stringReadString });
+
+        let graphAssign = nameLoader("graph-assign");
+        let graphAutoPut = nameLoader("graph-autoPut");
+            let graphPut = systems("7e5e764e118960318d513920a0f33e4c5ae64b50");
+        graphAutoPut = bind({ func: graphAutoPut, params: { graphPut }});
+        graphAssign = bind({ func: graphAssign, params: { graphAutoPut }});
+
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
             let graphReadEdge = returnFirst(graphFind);
         graphReadEdge = autoParam({ func: graphReadEdge, paramName: "id" });
 
-            let graphAutoPut = nameLoader("graph-autoPut");
-            let graphPut = systems("7e5e764e118960318d513920a0f33e4c5ae64b50");
-        graphAutoPut = bind({ func: graphAutoPut, params: { graphPut }});
-            let graphAssign = nameLoader("graph-assign");
-        graphAssign = bind({ func: graphAssign, params: { graphAutoPut }});
+        // Type Mappings
+        let hashInteger = nameLoader("cb76708f83577aa1a50f91ed39b98f077e969efe");
+        let readInteger = systems("a3cb3210c4688aabf0772e5a7dec9c9922247194");
+        let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
+        let typeMappings = createTypeMappings({ hashInteger, readInteger, stringAutoPut, stringReadString, systems });
 
-        // Name
-            // TODO: Fix this -> let name = nameLoader("name");
-            let name = systems("ddfe7d402ff26c18785bcc899fa69183b3170a7d");
-            let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
-        name = bind({ func: name, params: { stringAutoPut, graphAssign }});
+        // Object Put
+        let objectPut = nameLoader("object-put");
+        objectPut = bind({ func: objectPut, params: { graphAssign, graphAutoPut, stringAutoPut, typeMappings }});
 
-        // Function
-        let callNodeFunction = systems("ad95b67eca3c4044cb78a730a9368c3e54a56c5f");
-        callNodeFunction = bind({ func: callNodeFunction, params: { funcSys: systems }});
-
-        // Object
-            let hashRandom = nameLoader("hash-random");
-            let hashInteger = nameLoader("hash-integer");
-        let typeMappings = createTypeMappings({ hashInteger, stringAutoPut });
-            let objectPut = nameLoader("object-put");
-        objectPut = bind({ func: objectPut, params: { graphAssign, graphAutoPut,
-            stringAutoPut, typeMappings }});
+        let hashRandom = nameLoader("hash-random");
         let objectAutoPut = function(object) {
             let id = hashRandom();
             objectPut({ id, object });
             return id;
         };
-        typeMappings.object.putFunc = objectAutoPut; // Fill Placeholder
 
-            let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
-            let stringReadString = autoParam({ func: stringFind, paramName: "id" });
-            stringReadString = returnFirst(stringReadString);
-            let returnProperty = systems("c1020aea14a46b72c6f8a4b7fa57acc14a73a64e"); // return-property
-        stringReadString = returnProperty({ func: stringReadString, propertyName: "string" });
-        putSystem({ id: "08f8db63b1843f7dea016e488bd547555f345c59", system: stringReadString });
+        // Function
+        let callNodeFunction = systems("ad95b67eca3c4044cb78a730a9368c3e54a56c5f");
+        callNodeFunction = bind({ func: callNodeFunction, params: { funcSys: systems }});
 
             let readObject = nameLoader("read-object");
             let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
@@ -66,31 +64,26 @@ describe("sandbox", function() {
         readObject = autoParam({ func: readObject, paramName: "node" });
         putSystem({ id: "d7f80b3486eee7b142c190a895c5496242519608", system: readObject });
 
+        // Add object type mapping
+        typeMappings.objects = {
+            typeFunc: _.isPlainObject,
+            putFunc: objectAutoPut,
+            readFuncId: "d7f80b3486eee7b142c190a895c5496242519608"
+        };
+
+        let mappingResult = _.mapValues(typeMappings, function(value) {
+            return value.readFuncId;
+        });
+        console.log(mappingResult);
+
         // Other
             let hashString = nameLoader("hash-string");
         hashRandom = bind({ func: hashRandom, params: { hashString }});
 
-        // LOWER //
-        // Low priority //
-            let lokiRemove = nameLoader("loki-remove");
-            let graphColl = systems("adf6b91bb7c0472237e4764c044733c4328b1e55");
-            let graphRemove = bind({ func: lokiRemove, params: { db: graphColl }});
-        graphRemove = autoParam({ func: graphRemove, paramName: "id" });
-            let graphListNodes = nameLoader("graph-list-nodes");
-        graphListNodes = bind({ func: graphListNodes, params: { graphFind }});
-
-            let stringGetId = autoParam({ func: stringFind, paramName: "string" });
-            stringGetId = returnFirst(stringGetId);
-        stringGetId = returnProperty({ func: stringGetId, propertyName: "id" });
-            let stringColl = systems("ce6de1160131bddb4e214f52e895a68583105133");
-        let stringRemove = bind({ func: lokiRemove, params: { db: stringColl }});
-
-            let groupList = nameLoader("group-list");
-            groupList = bind({ func: groupList, params: { graphFind }});
-        groupList = autoParam({ func: groupList, paramName: "group" });
-
-            let nameRemove = nameLoader("name-remove");
-        nameRemove = bind({ func: nameRemove, params: { stringGetId, graphFactor, graphRemove }});
+        // Name
+        // TODO: Fix this -> let name = nameLoader("name");
+            let name = systems("ddfe7d402ff26c18785bcc899fa69183b3170a7d");
+        name = bind({ func: name, params: { stringAutoPut, graphAssign }});
 
         // Write func call Stuff
             let writeValue = nameLoader("write-value");
@@ -129,6 +122,28 @@ describe("sandbox", function() {
         let isInCollection = nameLoader("is-in-collection");
         let isEdge = bind({ func: isInCollection, params: { collFind: graphFind }});
         let isString = bind({ func: isInCollection, params: { collFind: stringFind }});
+
+        // LOWER //
+        // Low priority //
+            let lokiRemove = nameLoader("loki-remove");
+            let graphColl = systems("adf6b91bb7c0472237e4764c044733c4328b1e55");
+            let graphRemove = bind({ func: lokiRemove, params: { db: graphColl }});
+        graphRemove = autoParam({ func: graphRemove, paramName: "id" });
+            let graphListNodes = nameLoader("graph-list-nodes");
+        graphListNodes = bind({ func: graphListNodes, params: { graphFind }});
+
+            let stringGetId = autoParam({ func: stringFind, paramName: "string" });
+            stringGetId = returnFirst(stringGetId);
+        stringGetId = returnProperty({ func: stringGetId, propertyName: "id" });
+            let stringColl = systems("ce6de1160131bddb4e214f52e895a68583105133");
+        let stringRemove = bind({ func: lokiRemove, params: { db: stringColl }});
+
+            let groupList = nameLoader("group-list");
+            groupList = bind({ func: groupList, params: { graphFind }});
+        groupList = autoParam({ func: groupList, paramName: "group" });
+
+            let nameRemove = nameLoader("name-remove");
+        nameRemove = bind({ func: nameRemove, params: { stringGetId, graphFactor, graphRemove }});
 
         let createSystemFile = bind({ func: _createSystemFile, params: { hashRandom, graphAutoPut, nameFn: name }});
         let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut, nameFn: name }});
@@ -430,28 +445,23 @@ function hyphenNameToCamelCase(name) {
     return result;
 }
 
-function createTypeMappings({ hashInteger, stringAutoPut }) {
+function createTypeMappings({ hashInteger, readInteger, stringAutoPut, stringReadString, systems }) {
 
     return {
         "integer": {
             typeFunc: _.isInteger,
             putFunc: hashInteger,
-            readFuncId: "a3cb3210c4688aabf0772e5a7dec9c9922247194"
+            readFuncId: readInteger.id,
         },
         "string": {
             typeFunc: _.isString,
             putFunc: stringAutoPut,
-            readFuncId: "08f8db63b1843f7dea016e488bd547555f345c59"
+            readFuncId: stringReadString.id,
         },
         "function": {
             typeFunc: _.isFunction,
             putFunc: value =>  value.id,
-            readFuncId: "ab3c2b8f8ef49a450344437801bbadef765caf69"
-        },
-        "object": {
-            typeFunc: _.isPlainObject,
-            putFunc: null, // Placeholder
-            readFuncId: "d7f80b3486eee7b142c190a895c5496242519608"
+            readFuncId: systems.id
         }
     };
 }
@@ -459,6 +469,7 @@ function createTypeMappings({ hashInteger, stringAutoPut }) {
 // BOOTSTRAP - STEP 1
 function buildLoader({ bind, autoParam }) {
     // INIT LOADER SYSTEM - already loaded, just here for reference
+    // TODO: Make loader that returns null instead of exception on missing module
     // let systemLoaderId = "31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
     let loader = bind({ func: systemLoader, params: { path: "kitsune-core" }});
     loader = autoParam({ func: loader, paramName: "id" });
@@ -615,23 +626,47 @@ function buildFuncCallLoader(systems) {
 }
 
 // BOOTSTRAP - STEP 6
-function manuallyBuildSystems({ bind, autoParam, systems, stringFind, stringPut, graphFind, putSystem }) {
+function buildManualSystemLoader({ bind, autoParam, systems }) {
+    var manSysFuncs = {};
+    let addManSys = function(id, builderFunc) {
+        manSysFuncs[id] = builderFunc;
+    };
 
+    var manualSystems = function({ manSysFuncs, systems, id }) {
+        let result;
+        if(manSysFuncs[id])
+            result = manSysFuncs[id](systems);
+
+        return result;
+    };
+    manualSystems = bind({ func: manualSystems, params: { manSysFuncs, systems }});
+    manualSystems = autoParam({ func: manualSystems, paramName: "id" });
+
+    addManSys("4e63843a9bee61351b80fac49f4182bd582907b4", function(systems) {
+        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
+        let stringPut = systems("b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385");
         let stringAutoPut = systems("8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f");
-        stringAutoPut = bind({ func: stringAutoPut, params: { stringFind, stringPut }});
-    stringAutoPut = autoParam({ func: stringAutoPut, paramName: "string" });
-    putSystem({ id: "4e63843a9bee61351b80fac49f4182bd582907b4", system: stringAutoPut });
 
-        let graphFactor = systems("4163d1cd63d3949b79c37223bd7da04ad6cd36c8"); // graph-factor
-    graphFactor = bind({ func: graphFactor, params: { graphFind }});
-    putSystem({ id: "c83cd0ab78a1d57609f9224f851bde6d230711d0", system: graphFactor });
+        stringAutoPut = bind({ func: stringAutoPut, params: { stringFind, stringPut }});
+        stringAutoPut = autoParam({ func: stringAutoPut, paramName: "string" });
+        return stringAutoPut;
+    });
+
+    addManSys("c83cd0ab78a1d57609f9224f851bde6d230711d0", function(systems) {
+        let graphFactor = systems("4163d1cd63d3949b79c37223bd7da04ad6cd36c8");
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+        graphFactor = bind({ func: graphFactor, params: { graphFind }});
+        return graphFactor;
+    });
+
+    return manualSystems;
 }
 
 function bootstrap() {
 
     // STEP 1: LOADER
-    let bind = systemLoader({ path: "kitsune-core", id: "878c8ef64d31a194159765945fc460cb6b3f486f" }); // bind
-    let autoParam = systemLoader({ path: "kitsune-core", id: "b69aeff3eb1a14156b1a9c52652544bcf89761e2" }); // auto-param
+    let bind = systemLoader({ path: "kitsune-core", id: "878c8ef64d31a194159765945fc460cb6b3f486f" });
+    let autoParam = systemLoader({ path: "kitsune-core", id: "b69aeff3eb1a14156b1a9c52652544bcf89761e2" });
     let loader = buildLoader({ bind, autoParam });
 
     // STEP 2: CACHE MODULE
@@ -650,8 +685,12 @@ function bootstrap() {
     let funcCallSystems = buildFuncCallLoader(systems);
     modules.splice(0, 0, funcCallSystems);
 
-    // STEP 6: MANUALLY BUILD SYSTEMS
-    manuallyBuildSystems({ bind, autoParam, systems, stringFind, stringPut, graphFind, putSystem });
+    // STEP 6: MANUALLY SYSTEM LOADER
+    let manualSystems = buildManualSystemLoader({ bind, autoParam, systems });
+    modules.splice(0, 0, manualSystems);
+
+    let manSys = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
+    console.log("ManSys: ", manSys);
 
     return { modules, systems };
 }
