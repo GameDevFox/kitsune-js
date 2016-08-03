@@ -45,5 +45,7 @@ export default function objectPut({ graphAssign, graphAutoPut,stringAutoPut,
         let args = { head: id, type: nameId, tail: valueId };
         graphAssign(args);
     }
+
+    return id;
 }
 module.exports = objectPut;

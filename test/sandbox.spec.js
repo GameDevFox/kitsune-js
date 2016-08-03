@@ -17,49 +17,22 @@ describe("sandbox", function() {
 
         let bind = nameLoader("bind");
         let autoParam = nameLoader("auto-param");
+        let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");
         let returnFirst = nameLoader("return-first");
 
-        // Object Put
-        let hashInteger = systems("cb76708f83577aa1a50f91ed39b98f077e969efe");
-        let readInteger = systems("a3cb3210c4688aabf0772e5a7dec9c9922247194");
-        let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
-        let stringReadString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
-
-        let typeMappings = {
-            "integer": {
-                typeFunc: _.isInteger,
-                putFunc: hashInteger,
-                readFuncId: readInteger.id
-            },
-            "string": {
-                typeFunc: _.isString,
-                putFunc: stringAutoPut,
-                readFuncId: stringReadString.id
-            },
-            "function": {
-                typeFunc: _.isFunction,
-                putFunc: value =>  value.id,
-                readFuncId: systems.id
-            }
-        };
-
+        // Object Put and Auto Put
         let graphAssign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
         let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
+        let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
+        let typeMappings = systems("58f4149870fd4f99bcbf8083eedfee6fbc1199b0")();
 
         let objectPut = systems("eed13556a72cf02a35da377d6d074fe39c3b59c4");
         objectPut = bind({ func: objectPut, params: { graphAssign, graphAutoPut, stringAutoPut, typeMappings }});
 
-        let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
-
-        let objectAutoPut = function({ hashRandom, objectPut, object }) {
-            let id = hashRandom();
-            objectPut({ id, object });
-            return id;
-        };
-        objectAutoPut = bind({ func: objectAutoPut, params: { hashRandom, objectPut }});
+        let objectAutoPut = autoId(objectPut);
         objectAutoPut = autoParam({ func: objectAutoPut, paramName: "object" });
 
-        // Add object type mapping
+        // Add object to type mappings
         let readObject = systems("d7f80b3486eee7b142c190a895c5496242519608");
         typeMappings.objects = {
             typeFunc: _.isPlainObject,
@@ -73,8 +46,8 @@ describe("sandbox", function() {
         console.log(mappingResult);
 
         // Write func call Stuff
-            let writeValue = nameLoader("write-value");
-            writeValue = bind({ func: writeValue, params: { typeMappings }});
+        let writeValue = systems("d2a5636a4b4e88b0c7c640bfd8915e78919641a0");
+        writeValue = bind({ func: writeValue, params: { typeMappings }});
         writeValue = autoParam({ func: writeValue, paramName: "value" });
 
         let writeFuncCall = function({ writeValue, graphAssign, func, param }) {
@@ -111,6 +84,7 @@ describe("sandbox", function() {
         let isString = bind({ func: isInCollection, params: { collFind: stringFind }});
 
         // Utility functions //
+        let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
         let createSystemFile = bind({ func: _createSystemFile, params: { hashRandom, graphAutoPut, nameFn: name }});
         let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut, nameFn: name }});
 
@@ -127,6 +101,12 @@ describe("sandbox", function() {
         /////////////////
         let graphRemove = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
         let nameRemove = systems("708f17af0e4f537757cf8817cbca4ed016b7bb8b");
+
+        nameRemove({ node: "a73b64eba9daa07051815ca7151ba009789616e2", name: "graph-autoPut" });
+        let edges = graphFind({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: "a73b64eba9daa07051815ca7151ba009789616e2" });
+        console.log("Edges to delete:", edges);
+        edges.forEach(edge => graphRemove(edge.id));
+        cleanStringSystem();
 
         // createSystemFile({ name: "name-list-ids" });
         // let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
@@ -332,7 +312,11 @@ function systemFileReport({ coreNodes, groupList, nameList }) {
         };
     });
 
-    list.sort((a, b) => a.names[0].localeCompare(b.names[0]));
+    list.sort((a, b) => {
+        let aName = a.names[0] || "";
+        let bName = b.names[0] || "";
+        return aName.localeCompare(bName);
+    });
 
     list.forEach(({isInGroup, node, names}) => {
         console.log(`[${isInGroup ? "X" : " "}] ${node} ${JSON.stringify(names)}`);
@@ -371,15 +355,15 @@ function _createCoreNode({ node, name, graphAutoPut, nameFn }) {
     nameFn({ node: node, name: name });
 }
 
-function removeSystemFile({ graphFind, graphRemove, stringFind, stringRemove, groupId,
-                            systemFileId, systemFileName, nameRemove }) {
+function removeSystemFile({ graphFind, graphRemove, nameRemove, stringFind, stringRemove,
+                            systemFileId, systemFileName  }) {
     // TODO: Fix this, it's broken
     let groupEdge = graphFind({ head: "66564ec14ed18fb88965140fc644d7b813121c78",
                                 tail: systemFileId });
-        graphRemove({ id: groupEdge[0].id });
-        nameRemove({ node: groupEdge[0].tail });
-        let stringNode = stringFind({ string: systemFileName });
-        stringRemove({ id: stringNode[0].id });
+    graphRemove({ id: groupEdge[0].id });
+    nameRemove({ node: groupEdge[0].tail, name: systemFileName });
+    let stringNode = stringFind({ string: systemFileName });
+    stringRemove({ id: stringNode[0].id });
 }
 
 function _cleanStringSystem({ stringFind, graphListNodes, stringRemove }) {
@@ -492,7 +476,7 @@ function loadDataSystems({ loader, bind, autoParam, putSystem }) {
     let graphPut = bind({ func: lokiPut, params: { db: graphColl }});
     putSystem({ id: "7e5e764e118960318d513920a0f33e4c5ae64b50", system: graphPut });
 
-        let graphFind = bind({ func: lokiFind, params: { db: graphColl }});
+    let graphFind = bind({ func: lokiFind, params: { db: graphColl }});
     graphFind = autoParam({ func: graphFind, paramName: "where" });
     putSystem({ id: "a1e815356dceab7fded042f3032925489407c93e", system: graphFind });
 
@@ -503,7 +487,7 @@ function loadDataSystems({ loader, bind, autoParam, putSystem }) {
     let stringPut = bind({ func: lokiPut, params: { db: stringColl }});
     putSystem({ id: "b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385", system: stringPut });
 
-        let stringFind = bind({ func: lokiFind, params: { db: stringColl }});
+    let stringFind = bind({ func: lokiFind, params: { db: stringColl }});
     stringFind = autoParam({ func: stringFind, paramName: "where" });
     putSystem({ id: "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", system: stringFind });
 
@@ -759,6 +743,52 @@ function buildManualSystemLoader({ bind, autoParam, systems }) {
         let nameRemove = systems("7087272f7205fdac70e1f29d3d4b9e170d99a431");
         nameRemove = bind({ func: nameRemove, params: { stringGetId, graphFactor, graphRemove }});
         return nameRemove;
+    });
+
+    addManSys("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0", function() {
+        let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
+
+        let autoId = function({ hashRandom, func, paramName }) {
+            return function(input) {
+                let initial = {};
+                initial[paramName] = hashRandom();
+
+                let newInput = _.assign(initial, input);
+                return func(newInput);
+            };
+        };
+        autoId = bind({ func: autoId, params: { hashRandom, paramName: "id" }});
+        autoId = autoParam({ func: autoId, paramName: "func" });
+        return autoId;
+    });
+
+    addManSys("58f4149870fd4f99bcbf8083eedfee6fbc1199b0", function() {
+        let hashInteger = systems("cb76708f83577aa1a50f91ed39b98f077e969efe");
+        let readInteger = systems("a3cb3210c4688aabf0772e5a7dec9c9922247194");
+        let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
+        let stringReadString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
+
+        let typeMappings = {
+            "integer": {
+                typeFunc: _.isInteger,
+                putFunc: hashInteger,
+                readFuncId: readInteger.id
+            },
+            "string": {
+                typeFunc: _.isString,
+                putFunc: stringAutoPut,
+                readFuncId: stringReadString.id
+            },
+            "function": {
+                typeFunc: _.isFunction,
+                putFunc: value =>  value.id,
+                readFuncId: systems.id
+            }
+        };
+
+        return function() {
+            return typeMappings;
+        };
     });
 
     return manualSystems;
