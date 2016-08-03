@@ -27,6 +27,7 @@
     "gulp-sequence": "^0.4.5",
     "gulp-util": "^3.0.7",
     "istanbul": "^0.3.22",
+    "js-logger": "^1.3.0",
     "jshint-stylish": "^2.1.0",
     "mocha": "^2.4.5",
     "sinon": "^1.17.3",

@@ -6,13 +6,28 @@ import { expect } from "chai";
 
 import systemLoader from "kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1";
 
+// Logging
+import Logger from "js-logger";
+Logger.useDefaults();
+
+let rootLogger = Logger.get("root");
+let bootstrapLogger = Logger.get("bootstrap");
+
+rootLogger.setLevel(Logger.INFO);
+bootstrapLogger.setLevel(Logger.WARN);
+
 describe("sandbox", function() {
     it.only("should have sand in it", function() {
 
-        console.log("== BOOTSTRAP ==");
+        let log = rootLogger;
+
+        log.info("boostrap");
         let { modules, systems } = bootstrap();
+
+        log.info("build name loader");
         let nameLoader = buildNameLoader(systems);
 
+        log.info("load systems");
         let putSystem = systems("a26808f06030bb4c165ecbfe43d9d200672a0878");
 
         let bind = nameLoader("bind");
@@ -43,7 +58,7 @@ describe("sandbox", function() {
         let mappingResult = _.mapValues(typeMappings, function(value) {
             return value.readFuncId;
         });
-        console.log(mappingResult);
+        log.debug(mappingResult);
 
         // Write func call Stuff
         let writeValue = systems("d2a5636a4b4e88b0c7c640bfd8915e78919641a0");
@@ -102,13 +117,7 @@ describe("sandbox", function() {
         let graphRemove = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
         let nameRemove = systems("708f17af0e4f537757cf8817cbca4ed016b7bb8b");
 
-        nameRemove({ node: "a73b64eba9daa07051815ca7151ba009789616e2", name: "graph-autoPut" });
-        let edges = graphFind({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: "a73b64eba9daa07051815ca7151ba009789616e2" });
-        console.log("Edges to delete:", edges);
-        edges.forEach(edge => graphRemove(edge.id));
-        cleanStringSystem();
-
-        // createSystemFile({ name: "name-list-ids" });
+        // createSystemFile({ name: "auto-id" });
         // let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
         // edges.forEach(edge => graphRemove(edge.id));
         // nameRemove({ node: "b7916f86301a6bc2af32f402f6515809bac75b03", name: "graph-listNodes" });
@@ -166,7 +175,7 @@ describe("sandbox", function() {
 
         // REPORTS //
         console.log("== BEFORE REPORTS ==");
-        // beforeReports();
+        beforeReports();
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
 
         let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
@@ -180,7 +189,7 @@ describe("sandbox", function() {
             // stringReport({ stringFind });
         }
         console.log("== AFTER REPORTS ==");
-        // afterReports();
+        afterReports();
         console.log("===================");
 
         // END REPORTS //
@@ -749,15 +758,7 @@ function buildManualSystemLoader({ bind, autoParam, systems }) {
     addManSys("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0", function() {
         let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
 
-        let autoId = function({ hashRandom, func, paramName }) {
-            return function(input) {
-                let initial = {};
-                initial[paramName] = hashRandom();
-
-                let newInput = _.assign(initial, input);
-                return func(newInput);
-            };
-        };
+        let autoId = systems("a0089c410302c18427b4cbdc4c3a55de6a69eb8b");
         autoId = bind({ func: autoId, params: { hashRandom, paramName: "id" }});
         autoId = autoParam({ func: autoId, paramName: "func" });
         return autoId;
@@ -797,28 +798,36 @@ function buildManualSystemLoader({ bind, autoParam, systems }) {
 
 function bootstrap() {
 
+    let log = bootstrapLogger;
+
     // STEP 1: LOADER
+    log.info(":Loader");
     let bind = systemLoader({ path: "kitsune-core", id: "878c8ef64d31a194159765945fc460cb6b3f486f" });
     let autoParam = systemLoader({ path: "kitsune-core", id: "b69aeff3eb1a14156b1a9c52652544bcf89761e2" });
     let loader = buildLoader({ bind, autoParam });
 
     // STEP 2: CACHE MODULE
+    log.info(":Cache Modules");
     let { cache, putSystem } = buildCache({ loader, bind });
     putSystem({ id: "a26808f06030bb4c165ecbfe43d9d200672a0878", system: putSystem });
 
     // STEP 3: BUILD CORE
+    log.info(":Build Core");
     let modules = [loader];
     let systems = buildCore({ cache, modules, putSystem, bind, autoParam });
     putSystem({ id: "ab3c2b8f8ef49a450344437801bbadef765caf69", system: systems });
 
     // STEP 4: LOAD DATA SYSTEMS
+    log.info(":Load Data Systems");
     let { graphFind, stringPut, stringFind } = loadDataSystems({ loader, bind, autoParam, putSystem });
 
     // STEP 5: FUNCTION CALL SYSTEMS
+    log.info(":Function Call Systems");
     let funcCallSystems = buildFuncCallLoader(systems);
     modules.splice(0, 0, funcCallSystems);
 
     // STEP 6: MANUALLY SYSTEM LOADER
+    log.info(":Manually System Loader");
     let manualSystems = buildManualSystemLoader({ bind, autoParam, systems });
     modules.splice(0, 0, manualSystems);
 
