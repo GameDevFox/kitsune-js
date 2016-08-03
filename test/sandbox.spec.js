@@ -166,7 +166,7 @@ describe("sandbox", function() {
 
         // REPORTS //
         console.log("== BEFORE REPORTS ==");
-        beforeReports();
+        // beforeReports();
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
 
         let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
@@ -180,7 +180,7 @@ describe("sandbox", function() {
             // stringReport({ stringFind });
         }
         console.log("== AFTER REPORTS ==");
-        afterReports();
+        // afterReports();
         console.log("===================");
 
         // END REPORTS //
@@ -463,12 +463,6 @@ function loadDataSystems({ loader, bind, autoParam, putSystem }) {
 
     let valueFunc = loader("62126ce823b700cf7441b5179a3848149c9d8c89");
 
-    var insertData = function({ data, put }) {
-        data().forEach(value => {
-            put({ element: value });
-        });
-    };
-
     // Graph
     let graphColl = lokiColl();
     putSystem({ id: "adf6b91bb7c0472237e4764c044733c4328b1e55", system: valueFunc(graphColl) });
@@ -492,6 +486,12 @@ function loadDataSystems({ loader, bind, autoParam, putSystem }) {
     putSystem({ id: "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", system: stringFind });
 
     // Populate collections
+    var insertData = function({ data, put }) {
+        data().forEach(value => {
+            put({ element: value });
+        });
+    };
+
     insertData({ data: graphData, put: graphPut });
     insertData({ data: stringData, put: stringPut });
 
@@ -612,9 +612,10 @@ function buildManualSystemLoader({ bind, autoParam, systems }) {
 
     addManSys("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7", function(systems) {
         let graphPut = systems("7e5e764e118960318d513920a0f33e4c5ae64b50");
+        let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");
 
-        let graphAutoPut = systems("a73b64eba9daa07051815ca7151ba009789616e2");
-        graphAutoPut = bind({ func: graphAutoPut, params: { graphPut }});
+        let graphAutoPut = autoParam({ func: graphPut, paramName: "element" });
+        graphAutoPut = autoId(graphAutoPut);
         return graphAutoPut;
     });
 

@@ -46,10 +46,6 @@ var data = function() {
     "string": "graph-assign"
   },
   {
-    "id": "d3cbcc17ccd63660c3ab5135653916741ac29d9a",
-    "string": "graph-autoPut"
-  },
-  {
     "id": "4281ff159a0253e1af1516074e7bcc93a7b00eca",
     "string": "graph-data"
   },
