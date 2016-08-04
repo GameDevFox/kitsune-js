@@ -17,7 +17,7 @@ rootLogger.setLevel(Logger.INFO);
 bootstrapLogger.setLevel(Logger.WARN);
 
 // Settings
-let runReportWrappers = 0;
+let runReportWrappers = 1;
 let runReports = 1;
 
 describe("sandbox", function() {
@@ -28,53 +28,37 @@ describe("sandbox", function() {
         log.info("boostrap");
         let { modules, systems } = bootstrap();
 
-        log.info("build name loader");
-        let nameLoader = buildNameLoader(systems);
+        // Utilities
+        // let createSystemFile = systems("76c55430fccd4f9e0b19c1c2b98d8a3babea81b2");
+        // createSystemFile("something");
 
-        log.info("load systems");
-        let bind = nameLoader("bind");
-        let autoParam = nameLoader("auto-param");
-        let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");
-        let returnFirst = nameLoader("return-first");
+        // let createCoreNode = systems("a21b86930a00f7b31b5984aabb21cb5eea7efc56");
+        // createCoreNode({ node: "585d4cc792af1a4754f1819630068bdbb81bfd20", name: "some-thing" });
 
-        // Report Functions //
+        // let graphRemove = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
+        // let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: "???" });
+        // edges.forEach(edge => graphRemove(edge.id));
+
+        // let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
+        // let nameRemove = systems("708f17af0e4f537757cf8817cbca4ed016b7bb8b");
+        // nameRemove({ node: "b7916f86301a6bc2af32f402f6515809bac75b03", name: "graph-listNodes" });
+        // name({ node: "b7916f86301a6bc2af32f402f6515809bac75b03", name: "graph-list-nodes" });
+
+        // let cleanStringSystem = systems("f3db04b0138e827a9b513ab195cc373433407f83");
+        // cleanStringSystem();
+
+        // Outer Scope
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-
-        // let isInGroup = nameLoader("is-in-collection");
-        // let isEdge = bind({ func: isInGroup, params: { collFind: graphFind }});
-        // let isString = bind({ func: isInGroup, params: { collFind: stringFind }});
-
-        // Utility functions //
-        let createSystemFile = systems("76c55430fccd4f9e0b19c1c2b98d8a3babea81b2");
-
-        let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
-        let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
-        let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut, nameFn: name }});
-
-        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
         let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
-        let stringRemove = systems("6f00c44367d415878955630378683e1463f87aea");
-        let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind, graphListNodes, stringRemove }});
+        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
 
-        // OUTER SCOPE //
         let node;
         let nodeSearch;
         let graphFindOneId;
         let readEdgeId;
-        /////////////////
-        let graphRemove = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
-        let nameRemove = systems("708f17af0e4f537757cf8817cbca4ed016b7bb8b");
-
-        // createSystemFile("something");
-        // let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: ["fdf7d0f2b33dcf6c71a9b91111f83f458161cee2", "4cb8a3c55e8489dfa51211a9295dddeef6f9cfda"] });
-        // edges.forEach(edge => graphRemove(edge.id));
-        // nameRemove({ node: "b7916f86301a6bc2af32f402f6515809bac75b03", name: "graph-listNodes" });
-        // name({ node: "b7916f86301a6bc2af32f402f6515809bac75b03", name: "graph-list-nodes" });
-        // cleanStringSystem();
 
         // BEFORE REPORT //
-        let beforeReports = function() {
-
+        if(runReportWrappers) {
             console.log("== BEFORE REPORTS ==");
 
             let lokiRemove = systems("2ebd8d9fff28833dab44f086d4692fb888525fc8");
@@ -82,14 +66,18 @@ describe("sandbox", function() {
 
             // Create function calls
             let writeAndNameFuncCall = systems("253cd1812a32a6a81f1365e1eca19cc1549f6002");
+
+            let returnFirst = systems("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51");
             graphFindOneId = writeAndNameFuncCall({ func: returnFirst,
                 param: graphFind,
                 name: "graph-find-one" });
-            let fRef = nameLoader("function-reference");
+            let fRef = systems("78e787d70cc0f1c1dfdf6a406250dbe5243631ff");
+            let autoParam = systems("b69aeff3eb1a14156b1a9c52652544bcf89761e2");
             readEdgeId = writeAndNameFuncCall({ func: autoParam,
                 param: { func: fRef(graphFindOneId), paramName: "id" },
                 name: "read-edge" });
 
+            let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
             let graphRemoveBind = writeAndNameFuncCall({ func: bind,
                 param: { func: lokiRemove, params: { db: graphColl }},
                 name: "graph-remove-bind" });
@@ -105,12 +93,23 @@ describe("sandbox", function() {
             // let myGraphRemove = systems(graphRemove);
             // myGraphRemove(node.id);
         };
-        /////////////////////
+
+        // REPORTS //
+        let coreNodes = fs.readdirSync("node_modules/kitsune-core");
+        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+        if(runReports) {
+            // nodeDescReport({ bind, isInGroup, graphFind, andIs, isEdge, isString, graphListNodes, describeNode });
+            coreNodeReport({ groupList, nameList });
+            functionCallReport({ groupList, nameList });
+            systemFileReport({ coreNodes, groupList, nameList });
+            graphReport({ graphFind, graphListNodes });
+            stringReport({ stringFind });
+        }
 
         // AFTER REPORT //
-        let afterReports = function() {
+        if(runReportWrappers) {
             console.log("== AFTER REPORTS ==");
-            console.log(node.id);
 
             let edge = graphFind(nodeSearch)[0];
             console.log(edge);
@@ -121,33 +120,10 @@ describe("sandbox", function() {
             let readEdge = systems(readEdgeId);
             console.log(readEdge(node.id));
         };
-        ///////////////////////////
 
-        // REPORTS //
-        if(runReportWrappers)
-            beforeReports();
-
-        let coreNodes = fs.readdirSync("node_modules/kitsune-core");
-        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
-        if(runReports) {
-            // nodeDescReport({ bind, isInGroup, graphFind, andIs, isEdge, isString, graphListNodes, describeNode });
-            coreNodeReport({ groupList, nameList });
-            functionCallReport({ groupList, nameList });
-            systemFileReport({ coreNodes, groupList, nameList });
-            graphReport({ graphFind, graphListNodes });
-            // stringReport({ stringFind });
-        }
-
-        if(runReportWrappers)
-            afterReports();
-
-        // END REPORTS //
-
-        // Recreate links
+        // Save Data
         recreateLinks({ coreNodes, nameList });
 
-        // Sort and save Data
         let sortedGraphData = _.sortBy(graphFind(), ["head", "tail"]);
         let sortedStringData = _.sortBy(stringFind(), ["string"]);
 
@@ -156,6 +132,11 @@ describe("sandbox", function() {
         writeData(sortedStringData, "out/data/string.js");
     });
 });
+
+// Report Functions
+// let isInGroup = systems("d2f544f574dae26adb5ed3ee70c71e302b2575fa");
+// let isEdge = bind({ func: isInGroup, params: { collFind: graphFind }});
+// let isString = bind({ func: isInGroup, params: { collFind: stringFind }});
 
 function buildNameLoader(systems) {
 
@@ -199,6 +180,17 @@ function recreateLinks({ coreNodes, nameList }) {
             }
         }
     });
+}
+
+function removeSystemFile({ graphFind, graphRemove, nameRemove, stringFind, stringRemove,
+                            systemFileId, systemFileName  }) {
+    // TODO: Fix this, it's broken
+    let groupEdge = graphFind({ head: "66564ec14ed18fb88965140fc644d7b813121c78",
+                                tail: systemFileId });
+    graphRemove({ id: groupEdge[0].id });
+    nameRemove({ node: groupEdge[0].tail, name: systemFileName });
+    let stringNode = stringFind({ string: systemFileName });
+    stringRemove({ id: stringNode[0].id });
 }
 
 // Report functions
@@ -316,24 +308,19 @@ function _createCoreNode({ node, name, graphAutoPut, nameFn }) {
     nameFn({ node: node, name: name });
 }
 
-function removeSystemFile({ graphFind, graphRemove, nameRemove, stringFind, stringRemove,
-                            systemFileId, systemFileName  }) {
-    // TODO: Fix this, it's broken
-    let groupEdge = graphFind({ head: "66564ec14ed18fb88965140fc644d7b813121c78",
-                                tail: systemFileId });
-    graphRemove({ id: groupEdge[0].id });
-    nameRemove({ node: groupEdge[0].tail, name: systemFileName });
-    let stringNode = stringFind({ string: systemFileName });
-    stringRemove({ id: stringNode[0].id });
-}
-
 function _cleanStringSystem({ stringFind, graphListNodes, stringRemove }) {
-        let stringIds = stringFind({}).map(value => value.id);
-        let graphNodes = graphListNodes();
-        let diff = _.difference(stringIds, graphNodes);
-        diff.forEach(id => {
-            stringRemove({ id });
-        });
+    let stringIds = stringFind({}).map(value => value.id);
+    let graphNodes = graphListNodes();
+
+    console.log(stringIds.length, graphNodes.length);
+
+    let diff = _.difference(stringIds, graphNodes);
+
+    console.log(diff);
+
+    diff.forEach(id => {
+        stringRemove({ id });
+    });
 }
 
 function cleanLoki(data) {
@@ -738,6 +725,23 @@ function buildManualSystemLoader({ bind, autoParam, systems, putSystem }) {
         let createSystemFile = bind({ func: _createSystemFile, params: { hashRandom, graphAutoPut, nameFn: name }});
         createSystemFile = autoParam({ func: createSystemFile, paramName: "name" });
         return createSystemFile;
+    });
+
+    addManSys("a21b86930a00f7b31b5984aabb21cb5eea7efc56", function(systems) {
+        let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
+        let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
+
+        let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut, nameFn: name }});
+        return createCoreNode;
+    });
+
+    addManSys("f3db04b0138e827a9b513ab195cc373433407f83", function(systems) {
+        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
+        let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
+        let stringRemove = systems("6f00c44367d415878955630378683e1463f87aea");
+
+        let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind, graphListNodes, stringRemove }});
+        return cleanStringSystem;
     });
 
     addManSys("cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", () => console.log);
