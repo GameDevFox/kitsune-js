@@ -403,7 +403,11 @@ function buildCore({ cache, modules, putSystem, bind, autoParam }) {
                 if(system)
                     break;
             }
-            putSystem({ id, system });
+
+            if(system)
+                putSystem({ id, system });
+            else
+                rootLogger.warn("System was not found for id: "+id);
         }
         return system;
     };

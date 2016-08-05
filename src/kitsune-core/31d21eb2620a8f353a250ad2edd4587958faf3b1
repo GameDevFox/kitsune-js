@@ -1,7 +1,13 @@
 // -*- mode: js2 -*-
 export default function load({ path, id }) {
     let systemPath = path+"/"+id;
-    let system = require(systemPath);
+
+    let system = null;
+    try {
+        system = require(systemPath);
+    } catch(e) {
+        // ignore and return null
+    }
     return system;
 }
 module.exports = load;
