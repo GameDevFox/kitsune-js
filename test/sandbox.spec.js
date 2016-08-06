@@ -900,11 +900,11 @@ function buildManualSystemLoader(systems) {
     });
 
     addManSys("4f22989e5edf2634371133db2720b09fc441a141", function(systems) {
-        let isEdge = systems("20bfa138672de625230eef7faebe0e10ba6a49d0");
-        let isString = systems("821f1f34a4998adf0f1efd9b772b57efef71a070");
         let isCoreNode = systems("39bedcfba59c016590ddd53ddc7d89268b5340fd");
-        let isSystemFile = systems("b7df76bb3573caba7da57400c412f344cc309978");
+        let isEdge = systems("20bfa138672de625230eef7faebe0e10ba6a49d0");
         let isNameEdge = systems("7bee27a3335f7d2e3f562a84b9358b58f49390c1");
+        let isString = systems("821f1f34a4998adf0f1efd9b772b57efef71a070");
+        let isSystemFile = systems("b7df76bb3573caba7da57400c412f344cc309978");
 
         let typeMap = function() { return { isEdge, isString, isCoreNode, isSystemFile, isNameEdge }; };
         return typeMap;
