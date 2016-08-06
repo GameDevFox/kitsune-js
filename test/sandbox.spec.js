@@ -20,7 +20,7 @@ bootstrapLogger.setLevel(Logger.WARN);
 debugLog.setLevel(Logger.OFF);
 
 // Settings
-let runReportWrappers = 0;
+let runReportWrappers = 1;
 let runReports = 1;
 
 describe("sandbox", function() {
@@ -52,7 +52,6 @@ describe("sandbox", function() {
 
         // Outer Scope
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-        let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
         let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
 
         let node;
@@ -99,16 +98,15 @@ describe("sandbox", function() {
 
         // REPORTS //
         let coreNodes = fs.readdirSync("node_modules/kitsune-core");
-        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+
         if(runReports) {
-            let nodeDescReport = systems("f3d18aa9371f876d4264bfe051e5b4e312e90040"); nodeDescReport();
-            coreNodeReport({ groupList, nameList });
-            functionCallReport({ groupList, nameList });
-            // systemFileReport({ coreNodes, groupList, nameList });
-            // graphReport({ graphFind, graphListNodes });
-            // stringReport({ stringFind });
-            // let edgeReport = systems("c7773e16e74a697a262a338631db159672bcba30"); edgeReport();
+            // let nodeDescReport = systems("f3d18aa9371f876d4264bfe051e5b4e312e90040"); nodeDescReport();
+            let coreNodeReport = systems("561b671dface5313978a674e0c3c32c3cdc7474e"); coreNodeReport();
+            let funcCallReport = systems("2f15e440d136a8f1b9cd43f129fb798fecdcbe9a"); funcCallReport();
+            let systemFileReport = systems("0750f117e54676b9eb32aebe5db1d3dae2e1853e"); systemFileReport({ coreNodes });
+            // let edgeReport = systems("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039"); edgeReport();
+            // let stringReport = systems("8efd75de58a2802dd9b784d8bc1bdd66aaedd856"); stringReport();
+            let graphReport = systems("604a2dbd0f19f35564efc9b9ca3d77ac82ea9382"); graphReport();
         }
 
         // AFTER REPORT //
@@ -126,6 +124,7 @@ describe("sandbox", function() {
         }
 
         // Save Data
+        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
         recreateLinks({ coreNodes, nameList });
 
         let sortedGraphData = _.sortBy(graphFind(), ["head", "tail"]);
@@ -199,18 +198,6 @@ function printReport(report) {
     });
 }
 
-function coreNodeReport({ groupList, nameList }) {
-    console.log("=== Core Node Report ===");
-    let report = groupReport({ groupList, nameList, groupId: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
-    printReport(report);
-}
-
-function functionCallReport({ groupList, nameList }) {
-    console.log("=== Function Call Report ===");
-    let report = groupReport({ groupList, nameList, groupId: "d2cd5a6f99428baaa05394cf1fe3afa17fb59aff" });
-    printReport(report);
-}
-
 function groupReport({ groupList, nameList, groupId }) {
     let coreNodes = groupList(groupId);
     let nodesAndNames = [];
@@ -230,25 +217,6 @@ function groupReport({ groupList, nameList, groupId }) {
     return nodesAndNames;
 }
 
-function _graphReport({ graphFind }) {
-    console.log("== Graph Report ==");
-
-    let coreNodeGroup = function() {
-        let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
-        return _.map(edges, "id");
-    };
-    let coreNodeGroupEdges = coreNodeGroup();
-
-    let goodNodes = new Set(coreNodeGroupEdges);
-
-    let edges = graphFind();
-    let edgeIds = _.map(edges, "id");
-    edgeIds.forEach(value => {
-        let isIn = goodNodes.has(value) ? "X" : " ";
-        console.log(`[${isIn}] ${value}`);
-    });
-}
-
 function _nodeDescReport({ systems, graphListNodes, describeNode }) {
     let typeMap = systems("4f22989e5edf2634371133db2720b09fc441a141")();
     let nodeList = graphListNodes();
@@ -257,55 +225,6 @@ function _nodeDescReport({ systems, graphListNodes, describeNode }) {
     nodeList.forEach(node => {
         let types = describeNode({ node: node, types: typeMap });
         console.log(node+" => "+JSON.stringify(types));
-    });
-}
-
-function systemFileReport({ coreNodes, groupList, nameList }) {
-    console.log("=== System File Report ===");
-    console.log("System files: "+coreNodes.length);
-
-    let group = groupList("66564ec14ed18fb88965140fc644d7b813121c78");
-    let systemFiles = group.sort();
-
-    let list = coreNodes.map(node => {
-        let isInGroup = systemFiles.indexOf(node) != -1;
-        let myNames = nameList(node);
-        return {
-            node,
-            isInGroup,
-            names: myNames
-        };
-    });
-
-    list.sort((a, b) => {
-        let aName = a.names[0] || "";
-        let bName = b.names[0] || "";
-        return aName.localeCompare(bName);
-    });
-
-    list.forEach(({isInGroup, node, names}) => {
-        console.log(`[${isInGroup ? "X" : " "}] ${node} ${JSON.stringify(names)}`);
-    });
-}
-
-function graphReport({ graphFind, graphListNodes }) {
-    let edges = graphFind();
-    let nodes = graphListNodes();
-    let nodePercent = (edges.length/nodes.length*100).toPrecision(4);
-
-    console.log("== Graph Report ==");
-    console.log("Nodes: "+nodes.length);
-    console.log("Edges: "+edges.length+" ("+nodePercent+"%)");
-}
-
-function stringReport({ stringFind }) {
-    let strings = stringFind();
-
-    strings = _.sortBy(strings, "string");
-
-    console.log("== String Report ==");
-    strings.forEach(value => {
-        console.log(`${value.id} => ${value.string}`);
     });
 }
 
@@ -368,7 +287,6 @@ function hyphenNameToCamelCase(name) {
 // BOOTSTRAP - STEP 1
 function buildLoader({ bind, autoParam }) {
     // INIT LOADER SYSTEM - already loaded, just here for reference
-    // TODO: Make loader that returns null instead of exception on missing module
     // let systemLoaderId = "31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
     let loader = bind({ func: systemLoader, params: { path: "kitsune-core" }});
     loader = autoParam({ func: loader, paramName: "id" });
@@ -464,7 +382,7 @@ function loadDataSystems({ loader, bind, autoParam, putSystem }) {
     return { graphFind, stringPut, stringFind };
 }
 
-// BOOTSTRAP - STEP 5
+// SYSTEM LOADER: Function Call
 function buildFuncCallLoader(systems) {
 
     let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
@@ -528,8 +446,12 @@ function buildFuncCallLoader(systems) {
     return funcCallSystems;
 }
 
-// BOOTSTRAP - STEP 6
-function buildManualSystemLoader({ bind, autoParam, systems, putSystem }) {
+// SYSTEM LOADER: Manual
+function buildManualSystemLoader(systems) {
+    let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
+    let autoParam = systems("b69aeff3eb1a14156b1a9c52652544bcf89761e2");
+    let putSystem = systems("a26808f06030bb4c165ecbfe43d9d200672a0878");
+
     var manSysFuncs = {};
     let addManSys = function(id, builderFunc) {
         if(typeof id == "object") {
@@ -814,6 +736,133 @@ function buildManualSystemLoader({ bind, autoParam, systems, putSystem }) {
         return isSystemFile;
     });
 
+    addManSys("561b671dface5313978a674e0c3c32c3cdc7474e", function(systems) {
+        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+
+        let _coreNodeReport = function({ groupList, nameList }) {
+            console.log("=== Core Node Report ===");
+            let report = groupReport({ groupList, nameList, groupId: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
+            printReport(report);
+        };
+
+        let coreNodeReport = bind({ func: _coreNodeReport, params: { groupList, nameList }});
+        return coreNodeReport;
+    });
+
+    addManSys("604a2dbd0f19f35564efc9b9ca3d77ac82ea9382", function(systems) {
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+        let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
+
+        let _graphReport = function({ graphFind, graphListNodes }) {
+            let edges = graphFind();
+            let nodes = graphListNodes();
+            let nodePercent = (edges.length/nodes.length*100).toPrecision(4);
+
+            console.log("== Graph Report ==");
+            console.log("Nodes: "+nodes.length);
+            console.log("Edges: "+edges.length+" ("+nodePercent+"%)");
+        };
+
+        let graphReport = bind({ func: _graphReport, params: { graphFind, graphListNodes }});
+        return graphReport;
+    });
+
+    addManSys("8efd75de58a2802dd9b784d8bc1bdd66aaedd856", function() {
+        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
+
+        let _stringReport = function({ stringFind }) {
+            let strings = stringFind();
+
+            strings = _.sortBy(strings, "string");
+
+            console.log("== String Report ==");
+            strings.forEach(value => {
+                console.log(`${value.id} => ${value.string}`);
+            });
+        };
+
+        let stringReport = bind({ func: _stringReport, params: { stringFind }});
+        return stringReport;
+    });
+
+    addManSys("2f15e440d136a8f1b9cd43f129fb798fecdcbe9a", function(systems) {
+        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+
+        let _funcCallReport = function({ groupList, nameList }) {
+            console.log("=== Function Call Report ===");
+            let report = groupReport({ groupList, nameList, groupId: "d2cd5a6f99428baaa05394cf1fe3afa17fb59aff" });
+            printReport(report);
+        };
+
+        let funcCallReport = bind({ func: _funcCallReport, params: { groupList, nameList }});
+        return funcCallReport;
+    });
+
+    addManSys("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039", function(systems) {
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+        let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
+
+        let _edgeReport = function({ graphFind }) {
+            console.log("== Graph Report ==");
+
+            let coreNodeGroup = function() {
+                let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
+                return _.map(edges, "id");
+            };
+            let coreNodeGroupEdges = coreNodeGroup();
+
+            let goodNodes = new Set(coreNodeGroupEdges);
+
+            let edges = graphFind();
+            let edgeIds = _.map(edges, "id");
+            edgeIds.forEach(value => {
+                let isIn = goodNodes.has(value) ? "X" : " ";
+                console.log(`[${isIn}] ${value}`);
+            });
+        };
+
+        let edgeReport = bind({ func: _edgeReport, params: { graphFind, graphListNodes }});
+        return edgeReport;
+    });
+
+    addManSys("0750f117e54676b9eb32aebe5db1d3dae2e1853e", function(systems) {
+        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+
+        let _systemFileReport = function({ groupList, nameList, coreNodes }) {
+            console.log("=== System File Report ===");
+            console.log("System files: "+coreNodes.length);
+
+            let group = groupList("66564ec14ed18fb88965140fc644d7b813121c78");
+            let systemFiles = group.sort();
+
+            let list = coreNodes.map(node => {
+                let isInGroup = systemFiles.indexOf(node) != -1;
+                let myNames = nameList(node);
+                return {
+                    node,
+                    isInGroup,
+                    names: myNames
+                };
+            });
+
+            list.sort((a, b) => {
+                let aName = a.names[0] || "";
+                let bName = b.names[0] || "";
+                return aName.localeCompare(bName);
+            });
+
+            list.forEach(({isInGroup, node, names}) => {
+                console.log(`[${isInGroup ? "X" : " "}] ${node} ${JSON.stringify(names)}`);
+            });
+        };
+
+        let systemFileReport = bind({ func: _systemFileReport, params: { groupList, nameList }});
+        return systemFileReport;
+    });
+
     addManSys("842d244f8e9698d469dc060db0f9c9b4e24c50b0", function(systems) {
         let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
@@ -842,13 +891,6 @@ function buildManualSystemLoader({ bind, autoParam, systems, putSystem }) {
 
         let typeMap = function() { return { isEdge, isString, isCoreNode, isSystemFile, isNameEdge }; };
         return typeMap;
-    });
-
-    addManSys("c7773e16e74a697a262a338631db159672bcba30", function(systems) {
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-
-        let graphReport = bind({ func: _graphReport, params: { graphFind }});
-        return graphReport;
     });
 
     addManSys("cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", () => console.log);
@@ -981,15 +1023,13 @@ function bootstrap() {
     log.info(":Load Data Systems");
     let { graphFind, stringPut, stringFind } = loadDataSystems({ loader, bind, autoParam, putSystem });
 
-    // STEP 5: FUNCTION CALL SYSTEMS
+    // Build and load system loaders
+    log.info(":Manual System Loader");
+    let manualSystems = buildManualSystemLoader(systems);
     log.info(":Function Call Systems");
     let funcCallSystems = buildFuncCallLoader(systems);
-    modules.splice(0, 0, funcCallSystems);
 
-    // STEP 6: MANUALLY SYSTEM LOADER
-    log.info(":Manually System Loader");
-    let manualSystems = buildManualSystemLoader({ bind, autoParam, systems, putSystem });
-    modules.splice(0, 0, manualSystems);
+    modules.push(manualSystems, funcCallSystems);
 
     return { modules, systems };
 }
