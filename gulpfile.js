@@ -135,7 +135,7 @@ gulp.task("watch-flag", function() {
     softTestFail = true;
 });
 
-gulp.task("watch-src", function() {	gulp.watch(appSrcPath, ["watch-src-run"]); });
+gulp.task("watch-src", function() { gulp.watch(appSrcPath, ["watch-src-run"]); });
 gulp.task("watch-src-run", function(cb) {
 	delete g.cached.caches["mocha"];
 	g.sequence("build", "test-run", "start-run")(cb);
@@ -149,7 +149,7 @@ gulp.task("watch-test-run", function(cb) {
 //
 gulp.task("watch-coverage", "Create new coverage report everytime files change", g.sequence("clean", ["build", "build-test-kitsune"], "coverage-run", ["watch-cover-src", "watch-cover-test", "browser-sync-cover"]));
 
-gulp.task("watch-cover-src", function() {	gulp.watch(appSrcPath, ["watch-cover-src-run"]); });
+gulp.task("watch-cover-src", function() { gulp.watch(appSrcPath, ["watch-cover-src-run"]); });
 gulp.task("watch-cover-src-run", function(cb) {
 	g.sequence("build", "coverage-run", "browser-sync-reload")(cb);
 });

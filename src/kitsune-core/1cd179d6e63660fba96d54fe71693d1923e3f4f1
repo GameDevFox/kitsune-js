@@ -126,6 +126,10 @@ var data = function() {
     "string": "name-remove"
   },
   {
+    "id": "774978bb69c87d62ed9ede8abb63b8d89fd7bdd2",
+    "string": "node-type"
+  },
+  {
     "id": "30b348d2f59c021a1fd751fa631c110bd626c879",
     "string": "object-put"
   },
