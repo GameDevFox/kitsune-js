@@ -149,37 +149,6 @@ function saveData(systems) {
     writeData(sortedStringData, "out/data/string.js");
 }
 
-// TODO: Names should never be used to load system, instead they
-// should be used to lookup system ids and load by that
-// TODO: DON'T USE THIS
-function buildNameLoader(systems) {
-
-    let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
-    let autoParam = systems("b69aeff3eb1a14156b1a9c52652544bcf89761e2");
-
-    let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
-    let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
-    let nameListIds = systems("2bf3bbec64d4b33302b9ab228eb90bc3f04b22a8");
-
-    let nameLoader = function({ nameListIds, core, name }) {
-        let ids = nameListIds(name);
-
-        let system;
-        for(let key in ids) {
-            let id = ids[key];
-            system = core(id);
-            if(system)
-                break;
-        }
-
-        return system;
-    };
-    nameLoader = bind({ func: nameLoader, params: { nameListIds, core: systems }});
-    nameLoader = autoParam({ func: nameLoader, paramName: "name" });
-
-    return nameLoader;
-}
-
 function recreateLinks({ groupList, nameList }) {
     exec("rm -rf src/kitsune-core-src");
     exec("mkdir -p src/kitsune-core-src");
@@ -209,52 +178,7 @@ function removeSystemFile({ graphFind, graphRemove, nameRemove, stringFind, stri
     stringRemove({ id: stringNode[0].id });
 }
 
-// Report functions
-function printReport(report) {
-    report.forEach(({ node, names }) => {
-        console.log(`${node} ${JSON.stringify(names)}`);
-    });
-}
-
-function _nodeDescReport({ systems, graphListNodes, describeNode }) {
-    let typeMap = systems("4f22989e5edf2634371133db2720b09fc441a141")();
-    let nodeList = graphListNodes();
-
-    console.log("== Node Description Report ==");
-    nodeList.forEach(node => {
-        let types = describeNode({ node: node, types: typeMap });
-        console.log(node+" => "+JSON.stringify(types));
-    });
-}
-
 // Local utils - don't need to make system files out of these
-function _createSystemFile({ hashRandom, graphAutoPut, nameFn, name }) {
-    let newSystemId = hashRandom();
-    exec("cp src/kitsune-core/ddfe7d402ff26c18785bcc899fa69183b3170a7d src/kitsune-core/"+newSystemId);
-    graphAutoPut({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: newSystemId });
-    nameFn({ node: newSystemId, name: name });
-}
-
-function _createCoreNode({ node, name, graphAutoPut, nameFn }) {
-    graphAutoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: node });
-    nameFn({ node: node, name: name });
-}
-
-function _cleanStringSystem({ stringFind, graphListNodes, stringRemove }) {
-    let stringIds = stringFind({}).map(value => value.id);
-    let graphNodes = graphListNodes();
-
-    console.log(stringIds.length, graphNodes.length);
-
-    let diff = _.difference(stringIds, graphNodes);
-
-    console.log(diff);
-
-    diff.forEach(id => {
-        stringRemove({ id });
-    });
-}
-
 function cleanLoki(data) {
     let result = data.map(value => _.omit(value, "meta", "$loki"));
     return result;
@@ -281,6 +205,37 @@ function hyphenNameToCamelCase(name) {
             .replace(/-(.)/g, capture => capture.toUpperCase())
             .replace(/-/g, '');
     return result;
+}
+
+// TODO: Names should never be used to load system, instead they
+// should be used to lookup system ids and load by that
+// TODO: DON'T USE THIS
+function buildNameLoader(systems) {
+
+    let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
+    let autoParam = systems("b69aeff3eb1a14156b1a9c52652544bcf89761e2");
+
+    let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
+    let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+    let nameListIds = systems("2bf3bbec64d4b33302b9ab228eb90bc3f04b22a8");
+
+    let nameLoader = function({ nameListIds, core, name }) {
+        let ids = nameListIds(name);
+
+        let system;
+        for(let key in ids) {
+            let id = ids[key];
+            system = core(id);
+            if(system)
+                break;
+        }
+
+        return system;
+    };
+    nameLoader = bind({ func: nameLoader, params: { nameListIds, core: systems }});
+    nameLoader = autoParam({ func: nameLoader, paramName: "name" });
+
+    return nameLoader;
 }
 
 // BOOTSTRAP - STEP 1
@@ -520,8 +475,18 @@ function buildManualSystemLoader(systems) {
         return graphAutoPut;
     });
 
+    addManSys("990053fb6f50ab8cf4ea766f765acb89f88d3b3d", function() {
+        let printReport = function(report) {
+            report.forEach(({ node, names }) => {
+                console.log(`${node} ${JSON.stringify(names)}`);
+            });
+        };
+        return printReport;
+    });
+
     addManSys("1cbcbae3c4aea924e7bb9af6c6bde5192a6646ae", function() {
         let groupReport = systems("f4d6f188f91fe3569bfc833d7d7ca960dc60d1f3");
+        let printReport = systems("990053fb6f50ab8cf4ea766f765acb89f88d3b3d");
 
         let _printGroupReport = function({ groupReport, printReport, groupId }) {
             let report = groupReport(groupId);
@@ -674,6 +639,13 @@ function buildManualSystemLoader(systems) {
         let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
         let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
 
+        let _createSystemFile = function({ hashRandom, graphAutoPut, nameFn, name }) {
+            let newSystemId = hashRandom();
+            exec("cp src/kitsune-core/ddfe7d402ff26c18785bcc899fa69183b3170a7d src/kitsune-core/"+newSystemId);
+            graphAutoPut({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: newSystemId });
+            nameFn({ node: newSystemId, name: name });
+        };
+
         let createSystemFile = bind({ func: _createSystemFile, params: { hashRandom, graphAutoPut, nameFn: name }});
         createSystemFile = autoParam({ func: createSystemFile, paramName: "name" });
         return createSystemFile;
@@ -683,6 +655,11 @@ function buildManualSystemLoader(systems) {
         let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
         let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
 
+        let _createCoreNode = function({ node, name, graphAutoPut, nameFn }) {
+            graphAutoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: node });
+            nameFn({ node: node, name: name });
+        };
+
         let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut, nameFn: name }});
         return createCoreNode;
     });
@@ -691,6 +668,21 @@ function buildManualSystemLoader(systems) {
         let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
         let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
         let stringRemove = systems("6f00c44367d415878955630378683e1463f87aea");
+
+        let _cleanStringSystem = function({ stringFind, graphListNodes, stringRemove }) {
+            let stringIds = stringFind({}).map(value => value.id);
+            let graphNodes = graphListNodes();
+
+            console.log(stringIds.length, graphNodes.length);
+
+            let diff = _.difference(stringIds, graphNodes);
+
+            console.log(diff);
+
+            diff.forEach(id => {
+                stringRemove({ id });
+            });
+        };
 
         let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind, graphListNodes, stringRemove }});
         return cleanStringSystem;
@@ -725,6 +717,17 @@ function buildManualSystemLoader(systems) {
     addManSys("f3d18aa9371f876d4264bfe051e5b4e312e90040", function(systems) {
         let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
         let describeNode = systems("4bea815e7814aa415569ecd48e5733a19e7777db");
+
+        let _nodeDescReport = function({ systems, graphListNodes, describeNode }) {
+            let typeMap = systems("4f22989e5edf2634371133db2720b09fc441a141")();
+            let nodeList = graphListNodes();
+
+            console.log("== Node Description Report ==");
+            nodeList.forEach(node => {
+                let types = describeNode({ node: node, types: typeMap });
+                console.log(node+" => "+JSON.stringify(types));
+            });
+        };
 
         let nodeDescReport = bind({ func: _nodeDescReport, params: { systems, graphListNodes, describeNode }});
         return nodeDescReport;
