@@ -96,13 +96,21 @@ describe("sandbox", function() {
 
         // REPORTS //
         if(runReports) {
-            // let nodeDescReport = systems("f3d18aa9371f876d4264bfe051e5b4e312e90040"); nodeDescReport();
-            let coreNodeReport = systems("561b671dface5313978a674e0c3c32c3cdc7474e"); coreNodeReport();
-            let funcCallReport = systems("2f15e440d136a8f1b9cd43f129fb798fecdcbe9a"); funcCallReport();
-            let systemFileReport = systems("0750f117e54676b9eb32aebe5db1d3dae2e1853e"); systemFileReport();
+            let printGraphReport = systems("1cbcbae3c4aea924e7bb9af6c6bde5192a6646ae");
+
             // let edgeReport = systems("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039"); edgeReport();
+            // let nodeDescReport = systems("f3d18aa9371f876d4264bfe051e5b4e312e90040"); nodeDescReport();
+
+            console.log("=== Core Node Report ===");
+            printGraphReport("7f82d45a6ffb5c345f84237a621de35dd8b7b0e3");
+            console.log("=== Function Call Report ===");
+            printGraphReport("d2cd5a6f99428baaa05394cf1fe3afa17fb59aff");
+            console.log("=== Node Type Report ===");
+            printGraphReport("585d4cc792af1a4754f1819630068bdbb81bfd20");
+            // let systemFileReport = systems("0750f117e54676b9eb32aebe5db1d3dae2e1853e"); systemFileReport();
+
             // let stringReport = systems("8efd75de58a2802dd9b784d8bc1bdd66aaedd856"); stringReport();
-            let graphReport = systems("604a2dbd0f19f35564efc9b9ca3d77ac82ea9382"); graphReport();
+            // let graphReport = systems("604a2dbd0f19f35564efc9b9ca3d77ac82ea9382"); graphReport();
         }
 
         // AFTER REPORT //
@@ -141,6 +149,9 @@ function saveData(systems) {
     writeData(sortedStringData, "out/data/string.js");
 }
 
+// TODO: Names should never be used to load system, instead they
+// should be used to lookup system ids and load by that
+// TODO: DON'T USE THIS
 function buildNameLoader(systems) {
 
     let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
@@ -203,25 +214,6 @@ function printReport(report) {
     report.forEach(({ node, names }) => {
         console.log(`${node} ${JSON.stringify(names)}`);
     });
-}
-
-function groupReport({ groupList, nameList, groupId }) {
-    let coreNodes = groupList(groupId);
-    let nodesAndNames = [];
-    coreNodes.forEach(node => {
-        let names = nameList(node);
-        nodesAndNames.push({
-            node,
-            names
-        });
-    });
-
-    // Sort by first name
-    nodesAndNames = _.sortBy(nodesAndNames, value => {
-        return value.names[0];
-    });
-
-    return nodesAndNames;
 }
 
 function _nodeDescReport({ systems, graphListNodes, describeNode }) {
@@ -528,6 +520,19 @@ function buildManualSystemLoader(systems) {
         return graphAutoPut;
     });
 
+    addManSys("1cbcbae3c4aea924e7bb9af6c6bde5192a6646ae", function() {
+        let groupReport = systems("f4d6f188f91fe3569bfc833d7d7ca960dc60d1f3");
+
+        let _printGroupReport = function({ groupReport, printReport, groupId }) {
+            let report = groupReport(groupId);
+            printReport(report);
+        };
+
+        let printGroupReport = bind({ func: _printGroupReport, params: { groupReport, printReport }});
+        printGroupReport = autoParam({ func: printGroupReport, paramName: "groupId" });
+        return printGroupReport;
+    });
+
     addManSys("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74", function(systems) {
         let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
 
@@ -743,18 +748,32 @@ function buildManualSystemLoader(systems) {
         return isSystemFile;
     });
 
-    addManSys("561b671dface5313978a674e0c3c32c3cdc7474e", function(systems) {
+    addManSys("f4d6f188f91fe3569bfc833d7d7ca960dc60d1f3", function(systems) {
         let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
         let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
 
-        let _coreNodeReport = function({ groupList, nameList }) {
-            console.log("=== Core Node Report ===");
-            let report = groupReport({ groupList, nameList, groupId: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
-            printReport(report);
+        let _groupReport = function({ groupList, nameList, groupId }) {
+            let coreNodes = groupList(groupId);
+            let nodesAndNames = [];
+            coreNodes.forEach(node => {
+                let names = nameList(node);
+                nodesAndNames.push({
+                    node,
+                    names
+                });
+            });
+
+            // Sort by first name
+            nodesAndNames = _.sortBy(nodesAndNames, value => {
+                return value.names[0];
+            });
+
+            return nodesAndNames;
         };
 
-        let coreNodeReport = bind({ func: _coreNodeReport, params: { groupList, nameList }});
-        return coreNodeReport;
+        let groupReport = bind({ func: _groupReport, params: { groupList, nameList }});
+        groupReport = autoParam({ func: groupReport, paramName: "groupId" });
+        return groupReport;
     });
 
     addManSys("604a2dbd0f19f35564efc9b9ca3d77ac82ea9382", function(systems) {
@@ -791,20 +810,6 @@ function buildManualSystemLoader(systems) {
 
         let stringReport = bind({ func: _stringReport, params: { stringFind }});
         return stringReport;
-    });
-
-    addManSys("2f15e440d136a8f1b9cd43f129fb798fecdcbe9a", function(systems) {
-        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
-
-        let _funcCallReport = function({ groupList, nameList }) {
-            console.log("=== Function Call Report ===");
-            let report = groupReport({ groupList, nameList, groupId: "d2cd5a6f99428baaa05394cf1fe3afa17fb59aff" });
-            printReport(report);
-        };
-
-        let funcCallReport = bind({ func: _funcCallReport, params: { groupList, nameList }});
-        return funcCallReport;
     });
 
     addManSys("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039", function(systems) {
