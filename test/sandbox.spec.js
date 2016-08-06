@@ -98,17 +98,17 @@ describe("sandbox", function() {
         if(runReports) {
             let printGraphReport = systems("1cbcbae3c4aea924e7bb9af6c6bde5192a6646ae");
 
-            // let edgeReport = systems("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039"); edgeReport();
+            let edgeReport = systems("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039"); edgeReport();
             // let nodeDescReport = systems("f3d18aa9371f876d4264bfe051e5b4e312e90040"); nodeDescReport();
 
             console.log("=== Core Node Report ===");
             printGraphReport("7f82d45a6ffb5c345f84237a621de35dd8b7b0e3");
-            console.log("=== Function Call Report ===");
-            printGraphReport("d2cd5a6f99428baaa05394cf1fe3afa17fb59aff");
-            console.log("=== Node Type Report ===");
-            printGraphReport("585d4cc792af1a4754f1819630068bdbb81bfd20");
-            // let systemFileReport = systems("0750f117e54676b9eb32aebe5db1d3dae2e1853e"); systemFileReport();
+            // console.log("=== Function Call Report ===");
+            // printGraphReport("d2cd5a6f99428baaa05394cf1fe3afa17fb59aff");
+            // console.log("=== Node Type Report ===");
+            // printGraphReport("585d4cc792af1a4754f1819630068bdbb81bfd20");
 
+            // let systemFileReport = systems("0750f117e54676b9eb32aebe5db1d3dae2e1853e"); systemFileReport();
             // let stringReport = systems("8efd75de58a2802dd9b784d8bc1bdd66aaedd856"); stringReport();
             // let graphReport = systems("604a2dbd0f19f35564efc9b9ca3d77ac82ea9382"); graphReport();
         }
@@ -818,24 +818,63 @@ function buildManualSystemLoader(systems) {
     addManSys("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039", function(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
         let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
+        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
 
         let _edgeReport = function({ graphFind }) {
             console.log("== Graph Report ==");
 
-            let coreNodeGroup = function() {
-                let edges = graphFind({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
-                return _.map(edges, "id");
-            };
-            let coreNodeGroupEdges = coreNodeGroup();
+            var edgeTypes = {};
 
-            let goodNodes = new Set(coreNodeGroupEdges);
+            let makeFn = function(groupId) {
+                return edgeId => {
+                    let edge = graphFind({ id: edgeId })[0];
+                    return edge.head == groupId;
+                };
+            };
+
+            let allowedGroups = [
+                "585d4cc792af1a4754f1819630068bdbb81bfd20",
+                "66564ec14ed18fb88965140fc644d7b813121c78",
+                "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3",
+                "d2cd5a6f99428baaa05394cf1fe3afa17fb59aff",
+                "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0"
+            ];
+            allowedGroups.forEach(coreNode => {
+                let name = nameList(coreNode)[0];
+                edgeTypes[name+"-group"] = makeFn(coreNode);
+            });
+
+            edgeTypes["name-edge"] = function(edgeId) {
+                let search = graphFind({ head: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", tail: edgeId });
+                return search.length;
+            };
 
             let edges = graphFind();
             let edgeIds = _.map(edges, "id");
-            edgeIds.forEach(value => {
-                let isIn = goodNodes.has(value) ? "X" : " ";
-                console.log(`[${isIn}] ${value}`);
+            let edgeReport = _.map(edgeIds, function(edge) {
+                let types = _.map(edgeTypes, (edgeType, name) => edgeType(edge) ? name : null).filter(x => x);
+                return { edge, types };
             });
+
+            edgeReport = _.sortBy(edgeReport, value => value.types.join(""));
+
+            let [goodEdges, badEdges] = _.partition(edgeReport, value => value.types.length);
+
+            let totalCount = edgeIds.length;
+            let goodCount = goodEdges.length;
+            let badCount = badEdges.length;
+            let goodRatio = (goodCount / totalCount) * 100;
+
+            console.log(`-- Good Edges: ${goodCount}/${totalCount} [${goodRatio.toFixed(2)}%] --`);
+            _.forEach(goodEdges, data => console.log(`${data.edge} =>`, data.types));
+            console.log(`-- Bad Edges: ${badCount} --`);
+            _.forEach(badEdges, data => {
+                console.log(data.edge);
+                // TODO: Describe head and tail nodes here
+            });
+
+            console.log(`Good Edges: ${goodCount}/${totalCount} [${goodRatio.toFixed(2)}%]`);
+            console.log(`Bad Edges: ${badCount}`);
         };
 
         let edgeReport = bind({ func: _edgeReport, params: { graphFind, graphListNodes }});
