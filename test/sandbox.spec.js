@@ -51,9 +51,6 @@ describe("sandbox", function() {
         // cleanStringSystem();
 
         // Outer Scope
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
-
         let node;
         let nodeSearch;
         let graphFindOneId;
@@ -63,6 +60,7 @@ describe("sandbox", function() {
         if(runReportWrappers) {
             console.log("== BEFORE REPORTS ==");
 
+            let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
             let autoParam = systems("b69aeff3eb1a14156b1a9c52652544bcf89761e2");
             let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
             let fRef = systems("78e787d70cc0f1c1dfdf6a406250dbe5243631ff");
@@ -97,13 +95,11 @@ describe("sandbox", function() {
         }
 
         // REPORTS //
-        let coreNodes = fs.readdirSync("node_modules/kitsune-core");
-
         if(runReports) {
             // let nodeDescReport = systems("f3d18aa9371f876d4264bfe051e5b4e312e90040"); nodeDescReport();
             let coreNodeReport = systems("561b671dface5313978a674e0c3c32c3cdc7474e"); coreNodeReport();
             let funcCallReport = systems("2f15e440d136a8f1b9cd43f129fb798fecdcbe9a"); funcCallReport();
-            let systemFileReport = systems("0750f117e54676b9eb32aebe5db1d3dae2e1853e"); systemFileReport({ coreNodes });
+            let systemFileReport = systems("0750f117e54676b9eb32aebe5db1d3dae2e1853e"); systemFileReport();
             // let edgeReport = systems("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039"); edgeReport();
             // let stringReport = systems("8efd75de58a2802dd9b784d8bc1bdd66aaedd856"); stringReport();
             let graphReport = systems("604a2dbd0f19f35564efc9b9ca3d77ac82ea9382"); graphReport();
@@ -112,6 +108,8 @@ describe("sandbox", function() {
         // AFTER REPORT //
         if(runReportWrappers) {
             console.log("== AFTER REPORTS ==");
+
+            let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
             let edge = graphFind(nodeSearch)[0];
             console.log(edge);
@@ -124,17 +122,24 @@ describe("sandbox", function() {
         }
 
         // Save Data
-        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
-        recreateLinks({ coreNodes, nameList });
-
-        let sortedGraphData = _.sortBy(graphFind(), ["head", "tail"]);
-        let sortedStringData = _.sortBy(stringFind(), ["string"]);
-
-        exec("mkdir -p out/data");
-        writeData(sortedGraphData, "out/data/graph.js");
-        writeData(sortedStringData, "out/data/string.js");
+        saveData(systems);
     });
 });
+
+function saveData(systems) {
+    let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+    let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+    recreateLinks({ groupList, nameList });
+
+    let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+    let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
+    let sortedGraphData = _.sortBy(graphFind(), ["head", "tail"]);
+    let sortedStringData = _.sortBy(stringFind(), ["string"]);
+
+    exec("mkdir -p out/data");
+    writeData(sortedGraphData, "out/data/graph.js");
+    writeData(sortedStringData, "out/data/string.js");
+}
 
 function buildNameLoader(systems) {
 
@@ -164,9 +169,11 @@ function buildNameLoader(systems) {
     return nameLoader;
 }
 
-function recreateLinks({ coreNodes, nameList }) {
+function recreateLinks({ groupList, nameList }) {
     exec("rm -rf src/kitsune-core-src");
     exec("mkdir -p src/kitsune-core-src");
+
+    let coreNodes = groupList("66564ec14ed18fb88965140fc644d7b813121c78");
     coreNodes.forEach(node => {
         let myNames = nameList(node);
         if(myNames && myNames.length > 0) {
@@ -831,6 +838,8 @@ function buildManualSystemLoader(systems) {
         let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
         let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
 
+        let coreNodes = fs.readdirSync("node_modules/kitsune-core");
+
         let _systemFileReport = function({ groupList, nameList, coreNodes }) {
             console.log("=== System File Report ===");
             console.log("System files: "+coreNodes.length);
@@ -859,7 +868,7 @@ function buildManualSystemLoader(systems) {
             });
         };
 
-        let systemFileReport = bind({ func: _systemFileReport, params: { groupList, nameList }});
+        let systemFileReport = bind({ func: _systemFileReport, params: { groupList, nameList, coreNodes }});
         return systemFileReport;
     });
 
