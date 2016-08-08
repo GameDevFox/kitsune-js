@@ -20,7 +20,7 @@ bootstrapLogger.setLevel(Logger.WARN);
 debugLog.setLevel(Logger.OFF);
 
 // Settings
-let runReportWrappers = 1;
+let runReportWrappers = 0;
 let runReports = 1;
 
 describe("sandbox", function() {
@@ -714,17 +714,25 @@ function buildManualSystemLoader(systems) {
         return isString;
     });
 
+    addManSys("15b16d6f586760a181f017d264c4808dc0f8bd06", function(systems) {
+        let typeMap = systems("4f22989e5edf2634371133db2720b09fc441a141")();
+
+        let describeNode = systems("4bea815e7814aa415569ecd48e5733a19e7777db");
+        describeNode = bind({ func: describeNode, params: { types: typeMap }});
+        describeNode = autoParam({ func: describeNode, paramName: "node" });
+        return describeNode;
+    });
+
     addManSys("f3d18aa9371f876d4264bfe051e5b4e312e90040", function(systems) {
         let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
-        let describeNode = systems("4bea815e7814aa415569ecd48e5733a19e7777db");
+        let describeNode = systems("15b16d6f586760a181f017d264c4808dc0f8bd06");
 
         let _nodeDescReport = function({ systems, graphListNodes, describeNode }) {
-            let typeMap = systems("4f22989e5edf2634371133db2720b09fc441a141")();
             let nodeList = graphListNodes();
 
             console.log("== Node Description Report ==");
             nodeList.forEach(node => {
-                let types = describeNode({ node: node, types: typeMap });
+                let types = describeNode(node);
                 console.log(node+" => "+JSON.stringify(types));
             });
         };
@@ -819,6 +827,7 @@ function buildManualSystemLoader(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
         let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
         let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+        let describeNode = systems("15b16d6f586760a181f017d264c4808dc0f8bd06");
 
         let _edgeReport = function({ graphFind }) {
             console.log("== Graph Report ==");
@@ -870,7 +879,11 @@ function buildManualSystemLoader(systems) {
             console.log(`-- Bad Edges: ${badCount} --`);
             _.forEach(badEdges, data => {
                 console.log(data.edge);
-                // TODO: Describe head and tail nodes here
+                let edge = graphFind({ id: data.edge })[0];
+                let headDesc = describeNode(edge.head);
+                console.log(`\tH ${edge.head}  =>`, headDesc);
+                let tailDesc = describeNode(edge.tail);
+                console.log(`\tT ${edge.tail}  =>`, tailDesc);
             });
 
             console.log(`Good Edges: ${goodCount}/${totalCount} [${goodRatio.toFixed(2)}%]`);
