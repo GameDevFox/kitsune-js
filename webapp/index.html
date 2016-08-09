@@ -2,7 +2,19 @@
 <head>
   <title>Kitsune</title>
 </head>
-<body>
-  <b>This</b> is a web app
+<body ng-app="kitsune">
+
+  <div ng-controller="yours as vm">
+    <button ng-click="vm.save()">Save</button>
+    <div>
+      <button ng-click="vm.nameFn(vm.id, vm.name)">Name</button>
+      <input ng-model="vm.id" placeholder="id"/>
+      <input ng-model="vm.name" placeholder="name"/>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+  <script src="/main.js"></script>
+
 </body>
 </html>
