@@ -27,9 +27,7 @@ let funcs = {};
 funcs.list = function() {
     _.forEach(_.keys(funcs).sort(), value => console.log(value));
 };
-funcs.mkstr = function() {
-    let str = opt.argv[1];
-
+funcs.mkstr = function(str) {
     let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
     let id = stringAutoPut(str);
     console.log(id);
@@ -40,22 +38,15 @@ funcs.mkid = function() {
     let hash = hashRandom();
     console.log(hash);
 };
-funcs.csf = function() {
-    let name = opt.argv[1];
-
+funcs.csf = function(name) {
     let createSystemFile = systems("76c55430fccd4f9e0b19c1c2b98d8a3babea81b2");
     createSystemFile(name);
 };
-funcs.ccn = function() {
-    let name = opt.argv[1];
-
+funcs.ccn = function(name) {
     let createCoreNode = systems("a21b86930a00f7b31b5984aabb21cb5eea7efc56");
     createCoreNode(name);
 };
-funcs.rmg = function() {
-    let group = opt.argv[1];
-    let node = opt.argv[2];
-
+funcs.rmg = function(group, node) {
     let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
     let graphRemove = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
 
@@ -63,25 +54,15 @@ funcs.rmg = function() {
     console.log(edges);
     edges.forEach(edge => graphRemove(edge.id));
 };
-funcs.name = function() {
-    let node = opt.argv[1];
-    let newName = opt.argv[2];
-
+funcs.name = function(node, newName) {
     let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
     name({ node: node, name: newName });
 };
-funcs.unname = function() {
-    let node = opt.argv[1];
-    let oldName = opt.argv[2];
-
+funcs.unname = function(node, oldName) {
     let nameRemove = systems("708f17af0e4f537757cf8817cbca4ed016b7bb8b");
     nameRemove({ node: node, name: oldName });
 };
-funcs.rename = function() {
-    let node = opt.argv[1];
-    let oldName = opt.argv[2];
-    let newName = opt.argv[3];
-
+funcs.rename = function(node, oldName, newName) {
     let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
     let nameRemove = systems("708f17af0e4f537757cf8817cbca4ed016b7bb8b");
     nameRemove({ node: node, name: oldName });
@@ -91,11 +72,23 @@ funcs.cleanss = function() {
     let cleanStringSystem = systems("f3db04b0138e827a9b513ab195cc373433407f83");
     cleanStringSystem();
 };
+funcs.rmsf = function() {
+    let removeSystemFile = function({ graphFind, graphRemove, nameRemove, stringFind, stringRemove,
+                                      systemFileId, systemFileName  }) {
+        // TODO: Fix this, it's broken
+        let groupEdge = graphFind({ head: "66564ec14ed18fb88965140fc644d7b813121c78",
+                                    tail: systemFileId });
+        graphRemove({ id: groupEdge[0].id });
+        nameRemove({ node: groupEdge[0].tail, name: systemFileName });
+        let stringNode = stringFind({ string: systemFileName });
+        stringRemove({ id: stringNode[0].id });
+    };
+};
 
 // Perform function
-let op = opt.argv[0];
+let op = opt.argv.shift();
 let func = funcs[op];
 
-func();
+func.apply(this, opt.argv);
 
 saveData(systems, true);

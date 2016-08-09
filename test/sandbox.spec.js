@@ -17,7 +17,7 @@ debugLog.setLevel(Logger.OFF);
 
 // Settings
 let run = {
-    // reportWrappers : true,
+    reportWrappers : true,
     reports:  true
 };
 
@@ -112,15 +112,3 @@ describe("sandbox", function() {
         saveData(systems);
     });
 });
-
-// TODO: Move below to manual loader
-function removeSystemFile({ graphFind, graphRemove, nameRemove, stringFind, stringRemove,
-                            systemFileId, systemFileName  }) {
-    // TODO: Fix this, it's broken
-    let groupEdge = graphFind({ head: "66564ec14ed18fb88965140fc644d7b813121c78",
-                                tail: systemFileId });
-    graphRemove({ id: groupEdge[0].id });
-    nameRemove({ node: groupEdge[0].tail, name: systemFileName });
-    let stringNode = stringFind({ string: systemFileName });
-    stringRemove({ id: stringNode[0].id });
-}
