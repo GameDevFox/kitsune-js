@@ -4,6 +4,8 @@ let Logger = require("js-logger");
 global.Logger = Logger;
 Logger.useDefaults();
 
+let _ = require("lodash");
+
 let core = require("kitsune/core.js");
 let saveData = require("kitsune/save-data.js");
 
@@ -20,33 +22,37 @@ debugLogger.setLevel(Logger.OFF);
 
 let { systems } = core();
 
-let op = opt.argv[0];
-if(op == "mkstr") {
+let funcs = {};
+
+funcs.list = function() {
+    _.forEach(_.keys(funcs).sort(), value => console.log(value));
+};
+funcs.mkstr = function() {
     let str = opt.argv[1];
 
     let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
     let id = stringAutoPut(str);
     console.log(id);
-}
-if(op == "mkid") {
+};
+funcs.mkid = function() {
     let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
 
     let hash = hashRandom();
     console.log(hash);
-}
-if(op == "csf") {
+};
+funcs.csf = function() {
     let name = opt.argv[1];
 
     let createSystemFile = systems("76c55430fccd4f9e0b19c1c2b98d8a3babea81b2");
     createSystemFile(name);
-}
-if(op == "ccn") {
+};
+funcs.ccn = function() {
     let name = opt.argv[1];
 
     let createCoreNode = systems("a21b86930a00f7b31b5984aabb21cb5eea7efc56");
     createCoreNode(name);
-}
-if(op == "rmg") {
+};
+funcs.rmg = function() {
     let group = opt.argv[1];
     let node = opt.argv[2];
 
@@ -56,22 +62,22 @@ if(op == "rmg") {
     let edges = graphFind({ head: group, tail: node });
     console.log(edges);
     edges.forEach(edge => graphRemove(edge.id));
-}
-if(op == "name") {
+};
+funcs.name = function() {
     let node = opt.argv[1];
     let newName = opt.argv[2];
 
     let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
     name({ node: node, name: newName });
-}
-if(op == "unname") {
+};
+funcs.unname = function() {
     let node = opt.argv[1];
     let oldName = opt.argv[2];
 
     let nameRemove = systems("708f17af0e4f537757cf8817cbca4ed016b7bb8b");
     nameRemove({ node: node, name: oldName });
-}
-if(op == "rename") {
+};
+funcs.rename = function() {
     let node = opt.argv[1];
     let oldName = opt.argv[2];
     let newName = opt.argv[3];
@@ -80,10 +86,16 @@ if(op == "rename") {
     let nameRemove = systems("708f17af0e4f537757cf8817cbca4ed016b7bb8b");
     nameRemove({ node: node, name: oldName });
     name({ node: node, name: newName });
-}
-if(op == "cleanss") {
+};
+funcs.cleanss = function() {
     let cleanStringSystem = systems("f3db04b0138e827a9b513ab195cc373433407f83");
     cleanStringSystem();
-}
+};
+
+// Perform function
+let op = opt.argv[0];
+let func = funcs[op];
+
+func();
 
 saveData(systems, true);
