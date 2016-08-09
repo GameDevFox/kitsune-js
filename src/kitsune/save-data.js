@@ -3,7 +3,7 @@ import fs from "fs";
 
 import _ from "lodash";
 
-function saveData(systems) {
+function saveData(systems, copy) {
     let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
     let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
     recreateLinks({ groupList, nameList });
@@ -16,6 +16,9 @@ function saveData(systems) {
     exec("mkdir -p out/data");
     writeData(sortedGraphData, "out/data/graph.js");
     writeData(sortedStringData, "out/data/string.js");
+
+    if(copy)
+        exec("cp out/data/* data");
 }
 
 function recreateLinks({ groupList, nameList }) {

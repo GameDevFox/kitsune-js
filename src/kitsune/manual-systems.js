@@ -267,7 +267,6 @@ function buildManualSystemLoader(systems) {
         let autoId = systems("d673ba0c8d334d4644375f853e30ad46df514120");
 
         let _createCoreNode = function({ node, name, graphAutoPut, nameFn }) {
-            console.log(node, name, graphAutoPut, nameFn);
             graphAutoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: node });
             nameFn({ node: node, name: name });
         };
