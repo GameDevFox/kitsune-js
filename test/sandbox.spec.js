@@ -16,8 +16,10 @@ rootLogger.setLevel(Logger.INFO);
 debugLog.setLevel(Logger.OFF);
 
 // Settings
-let runReportWrappers = 0;
-let runReports = 1;
+let run = {
+    reportWrappers : true,
+    reports:  true
+};
 
 describe("sandbox", function() {
     it.only("should have sand in it", function() {
@@ -34,7 +36,7 @@ describe("sandbox", function() {
         let readEdgeId;
 
         // BEFORE REPORT //
-        if(runReportWrappers) {
+        if(run.reportWrappers) {
             console.log("== BEFORE REPORTS ==");
 
             let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
@@ -72,26 +74,26 @@ describe("sandbox", function() {
         }
 
         // REPORTS //
-        if(runReports) {
+        if(run.reports) {
             let printGraphReport = systems("1cbcbae3c4aea924e7bb9af6c6bde5192a6646ae");
 
-            let edgeReport = systems("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039"); edgeReport();
+            // let edgeReport = systems("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039"); edgeReport();
             // let nodeDescReport = systems("f3d18aa9371f876d4264bfe051e5b4e312e90040"); nodeDescReport();
 
             console.log("=== Core Node Report ===");
             printGraphReport("7f82d45a6ffb5c345f84237a621de35dd8b7b0e3");
-            // console.log("=== Function Call Report ===");
-            // printGraphReport("d2cd5a6f99428baaa05394cf1fe3afa17fb59aff");
-            // console.log("=== Node Type Report ===");
-            // printGraphReport("585d4cc792af1a4754f1819630068bdbb81bfd20");
+            console.log("=== Function Call Report ===");
+            printGraphReport("d2cd5a6f99428baaa05394cf1fe3afa17fb59aff");
+            console.log("=== Node Type Report ===");
+            printGraphReport("585d4cc792af1a4754f1819630068bdbb81bfd20");
 
-            // let systemFileReport = systems("0750f117e54676b9eb32aebe5db1d3dae2e1853e"); systemFileReport();
+            let systemFileReport = systems("0750f117e54676b9eb32aebe5db1d3dae2e1853e"); systemFileReport();
             // let stringReport = systems("8efd75de58a2802dd9b784d8bc1bdd66aaedd856"); stringReport();
             // let graphReport = systems("604a2dbd0f19f35564efc9b9ca3d77ac82ea9382"); graphReport();
         }
 
         // AFTER REPORT //
-        if(runReportWrappers) {
+        if(run.reportWrappers) {
             console.log("== AFTER REPORTS ==");
 
             let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
@@ -111,6 +113,7 @@ describe("sandbox", function() {
     });
 });
 
+// TODO: Move below to manual loader
 function removeSystemFile({ graphFind, graphRemove, nameRemove, stringFind, stringRemove,
                             systemFileId, systemFileName  }) {
     // TODO: Fix this, it's broken
@@ -120,43 +123,4 @@ function removeSystemFile({ graphFind, graphRemove, nameRemove, stringFind, stri
     nameRemove({ node: groupEdge[0].tail, name: systemFileName });
     let stringNode = stringFind({ string: systemFileName });
     stringRemove({ id: stringNode[0].id });
-}
-
-// TODO: Move below to manual loader
-function hyphenNameToCamelCase(name) {
-    let result = name
-            .replace(/-(.)/g, capture => capture.toUpperCase())
-            .replace(/-/g, '');
-    return result;
-}
-
-// TODO: Names should never be used to load system, instead they
-// should be used to lookup system ids and load by that
-// TODO: DON'T USE THIS
-function buildNameLoader(systems) {
-
-    let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
-    let autoParam = systems("b69aeff3eb1a14156b1a9c52652544bcf89761e2");
-
-    let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
-    let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
-    let nameListIds = systems("2bf3bbec64d4b33302b9ab228eb90bc3f04b22a8");
-
-    let nameLoader = function({ nameListIds, core, name }) {
-        let ids = nameListIds(name);
-
-        let system;
-        for(let key in ids) {
-            let id = ids[key];
-            system = core(id);
-            if(system)
-                break;
-        }
-
-        return system;
-    };
-    nameLoader = bind({ func: nameLoader, params: { nameListIds, core: systems }});
-    nameLoader = autoParam({ func: nameLoader, paramName: "name" });
-
-    return nameLoader;
 }

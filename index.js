@@ -1,10 +1,11 @@
 let core = require("kitsune/core.js");
+let saveData = require("kitsune/save-data.js");
 
 let { systems } = core();
 
 // Utilities
-// let createSystemFile = systems("76c55430fccd4f9e0b19c1c2b98d8a3babea81b2");
-// createSystemFile("something");
+let createSystemFile = systems("76c55430fccd4f9e0b19c1c2b98d8a3babea81b2");
+createSystemFile("your-mother");
 
 // let createCoreNode = systems("a21b86930a00f7b31b5984aabb21cb5eea7efc56");
 // createCoreNode({ node: "585d4cc792af1a4754f1819630068bdbb81bfd20", name: "some-thing" });
@@ -21,3 +22,5 @@ let { systems } = core();
 
 // let cleanStringSystem = systems("f3db04b0138e827a9b513ab195cc373433407f83");
 // cleanStringSystem();
+
+saveData(systems);
