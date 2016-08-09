@@ -4,17 +4,15 @@ let mod = angular.module("kitsune", []);
 
 mod.factory("kitsuneService", function($http) {
 
-    let name = (node, name) => {
-        let data = JSON.stringify({ node, name });
-        return $http({ method: "POST", url: "/api/2885e34819b8a2f043b139bd92b96e484efd6217", headers: {
+    let post = function(funcId, data) {
+        return $http({ method: "POST", url: "/api/"+ funcId, headers: {
             'Content-Type': 'text/plain'
         }, data });
     };
-    let save = () => $http({ method: "GET", url: "/api/save" });
 
     let service = {
-        save,
-        name
+        name: (node, name) => post("2885e34819b8a2f043b139bd92b96e484efd6217", JSON.stringify({ node, name })),
+        save: () => $http({ method: "GET", url: "/api/save" })
     };
     return service;
 });
