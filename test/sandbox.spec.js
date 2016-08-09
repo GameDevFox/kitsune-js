@@ -17,7 +17,7 @@ debugLog.setLevel(Logger.OFF);
 
 // Settings
 let run = {
-    reportWrappers : true,
+    // reportWrappers : true,
     reports:  true
 };
 
@@ -84,8 +84,8 @@ describe("sandbox", function() {
             printGraphReport("7f82d45a6ffb5c345f84237a621de35dd8b7b0e3");
             console.log("=== Function Call Report ===");
             printGraphReport("d2cd5a6f99428baaa05394cf1fe3afa17fb59aff");
-            console.log("=== Node Type Report ===");
-            printGraphReport("585d4cc792af1a4754f1819630068bdbb81bfd20");
+            // console.log("=== Node Type Report ===");
+            // printGraphReport("585d4cc792af1a4754f1819630068bdbb81bfd20");
 
             let systemFileReport = systems("0750f117e54676b9eb32aebe5db1d3dae2e1853e"); systemFileReport();
             // let stringReport = systems("8efd75de58a2802dd9b784d8bc1bdd66aaedd856"); stringReport();

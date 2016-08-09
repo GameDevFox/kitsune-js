@@ -227,11 +227,19 @@ function buildManualSystemLoader(systems) {
         return nameRemove;
     });
 
-    addManSys("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0", function() {
+    addManSys("d673ba0c8d334d4644375f853e30ad46df514120", function(systems) {
         let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
 
         let autoId = systems("a0089c410302c18427b4cbdc4c3a55de6a69eb8b");
-        autoId = bind({ func: autoId, params: { hashRandom, paramName: "id" }});
+        autoId = bind({ func: autoId, params: { hashRandom }});
+        return autoId;
+    });
+
+    addManSys("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0", function() {
+        let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
+
+        let autoId = systems("d673ba0c8d334d4644375f853e30ad46df514120");
+        autoId = bind({ func: autoId, params: { paramName: "id" }});
         autoId = autoParam({ func: autoId, paramName: "func" });
         return autoId;
     });
@@ -256,15 +264,16 @@ function buildManualSystemLoader(systems) {
     addManSys("a21b86930a00f7b31b5984aabb21cb5eea7efc56", function(systems) {
         let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
         let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
-        let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");
+        let autoId = systems("d673ba0c8d334d4644375f853e30ad46df514120");
 
         let _createCoreNode = function({ node, name, graphAutoPut, nameFn }) {
+            console.log(node, name, graphAutoPut, nameFn);
             graphAutoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: node });
             nameFn({ node: node, name: name });
         };
 
         let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut, nameFn: name }});
-        createCoreNode = autoId({ func: createCoreNode, id: "node" });
+        createCoreNode = autoId({ func: createCoreNode, paramName: "node" });
         createCoreNode = autoParam({ func: createCoreNode, paramName: "name" });
         return createCoreNode;
     });
@@ -278,10 +287,9 @@ function buildManualSystemLoader(systems) {
             let stringIds = stringFind({}).map(value => value.id);
             let graphNodes = graphListNodes();
 
-            console.log(stringIds.length, graphNodes.length);
-
             let diff = _.difference(stringIds, graphNodes);
 
+            console.log("Removed string ids:");
             console.log(diff);
 
             diff.forEach(id => {
