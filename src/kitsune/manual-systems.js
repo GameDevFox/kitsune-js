@@ -256,6 +256,7 @@ function buildManualSystemLoader(systems) {
     addManSys("a21b86930a00f7b31b5984aabb21cb5eea7efc56", function(systems) {
         let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
         let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
+        let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");
 
         let _createCoreNode = function({ node, name, graphAutoPut, nameFn }) {
             graphAutoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: node });
@@ -263,6 +264,8 @@ function buildManualSystemLoader(systems) {
         };
 
         let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut, nameFn: name }});
+        createCoreNode = autoId({ func: createCoreNode, id: "node" });
+        createCoreNode = autoParam({ func: createCoreNode, paramName: "name" });
         return createCoreNode;
     });
 

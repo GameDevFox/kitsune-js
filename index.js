@@ -1,14 +1,35 @@
+#!/usr/bin/env node
+
 let core = require("kitsune/core.js");
 let saveData = require("kitsune/save-data.js");
 
+let opt = require("node-getopt").create([
+    ['h', 'help', 'display this help']
+])
+        .bindHelp()
+        .parseSystem();
+
 let { systems } = core();
 
-// Utilities
-let createSystemFile = systems("76c55430fccd4f9e0b19c1c2b98d8a3babea81b2");
-createSystemFile("your-mother");
+let op = opt.argv[0];
+if(op == "mkid") {
+    let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
 
-// let createCoreNode = systems("a21b86930a00f7b31b5984aabb21cb5eea7efc56");
-// createCoreNode({ node: "585d4cc792af1a4754f1819630068bdbb81bfd20", name: "some-thing" });
+    let hash = hashRandom();
+    console.log(hash);
+}
+if(op == "csf") {
+    let name = opt.argv[1];
+
+    let createSystemFile = systems("76c55430fccd4f9e0b19c1c2b98d8a3babea81b2");
+    createSystemFile(name);
+}
+if(op == "ccn") {
+    let name = opt.argv[1];
+
+    let createCoreNode = systems("a21b86930a00f7b31b5984aabb21cb5eea7efc56");
+    createCoreNode(name);
+}
 
 // let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 // let graphRemove = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
