@@ -1,3 +1,4 @@
+// -*- mode: js2 -*-
 #!/usr/bin/env node
 let Logger = require("js-logger");
 global.Logger = Logger;
