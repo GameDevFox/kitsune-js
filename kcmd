@@ -58,6 +58,16 @@ funcs.name = function(node, newName) {
     let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
     name({ node: node, name: newName });
 };
+funcs.lsname = function(id) {
+    let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+    let result = nameList(id);
+    result.forEach(x => console.log(x));
+};
+funcs.lsnode = function(name) {
+    let idList = systems("2bf3bbec64d4b33302b9ab228eb90bc3f04b22a8");
+    let result = idList(name);
+    result.forEach(x => console.log(x));
+};
 funcs.unname = function(node, oldName) {
     let nameRemove = systems("708f17af0e4f537757cf8817cbca4ed016b7bb8b");
     nameRemove({ node: node, name: oldName });
@@ -88,6 +98,11 @@ funcs.rmsf = function() {
 // Perform function
 let op = opt.argv.shift();
 let func = funcs[op];
+
+if(!func) {
+    console.error("No such command: "+op);
+    return 1;
+}
 
 func.apply(this, opt.argv);
 

@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+// -*- mode: js2 -*-
+let core = require("kitsune/core.js");
+let saveData = require("kitsune/save-data.js");
+
+let express = require("express");
+var bodyParser = require('body-parser');
+
+// Static
+let app = express();
+app.use(express.static("./webapp"));
+app.use(bodyParser.text());
+
+let { systems } = core();
+
+app.all("/api/:id([0-9a-fA-F]{40})", function(req, res) {
+    let id = req.params.id;
+
+    let input = null;
+    if(typeof req.body == "string")
+        input = JSON.parse(req.body);
+
+    let system = systems(id);
+    let output = system(input);
+
+    res.send(output);
+});
+
+app.all("/api/save", function(req, res) {
+    saveData(systems, true);
+    res.send(true);
+});
+
+app.listen(8080);
