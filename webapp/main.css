@@ -1,0 +1,14 @@
+.container {
+    position: relative;
+}
+
+.savePanel {
+    position: absolute;
+    right: 0px;
+}
+
+node .name {
+    border: 2px solid black;
+    padding: 0 2px;
+    margin: 0 2px;
+}
