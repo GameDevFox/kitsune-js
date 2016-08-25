@@ -10,6 +10,7 @@ function buildManualSystemLoader(systems) {
 
     var manSysFuncs = {};
     let addManSys = function(id, builderFunc) {
+
         if(typeof id == "object") {
             _.forEach(id, value => {
                 manSysFuncs[value] = builderFunc;
@@ -19,6 +20,7 @@ function buildManualSystemLoader(systems) {
     };
 
     var manualSystems = function({ manSysFuncs, systems, putSystem, id }) {
+
         let result;
 
         if(manSysFuncs[id]) {
@@ -598,14 +600,12 @@ function buildManualSystemLoader(systems) {
     });
 
     addManSys("4f22989e5edf2634371133db2720b09fc441a141", function(systems) {
-        let isCoreNode = systems("39bedcfba59c016590ddd53ddc7d89268b5340fd");
-        let isEdge = systems("20bfa138672de625230eef7faebe0e10ba6a49d0");
-        let isNameEdge = systems("7bee27a3335f7d2e3f562a84b9358b58f49390c1");
-        let isString = systems("821f1f34a4998adf0f1efd9b772b57efef71a070");
-        let isSystemFile = systems("b7df76bb3573caba7da57400c412f344cc309978");
+        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
 
-        let typeMap = function() { return { isEdge, isString, isCoreNode, isSystemFile, isNameEdge }; };
-        return typeMap;
+        let nodeTypes = groupList("585d4cc792af1a4754f1819630068bdbb81bfd20");
+
+        let typeMap = _.zipObject(nodeTypes, _.map(nodeTypes, (typeId) => systems(typeId)));
+        return () => typeMap;
     });
 
     addManSys("cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", () => console.log);
