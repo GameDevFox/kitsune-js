@@ -24,7 +24,7 @@ let { systems } = core();
 
 let funcs = {};
 
-funcs.list = function() {
+funcs.help = function() {
     _.forEach(_.keys(funcs).sort(), value => console.log(value));
 };
 funcs.mkstr = function(str) {
@@ -100,7 +100,9 @@ let op = opt.argv.shift();
 let func = funcs[op];
 
 if(!func) {
-    console.error("No such command: "+op);
+    console.error("No such command: "+op+"\n");
+    console.error("Available commands:");
+    funcs.help();
     return 1;
 }
 
