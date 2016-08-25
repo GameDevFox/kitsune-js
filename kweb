@@ -4,12 +4,15 @@ let core = require("kitsune/core.js");
 let saveData = require("kitsune/save-data.js");
 
 let express = require("express");
-var bodyParser = require('body-parser');
+let bodyParser = require('body-parser');
+let cors = require("cors");
 
 // Static
 let app = express();
+
 app.use(express.static("./webapp"));
 app.use(bodyParser.text());
+app.use(cors());
 
 let { systems } = core();
 
