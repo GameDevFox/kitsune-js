@@ -17,7 +17,7 @@ debugLog.setLevel(Logger.OFF);
 
 // Settings
 let run = {
-    reportWrappers : true,
+    reportWrappers : false,
     reports:  true
 };
 

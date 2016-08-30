@@ -82,6 +82,14 @@ var data = function() {
     "string": "identity"
   },
   {
+    "id": "9621142ee56435ad5a2c8b2f93f19f5a57194f75",
+    "string": "is-core-node"
+  },
+  {
+    "id": "8f65641814e35fec0e6196a6f56674eb56e5e19e",
+    "string": "is-edge"
+  },
+  {
     "id": "aa233bb14b0b75084bd435c4e857a10c955e948c",
     "string": "is-in-collection"
   },
@@ -90,28 +98,20 @@ var data = function() {
     "string": "is-in-group"
   },
   {
-    "id": "19c66646a67573cda40720548209871f6fc48a3e",
-    "string": "isCoreNode"
+    "id": "55a2da89c78a06bcecf44691b3a6707673799f71",
+    "string": "is-name-edge"
   },
   {
-    "id": "8153229ca33dcbd78c79bfafd5fdd7efa11fc673",
-    "string": "isEdge"
+    "id": "8d972248e5f502abb397ecb2a76c4be9e3bb3910",
+    "string": "is-name-pointer"
   },
   {
-    "id": "fa9445d9616576c67aaa6573cb6476c42e372786",
-    "string": "isNameEdge"
+    "id": "57941d7c86588fb78b2b0152160852a04eae7f0d",
+    "string": "is-string"
   },
   {
-    "id": "4fa0d717ed9a7ee84cbd0a1dbbd82f8d17a4d8e4",
-    "string": "isNamePointer"
-  },
-  {
-    "id": "3badeeb684ef4f272381ea3b24b4b5276c61b7f3",
-    "string": "isString"
-  },
-  {
-    "id": "165a98c05c95b208722642c081a66c6ec4c6a67a",
-    "string": "isSystemFile"
+    "id": "eb4fdd61c23cabd78f0c1aae5ae1d91db531be61",
+    "string": "is-system-file"
   },
   {
     "id": "7babc233de26ab19ead1b9c278128d5c434910ee",
