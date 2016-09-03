@@ -202,13 +202,26 @@ function buildManualSystemLoader(systems) {
         return stringGetId;
     });
 
+    addManSys("fc83ddd594c9b4fa2a44b3b42d8f1824d0f68c3e", function() {
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+
+        let getHeads = function({ graphFind, node }) {
+            let edges = graphFind({ head: node });
+            let result = edges.map(edge => edge.head);
+            return result;
+        };
+        getHeads = bind({ func: getHeads, params: { graphFind }});
+        getHeads = autoParam({ func: getHeads, paramName: "group" });
+        return getHeads;
+    });
+
     addManSys("a8a338d08b0ef7e532cbc343ba1e4314608024b2", function() {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
-        let groupList = systems("ab54a0a1abd5f849fcc04c809e5db0ebb1f1cc29");
-        groupList = bind({ func: groupList, params: { graphFind }});
-        groupList = autoParam({ func: groupList, paramName: "group" });
-        return groupList;
+        let getTails = systems("ab54a0a1abd5f849fcc04c809e5db0ebb1f1cc29"); // groupList
+        getTails = bind({ func: getTails, params: { graphFind }});
+        getTails = autoParam({ func: getTails, paramName: "group" });
+        return getTails;
     });
 
     addManSys("6f00c44367d415878955630378683e1463f87aea", function() {
@@ -606,6 +619,13 @@ function buildManualSystemLoader(systems) {
 
         let typeMap = _.zipObject(nodeTypes, _.map(nodeTypes, (typeId) => systems(typeId)));
         return () => typeMap;
+    });
+
+    addManSys("e6ff3d78ebd8f80c8945afd3499195049609905d", function() {
+        let readSystemFile = function(id) {
+            return fs.readFileSync("./src/kitsune-core/"+id, "utf8")
+        };
+        return readSystemFile;
     });
 
     addManSys("cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", () => console.log);
