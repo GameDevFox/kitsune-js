@@ -24,6 +24,34 @@ let { systems } = core();
 
 let funcs = {};
 
+funcs.x = function() {
+    let readFileSystem = systems("e6ff3d78ebd8f80c8945afd3499195049609905d");
+    let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+    let systemFiles = getTails("66564ec14ed18fb88965140fc644d7b813121c78");
+
+    systemFiles.forEach(function(node) {
+        let file = readFileSystem(node);
+        let match = file.match(/function (\w+)\((.*)\)/);
+        if(match) {
+            let name = match[1];
+            let args = match[2].trim();
+
+            if(args[0] == "{")
+                args = args.substr(1, args.length-2).trim();
+
+            args = args.split(/\s*,\s*/);
+
+            if(args[0].length == 0)
+                args = null;
+
+            console.log("===========");
+            console.log(node);
+            console.log("-----------");
+            console.log(name, '=>', args);
+        }
+    });
+};
+
 funcs.help = function() {
     _.forEach(_.keys(funcs).sort(), value => console.log(value));
 };

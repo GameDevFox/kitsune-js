@@ -1,6 +1,5 @@
 // -*- mode: js2 -*-
-export default function objectPut({ graphAssign, graphAutoPut,stringAutoPut,
-    typeMappings, id, object }) {
+export default function objectPut({ graphAssign, graphAutoPut,stringAutoPut, typeMappings, id, object }) {
     // TODO: There must be serveral ways to break this method down
 
     // Gather types of all children
