@@ -38,6 +38,10 @@ var data = function() {
     "string": "execute-function"
   },
   {
+    "id": "c218e39efa2e1aae69f39d2054528369ce1e1f46",
+    "string": "function"
+  },
+  {
     "id": "f91af1f6dde52876197ebc34f6a9fe651fc78b33",
     "string": "function-call"
   },
