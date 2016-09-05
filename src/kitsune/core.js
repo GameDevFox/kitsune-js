@@ -93,15 +93,31 @@ function loadDataSystems({ loader, bind, autoParam, putSystem }) {
     stringFind = autoParam({ func: stringFind, paramName: "where" });
     putSystem({ id: "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", system: stringFind });
 
-    // Populate collections
-    var insertData = function({ data, put }) {
-        data().forEach(value => {
-            put({ element: value });
+    let buildLoadDataFn = function({ coll, putFn, data }) {
+        // Clear collection
+        coll.clear();
+
+        // Load data
+        data.forEach(value => {
+            putFn({ element: value });
         });
     };
 
-    insertData({ data: graphData, put: graphPut });
-    insertData({ data: stringData, put: stringPut });
+    let loadGraphData = bind({ func: buildLoadDataFn, params: { coll: graphColl, putFn: graphPut }});
+    loadGraphData = autoParam({ func: loadGraphData, paramName: "data" });
+    putSystem({ id: "abc1100cf7579a10d519719dc72ff7ead4a5914b", system: loadGraphData });
+    let loadStringData = bind({ func: buildLoadDataFn, params: { coll: stringColl, putFn: stringPut }});
+    loadStringData = autoParam({ func: loadStringData, paramName: "data" });
+    putSystem({ id: "aa9b9341f8c4236d27831625ebbb91f2031cfb4b", system: loadStringData });
+
+    // Populate collections
+    let loadData = function() {
+        loadGraphData(graphData());
+        loadStringData(stringData());
+    };
+    putSystem({ id: "d575ab0a08a412215384e34ccbf363e960f3b392", system: loadData });
+
+    loadData();
 
     return { graphFind, stringPut, stringFind };
 }

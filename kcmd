@@ -27,7 +27,17 @@ let funcs = {};
 funcs.x = function() {
     let readFileSystem = systems("e6ff3d78ebd8f80c8945afd3499195049609905d");
     let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+    let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
+    let graphAssign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
+    let nameFn = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
+    let mkid = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
+
     let systemFiles = getTails("66564ec14ed18fb88965140fc644d7b813121c78");
+
+    // nameFn({ node: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", name: "another-name" });
+
+    let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
+    let paramId = "5c81ef998c44d90c3db495ec82892cf2925202f7";
 
     systemFiles.forEach(function(node) {
         let file = readFileSystem(node);
@@ -48,6 +58,15 @@ funcs.x = function() {
             console.log(node);
             console.log("-----------");
             console.log(name, '=>', args);
+
+            graphAutoPut({ head: funcId, tail: node });
+
+            for(let i in args) {
+                let arg = args[i];
+                let argId = mkid();
+                graphAssign({ head: node, type: paramId, tail: argId });
+                nameFn({ node, name: arg });
+            };
         }
     });
 };
