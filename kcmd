@@ -65,7 +65,7 @@ funcs.x = function() {
                 let arg = args[i];
                 let argId = mkid();
                 graphAssign({ head: node, type: paramId, tail: argId });
-                nameFn({ node, name: arg });
+                nameFn({ node: argId, name: arg });
             };
         }
     });
