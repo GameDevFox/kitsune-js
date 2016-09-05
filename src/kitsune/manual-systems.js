@@ -621,11 +621,22 @@ function buildManualSystemLoader(systems) {
         return () => typeMap;
     });
 
-    addManSys("e6ff3d78ebd8f80c8945afd3499195049609905d", function() {
+    addManSys("e6ff3d78ebd8f80c8945afd3499195049609905d", function(systems) {
         let readSystemFile = function(id) {
             return fs.readFileSync("./src/kitsune-core/"+id, "utf8");
         };
         return readSystemFile;
+    });
+
+    addManSys("d5e195726a6a3650166a6591dc3d7619adaef98d", function(systems) {
+        let getDataTime = function() {
+            let graphTime = fs.statSync("./data/24c045b912918d65c9e9aaea9993e9ab56f50d2e.json").mtime;
+            let stringTime = fs.statSync("./data/1cd179d6e63660fba96d54fe71693d1923e3f4f1.json").mtime;
+
+            let latest = Math.max(graphTime.getTime(), stringTime.getTime());
+            return latest;
+        };
+        return getDataTime;
     });
 
     addManSys("cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", () => console.log);

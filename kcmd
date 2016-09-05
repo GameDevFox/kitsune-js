@@ -71,6 +71,12 @@ funcs.x = function() {
     });
 };
 
+funcs.stat = function() {
+    let getDataTime = systems("d5e195726a6a3650166a6591dc3d7619adaef98d");
+    let time = getDataTime();
+    console.log(time);
+};
+
 funcs.help = function() {
     _.forEach(_.keys(funcs).sort(), value => console.log(value));
 };
