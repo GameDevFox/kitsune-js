@@ -44,7 +44,7 @@ function recreateLinks({ groupList, nameList }) {
 function writeData(data, filename) {
     data = cleanLoki(data);
     let json = JSON.stringify(data, null, 2);
-    fs.writeFileSync(filename, json);
+    fs.writeFileSync(filename, json+"\n");
 }
 
 function cleanLoki(data) {
