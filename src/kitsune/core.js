@@ -110,10 +110,17 @@ function loadDataSystems({ loader, bind, autoParam, putSystem }) {
     loadStringData = autoParam({ func: loadStringData, paramName: "data" });
     putSystem({ id: "aa9b9341f8c4236d27831625ebbb91f2031cfb4b", system: loadStringData });
 
+    let loadedTime;
+
+    let getLoadedTime = () => loadedTime;
+    putSystem({ id: "9a3a7c56e96abc04bd92f63cdfc5f31d49f778cd", system: getLoadedTime });
+
     // Populate collections
     let loadData = function() {
         loadGraphData(graphData());
         loadStringData(stringData());
+
+        loadedTime = new Date().getTime();
     };
     putSystem({ id: "d575ab0a08a412215384e34ccbf363e960f3b392", system: loadData });
 
