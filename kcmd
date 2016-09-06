@@ -24,7 +24,7 @@ let { systems } = core();
 
 let funcs = {};
 
-funcs.x = function() {
+funcs["graph-funcs-and-params"] = function() {
     let readFileSystem = systems("e6ff3d78ebd8f80c8945afd3499195049609905d");
     let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
     let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
@@ -62,10 +62,14 @@ funcs.x = function() {
             graphAutoPut({ head: funcId, tail: node });
 
             for(let i in args) {
-                let arg = args[i];
+                let argName = args[i];
+
+                argName = argName.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-");
+                console.log("New Name:", argName);
+
                 let argId = mkid();
                 graphAssign({ head: node, type: paramId, tail: argId });
-                nameFn({ node: argId, name: arg });
+                nameFn({ node: argId, name: argName });
             };
         }
     });

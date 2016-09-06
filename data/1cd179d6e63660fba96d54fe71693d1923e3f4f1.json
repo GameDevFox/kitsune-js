@@ -4,6 +4,14 @@
     "string": "and-is"
   },
   {
+    "id": "f3dec4d25be0ea4aa0d98af6550ce6474ce5c1c0",
+    "string": "arg-func-id"
+  },
+  {
+    "id": "06b8ba9db5de5040745f420fa3f0877fff8152b1",
+    "string": "arg-id"
+  },
+  {
     "id": "bcb216aea07698a1f4daf707a422bfe6e3d9d031",
     "string": "auto-id"
   },
@@ -16,12 +24,24 @@
     "string": "bind"
   },
   {
+    "id": "7f1ba3e38b4e2640b991e7f5d1d45eb1b699cf50",
+    "string": "call-node-func"
+  },
+  {
     "id": "d04d81b79dc86ca7b8c6e3e515d57f23014e5fe7",
     "string": "call-node-function"
   },
   {
+    "id": "c31359115860caf8dd8827cc1c32c43342494628",
+    "string": "coll-find"
+  },
+  {
     "id": "ab53755e1c9f705798ac7812c20962a510275dff",
     "string": "core-node"
+  },
+  {
+    "id": "0352a8acc949c7df21fec16e566ba9a74e797a97",
+    "string": "db"
   },
   {
     "id": "a8ffff2a4e7e829f2aa59185999759b1d3095920",
@@ -32,8 +52,24 @@
     "string": "dictionary-function"
   },
   {
+    "id": "dece05484839df110745b0a800297c33cc078287",
+    "string": "element"
+  },
+  {
     "id": "a25b9201c262946252a4a093a45888312e72c1fa",
     "string": "execute-function"
+  },
+  {
+    "id": "99fdb3623cf5c6ad0283ca5c096018dd2f2ff5ad",
+    "string": "func"
+  },
+  {
+    "id": "46b87f7028ecafb56f0850a274976c1b9a85a26e",
+    "string": "func-id"
+  },
+  {
+    "id": "3fa4f936260bf09921d6b4698a99e45268f8b2cc",
+    "string": "func-sys"
   },
   {
     "id": "c218e39efa2e1aae69f39d2054528369ce1e1f46",
@@ -52,6 +88,10 @@
     "string": "graph-assign"
   },
   {
+    "id": "674a65de6ca27f837c6e2f218eb04a2caa9e2f4c",
+    "string": "graph-auto-put"
+  },
+  {
     "id": "4281ff159a0253e1af1516074e7bcc93a7b00eca",
     "string": "graph-data"
   },
@@ -60,8 +100,24 @@
     "string": "graph-factor"
   },
   {
+    "id": "d6218b3952adb542e3cef81e5270c2f813b9a1b3",
+    "string": "graph-find"
+  },
+  {
     "id": "9281f6a97b1c5b7c373f3624bf1d388228e33820",
     "string": "graph-list-nodes"
+  },
+  {
+    "id": "367eaab93d9d01d4aae91614b699e2895ca52a2a",
+    "string": "graph-read-edge"
+  },
+  {
+    "id": "cc75218d09c94da8e4fdef90923cfb7a67929c2a",
+    "string": "graph-remove"
+  },
+  {
+    "id": "64292b1c2b2e13ead8788fc8a2b8edc8c1db4ecd",
+    "string": "group"
   },
   {
     "id": "072ee751f6d7c926f56fd81b3ed1a355dc4d2ae9",
@@ -80,8 +136,24 @@
     "string": "hash-string"
   },
   {
+    "id": "1a954628a960aaef81d7b2d4521929579f3541e6",
+    "string": "head"
+  },
+  {
+    "id": "87ea5dfc8b8e384d848979496e706390b497e547",
+    "string": "id"
+  },
+  {
     "id": "1db089a9f84e14e95f11dcb5c57fa10d60aa84bb",
     "string": "identity"
+  },
+  {
+    "id": "140f86aae51ab9e1cda9b4254fe98a74eb54c1a1",
+    "string": "input"
+  },
+  {
+    "id": "1178cafbd64bbbfa77f5ac0a9d5032ed88162781",
+    "string": "integer"
   },
   {
     "id": "9621142ee56435ad5a2c8b2f93f19f5a57194f75",
@@ -136,6 +208,10 @@
     "string": "loki-remove"
   },
   {
+    "id": "19f34ee1e406ea84ca83c835a3301b5d9014a788",
+    "string": "msg"
+  },
+  {
     "id": "6ae999552a0d2dca14d62e2bc8b764d377b1dd6c",
     "string": "name"
   },
@@ -152,16 +228,48 @@
     "string": "name-remove"
   },
   {
+    "id": "f8e966d1e207d02c44511a58dccff2f5429e9a3b",
+    "string": "node"
+  },
+  {
+    "id": "4b3739c9c50b8a92da5341a069cb14a2ba9ddd49",
+    "string": "node-func"
+  },
+  {
     "id": "774978bb69c87d62ed9ede8abb63b8d89fd7bdd2",
     "string": "node-type"
+  },
+  {
+    "id": "9b5c0b859faba061dd60fd8070fce74fcee29d0b",
+    "string": "obj"
+  },
+  {
+    "id": "1615307cc4523f183e777df67f168c86908e8007",
+    "string": "object"
   },
   {
     "id": "30b348d2f59c021a1fd751fa631c110bd626c879",
     "string": "object-put"
   },
   {
+    "id": "7c8c3618c01128d8b5cd5b39b09f4e704fb52a52",
+    "string": "param-name"
+  },
+  {
     "id": "b75381f00486e5b8409bb3475762882a8ac61715",
     "string": "parameter"
+  },
+  {
+    "id": "fd7b034e09b752c24942cd9b0b20c29db2dc3e90",
+    "string": "params"
+  },
+  {
+    "id": "3150ecd5e0294534a81ae047ddac559de481d774",
+    "string": "path"
+  },
+  {
+    "id": "52ab656f5995d7d6458361c5531afcee9f3ed69a",
+    "string": "property-name"
   },
   {
     "id": "02e4e931cd6dd2daa47983629addcf0453da255e",
@@ -192,6 +300,14 @@
     "string": "return-property"
   },
   {
+    "id": "ecb252044b5ea0f679ee78ec1a12904739e2904d",
+    "string": "string"
+  },
+  {
+    "id": "3a3f205bd90954db3507bf3a6d94d88fe0a9e0ae",
+    "string": "string-auto-put"
+  },
+  {
     "id": "911b601087190a41d0b744d9b402a30f2e2de206",
     "string": "string-autoPut"
   },
@@ -200,16 +316,56 @@
     "string": "string-data"
   },
   {
+    "id": "07e5c12d50cefc3392c61bf57fb709d21dfadd18",
+    "string": "string-find"
+  },
+  {
+    "id": "d24721766a775f163627440199a2dde86f025dfa",
+    "string": "string-get-id"
+  },
+  {
+    "id": "584f1a936a1ae10e2af1f9cc352d6959cf5776a8",
+    "string": "string-put"
+  },
+  {
+    "id": "9917b7f338fceeb7f2694bf4e59c89be4e9018bf",
+    "string": "string-read-string"
+  },
+  {
+    "id": "317f1e761f2faa8da781a4762b9dcc2c5cad209a",
+    "string": "system"
+  },
+  {
     "id": "74bc2baca0d62430a9ae246947b0b2c516e79f4f",
     "string": "system-files"
+  },
+  {
+    "id": "ada51b2381037cd7a0732f587622057c741ddaa1",
+    "string": "system-list"
   },
   {
     "id": "6576d3ae606465f2272dc5f1053ecc315b159724",
     "string": "system-loader"
   },
   {
+    "id": "fbf5f2a2875b3bb65b8e3b23e6cc01d58ca30447",
+    "string": "tail"
+  },
+  {
     "id": "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb",
     "string": "test-data"
+  },
+  {
+    "id": "d0a3e7f81a9885e99049d1cae0336d269d5e47a9",
+    "string": "type"
+  },
+  {
+    "id": "71757d50aa8ae681778c2de3dc8f9c8ba7227ef2",
+    "string": "type-mappings"
+  },
+  {
+    "id": "e7b1fff7007b635892a8f2c7c17f4fabc7aa2f8c",
+    "string": "types"
   },
   {
     "id": "f32b67c7e26342af42efabc674d441dca0a281c5",
@@ -218,6 +374,10 @@
   {
     "id": "90625a7940d4425591c41e527d8523b1eb17c9ff",
     "string": "value-function"
+  },
+  {
+    "id": "46148cc3b4d2b3ac8073f14b0cba7f25ffff54bd",
+    "string": "where"
   },
   {
     "id": "d6045152174d13cb13a1c96d7bb8e2b72d0b8470",
