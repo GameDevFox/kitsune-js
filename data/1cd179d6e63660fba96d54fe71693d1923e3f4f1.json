@@ -12,6 +12,14 @@
     "string": "arg-id"
   },
   {
+    "id": "560363f85efeee37f488b663960a3c05df31e61a",
+    "string": "argFuncId"
+  },
+  {
+    "id": "70b40c6b9eb69d8ca893b7c1424f97ebca8ae23d",
+    "string": "argId"
+  },
+  {
     "id": "bcb216aea07698a1f4daf707a422bfe6e3d9d031",
     "string": "auto-id"
   },
@@ -36,8 +44,16 @@
     "string": "call-node-function"
   },
   {
+    "id": "130172eb5b061051f1b1ceef7e68efea7fac2506",
+    "string": "callNodeFunc"
+  },
+  {
     "id": "c31359115860caf8dd8827cc1c32c43342494628",
     "string": "coll-find"
+  },
+  {
+    "id": "1a4485cc3088bcecf833d0fe8b90a42c921f0055",
+    "string": "collFind"
   },
   {
     "id": "ab53755e1c9f705798ac7812c20962a510275dff",
@@ -74,6 +90,14 @@
   {
     "id": "3fa4f936260bf09921d6b4698a99e45268f8b2cc",
     "string": "func-sys"
+  },
+  {
+    "id": "60f34da99edd67731aa1c30721e9b1a43296b934",
+    "string": "funcId"
+  },
+  {
+    "id": "f28874b56e72fbb759ba817af4e75331e8df8ca1",
+    "string": "funcSys"
   },
   {
     "id": "c218e39efa2e1aae69f39d2054528369ce1e1f46",
@@ -120,6 +144,30 @@
     "string": "graph-remove"
   },
   {
+    "id": "4db993250a55f92dcfdb24f445036698dd7f86d3",
+    "string": "graphAssign"
+  },
+  {
+    "id": "e1261b6d419e50a1d1b7727548fdeb878a555b55",
+    "string": "graphAutoPut"
+  },
+  {
+    "id": "5c6af32f290271de489b00825c2e223ce92fa3b6",
+    "string": "graphFactor"
+  },
+  {
+    "id": "6e95984e7fc6ed0f153b97a8b529a413dcb36f01",
+    "string": "graphFind"
+  },
+  {
+    "id": "432ce2e5a839338d8bfeee812173c4c2ae84fbb3",
+    "string": "graphReadEdge"
+  },
+  {
+    "id": "6c879c60e4ec56db3c9eae7ce244dbaca1cde4a1",
+    "string": "graphRemove"
+  },
+  {
     "id": "64292b1c2b2e13ead8788fc8a2b8edc8c1db4ecd",
     "string": "group"
   },
@@ -138,6 +186,14 @@
   {
     "id": "dbdc0a9d387abf3a42d27f988a9e1c32fad9a514",
     "string": "hash-string"
+  },
+  {
+    "id": "ca2d4113b21e23cc5dce5bfbfb51171bbd83358c",
+    "string": "hashRandom"
+  },
+  {
+    "id": "1eba4d5678639858da468be2203484fca92a356c",
+    "string": "hashString"
   },
   {
     "id": "1a954628a960aaef81d7b2d4521929579f3541e6",
@@ -244,6 +300,10 @@
     "string": "node-type"
   },
   {
+    "id": "9826923718233c1d5227522b5cca6a65e83fbcc1",
+    "string": "nodeFunc"
+  },
+  {
     "id": "9b5c0b859faba061dd60fd8070fce74fcee29d0b",
     "string": "obj"
   },
@@ -260,6 +320,10 @@
     "string": "param-name"
   },
   {
+    "id": "39c5b06925df63f4420d01399f2c37941b9f945e",
+    "string": "paramName"
+  },
+  {
     "id": "b75381f00486e5b8409bb3475762882a8ac61715",
     "string": "parameter"
   },
@@ -274,6 +338,10 @@
   {
     "id": "52ab656f5995d7d6458361c5531afcee9f3ed69a",
     "string": "property-name"
+  },
+  {
+    "id": "deaeb26764551c6a022d74cf85afd8f0bbf999d7",
+    "string": "propertyName"
   },
   {
     "id": "02e4e931cd6dd2daa47983629addcf0453da255e",
@@ -294,6 +362,10 @@
   {
     "id": "059d992ad1d669e2473be81f0c4c5bd5128c5c8c",
     "string": "read-object"
+  },
+  {
+    "id": "0fb0e10b4adab71b2d6eb0719b38724001ec66a0",
+    "string": "readAssign"
   },
   {
     "id": "40e834bf73db510d13dab70ff96a300962037d31",
@@ -336,6 +408,26 @@
     "string": "string-read-string"
   },
   {
+    "id": "83b5b582e0e3d2ee1eeaaf192ed286782fdd04f9",
+    "string": "stringAutoPut"
+  },
+  {
+    "id": "01b92914b65eeb865baa1f89a6aeb55f12d960b1",
+    "string": "stringFind"
+  },
+  {
+    "id": "e900c412007127c67533a4b114face1008a4b234",
+    "string": "stringGetId"
+  },
+  {
+    "id": "e1299f2b1d2e0a7d5fb9ee27bd159301c96e7fe9",
+    "string": "stringPut"
+  },
+  {
+    "id": "8dba4d2c5ad00c19505433d57203e62c39d76987",
+    "string": "stringReadString"
+  },
+  {
     "id": "317f1e761f2faa8da781a4762b9dcc2c5cad209a",
     "string": "system"
   },
@@ -352,6 +444,10 @@
     "string": "system-loader"
   },
   {
+    "id": "6b6ed4c0e2aac0ba9c344d1b0135b6823f1b3f3a",
+    "string": "systemList"
+  },
+  {
     "id": "fbf5f2a2875b3bb65b8e3b23e6cc01d58ca30447",
     "string": "tail"
   },
@@ -366,6 +462,10 @@
   {
     "id": "71757d50aa8ae681778c2de3dc8f9c8ba7227ef2",
     "string": "type-mappings"
+  },
+  {
+    "id": "7589bcba3d6f18eb18914e54473caa5d3aa5e830",
+    "string": "typeMappings"
   },
   {
     "id": "e7b1fff7007b635892a8f2c7c17f4fabc7aa2f8c",
