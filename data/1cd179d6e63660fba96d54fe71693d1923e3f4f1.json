@@ -24,6 +24,10 @@
     "string": "bind"
   },
   {
+    "id": "5fd89aa15360cde12141a6b6fe19d1c251a3ea07",
+    "string": "bind-function"
+  },
+  {
     "id": "7f1ba3e38b4e2640b991e7f5d1d45eb1b699cf50",
     "string": "call-node-func"
   },
