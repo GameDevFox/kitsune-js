@@ -639,6 +639,31 @@ function buildManualSystemLoader(systems) {
         return getDataTime;
     });
 
+    addManSys("36b76ca66bba2d0b98fe25ce05efeaec1f286826", function(systems) {
+        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+
+        let recreateLinks = function({ groupList, nameList }) {
+            exec("rm -rf src/kitsune-core-src");
+            exec("mkdir -p src/kitsune-core-src");
+
+            let coreNodes = groupList("66564ec14ed18fb88965140fc644d7b813121c78");
+            coreNodes.forEach(node => {
+                let myNames = nameList(node);
+                if(myNames && myNames.length > 0) {
+                    try {
+                        let cmdStr = "ln -s ../../src/kitsune-core/"+node+" src/kitsune-core-src/"+myNames[0];
+                        exec(cmdStr);
+                    } catch(e) {
+                        console.log("Already a link for "+myNames[0]);
+                    }
+                }
+            });
+        };
+        recreateLinks = bind({ func: recreateLinks, params: { groupList, nameList } });
+        return recreateLinks;
+    });
+
     addManSys("cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", () => console.log);
 
     addManSys("58f4149870fd4f99bcbf8083eedfee6fbc1199b0", function() {
