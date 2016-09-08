@@ -112,6 +112,7 @@ describe("sandbox", function() {
         let recreateLinks = systems("36b76ca66bba2d0b98fe25ce05efeaec1f286826");
         recreateLinks();
 
-        saveData(systems);
+        if(run.reportWrappers)
+            saveData(systems);
     });
 });

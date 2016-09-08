@@ -24,7 +24,13 @@ let { systems } = core();
 
 let funcs = {};
 
-funcs["graph-funcs-and-params"] = function() {
+const READ_ONLY = true;
+
+let regFunc = function(name, readOnly, func) {
+    funcs[name] = { func, readOnly };
+};
+
+regFunc("graph-funcs-and-params", false, function() {
     let readFileSystem = systems("e6ff3d78ebd8f80c8945afd3499195049609905d");
     let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
     let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
@@ -73,73 +79,74 @@ funcs["graph-funcs-and-params"] = function() {
             };
         }
     });
-};
+});
 
-funcs.stat = function() {
+regFunc("stat", READ_ONLY, function() {
     let getDataTime = systems("d5e195726a6a3650166a6591dc3d7619adaef98d");
     let time = getDataTime();
     console.log(time);
-};
+});
 
-funcs.help = function() {
+regFunc("help", READ_ONLY, function() {
     _.forEach(_.keys(funcs).sort(), value => console.log(value));
-};
-funcs.mkstr = function(str) {
+});
+regFunc("mkstr", false, function(str) {
     let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
     let id = stringAutoPut(str);
     console.log(id);
-};
-funcs.mkid = function() {
+});
+regFunc("mkid", READ_ONLY, function() {
     let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
 
     let hash = hashRandom();
     console.log(hash);
-};
-funcs.csf = function(name) {
+});
+regFunc("csf", false, function(name) {
     let createSystemFile = systems("76c55430fccd4f9e0b19c1c2b98d8a3babea81b2");
     createSystemFile(name);
-};
-funcs.ccn = function(name) {
+});
+regFunc("ccn", false, function(name) {
     let createCoreNode = systems("a21b86930a00f7b31b5984aabb21cb5eea7efc56");
     createCoreNode(name);
-};
-funcs.rmg = function(group, node) {
+});
+
+regFunc("rmg", false, function(group, node) {
     let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
     let graphRemove = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
 
     let edges = graphFind({ head: group, tail: node });
     console.log(edges);
     edges.forEach(edge => graphRemove(edge.id));
-};
-funcs.name = function(node, newName) {
+});
+regFunc("name", false, function(node, newName) {
     let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
     name({ node: node, name: newName });
-};
-funcs.lsname = function(id) {
+});
+regFunc("lsname", READ_ONLY, function(id) {
     let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
     let result = nameList(id);
     result.forEach(x => console.log(x));
-};
-funcs.lsnode = function(name) {
+});
+regFunc("lsnode", READ_ONLY, function(name) {
     let idList = systems("2bf3bbec64d4b33302b9ab228eb90bc3f04b22a8");
     let result = idList(name);
     result.forEach(x => console.log(x));
-};
-funcs.unname = function(node, oldName) {
+});
+regFunc("unname", false, function(node, oldName) {
     let nameRemove = systems("708f17af0e4f537757cf8817cbca4ed016b7bb8b");
     nameRemove({ node: node, name: oldName });
-};
-funcs.rename = function(node, oldName, newName) {
+});
+regFunc("rename", false, function(node, oldName, newName) {
     let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
     let nameRemove = systems("708f17af0e4f537757cf8817cbca4ed016b7bb8b");
     nameRemove({ node: node, name: oldName });
     name({ node: node, name: newName });
-};
-funcs.cleanss = function() {
+});
+regFunc("cleanss", false, function() {
     let cleanStringSystem = systems("f3db04b0138e827a9b513ab195cc373433407f83");
     cleanStringSystem();
-};
-funcs.rmsf = function() {
+});
+regFunc("rmsf", false, function() {
     let removeSystemFile = function({ graphFind, graphRemove, nameRemove, stringFind, stringRemove,
                                       systemFileId, systemFileName  }) {
         // TODO: Fix this, it's broken
@@ -150,19 +157,21 @@ funcs.rmsf = function() {
         let stringNode = stringFind({ string: systemFileName });
         stringRemove({ id: stringNode[0].id });
     };
-};
+});
 
 // Perform function
 let op = opt.argv.shift();
-let func = funcs[op];
+let funcReg = funcs[op];
 
-if(!func) {
+if(!funcReg) {
     console.error("No such command: "+op+"\n");
     console.error("Available commands:");
     funcs.help();
     return 1;
 }
 
+let func = funcReg.func;
 func.apply(this, opt.argv);
 
-saveData(systems, true);
+if(!funcReg.readOnly)
+    saveData(systems, true);
