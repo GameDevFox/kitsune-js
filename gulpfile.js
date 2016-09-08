@@ -106,30 +106,9 @@ gulp.task("coverage-run", function(done) {
 //			.pipe(gulp.dest("./app"));
 // });
 
-var proc;
-gulp.task("start", "Runs an instance of kitsune", g.sequence("clean", ["build", "build-test-kitsune"], "test-run", "start-run"));
-gulp.task("start-run", function() {
-
-	if(proc != null)
-		proc.kill();
-
-	proc = spawn("node", ["node_modules/kitsune/service.js"]);
-	proc.stdout.on("data", function(data) {
-		process.stdout.write("service: " + data.toString());
-	});
-	proc.stderr.on("data", function(data) {
-		process.stderr.write("service-error: " + data.toString());
-	});
-
-	console.log("Process ID: " + proc.pid);
-
-	// var kitsune = require("kitsune");
-	// kitsune();
-});
-
 // Watch tasks
 gulp.task("watch", 'Runs app in "development mode", reloading app and running tests on files changes',
-          g.sequence("watch-flag", "clean", ["build", "build-test-kitsune"], "test-run", "start-run", ["watch-src", "watch-test"]));
+          g.sequence("watch-flag", "clean", ["build", "build-test-kitsune"], "test-run", ["watch-src", "watch-test"]));
 
 gulp.task("watch-flag", function() {
     softTestFail = true;
@@ -138,12 +117,12 @@ gulp.task("watch-flag", function() {
 gulp.task("watch-src", function() { gulp.watch(appSrcPath, ["watch-src-run"]); });
 gulp.task("watch-src-run", function(cb) {
 	delete g.cached.caches["mocha"];
-	g.sequence("build", "test-run", "start-run")(cb);
+	g.sequence("build", "test-run")(cb);
 });
 
 gulp.task("watch-test", function() { gulp.watch(testSrcPath, ["watch-test-run"]); });
 gulp.task("watch-test-run", function(cb) {
-	g.sequence(["build-test-kitsune"], "test-run", "start-run")(cb);
+	g.sequence(["build-test-kitsune"], "test-run")(cb);
 });
 
 //
