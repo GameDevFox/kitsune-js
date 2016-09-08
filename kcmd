@@ -30,6 +30,97 @@ let regFunc = function(name, readOnly, func) {
     funcs[name] = { func, readOnly };
 };
 
+let bindFuncLoader = function(id) {
+    let readBindFunc = systems("4841f107fb76dbf4ac1d29a936b16b7365985ca4");
+    let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+    let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
+
+    let bindFunc = readBindFunc(id);
+
+    let func = systems(bindFunc.func);
+    let params = {};
+    for(let i in bindFunc.params) {
+        let name = nameList(i)[0];
+        let param = systems(bindFunc.params[i]);
+        params[name] = param;
+    }
+
+    let result = bind({ func, params });
+    return result;
+};
+
+regFunc("q", READ_ONLY, function() {
+    let id = "e0b0186b6357d1eb4fe0edee8fa58feb1461d1bf";
+
+    let func = bindFuncLoader(id);
+    let result = func({ type: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", tail: "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f" });
+    return result;
+});
+
+regFunc("x", false, function() {
+    let writeBindFunc = systems("ccd7b9796a25b50b3d5d712392c9758e3ab6133d");
+    let readBindFunc = systems("4841f107fb76dbf4ac1d29a936b16b7365985ca4");
+    let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
+
+    let id = "e0b0186b6357d1eb4fe0edee8fa58feb1461d1bf";
+    let func = "4163d1cd63d3949b79c37223bd7da04ad6cd36c8";
+    let params = { "4b11104da518783045dd6afaa3534ba37b9d4190": "a1e815356dceab7fded042f3032925489407c93e" };
+
+    writeBindFunc({ id, func, params });
+    let result = readBindFunc(id);
+    console.log("R", result);
+
+    let bindFuncGroup = "e6429ca88b178bd13982b6ca543c822043b609c6";
+    autoWriteEdge({ head: bindFuncGroup, tail: id });
+
+    return id;
+});
+
+regFunc("write-test", false, function() {
+    writeNodeObject({ id: "this-is-the-id", obj: {
+        "hello": "world",
+        "what": "is-up",
+        "i": "like-it"
+    }});
+});
+
+regFunc("read-test", READ_ONLY, function() {
+    let readNodeObject = systems("971a9f4b9f8e841b4519d96fa8733311c8b58fe2");
+    return readNodeObject("this-is-the-id");
+});
+
+regFunc("fix-names", false, function() {
+    let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+    let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+    let hypenToCamel = systems("a3bf45bfe89ebb31dac911bfbe299fcb2ce6491c");
+    let removeName = systems("708f17af0e4f537757cf8817cbca4ed016b7bb8b");
+    let nameFn = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
+
+    let funcs = getTails("4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f");
+    let params = [];
+    funcs.forEach(x => {
+        let tails = getTails(x);
+        params.push(tails);
+    });
+
+    params = _.flatten(params);
+
+    params.forEach(param => {
+        let name = nameList(param)[0];
+        let newName = hypenToCamel(name);
+
+        console.log(param);
+        console.log(name+" => "+newName);
+
+        if(name != newName) {
+            removeName({ node: param, name });
+            nameFn({ node: param, name: newName });
+        }
+    });
+
+    console.log(params);
+});
+
 regFunc("graph-funcs-and-params", false, function() {
     let readFileSystem = systems("e6ff3d78ebd8f80c8945afd3499195049609905d");
     let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
@@ -171,7 +262,10 @@ if(!funcReg) {
 }
 
 let func = funcReg.func;
-func.apply(this, opt.argv);
+let output = func.apply(this, opt.argv);
+
+if(typeof output != "undefined")
+    console.log(output);
 
 if(!funcReg.readOnly)
     saveData(systems, true);

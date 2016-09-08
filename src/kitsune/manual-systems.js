@@ -63,6 +63,10 @@ function buildManualSystemLoader(systems) {
         return stringAutoPut;
     });
 
+    // CANDIDATE
+    // graphFactor: 4163d1cd63d3949b79c37223bd7da04ad6cd36c8
+    // graphFind.graph-find:
+    //      4b11104da518783045dd6afaa3534ba37b9d4190 => a1e815356dceab7fded042f3032925489407c93e
     addManSys("c83cd0ab78a1d57609f9224f851bde6d230711d0", function(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
@@ -82,13 +86,18 @@ function buildManualSystemLoader(systems) {
         return stringReadString;
     });
 
-    addManSys("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7", function(systems) {
+    addManSys("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220", function() {
         let graphPut = systems("7e5e764e118960318d513920a0f33e4c5ae64b50");
+        let writeEdge = autoParam({ func: graphPut, paramName: "element" });
+        return writeEdge;
+    });
+
+    addManSys("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7", function(systems) {
+        let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
         let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");
 
-        let graphAutoPut = autoParam({ func: graphPut, paramName: "element" });
-        graphAutoPut = autoId(graphAutoPut);
-        return graphAutoPut;
+        let autoWriteEdge = autoId(writeEdge);
+        return autoWriteEdge;
     });
 
     addManSys("990053fb6f50ab8cf4ea766f765acb89f88d3b3d", function() {
@@ -126,9 +135,9 @@ function buildManualSystemLoader(systems) {
         let returnFirst = systems("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
-        let graphReadEdge = returnFirst(graphFind);
-        graphReadEdge = autoParam({ func: graphReadEdge, paramName: "id" });
-        return graphReadEdge;
+        let readEdge = returnFirst(graphFind);
+        readEdge = autoParam({ func: readEdge, paramName: "id" });
+        return readEdge;
     });
 
     addManSys("ca79cd84ab6a9eb3e5ac06ed48d3d24e6649d0bc", function(systems) {
@@ -649,6 +658,77 @@ function buildManualSystemLoader(systems) {
             return latest;
         };
         return getDataTime;
+    });
+
+    addManSys("236063bf30465aef27d1366d7573ffafa99d8c14", function(systems) {
+        let graphAssign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
+
+        let writeNodeObject = function({ graphAssign, id, obj }) {
+            for(let i in obj)
+                graphAssign({ head: i, type: id, tail: obj[i] });
+            return id;
+        };
+        writeNodeObject = bind({ func: writeNodeObject, params: { graphAssign }});
+        return writeNodeObject;
+    });
+
+    addManSys("e5f7c17a83b013b4bc9d2e34c078ba5d5ae69077", function() {
+        let writeNodeObject =  systems("236063bf30465aef27d1366d7573ffafa99d8c14");
+        let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");
+
+        let autoWriteNodeObject = autoId(writeNodeObject);
+        autoWriteNodeObject = autoParam({ func: autoWriteNodeObject, paramName: "obj" });
+        return autoWriteNodeObject;
+    });
+
+    addManSys("971a9f4b9f8e841b4519d96fa8733311c8b58fe2", function(systems) {
+        let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+
+        let readNodeObject = function({ graphFactor, id }) {
+            let result = {};
+            let factor = graphFactor({ type: id });
+            for(let i in factor) {
+                let key = factor[i].head;
+                let value = factor[i].tail;
+                result[key] = value;
+            }
+            return result;
+        };
+        readNodeObject = bind({ func: readNodeObject, params: { graphFactor }});
+        readNodeObject = autoParam({ func: readNodeObject, paramName: "id" });
+        return readNodeObject;
+    });
+
+    addManSys("ccd7b9796a25b50b3d5d712392c9758e3ab6133d", function(systems) {
+        let autoWriteNodeObject = systems("e5f7c17a83b013b4bc9d2e34c078ba5d5ae69077");
+        let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
+
+        let writeBindFunc = function({ autoWriteNodeObject, writeEdge, id, func, params }) {
+            let paramObj = autoWriteNodeObject(params);
+            writeEdge({ id, head: func, tail: paramObj });
+
+            return id;
+        };
+        writeBindFunc = bind({ func: writeBindFunc, params: { autoWriteNodeObject, writeEdge }});
+        return writeBindFunc;
+    });
+
+    addManSys("4841f107fb76dbf4ac1d29a936b16b7365985ca4", function(systems) {
+        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+        let readNodeObject = systems("971a9f4b9f8e841b4519d96fa8733311c8b58fe2");
+
+        let readBindFunc = function({ readEdge, readNodeObject, id }) {
+            let bindFunc = readEdge(id);
+
+            let func = bindFunc.head;
+            let paramId = bindFunc.tail;
+            let params = readNodeObject(paramId);
+
+            return { func, params };
+        };
+        readBindFunc = bind({ func: readBindFunc, params: { readEdge, readNodeObject }});
+        readBindFunc = autoParam({ func: readBindFunc, paramName: "id" });
+        return readBindFunc;
     });
 
     addManSys("36b76ca66bba2d0b98fe25ce05efeaec1f286826", function(systems) {
