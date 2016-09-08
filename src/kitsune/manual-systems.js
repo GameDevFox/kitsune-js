@@ -39,7 +39,12 @@ function buildManualSystemLoader(systems) {
     manualSystems = bind({ func: manualSystems, params: { manSysFuncs, systems, putSystem }});
     manualSystems = autoParam({ func: manualSystems, paramName: "id" });
 
-    // TODO: See which of these can be converted to function call systems
+    // listManyalSystems
+    addManSys("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8", function(systems) {
+        return () => _.keys(manSysFuncs);
+    });
+
+    // TODO: See which of these can be converted to function call systems or bind-functions
     // TODO; Report of which of these have/have-not been loaded at certain points
     addManSys("4e63843a9bee61351b80fac49f4182bd582907b4", function(systems) {
         let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
