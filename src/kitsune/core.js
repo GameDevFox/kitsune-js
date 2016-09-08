@@ -193,7 +193,6 @@ function buildFuncCallLoader(systems) {
     return funcCallSystems;
 }
 
-// SYSTEM LOADER: Manual
 function bootstrap() {
 
     let log = bootstrapLogger;
@@ -222,10 +221,15 @@ function bootstrap() {
     // Build and load system loaders
     log.info(":Manual System Loader");
     let manualSystems = buildManualSystemLoader(systems);
-    log.info(":Function Call Systems");
-    let funcCallSystems = buildFuncCallLoader(systems);
+    modules.push(manualSystems);
 
-    modules.push(manualSystems, funcCallSystems);
+    log.info(":Bind Function Loader");
+    let bindFuncLoader = systems("9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a");
+    modules.push(bindFuncLoader);
+
+    // log.info(":Function Call Systems");
+    // let funcCallSystems = buildFuncCallLoader(systems);
+    // modules.push(funcCallSystems);
 
     return { modules, systems };
 }

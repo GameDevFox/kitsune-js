@@ -30,29 +30,10 @@ let regFunc = function(name, readOnly, func) {
     funcs[name] = { func, readOnly };
 };
 
-let bindFuncLoader = function(id) {
-    let readBindFunc = systems("4841f107fb76dbf4ac1d29a936b16b7365985ca4");
-    let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
-    let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
-
-    let bindFunc = readBindFunc(id);
-
-    let func = systems(bindFunc.func);
-    let params = {};
-    for(let i in bindFunc.params) {
-        let name = nameList(i)[0];
-        let param = systems(bindFunc.params[i]);
-        params[name] = param;
-    }
-
-    let result = bind({ func, params });
-    return result;
-};
-
 regFunc("q", READ_ONLY, function() {
     let id = "e0b0186b6357d1eb4fe0edee8fa58feb1461d1bf";
 
-    let func = bindFuncLoader(id);
+    let func = systems(id);
     let result = func({ type: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", tail: "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f" });
     return result;
 });

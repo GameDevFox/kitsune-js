@@ -787,6 +787,35 @@ function buildManualSystemLoader(systems) {
         };
     });
 
+    // LOADERS //
+    addManSys("9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a", function() {
+
+        let readBindFunc = systems("4841f107fb76dbf4ac1d29a936b16b7365985ca4");
+        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+
+        let bindFuncLoader = function({ readBindFunc, nameList, id }) {
+
+            console.log("X", readBindFunc, nameList, id);
+
+            let bindFunc = readBindFunc(id);
+
+            let func = systems(bindFunc.func);
+            let params = {};
+            for(let i in bindFunc.params) {
+                let name = nameList(i)[0];
+                let param = systems(bindFunc.params[i]);
+                params[name] = param;
+            }
+
+            let result = bind({ func, params });
+            return result;
+        };
+        bindFuncLoader = bind({ func: bindFuncLoader, params: { readBindFunc, nameList }});
+        bindFuncLoader = autoParam({ func: bindFuncLoader, paramName: "id" });
+        return bindFuncLoader;
+    });
+    // END LOADERS //
+
     addManSys(["c5cfe7d5154188daaa2a5cdf5d27a18fce4c2345",
                "0abebb208d96e3aa8a17890a5606734e03fa2539",
                "30381757ef98651b92e54ce11a4fb839e76aa847",
