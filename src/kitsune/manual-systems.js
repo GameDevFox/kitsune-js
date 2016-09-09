@@ -178,14 +178,6 @@ function buildManualSystemLoader(systems) {
         return autoWriteEdge;
     });
 
-    addManSys("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74", function(systems) {
-        let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
-
-        let graphAssign = systems("6c877bef62bc8f57eb55265c62e75b36515ef458");
-        graphAssign = bind({ func: graphAssign, params: { graphAutoPut }});
-        return graphAssign;
-    });
-
     addManSys("ca79cd84ab6a9eb3e5ac06ed48d3d24e6649d0bc", function(systems) {
         let callNodeFunction = systems("ad95b67eca3c4044cb78a730a9368c3e54a56c5f");
         callNodeFunction = bind({ func: callNodeFunction, params: { funcSys: systems }});
