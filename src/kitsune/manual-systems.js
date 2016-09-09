@@ -219,37 +219,20 @@ function buildManualSystemLoader(systems) {
         return autoId;
     });
 
-    addManSys("76c55430fccd4f9e0b19c1c2b98d8a3babea81b2", function(systems) {
+    addManSys("abd7880e8088fdf6c8e0519ea45a50a603be0687", function() {
         let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
         let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
         let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
 
-        let _createSystemFile = function({ hashRandom, graphAutoPut, nameFn, name }) {
-            let newSystemId = hashRandom();
-            exec("cp src/kitsune-core/ddfe7d402ff26c18785bcc899fa69183b3170a7d src/kitsune-core/"+newSystemId);
-            graphAutoPut({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: newSystemId });
-            nameFn({ node: newSystemId, name: name });
-        };
-
-        let createSystemFile = bind({ func: _createSystemFile, params: { hashRandom, graphAutoPut, nameFn: name }});
-        createSystemFile = autoParam({ func: createSystemFile, paramName: "name" });
+        let createSystemFile = systems("4a24b766f417667abc55a0bcc3a6617a85c73902");
+        createSystemFile = bind({ func: _createSystemFile, params: { hashRandom, graphAutoPut, nameFn: name }});
         return createSystemFile;
     });
 
-    addManSys("a21b86930a00f7b31b5984aabb21cb5eea7efc56", function(systems) {
-        let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
-        let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
-        let autoId = systems("d673ba0c8d334d4644375f853e30ad46df514120");
-
-        let _createCoreNode = function({ node, name, graphAutoPut, nameFn }) {
-            graphAutoPut({ head: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", tail: node });
-            nameFn({ node: node, name: name });
-        };
-
-        let createCoreNode = bind({ func: _createCoreNode, params: { graphAutoPut, nameFn: name }});
-        createCoreNode = autoId({ func: createCoreNode, paramName: "node" });
-        createCoreNode = autoParam({ func: createCoreNode, paramName: "name" });
-        return createCoreNode;
+    addManSys("76c55430fccd4f9e0b19c1c2b98d8a3babea81b2", function(systems) {
+        let createSystemFile = systems("abd7880e8088fdf6c8e0519ea45a50a603be0687");
+        createSystemFile = autoParam({ func: createSystemFile, paramName: "name" });
+        return createSystemFile;
     });
 
     addManSys("f3db04b0138e827a9b513ab195cc373433407f83", function(systems) {
@@ -760,6 +743,16 @@ function buildManualSystemLoader(systems) {
             return result;
         };
         return getHeads;
+    });
+
+    addManSys("4a24b766f417667abc55a0bcc3a6617a85c73902", function() {
+        let createSystemFile = function({ hashRandom, graphAutoPut, nameFn, name }) {
+            let newSystemId = hashRandom();
+            exec("cp src/kitsune-core/ddfe7d402ff26c18785bcc899fa69183b3170a7d src/kitsune-core/"+newSystemId);
+            graphAutoPut({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: newSystemId });
+            nameFn({ node: newSystemId, name: name });
+        };
+        return createSystemFile;
     });
     // END FOLD
 
