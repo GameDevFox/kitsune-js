@@ -262,25 +262,22 @@ function buildManualSystemLoader(systems) {
         return cleanStringSystem;
     });
 
-    addManSys("86c5865436335ab46f6cac7c620279457068490f", function() {
-        let isInCollection = systems("d2f544f574dae26adb5ed3ee70c71e302b2575fa");
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-
-        let isEdge = bind({ func: isInCollection, params: { collFind: graphFind }});
-        return isEdge;
-    });
-
     addManSys("20bfa138672de625230eef7faebe0e10ba6a49d0", function(systems) {
         let isEdge = systems("86c5865436335ab46f6cac7c620279457068490f");
         isEdge = autoParam({ func: isEdge, paramName: "node" });
         return isEdge;
     });
 
-    addManSys("821f1f34a4998adf0f1efd9b772b57efef71a070", function(systems) {
-        let isInCollection = systems("d2f544f574dae26adb5ed3ee70c71e302b2575fa");
+    addManSys("0cea7cd1fc619b0d2db4f7205b63c8e15e693d9f", function() {
         let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
 
+        let isInCollection = systems("d2f544f574dae26adb5ed3ee70c71e302b2575fa");
         let isString = bind({ func: isInCollection, params: { collFind: stringFind }});
+        return isString;
+    });
+
+    addManSys("821f1f34a4998adf0f1efd9b772b57efef71a070", function(systems) {
+        let isString = systems("0cea7cd1fc619b0d2db4f7205b63c8e15e693d9f");
         isString = autoParam({ func: isString, paramName: "node" });
         return isString;
     });
