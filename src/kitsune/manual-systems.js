@@ -210,14 +210,6 @@ function buildManualSystemLoader(systems) {
         return getTails;
     });
 
-    addManSys("d673ba0c8d334d4644375f853e30ad46df514120", function(systems) {
-        let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
-
-        let autoId = systems("a0089c410302c18427b4cbdc4c3a55de6a69eb8b");
-        autoId = bind({ func: autoId, params: { hashRandom }});
-        return autoId;
-    });
-
     addManSys("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0", function() {
         let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
 
