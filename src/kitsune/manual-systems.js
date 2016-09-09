@@ -178,16 +178,6 @@ function buildManualSystemLoader(systems) {
         return autoWriteEdge;
     });
 
-    addManSys("2bf3bbec64d4b33302b9ab228eb90bc3f04b22a8", function() {
-        let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
-        let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
-
-        let nameListIds = systems("c4863daa27736a3fb94fa536fcf17bab5fce25bf");
-        nameListIds = bind({ func: nameListIds, params: { stringAutoPut, graphFactor }});
-        nameListIds = autoParam({ func: nameListIds, paramName: "name" });
-        return nameListIds;
-    });
-
     addManSys("c2d807f302ca499c3584a8ccf04fb7a76cf589ad", function() {
         let lokiRemove = systems("2ebd8d9fff28833dab44f086d4692fb888525fc8");
         let graphColl = systems("adf6b91bb7c0472237e4764c044733c4328b1e55");
