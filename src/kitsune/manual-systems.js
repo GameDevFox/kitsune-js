@@ -184,14 +184,6 @@ function buildManualSystemLoader(systems) {
         return graphRemove;
     });
 
-    addManSys("74b1eb95baaf14385cf3a0b1b76198a5cadfa258", function() {
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-
-        let graphListNodes = systems("b7916f86301a6bc2af32f402f6515809bac75b03");
-        graphListNodes = bind({ func: graphListNodes, params: { graphFind }});
-        return graphListNodes;
-    });
-
     addManSys("8c7d214678ce851d39ebb4a774c9f168bfffe43d", function() {
         let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
         let returnFirst = systems("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51");
