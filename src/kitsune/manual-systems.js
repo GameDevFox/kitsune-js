@@ -225,7 +225,7 @@ function buildManualSystemLoader(systems) {
         let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
 
         let createSystemFile = systems("4a24b766f417667abc55a0bcc3a6617a85c73902");
-        createSystemFile = bind({ func: _createSystemFile, params: { hashRandom, graphAutoPut, nameFn: name }});
+        createSystemFile = bind({ func: createSystemFile, params: { hashRandom, graphAutoPut, nameFn: name }});
         return createSystemFile;
     });
 
@@ -235,12 +235,8 @@ function buildManualSystemLoader(systems) {
         return createSystemFile;
     });
 
-    addManSys("f3db04b0138e827a9b513ab195cc373433407f83", function(systems) {
-        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
-        let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
-        let stringRemove = systems("6f00c44367d415878955630378683e1463f87aea");
-
-        let _cleanStringSystem = function({ stringFind, graphListNodes, stringRemove }) {
+    addManSys("d79ba735ae111d7d34457c712cf44519f13e827e", function() {
+        let cleanStringSystem = function({ stringFind, graphListNodes, stringRemove }) {
             let stringIds = stringFind({}).map(value => value.id);
             let graphNodes = graphListNodes();
 
@@ -253,24 +249,29 @@ function buildManualSystemLoader(systems) {
                 stringRemove({ id });
             });
         };
-
-        let cleanStringSystem = bind({ func: _cleanStringSystem, params: { stringFind, graphListNodes, stringRemove }});
         return cleanStringSystem;
     });
 
-    addManSys("9f3a4c1bb1d1e8da1fc3ab19c23cd5507666ab45", function(systems) {
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+    addManSys("f3db04b0138e827a9b513ab195cc373433407f83", function(systems) {
+        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
+        let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
+        let stringRemove = systems("6f00c44367d415878955630378683e1463f87aea");
 
-        let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
-        isInGroup = bind({ func: isInGroup, params: { graphFind }});
-        return isInGroup;
+        let cleanStringSystem = systems("d79ba735ae111d7d34457c712cf44519f13e827e");
+        cleanStringSystem = bind({ func: cleanStringSystem, params: { stringFind, graphListNodes, stringRemove }});
+        return cleanStringSystem;
     });
 
-    addManSys("20bfa138672de625230eef7faebe0e10ba6a49d0", function(systems) {
+    addManSys("86c5865436335ab46f6cac7c620279457068490f", function() {
         let isInCollection = systems("d2f544f574dae26adb5ed3ee70c71e302b2575fa");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
         let isEdge = bind({ func: isInCollection, params: { collFind: graphFind }});
+        return isEdge;
+    });
+
+    addManSys("20bfa138672de625230eef7faebe0e10ba6a49d0", function(systems) {
+        let isEdge = systems("86c5865436335ab46f6cac7c620279457068490f");
         isEdge = autoParam({ func: isEdge, paramName: "node" });
         return isEdge;
     });

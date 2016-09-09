@@ -30,14 +30,12 @@ let regFunc = function(name, readOnly, func) {
     funcs[name] = { func, readOnly };
 };
 
-let id = "abd7880e8088fdf6c8e0519ea45a50a603be0687";
+let id = "9f3a4c1bb1d1e8da1fc3ab19c23cd5507666ab45";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func({ func: function(args) {
-        return args;
-    }, paramName: "id" });
-    return result({ hello: "world" });
+    let result = func({ group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3", node: "d121b96a6c1c41b3a03eaacd55f7b28c55ef5fea" });
+    return result;
 });
 
 function createBindFunc() {
@@ -45,9 +43,9 @@ function createBindFunc() {
     let readBindFunc = systems("4841f107fb76dbf4ac1d29a936b16b7365985ca4");
     let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
 
-    let func = "4a24b766f417667abc55a0bcc3a6617a85c73902";
+    let func = "a3fd8e7c0d51f13671ebbb6f9758833ff6120b42";
     let params = {
-        "": "bf565ae1309f425b0ab00efa2ba541ae03ad22cf",
+        "93e67d7aa333aefb979cf359add2bcd080253f47": "a1e815356dceab7fded042f3032925489407c93e",
     };
 
     writeBindFunc({ id, func, params });
