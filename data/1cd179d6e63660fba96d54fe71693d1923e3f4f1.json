@@ -412,6 +412,10 @@
     "string": "string-read-string"
   },
   {
+    "id": "fbfaaffb76f3ead99f8818fdc32199a483b0d0f4",
+    "string": "string-remove"
+  },
+  {
     "id": "83b5b582e0e3d2ee1eeaaf192ed286782fdd04f9",
     "string": "stringAutoPut"
   },

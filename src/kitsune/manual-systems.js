@@ -210,16 +210,6 @@ function buildManualSystemLoader(systems) {
         return getTails;
     });
 
-    addManSys("708f17af0e4f537757cf8817cbca4ed016b7bb8b", function() {
-        let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
-        let graphRemove = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
-        let stringGetId = systems("8c7d214678ce851d39ebb4a774c9f168bfffe43d");
-
-        let nameRemove = systems("7087272f7205fdac70e1f29d3d4b9e170d99a431");
-        nameRemove = bind({ func: nameRemove, params: { stringGetId, graphFactor, graphRemove }});
-        return nameRemove;
-    });
-
     addManSys("d673ba0c8d334d4644375f853e30ad46df514120", function(systems) {
         let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
 
