@@ -293,30 +293,6 @@ function buildManualSystemLoader(systems) {
         return hyphenNameToCamelCase;
     });
 
-    addManSys("6cc36ca05b68868f725f1edc2c2c039b50928016", function(systems) {
-        let stringAutoPut = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
-        let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
-        let nameListIds = systems("2bf3bbec64d4b33302b9ab228eb90bc3f04b22a8");
-
-        let nameLoader = function({ nameListIds, core, name }) {
-            let ids = nameListIds(name);
-
-            let system;
-            for(let key in ids) {
-                let id = ids[key];
-                system = core(id);
-                if(system)
-                    break;
-            }
-
-            return system;
-        };
-        nameLoader = bind({ func: nameLoader, params: { nameListIds, core: systems }});
-        nameLoader = autoParam({ func: nameLoader, paramName: "name" });
-
-        return nameLoader;
-    });
-
     addManSys("f3d18aa9371f876d4264bfe051e5b4e312e90040", function(systems) {
         let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
         let describeNode = systems("15b16d6f586760a181f017d264c4808dc0f8bd06");
