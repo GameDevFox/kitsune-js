@@ -42,37 +42,30 @@ function buildManualSystemLoader(systems) {
     // TODO: See which of these can be converted to function call systems or bind-functions
     // TODO; Report of which of these have/have-not been loaded at certain points
 
-    // listManyalSystems
+    // list-manual-systems
     addManSys("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8", function(systems) {
         return () => _.keys(manSysFuncs);
     });
 
-    // listSystemFiles
+    // list-system-files
     addManSys("5277dc011cbc9800046edeb4460f7138e060a935", function(systems) {
         let files = fs.readdirSync("./src/kitsune-core");
         return () => files;
     });
 
-    addManSys("4e63843a9bee61351b80fac49f4182bd582907b4", function(systems) {
-        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
-        let stringPut = systems("b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385");
-
-        let stringAutoPut = systems("8f8b523b9a05a55bfdffbf14187ecae2bf7fe87f");
-        stringAutoPut = bind({ func: stringAutoPut, params: { stringFind, stringPut }});
-        stringAutoPut = autoParam({ func: stringAutoPut, paramName: "string" });
-        return stringAutoPut;
-    });
-
-    // CANDIDATE
-    // graphFactor: 4163d1cd63d3949b79c37223bd7da04ad6cd36c8
-    // graphFind.graph-find:
-    //      4b11104da518783045dd6afaa3534ba37b9d4190 => a1e815356dceab7fded042f3032925489407c93e
+    // Dependancy of Bind Function Loader
     addManSys("c83cd0ab78a1d57609f9224f851bde6d230711d0", function(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
         let graphFactor = systems("4163d1cd63d3949b79c37223bd7da04ad6cd36c8");
         graphFactor = bind({ func: graphFactor, params: { graphFind }});
         return graphFactor;
+    });
+
+    addManSys("4e63843a9bee61351b80fac49f4182bd582907b4", function(systems) {
+        let stringAutoPut = systems("21eb5692a08d14bf1116d2652d705fd57fd670cd");
+        stringAutoPut = autoParam({ func: stringAutoPut, paramName: "string" });
+        return stringAutoPut;
     });
 
     addManSys("08f8db63b1843f7dea016e488bd547555f345c59", function(systems) {
@@ -794,8 +787,6 @@ function buildManualSystemLoader(systems) {
         let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
 
         let bindFuncLoader = function({ readBindFunc, nameList, id }) {
-
-            console.log("X", readBindFunc, nameList, id);
 
             let bindFunc = readBindFunc(id);
 

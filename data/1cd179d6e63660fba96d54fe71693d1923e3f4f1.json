@@ -484,6 +484,10 @@
     "string": "where"
   },
   {
+    "id": "d1e8cda0190738333a0abef26a390913f9b00a4b",
+    "string": "write-string-auto"
+  },
+  {
     "id": "d6045152174d13cb13a1c96d7bb8e2b72d0b8470",
     "string": "write-value"
   }
