@@ -210,14 +210,6 @@ function buildManualSystemLoader(systems) {
         return getTails;
     });
 
-    addManSys("6f00c44367d415878955630378683e1463f87aea", function() {
-        let lokiRemove = systems("2ebd8d9fff28833dab44f086d4692fb888525fc8");
-        let stringColl = systems("ce6de1160131bddb4e214f52e895a68583105133");
-
-        let stringRemove = bind({ func: lokiRemove, params: { db: stringColl }});
-        return stringRemove;
-    });
-
     addManSys("708f17af0e4f537757cf8817cbca4ed016b7bb8b", function() {
         let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
         let graphRemove = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
