@@ -179,10 +179,7 @@ function buildManualSystemLoader(systems) {
     });
 
     addManSys("c2d807f302ca499c3584a8ccf04fb7a76cf589ad", function() {
-        let lokiRemove = systems("2ebd8d9fff28833dab44f086d4692fb888525fc8");
-        let graphColl = systems("adf6b91bb7c0472237e4764c044733c4328b1e55");
-
-        let graphRemove = bind({ func: lokiRemove, params: { db: graphColl }});
+        let graphRemove = systems("e773ae04f0879e8a949f42d34b67f4d619c986a9");
         graphRemove = autoParam({ func: graphRemove, paramName: "id" });
         return graphRemove;
     });

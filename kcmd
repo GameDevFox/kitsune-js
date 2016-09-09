@@ -30,11 +30,11 @@ let regFunc = function(name, readOnly, func) {
     funcs[name] = { func, readOnly };
 };
 
-let id = "2bf3bbec64d4b33302b9ab228eb90bc3f04b22a8";
+let id = "e773ae04f0879e8a949f42d34b67f4d619c986a9";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func({ name: "graph-assign" });
+    let result = func({ id: "8363fbadeb16afc4489dc959c1dcb87009f39176" });
     return result;
 });
 
@@ -43,10 +43,9 @@ regFunc("x", false, function() {
     let readBindFunc = systems("4841f107fb76dbf4ac1d29a936b16b7365985ca4");
     let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
 
-    let func = "c4863daa27736a3fb94fa536fcf17bab5fce25bf";
+    let func = "2ebd8d9fff28833dab44f086d4692fb888525fc8";
     let params = {
-        "f7f74123761a63f9bee80cefb3bad5d4d638c57c": "c83cd0ab78a1d57609f9224f851bde6d230711d0",
-        "e6438b3a8e8bcd7f9dd98f3aee91391f28fc83f3": "4e63843a9bee61351b80fac49f4182bd582907b4"
+        "e167b51aeeb45fbba4279a689daffd46dfa25f32": "adf6b91bb7c0472237e4764c044733c4328b1e55",
     };
 
     writeBindFunc({ id, func, params });
