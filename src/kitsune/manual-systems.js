@@ -41,6 +41,9 @@ function buildManualSystemLoader(systems) {
 
     // TODO: See which of these can be converted to function call systems or bind-functions
 
+    // TODO: Make a loader for native/libary stuff like this (like lodash)
+    addManSys("cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", () => console.log);
+
     // list-manual-systems
     addManSys("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8", function(systems) {
         return () => _.keys(manSysFuncs);
@@ -50,6 +53,13 @@ function buildManualSystemLoader(systems) {
     addManSys("5277dc011cbc9800046edeb4460f7138e060a935", function(systems) {
         let files = fs.readdirSync("./src/kitsune-core");
         return () => files;
+    });
+
+    addManSys("e6ff3d78ebd8f80c8945afd3499195049609905d", function(systems) {
+        let readSystemFile = function(id) {
+            return fs.readFileSync("./src/kitsune-core/"+id, "utf8");
+        };
+        return readSystemFile;
     });
 
     // LOADERS //
@@ -340,41 +350,10 @@ function buildManualSystemLoader(systems) {
         return isNameEdge;
     });
 
-    addManSys("4f22989e5edf2634371133db2720b09fc441a141", function(systems) {
-        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-
-        let nodeTypes = groupList("585d4cc792af1a4754f1819630068bdbb81bfd20");
-
-        let typeMap = _.zipObject(nodeTypes, _.map(nodeTypes, (typeId) => systems(typeId)));
-        return () => typeMap;
-    });
-
-    addManSys("e6ff3d78ebd8f80c8945afd3499195049609905d", function(systems) {
-        let readSystemFile = function(id) {
-            return fs.readFileSync("./src/kitsune-core/"+id, "utf8");
-        };
-        return readSystemFile;
-    });
-
-    addManSys("d5e195726a6a3650166a6591dc3d7619adaef98d", function(systems) {
-        let getDataTime = function() {
-            let graphTime = fs.statSync("./data/24c045b912918d65c9e9aaea9993e9ab56f50d2e.json").mtime;
-            let stringTime = fs.statSync("./data/1cd179d6e63660fba96d54fe71693d1923e3f4f1.json").mtime;
-
-            let latest = Math.max(graphTime.getTime(), stringTime.getTime());
-            return latest;
-        };
-        return getDataTime;
-    });
-
     addManSys("236063bf30465aef27d1366d7573ffafa99d8c14", function(systems) {
         let graphAssign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
 
-        let writeNodeObject = function({ graphAssign, id, obj }) {
-            for(let i in obj)
-                graphAssign({ head: i, type: id, tail: obj[i] });
-            return id;
-        };
+        let writeNodeObject = systems("1d6976a263d64b64ac113f178e8ddc1d245b6120");
         writeNodeObject = bind({ func: writeNodeObject, params: { graphAssign }});
         return writeNodeObject;
     });
@@ -392,12 +371,7 @@ function buildManualSystemLoader(systems) {
         let autoWriteNodeObject = systems("e5f7c17a83b013b4bc9d2e34c078ba5d5ae69077");
         let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
 
-        let writeBindFunc = function({ autoWriteNodeObject, writeEdge, id, func, params }) {
-            let paramObj = autoWriteNodeObject(params);
-            writeEdge({ id, head: func, tail: paramObj });
-
-            return id;
-        };
+        let writeBindFunc = systems("aed811d85de045e271fdfe4097349dbdae83db3f");
         writeBindFunc = bind({ func: writeBindFunc, params: { autoWriteNodeObject, writeEdge }});
         return writeBindFunc;
     });
@@ -424,28 +398,19 @@ function buildManualSystemLoader(systems) {
         let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
         let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
 
-        let recreateLinks = function({ groupList, nameList }) {
-            exec("rm -rf src/kitsune-core-src");
-            exec("mkdir -p src/kitsune-core-src");
-
-            let coreNodes = groupList("66564ec14ed18fb88965140fc644d7b813121c78");
-            coreNodes.forEach(node => {
-                let myNames = nameList(node);
-                if(myNames && myNames.length > 0) {
-                    try {
-                        let cmdStr = "ln -s ../../src/kitsune-core/"+node+" src/kitsune-core-src/"+myNames[0];
-                        exec(cmdStr);
-                    } catch(e) {
-                        console.log("Already a link for "+myNames[0]);
-                    }
-                }
-            });
-        };
+        let recreateLinks = systems("f520dd0e4da481f0fbc18584a7bf8098d19d3222");
         recreateLinks = bind({ func: recreateLinks, params: { groupList, nameList } });
         return recreateLinks;
     });
 
-    addManSys("cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", () => console.log);
+    addManSys("4f22989e5edf2634371133db2720b09fc441a141", function(systems) {
+        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+
+        let nodeTypes = groupList("585d4cc792af1a4754f1819630068bdbb81bfd20");
+
+        let typeMap = _.zipObject(nodeTypes, _.map(nodeTypes, (typeId) => systems(typeId)));
+        return () => typeMap;
+    });
 
     addManSys("58f4149870fd4f99bcbf8083eedfee6fbc1199b0", function() {
         let hashInteger = systems("cb76708f83577aa1a50f91ed39b98f077e969efe");
@@ -633,6 +598,56 @@ function buildManualSystemLoader(systems) {
             });
         };
         return stringReport;
+    });
+
+    addManSys("d5e195726a6a3650166a6591dc3d7619adaef98d", function(systems) {
+        let getDataTime = function() {
+            let graphTime = fs.statSync("./data/24c045b912918d65c9e9aaea9993e9ab56f50d2e.json").mtime;
+            let stringTime = fs.statSync("./data/1cd179d6e63660fba96d54fe71693d1923e3f4f1.json").mtime;
+
+            let latest = Math.max(graphTime.getTime(), stringTime.getTime());
+            return latest;
+        };
+        return getDataTime;
+    });
+
+    addManSys("1d6976a263d64b64ac113f178e8ddc1d245b6120", function() {
+        let writeNodeObject = function({ graphAssign, id, obj }) {
+            for(let i in obj)
+                graphAssign({ head: i, type: id, tail: obj[i] });
+            return id;
+        };
+        return writeNodeObject;
+    });
+
+    addManSys("aed811d85de045e271fdfe4097349dbdae83db3f", function() {
+        let writeBindFunc = function({ autoWriteNodeObject, writeEdge, id, func, params }) {
+            let paramObj = autoWriteNodeObject(params);
+            writeEdge({ id, head: func, tail: paramObj });
+            return id;
+        };
+        return writeBindFunc;
+    });
+
+    addManSys("f520dd0e4da481f0fbc18584a7bf8098d19d3222", function() {
+        let recreateLinks = function({ groupList, nameList }) {
+            exec("rm -rf src/kitsune-core-src");
+            exec("mkdir -p src/kitsune-core-src");
+
+            let coreNodes = groupList("66564ec14ed18fb88965140fc644d7b813121c78");
+            coreNodes.forEach(node => {
+                let myNames = nameList(node);
+                if(myNames && myNames.length > 0) {
+                    try {
+                        let cmdStr = "ln -s ../../src/kitsune-core/"+node+" src/kitsune-core-src/"+myNames[0];
+                        exec(cmdStr);
+                    } catch(e) {
+                        console.log("Already a link for "+myNames[0]);
+                    }
+                }
+            });
+        };
+        return recreateLinks;
     });
 
     addManSys("42e9ce26666845ae2855a6ed619b54b8280b415b", function() {
