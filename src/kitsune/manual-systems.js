@@ -235,23 +235,6 @@ function buildManualSystemLoader(systems) {
         return createSystemFile;
     });
 
-    addManSys("d79ba735ae111d7d34457c712cf44519f13e827e", function() {
-        let cleanStringSystem = function({ stringFind, graphListNodes, stringRemove }) {
-            let stringIds = stringFind({}).map(value => value.id);
-            let graphNodes = graphListNodes();
-
-            let diff = _.difference(stringIds, graphNodes);
-
-            console.log("Removed string ids:");
-            console.log(diff);
-
-            diff.forEach(id => {
-                stringRemove({ id });
-            });
-        };
-        return cleanStringSystem;
-    });
-
     addManSys("f3db04b0138e827a9b513ab195cc373433407f83", function(systems) {
         let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
         let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
@@ -283,31 +266,12 @@ function buildManualSystemLoader(systems) {
         return describeNode;
     });
 
-    addManSys("a3bf45bfe89ebb31dac911bfbe299fcb2ce6491c", function(systems) {
-        let hyphenNameToCamelCase = function(name) {
-            let result = name
-                    .replace(/-(.)/g, capture => capture.toUpperCase())
-                    .replace(/-/g, '');
-            return result;
-        };
-        return hyphenNameToCamelCase;
-    });
-
     addManSys("f3d18aa9371f876d4264bfe051e5b4e312e90040", function(systems) {
         let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
         let describeNode = systems("15b16d6f586760a181f017d264c4808dc0f8bd06");
 
-        let _nodeDescReport = function({ systems, graphListNodes, describeNode }) {
-            let nodeList = graphListNodes();
-
-            console.log("== Node Description Report ==");
-            nodeList.forEach(node => {
-                let types = describeNode(node);
-                console.log(node+" => "+JSON.stringify(types));
-            });
-        };
-
-        let nodeDescReport = bind({ func: _nodeDescReport, params: { systems, graphListNodes, describeNode }});
+        let nodeDescReport = systems("c574e6cc383ede7bae894721dbf7f0e19233dbac");
+        nodeDescReport = bind({ func: nodeDescReport, params: { systems, graphListNodes, describeNode }});
         return nodeDescReport;
     });
 
@@ -333,35 +297,16 @@ function buildManualSystemLoader(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
         let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
 
-        let _graphReport = function({ graphFind, graphListNodes }) {
-            let edges = graphFind();
-            let nodes = graphListNodes();
-            let nodePercent = (edges.length/nodes.length*100).toPrecision(4);
-
-            console.log("== Graph Report ==");
-            console.log("Nodes: "+nodes.length);
-            console.log("Edges: "+edges.length+" ("+nodePercent+"%)");
-        };
-
-        let graphReport = bind({ func: _graphReport, params: { graphFind, graphListNodes }});
+        let graphReport = systems("de4c22f8bae0d00aad89fe0767d64f38da88a357");
+        graphReport = bind({ func: graphReport, params: { graphFind, graphListNodes }});
         return graphReport;
     });
 
     addManSys("8efd75de58a2802dd9b784d8bc1bdd66aaedd856", function() {
         let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
 
-        let _stringReport = function({ stringFind }) {
-            let strings = stringFind();
-
-            strings = _.sortBy(strings, "string");
-
-            console.log("== String Report ==");
-            strings.forEach(value => {
-                console.log(`${value.id} => ${value.string}`);
-            });
-        };
-
-        let stringReport = bind({ func: _stringReport, params: { stringFind }});
+        let stringReport = systems("bcf4dfc4210f020178288d9c134cf6e3e94a6d63");
+        stringReport = bind({ func: stringReport, params: { stringFind }});
         return stringReport;
     });
 
@@ -371,107 +316,9 @@ function buildManualSystemLoader(systems) {
         let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
         let describeNode = systems("15b16d6f586760a181f017d264c4808dc0f8bd06");
 
-        let _edgeReport = function({ graphFind }) {
-            console.log("== Graph Report ==");
-
-            var edgeTypes = {};
-
-            let makeFn = function(groupId) {
-                return edgeId => {
-                    let edge = graphFind({ id: edgeId })[0];
-                    return edge.head == groupId;
-                };
-            };
-
-            let allowedGroups = [
-                "585d4cc792af1a4754f1819630068bdbb81bfd20",
-                "66564ec14ed18fb88965140fc644d7b813121c78",
-                "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3",
-                "d2cd5a6f99428baaa05394cf1fe3afa17fb59aff",
-                "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0"
-            ];
-            allowedGroups.forEach(coreNode => {
-                let name = nameList(coreNode)[0];
-                edgeTypes[name+"-group"] = makeFn(coreNode);
-            });
-
-            edgeTypes["name-edge"] = function(edgeId) {
-                let search = graphFind({ head: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", tail: edgeId });
-                return search.length;
-            };
-
-            let edges = graphFind();
-            let edgeIds = _.map(edges, "id");
-            let edgeReport = _.map(edgeIds, function(edge) {
-                let types = _.map(edgeTypes, (edgeType, name) => edgeType(edge) ? name : null).filter(x => x);
-                return { edge, types };
-            });
-
-            edgeReport = _.sortBy(edgeReport, value => value.types.join(""));
-
-            let [goodEdges, badEdges] = _.partition(edgeReport, value => value.types.length);
-
-            let totalCount = edgeIds.length;
-            let goodCount = goodEdges.length;
-            let badCount = badEdges.length;
-            let goodRatio = (goodCount / totalCount) * 100;
-
-            console.log(`-- Good Edges: ${goodCount}/${totalCount} [${goodRatio.toFixed(2)}%] --`);
-            _.forEach(goodEdges, data => console.log(`${data.edge} =>`, data.types));
-            console.log(`-- Bad Edges: ${badCount} --`);
-            _.forEach(badEdges, data => {
-                console.log(data.edge);
-                let edge = graphFind({ id: data.edge })[0];
-                let headDesc = describeNode(edge.head);
-                console.log(`\tH ${edge.head}  =>`, headDesc);
-                let tailDesc = describeNode(edge.tail);
-                console.log(`\tT ${edge.tail}  =>`, tailDesc);
-            });
-
-            console.log(`Good Edges: ${goodCount}/${totalCount} [${goodRatio.toFixed(2)}%]`);
-            console.log(`Bad Edges: ${badCount}`);
-        };
-
-        let edgeReport = bind({ func: _edgeReport, params: { graphFind, graphListNodes }});
+        let edgeReport = systems("42e9ce26666845ae2855a6ed619b54b8280b415b");
+        edgeReport = bind({ func: edgeReport, params: { graphFind, graphListNodes }});
         return edgeReport;
-    });
-
-    addManSys("0750f117e54676b9eb32aebe5db1d3dae2e1853e", function(systems) {
-        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
-
-        let coreNodes = fs.readdirSync("node_modules/kitsune-core");
-
-        let _systemFileReport = function({ groupList, nameList, coreNodes }) {
-            console.log("=== System File Report ===");
-            console.log("System files: "+coreNodes.length);
-
-            let group = groupList("66564ec14ed18fb88965140fc644d7b813121c78");
-            let systemFiles = group.sort();
-
-            let list = coreNodes.map(node => {
-                let isInGroup = systemFiles.indexOf(node) != -1;
-                let myNames = nameList(node);
-                return {
-                    node,
-                    isInGroup,
-                    names: myNames
-                };
-            });
-
-            list.sort((a, b) => {
-                let aName = a.names[0] || "";
-                let bName = b.names[0] || "";
-                return aName.localeCompare(bName);
-            });
-
-            list.forEach(({isInGroup, node, names}) => {
-                console.log(`[${isInGroup ? "X" : " "}] ${node} ${JSON.stringify(names)}`);
-            });
-        };
-
-        let systemFileReport = bind({ func: _systemFileReport, params: { groupList, nameList, coreNodes }});
-        return systemFileReport;
     });
 
     addManSys("842d244f8e9698d469dc060db0f9c9b4e24c50b0", function(systems) {
@@ -719,6 +566,137 @@ function buildManualSystemLoader(systems) {
             nameFn({ node: newSystemId, name: name });
         };
         return createSystemFile;
+    });
+
+    addManSys("c574e6cc383ede7bae894721dbf7f0e19233dbac", function() {
+        let nodeDescReport = function({ systems, graphListNodes, describeNode }) {
+            let nodeList = graphListNodes();
+
+            console.log("== Node Description Report ==");
+            nodeList.forEach(node => {
+                let types = describeNode(node);
+                console.log(node+" => "+JSON.stringify(types));
+            });
+        };
+        return nodeDescReport;
+    });
+
+    addManSys("d79ba735ae111d7d34457c712cf44519f13e827e", function() {
+        let cleanStringSystem = function({ stringFind, graphListNodes, stringRemove }) {
+            let stringIds = stringFind({}).map(value => value.id);
+            let graphNodes = graphListNodes();
+
+            let diff = _.difference(stringIds, graphNodes);
+
+            console.log("Removed string ids:");
+            console.log(diff);
+
+            diff.forEach(id => {
+                stringRemove({ id });
+            });
+        };
+        return cleanStringSystem;
+    });
+
+    addManSys("a3bf45bfe89ebb31dac911bfbe299fcb2ce6491c", function(systems) {
+        let hyphenNameToCamelCase = function(name) {
+            let result = name
+                    .replace(/-(.)/g, capture => capture.toUpperCase())
+                    .replace(/-/g, '');
+            return result;
+        };
+        return hyphenNameToCamelCase;
+    });
+
+    addManSys("de4c22f8bae0d00aad89fe0767d64f38da88a357", function() {
+        let graphReport = function({ graphFind, graphListNodes }) {
+            let edges = graphFind();
+            let nodes = graphListNodes();
+            let nodePercent = (edges.length/nodes.length*100).toPrecision(4);
+
+            console.log("== Graph Report ==");
+            console.log("Nodes: "+nodes.length);
+            console.log("Edges: "+edges.length+" ("+nodePercent+"%)");
+        };
+        return graphReport;
+    });
+
+    addManSys("bcf4dfc4210f020178288d9c134cf6e3e94a6d63", function() {
+        let stringReport = function({ stringFind }) {
+            let strings = stringFind();
+
+            strings = _.sortBy(strings, "string");
+
+            console.log("== String Report ==");
+            strings.forEach(value => {
+                console.log(`${value.id} => ${value.string}`);
+            });
+        };
+        return stringReport;
+    });
+
+    addManSys("42e9ce26666845ae2855a6ed619b54b8280b415b", function() {
+        let edgeReport = function({ graphFind }) {
+            console.log("== Graph Report ==");
+
+            var edgeTypes = {};
+
+            let makeFn = function(groupId) {
+                return edgeId => {
+                    let edge = graphFind({ id: edgeId })[0];
+                    return edge.head == groupId;
+                };
+            };
+
+            let allowedGroups = [
+                "585d4cc792af1a4754f1819630068bdbb81bfd20",
+                "66564ec14ed18fb88965140fc644d7b813121c78",
+                "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3",
+                "d2cd5a6f99428baaa05394cf1fe3afa17fb59aff",
+                "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0"
+            ];
+            allowedGroups.forEach(coreNode => {
+                let name = nameList(coreNode)[0];
+                edgeTypes[name+"-group"] = makeFn(coreNode);
+            });
+
+            edgeTypes["name-edge"] = function(edgeId) {
+                let search = graphFind({ head: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", tail: edgeId });
+                return search.length;
+            };
+
+            let edges = graphFind();
+            let edgeIds = _.map(edges, "id");
+            let edgeReport = _.map(edgeIds, function(edge) {
+                let types = _.map(edgeTypes, (edgeType, name) => edgeType(edge) ? name : null).filter(x => x);
+                return { edge, types };
+            });
+
+            edgeReport = _.sortBy(edgeReport, value => value.types.join(""));
+
+            let [goodEdges, badEdges] = _.partition(edgeReport, value => value.types.length);
+
+            let totalCount = edgeIds.length;
+            let goodCount = goodEdges.length;
+            let badCount = badEdges.length;
+            let goodRatio = (goodCount / totalCount) * 100;
+
+            console.log(`-- Good Edges: ${goodCount}/${totalCount} [${goodRatio.toFixed(2)}%] --`);
+            _.forEach(goodEdges, data => console.log(`${data.edge} =>`, data.types));
+            console.log(`-- Bad Edges: ${badCount} --`);
+            _.forEach(badEdges, data => {
+                console.log(data.edge);
+                let edge = graphFind({ id: data.edge })[0];
+                let headDesc = describeNode(edge.head);
+                console.log(`\tH ${edge.head}  =>`, headDesc);
+                let tailDesc = describeNode(edge.tail);
+                console.log(`\tT ${edge.tail}  =>`, tailDesc);
+            });
+
+            console.log(`Good Edges: ${goodCount}/${totalCount} [${goodRatio.toFixed(2)}%]`);
+            console.log(`Bad Edges: ${badCount}`);
+        };
+        return edgeReport;
     });
     // END FOLD
 
