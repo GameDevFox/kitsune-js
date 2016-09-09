@@ -198,21 +198,14 @@ function buildManualSystemLoader(systems) {
     addManSys("fc83ddd594c9b4fa2a44b3b42d8f1824d0f68c3e", function() {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
-        let getHeads = function({ graphFind, node }) {
-            let edges = graphFind({ head: node });
-            let result = edges.map(edge => edge.head);
-            return result;
-        };
+        let getHeads = systems("f6886ff48a34c6561cbab13fbfeabc0e6a4bd964");
         getHeads = bind({ func: getHeads, params: { graphFind }});
         getHeads = autoParam({ func: getHeads, paramName: "group" });
         return getHeads;
     });
 
     addManSys("a8a338d08b0ef7e532cbc343ba1e4314608024b2", function() {
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-
-        let getTails = systems("ab54a0a1abd5f849fcc04c809e5db0ebb1f1cc29"); // groupList
-        getTails = bind({ func: getTails, params: { graphFind }});
+        let getTails = systems("d27602da00e2cfcc58ce7440aa593d7b0e181921");
         getTails = autoParam({ func: getTails, paramName: "group" });
         return getTails;
     });
@@ -783,6 +776,18 @@ function buildManualSystemLoader(systems) {
                             "0d4085c107c1e9fab3fcb0cd49a8372003f00484": writeFuncCall,
                             "253cd1812a32a6a81f1365e1eca19cc1549f6002": writeAndNameFuncCall };
     });
+
+    // FUNCTIONS
+    // FOLD
+    addManSys("f6886ff48a34c6561cbab13fbfeabc0e6a4bd964", function() {
+        let getHeads = function({ graphFind, node }) {
+            let edges = graphFind({ tail: node });
+            let result = edges.map(edge => edge.head);
+            return result;
+        };
+        return getHeads;
+    });
+    // END FOLD
 
     return manualSystems;
 }
