@@ -158,18 +158,6 @@ function buildManualSystemLoader(systems) {
         });
     // END FOLD
 
-    // REPORTS //
-    // FOLD
-    addManSys("990053fb6f50ab8cf4ea766f765acb89f88d3b3d", function() {
-        let printReport = function(report) {
-            report.forEach(({ node, names }) => {
-                console.log(`${node} ${JSON.stringify(names)}`);
-            });
-        };
-        return printReport;
-    });
-    // END FOLD
-
     addManSys("4e63843a9bee61351b80fac49f4182bd582907b4", function(systems) {
         let stringAutoPut = systems("21eb5692a08d14bf1116d2652d705fd57fd670cd");
         stringAutoPut = autoParam({ func: stringAutoPut, paramName: "string" });
@@ -188,25 +176,6 @@ function buildManualSystemLoader(systems) {
 
         let autoWriteEdge = autoId(writeEdge);
         return autoWriteEdge;
-    });
-
-    addManSys("3ddcd1d1d8dec3762d314f7e479e38a8e6325c41", function() {
-        let groupReport = systems("f4d6f188f91fe3569bfc833d7d7ca960dc60d1f3");
-        let printReport = systems("990053fb6f50ab8cf4ea766f765acb89f88d3b3d");
-
-        let _printGroupReport = function({ groupReport, printReport, groupId }) {
-            let report = groupReport(groupId);
-            printReport(report);
-        };
-
-        let printGroupReport = bind({ func: _printGroupReport, params: { groupReport, printReport }});
-        return printGroupReport;
-    });
-
-    addManSys("1cbcbae3c4aea924e7bb9af6c6bde5192a6646ae", function() {
-        let printGroupReport = systems("3ddcd1d1d8dec3762d314f7e479e38a8e6325c41"); 
-        printGroupReport = autoParam({ func: printGroupReport, paramName: "groupId" });
-        return printGroupReport;
     });
 
     addManSys("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74", function(systems) {
@@ -506,34 +475,6 @@ function buildManualSystemLoader(systems) {
         let isSystemFile = bind({ func: isInGroup, params: { graphFind, group: "66564ec14ed18fb88965140fc644d7b813121c78" }});
         isSystemFile = autoParam({ func: isSystemFile, paramName: "node" });
         return isSystemFile;
-    });
-
-    addManSys("f4d6f188f91fe3569bfc833d7d7ca960dc60d1f3", function(systems) {
-        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
-
-        let _groupReport = function({ groupList, nameList, groupId }) {
-            let coreNodes = groupList(groupId);
-            let nodesAndNames = [];
-            coreNodes.forEach(node => {
-                let names = nameList(node);
-                nodesAndNames.push({
-                    node,
-                    names
-                });
-            });
-
-            // Sort by first name
-            nodesAndNames = _.sortBy(nodesAndNames, value => {
-                return value.names[0];
-            });
-
-            return nodesAndNames;
-        };
-
-        let groupReport = bind({ func: _groupReport, params: { groupList, nameList }});
-        groupReport = autoParam({ func: groupReport, paramName: "groupId" });
-        return groupReport;
     });
 
     addManSys("604a2dbd0f19f35564efc9b9ca3d77ac82ea9382", function(systems) {
