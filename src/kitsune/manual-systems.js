@@ -40,7 +40,6 @@ function buildManualSystemLoader(systems) {
     manualSystems = autoParam({ func: manualSystems, paramName: "id" });
 
     // TODO: See which of these can be converted to function call systems or bind-functions
-    // TODO; Report of which of these have/have-not been loaded at certain points
 
     // list-manual-systems
     addManSys("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8", function(systems) {
@@ -53,30 +52,128 @@ function buildManualSystemLoader(systems) {
         return () => files;
     });
 
-    // Dependancy of Bind Function Loader
-    addManSys("c83cd0ab78a1d57609f9224f851bde6d230711d0", function(systems) {
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+    // LOADERS //
+    // FOLD
+    addManSys("9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a", function() {
+        let readBindFunc = systems("4841f107fb76dbf4ac1d29a936b16b7365985ca4");
+        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+        let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
 
-        let graphFactor = systems("4163d1cd63d3949b79c37223bd7da04ad6cd36c8");
-        graphFactor = bind({ func: graphFactor, params: { graphFind }});
-        return graphFactor;
+        let bindFuncLoader = function({ readBindFunc, nameList, id }) {
+
+            let bindFunc = readBindFunc(id);
+
+            let func = systems(bindFunc.func);
+            let params = {};
+            for(let i in bindFunc.params) {
+                let name = nameList(i)[0];
+                let param = systems(bindFunc.params[i]);
+                params[name] = param;
+            }
+
+            let result = bind({ func, params });
+            return result;
+        };
+        bindFuncLoader = bind({ func: bindFuncLoader, params: { readBindFunc, nameList }});
+        bindFuncLoader = autoParam({ func: bindFuncLoader, paramName: "id" });
+        return bindFuncLoader;
     });
+    // END FOLD
+
+    // LOADER DEPENDENCIES //
+    // FOLD
+    // Dependancies of Bind Function Loader
+    addManSys("4841f107fb76dbf4ac1d29a936b16b7365985ca4", function(systems) {
+        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+        let readNodeObject = systems("971a9f4b9f8e841b4519d96fa8733311c8b58fe2");
+
+        let readBindFunc = function({ readEdge, readNodeObject, id }) {
+            let bindFunc = readEdge(id);
+
+            let func = bindFunc.head;
+            let paramId = bindFunc.tail;
+            let params = readNodeObject(paramId);
+
+            return { func, params };
+        };
+        readBindFunc = bind({ func: readBindFunc, params: { readEdge, readNodeObject }});
+        readBindFunc = autoParam({ func: readBindFunc, paramName: "id" });
+        return readBindFunc;
+    });
+
+        addManSys("25cff8a2afcf560b5451d2482dbf9d9d69649f26", function(systems) {
+            let returnFirst = systems("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51");
+            let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+
+            let readEdge = returnFirst(graphFind);
+            readEdge = autoParam({ func: readEdge, paramName: "id" });
+            return readEdge;
+        });
+
+        addManSys("971a9f4b9f8e841b4519d96fa8733311c8b58fe2", function(systems) {
+            let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+
+            let readNodeObject = function({ graphFactor, id }) {
+                let result = {};
+                let factor = graphFactor({ type: id });
+                for(let i in factor) {
+                    let key = factor[i].head;
+                    let value = factor[i].tail;
+                    result[key] = value;
+                }
+                return result;
+            };
+            readNodeObject = bind({ func: readNodeObject, params: { graphFactor }});
+            readNodeObject = autoParam({ func: readNodeObject, paramName: "id" });
+            return readNodeObject;
+        });
+
+            addManSys("c83cd0ab78a1d57609f9224f851bde6d230711d0", function(systems) {
+                let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+
+                let graphFactor = systems("4163d1cd63d3949b79c37223bd7da04ad6cd36c8");
+                graphFactor = bind({ func: graphFactor, params: { graphFind }});
+                return graphFactor;
+            });
+
+    addManSys("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3", function(systems) {
+        let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+        let stringReadString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
+
+        let nameList = systems("81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266");
+        nameList = bind({ func: nameList, params: { graphFactor, stringReadString }});
+        nameList = autoParam({ func: nameList, paramName: "node" });
+        return nameList;
+    });
+
+        addManSys("08f8db63b1843f7dea016e488bd547555f345c59", function(systems) {
+            let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
+            let returnFirst = systems("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51");
+            let returnProperty = systems("c1020aea14a46b72c6f8a4b7fa57acc14a73a64e");
+
+            let stringReadString = autoParam({ func: stringFind, paramName: "id" });
+            stringReadString = returnFirst(stringReadString);
+            stringReadString = returnProperty({ func: stringReadString, propertyName: "string" });
+            return stringReadString;
+        });
+    // END FOLD
+
+    // REPORTS //
+    // FOLD
+    addManSys("990053fb6f50ab8cf4ea766f765acb89f88d3b3d", function() {
+        let printReport = function(report) {
+            report.forEach(({ node, names }) => {
+                console.log(`${node} ${JSON.stringify(names)}`);
+            });
+        };
+        return printReport;
+    });
+    // END FOLD
 
     addManSys("4e63843a9bee61351b80fac49f4182bd582907b4", function(systems) {
         let stringAutoPut = systems("21eb5692a08d14bf1116d2652d705fd57fd670cd");
         stringAutoPut = autoParam({ func: stringAutoPut, paramName: "string" });
         return stringAutoPut;
-    });
-
-    addManSys("08f8db63b1843f7dea016e488bd547555f345c59", function(systems) {
-        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
-        let returnFirst = systems("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51");
-        let returnProperty = systems("c1020aea14a46b72c6f8a4b7fa57acc14a73a64e");
-
-        let stringReadString = autoParam({ func: stringFind, paramName: "id" });
-        stringReadString = returnFirst(stringReadString);
-        stringReadString = returnProperty({ func: stringReadString, propertyName: "string" });
-        return stringReadString;
     });
 
     addManSys("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220", function() {
@@ -93,16 +190,7 @@ function buildManualSystemLoader(systems) {
         return autoWriteEdge;
     });
 
-    addManSys("990053fb6f50ab8cf4ea766f765acb89f88d3b3d", function() {
-        let printReport = function(report) {
-            report.forEach(({ node, names }) => {
-                console.log(`${node} ${JSON.stringify(names)}`);
-            });
-        };
-        return printReport;
-    });
-
-    addManSys("1cbcbae3c4aea924e7bb9af6c6bde5192a6646ae", function() {
+    addManSys("3ddcd1d1d8dec3762d314f7e479e38a8e6325c41", function() {
         let groupReport = systems("f4d6f188f91fe3569bfc833d7d7ca960dc60d1f3");
         let printReport = systems("990053fb6f50ab8cf4ea766f765acb89f88d3b3d");
 
@@ -112,6 +200,11 @@ function buildManualSystemLoader(systems) {
         };
 
         let printGroupReport = bind({ func: _printGroupReport, params: { groupReport, printReport }});
+        return printGroupReport;
+    });
+
+    addManSys("1cbcbae3c4aea924e7bb9af6c6bde5192a6646ae", function() {
+        let printGroupReport = systems("3ddcd1d1d8dec3762d314f7e479e38a8e6325c41"); 
         printGroupReport = autoParam({ func: printGroupReport, paramName: "groupId" });
         return printGroupReport;
     });
@@ -122,15 +215,6 @@ function buildManualSystemLoader(systems) {
         let graphAssign = systems("6c877bef62bc8f57eb55265c62e75b36515ef458");
         graphAssign = bind({ func: graphAssign, params: { graphAutoPut }});
         return graphAssign;
-    });
-
-    addManSys("25cff8a2afcf560b5451d2482dbf9d9d69649f26", function(systems) {
-        let returnFirst = systems("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51");
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-
-        let readEdge = returnFirst(graphFind);
-        readEdge = autoParam({ func: readEdge, paramName: "id" });
-        return readEdge;
     });
 
     addManSys("ca79cd84ab6a9eb3e5ac06ed48d3d24e6649d0bc", function(systems) {
@@ -154,16 +238,6 @@ function buildManualSystemLoader(systems) {
         let name = systems("ddfe7d402ff26c18785bcc899fa69183b3170a7d");
         name = bind({ func: name, params: { stringAutoPut, graphAssign }});
         return name;
-    });
-
-    addManSys("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3", function(systems) {
-        let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
-        let stringReadString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
-
-        let nameList = systems("81e0ef7e2fae9ccc6e0e3f79ebf0c9e14d88d266");
-        nameList = bind({ func: nameList, params: { graphFactor, stringReadString }});
-        nameList = autoParam({ func: nameList, paramName: "node" });
-        return nameList;
     });
 
     addManSys("2bf3bbec64d4b33302b9ab228eb90bc3f04b22a8", function() {
@@ -674,24 +748,6 @@ function buildManualSystemLoader(systems) {
         return autoWriteNodeObject;
     });
 
-    addManSys("971a9f4b9f8e841b4519d96fa8733311c8b58fe2", function(systems) {
-        let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
-
-        let readNodeObject = function({ graphFactor, id }) {
-            let result = {};
-            let factor = graphFactor({ type: id });
-            for(let i in factor) {
-                let key = factor[i].head;
-                let value = factor[i].tail;
-                result[key] = value;
-            }
-            return result;
-        };
-        readNodeObject = bind({ func: readNodeObject, params: { graphFactor }});
-        readNodeObject = autoParam({ func: readNodeObject, paramName: "id" });
-        return readNodeObject;
-    });
-
     addManSys("ccd7b9796a25b50b3d5d712392c9758e3ab6133d", function(systems) {
         let autoWriteNodeObject = systems("e5f7c17a83b013b4bc9d2e34c078ba5d5ae69077");
         let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
@@ -704,24 +760,6 @@ function buildManualSystemLoader(systems) {
         };
         writeBindFunc = bind({ func: writeBindFunc, params: { autoWriteNodeObject, writeEdge }});
         return writeBindFunc;
-    });
-
-    addManSys("4841f107fb76dbf4ac1d29a936b16b7365985ca4", function(systems) {
-        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
-        let readNodeObject = systems("971a9f4b9f8e841b4519d96fa8733311c8b58fe2");
-
-        let readBindFunc = function({ readEdge, readNodeObject, id }) {
-            let bindFunc = readEdge(id);
-
-            let func = bindFunc.head;
-            let paramId = bindFunc.tail;
-            let params = readNodeObject(paramId);
-
-            return { func, params };
-        };
-        readBindFunc = bind({ func: readBindFunc, params: { readEdge, readNodeObject }});
-        readBindFunc = autoParam({ func: readBindFunc, paramName: "id" });
-        return readBindFunc;
     });
 
     addManSys("36b76ca66bba2d0b98fe25ce05efeaec1f286826", function(systems) {
@@ -779,33 +817,6 @@ function buildManualSystemLoader(systems) {
             return typeMappings;
         };
     });
-
-    // LOADERS //
-    addManSys("9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a", function() {
-
-        let readBindFunc = systems("4841f107fb76dbf4ac1d29a936b16b7365985ca4");
-        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
-
-        let bindFuncLoader = function({ readBindFunc, nameList, id }) {
-
-            let bindFunc = readBindFunc(id);
-
-            let func = systems(bindFunc.func);
-            let params = {};
-            for(let i in bindFunc.params) {
-                let name = nameList(i)[0];
-                let param = systems(bindFunc.params[i]);
-                params[name] = param;
-            }
-
-            let result = bind({ func, params });
-            return result;
-        };
-        bindFuncLoader = bind({ func: bindFuncLoader, params: { readBindFunc, nameList }});
-        bindFuncLoader = autoParam({ func: bindFuncLoader, paramName: "id" });
-        return bindFuncLoader;
-    });
-    // END LOADERS //
 
     addManSys(["c5cfe7d5154188daaa2a5cdf5d27a18fce4c2345",
                "0abebb208d96e3aa8a17890a5606734e03fa2539",

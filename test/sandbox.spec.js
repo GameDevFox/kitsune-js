@@ -75,17 +75,17 @@ describe("sandbox", function() {
 
         // REPORTS //
         if(run.reports) {
-            let printGraphReport = systems("1cbcbae3c4aea924e7bb9af6c6bde5192a6646ae");
+            let printGroupReport = systems("1cbcbae3c4aea924e7bb9af6c6bde5192a6646ae");
 
             // let edgeReport = systems("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039"); edgeReport();
             // let nodeDescReport = systems("f3d18aa9371f876d4264bfe051e5b4e312e90040"); nodeDescReport();
 
             // console.log("=== Core Node Report ===");
-            // printGraphReport("7f82d45a6ffb5c345f84237a621de35dd8b7b0e3");
+            // printGroupReport("7f82d45a6ffb5c345f84237a621de35dd8b7b0e3");
             // console.log("=== Function Call Report ===");
-            // printGraphReport("d2cd5a6f99428baaa05394cf1fe3afa17fb59aff");
+            // printGroupReport("d2cd5a6f99428baaa05394cf1fe3afa17fb59aff");
             // console.log("=== Node Type Report ===");
-            // printGraphReport("585d4cc792af1a4754f1819630068bdbb81bfd20");
+            // printGroupReport("585d4cc792af1a4754f1819630068bdbb81bfd20");
 
             // let systemFileReport = systems("0750f117e54676b9eb32aebe5db1d3dae2e1853e"); systemFileReport();
             let stringReport = systems("8efd75de58a2802dd9b784d8bc1bdd66aaedd856"); stringReport();
