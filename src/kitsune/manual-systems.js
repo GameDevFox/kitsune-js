@@ -315,12 +315,11 @@ function buildManualSystemLoader(systems) {
         return isCoreNode;
     });
 
-    addManSys("b7df76bb3573caba7da57400c412f344cc309978", function(systems) {
+    addManSys("50ef96b815193e3a4fb04a648f2d9b3a50171bc5", function() {
         let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
         let isSystemFile = bind({ func: isInGroup, params: { graphFind, group: "66564ec14ed18fb88965140fc644d7b813121c78" }});
-        isSystemFile = autoParam({ func: isSystemFile, paramName: "node" });
         return isSystemFile;
     });
 
