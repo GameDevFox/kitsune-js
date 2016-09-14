@@ -398,13 +398,7 @@ function buildManualSystemLoader(systems) {
     });
 
     addManSys("d7f80b3486eee7b142c190a895c5496242519608", function() {
-        let graphFactor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
-        let stringReadString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
-        let graphReadEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
-        let callNodeFunction = systems("ca79cd84ab6a9eb3e5ac06ed48d3d24e6649d0bc");
-
-        let readObject = systems("e5ac371a5d01eb2e1df8f42166f2ef20a5ae094b");
-        readObject = bind({ func: readObject, params: { graphFactor, stringReadString, graphReadEdge, nodeFunc: callNodeFunction }});
+        let readObject = systems("2f44f915602e3cc34f1d41cf76d53ad96f835b04");
         readObject = autoParam({ func: readObject, paramName: "node" });
         return readObject;
     });
@@ -488,7 +482,7 @@ function buildManualSystemLoader(systems) {
         let mappingResult = _.mapValues(typeMappings, function(value) {
             return value.readFuncId;
         });
-        console.log(mappingResult);
+        // console.log(mappingResult);
 
         // Write func call Stuff
         let writeValue = systems("d2a5636a4b4e88b0c7c640bfd8915e78919641a0");
