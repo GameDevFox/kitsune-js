@@ -284,12 +284,6 @@ function buildManualSystemLoader(systems) {
         return createSystemFile;
     });
 
-    addManSys("76c55430fccd4f9e0b19c1c2b98d8a3babea81b2", function(systems) {
-        let createSystemFile = systems("abd7880e8088fdf6c8e0519ea45a50a603be0687");
-        createSystemFile = autoParam({ func: createSystemFile, paramName: "name" });
-        return createSystemFile;
-    });
-
     addManSys("f3db04b0138e827a9b513ab195cc373433407f83", function(systems) {
         let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
         let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
