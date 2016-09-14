@@ -100,6 +100,10 @@
     "string": "function-reference"
   },
   {
+    "id": "756298c8ec1f323603452496a7bbab2a85214b6d",
+    "string": "get-heads"
+  },
+  {
     "id": "0b8838e140b93b082b1358f8b5b70a045f3baf58",
     "string": "get-tails"
   },

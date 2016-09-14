@@ -254,12 +254,11 @@ function buildManualSystemLoader(systems) {
         return stringGetId;
     });
 
-    addManSys("fc83ddd594c9b4fa2a44b3b42d8f1824d0f68c3e", function() {
+    addManSys("a4268864d21fd571f4dc7888f82d15b09e0e678d", function() {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
         let getHeads = systems("f6886ff48a34c6561cbab13fbfeabc0e6a4bd964");
         getHeads = bind({ func: getHeads, params: { graphFind }});
-        getHeads = autoParam({ func: getHeads, paramName: "group" });
         return getHeads;
     });
 
