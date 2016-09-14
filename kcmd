@@ -30,11 +30,11 @@ let regFunc = function(name, readOnly, func) {
     funcs[name] = { func, readOnly };
 };
 
-let id = "d7f80b3486eee7b142c190a895c5496242519608";
+let id = "263b18de1773a7bf1954c5622e67f0f2edf0aabc";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func("821f1f34a4998adf0f1efd9b772b57efef71a070");
+    let result = func("core-node");
     return result;
 });
 
@@ -42,8 +42,8 @@ function createAutoParamFunc() {
     let writeAutoParamFunc = systems("2fb95ddb758034712fe85b8cf63c9ea1ea0570cf");
     let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
 
-    let func = "2f44f915602e3cc34f1d41cf76d53ad96f835b04";
-    let paramName = "node";
+    let func = "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7";
+    let paramName = "string";
     writeAutoParamFunc({ id, func, paramName })
 
     let autoParamFuncGroup = "01ec9bb984b50b0a7bd0e296004ef1e74ea293a0";

@@ -217,16 +217,6 @@ function buildManualSystemLoader(systems) {
             stringReadString = returnProperty({ func: stringReadString, propertyName: "string" });
             return stringReadString;
         });
-    // END FOLD
-
-    addManSys("dc9959d7b543763255547b16b11e21ae6c3a8209", function(systems) {
-        let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-
-        let isAutoParamFunc = bind({ func: isInGroup, params: { graphFind, group: "01ec9bb984b50b0a7bd0e296004ef1e74ea293a0" }});
-        isAutoParamFunc = autoParam({ func: isAutoParamFunc, paramName: "node" });
-        return isAutoParamFunc;
-    });
 
     addManSys("03d33fe3603bfa66db338b5768f21a5c90a4e1b8", function(systems) {
         let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
@@ -237,6 +227,16 @@ function buildManualSystemLoader(systems) {
         return isBindFunc;
     });
 
+    addManSys("dc9959d7b543763255547b16b11e21ae6c3a8209", function(systems) {
+        let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+
+        let isAutoParamFunc = bind({ func: isInGroup, params: { graphFind, group: "01ec9bb984b50b0a7bd0e296004ef1e74ea293a0" }});
+        isAutoParamFunc = autoParam({ func: isAutoParamFunc, paramName: "node" });
+        return isAutoParamFunc;
+    });
+    // END FOLD
+
     addManSys("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7", function(systems) {
         let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
         let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");
@@ -246,11 +246,9 @@ function buildManualSystemLoader(systems) {
     });
 
     addManSys("8c7d214678ce851d39ebb4a774c9f168bfffe43d", function() {
-        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
         let returnFirst = systems("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51");
         let returnProperty = systems("c1020aea14a46b72c6f8a4b7fa57acc14a73a64e");
 
-        let stringGetId = autoParam({ func: stringFind, paramName: "string" });
         stringGetId = returnFirst(stringGetId);
         stringGetId = returnProperty({ func: stringGetId, propertyName: "id" });
         return stringGetId;
