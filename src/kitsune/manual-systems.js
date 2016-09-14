@@ -237,13 +237,6 @@ function buildManualSystemLoader(systems) {
         return isBindFunc;
     });
 
-
-    addManSys("4e63843a9bee61351b80fac49f4182bd582907b4", function(systems) {
-        let stringAutoPut = systems("21eb5692a08d14bf1116d2652d705fd57fd670cd");
-        stringAutoPut = autoParam({ func: stringAutoPut, paramName: "string" });
-        return stringAutoPut;
-    });
-
     addManSys("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7", function(systems) {
         let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
         let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");

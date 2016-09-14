@@ -428,6 +428,10 @@
     "string": "write-object"
   },
   {
+    "id": "98205aa3da5f363d7a6a325cf6d92469802ff266",
+    "string": "write-string"
+  },
+  {
     "id": "d1e8cda0190738333a0abef26a390913f9b00a4b",
     "string": "write-string-auto"
   },
