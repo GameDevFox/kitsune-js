@@ -307,12 +307,11 @@ function buildManualSystemLoader(systems) {
         return nodeDescReport;
     });
 
-    addManSys("39bedcfba59c016590ddd53ddc7d89268b5340fd", function(systems) {
+    addManSys("1ae2731ceb6b1984be6e3dba46df3eda2f46e5a7", function() {
         let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
         let isCoreNode = bind({ func: isInGroup, params: { graphFind, group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" }});
-        isCoreNode = autoParam({ func: isCoreNode, paramName: "node" });
         return isCoreNode;
     });
 
