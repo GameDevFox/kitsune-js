@@ -368,12 +368,6 @@ function buildManualSystemLoader(systems) {
         return isNameEdge;
     });
 
-    addManSys("7bee27a3335f7d2e3f562a84b9358b58f49390c1", function(systems) {
-        let isNameEdge = systems("bd7d5695726fa6fe5eb35bed1e009f8784b29c98");
-        isNameEdge = autoParam({ func: isNameEdge, paramName: "node" });
-        return isNameEdge;
-    });
-
     addManSys("236063bf30465aef27d1366d7573ffafa99d8c14", function(systems) {
         let graphAssign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
 
