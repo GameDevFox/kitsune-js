@@ -359,12 +359,17 @@ function buildManualSystemLoader(systems) {
         return isInNameGroup;
     });
 
-    addManSys("7bee27a3335f7d2e3f562a84b9358b58f49390c1", function(systems) {
+    addManSys("bd7d5695726fa6fe5eb35bed1e009f8784b29c98", function() {
         let andIs = systems("90184a3d0c84658aac411637f7442f80b3fe0040");
         let isEdge = systems("20bfa138672de625230eef7faebe0e10ba6a49d0");
         let isInNameGroup = systems("842d244f8e9698d469dc060db0f9c9b4e24c50b0");
 
         let isNameEdge = bind({ func: andIs, params: { types: [ isEdge, isInNameGroup ] }});
+        return isNameEdge;
+    });
+
+    addManSys("7bee27a3335f7d2e3f562a84b9358b58f49390c1", function(systems) {
+        let isNameEdge = systems("bd7d5695726fa6fe5eb35bed1e009f8784b29c98");
         isNameEdge = autoParam({ func: isNameEdge, paramName: "node" });
         return isNameEdge;
     });

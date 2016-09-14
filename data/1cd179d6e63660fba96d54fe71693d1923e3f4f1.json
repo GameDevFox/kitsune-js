@@ -216,6 +216,10 @@
     "string": "is-in-group"
   },
   {
+    "id": "bc8a59c1a71a694d762141430618c5070144bdf9",
+    "string": "is-in-name-group"
+  },
+  {
     "id": "55a2da89c78a06bcecf44691b3a6707673799f71",
     "string": "is-name-edge"
   },
