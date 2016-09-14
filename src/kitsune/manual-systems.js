@@ -351,12 +351,11 @@ function buildManualSystemLoader(systems) {
         return edgeReport;
     });
 
-    addManSys("842d244f8e9698d469dc060db0f9c9b4e24c50b0", function(systems) {
+    addManSys("0f9be9c5ad796df34aea4adf0cb340f2bbc2dfc6", function() {
         let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
         let isInNameGroup = bind({ func: isInGroup, params: { graphFind, group: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" }});
-        isInNameGroup = autoParam({ func: isInNameGroup, paramName: "node" });
         return isInNameGroup;
     });
 
