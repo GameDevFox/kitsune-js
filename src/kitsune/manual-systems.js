@@ -64,8 +64,10 @@ function buildManualSystemLoader(systems) {
 
     // LOADERS //
     // FOLD
+
+    // Bind func loader
     addManSys("2c677e2c78bede32f66bed87c214e5875c2c685c", function() {
-        let bindFuncLoader = function({ readBindFunc, nameList, id }) {
+        let bindFuncLoader = function({ readBindFunc, nameList, bind, id }) {
 
             let bindFunc = readBindFunc(id);
 
@@ -89,9 +91,16 @@ function buildManualSystemLoader(systems) {
         let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
 
         let bindFuncLoader = systems("2c677e2c78bede32f66bed87c214e5875c2c685c");
-        bindFuncLoader = bind({ func: bindFuncLoader, params: { readBindFunc, nameList }});
+        bindFuncLoader = bind({ func: bindFuncLoader, params: { readBindFunc, nameList, bind }});
         bindFuncLoader = autoParam({ func: bindFuncLoader, paramName: "id" });
         return bindFuncLoader;
+    });
+
+    // Auto param loader
+    addManSys("e7077ff12256c2c8da6a200c90899c311caf2cf4", function() {
+        let autoParamLoader = function() {
+
+        };
     });
     // END FOLD
 
@@ -489,36 +498,18 @@ function buildManualSystemLoader(systems) {
         writeValue = bind({ func: writeValue, params: { typeMappings }});
         writeValue = autoParam({ func: writeValue, paramName: "value" });
 
-        let writeFuncCall = function({ writeValue, graphAssign, func, param }) {
-            if(typeof func == "function")
-                func = func.id;
-
-            if(!func)
-                throw new Error("funcId must not be null or must have an id");
-
-            let ref = writeValue(param);
-
-            let args = { head: ref.funcId, type: func, tail: ref.id };
-            let result = graphAssign(args);
-
-            return result;
-        };
+        let writeFuncCall = systems("a06a20a98b11deb325416a6897978342632db336");
         writeFuncCall = bind({ func: writeFuncCall, params: { writeValue, graphAssign }});
 
-        let writeAndNameFuncCall = function({ writeFuncCall, nameFn, func, param, name }) {
-            let id = writeFuncCall({ func, param });
-            graphAutoPut({ head: "d2cd5a6f99428baaa05394cf1fe3afa17fb59aff", tail: id });
-            nameFn({ node: id, name });
-            return id;
-        };
+        let writeAndNameFuncCall = systems("7e387151076d045bedf4b34eef4f84aab789306d");
         writeAndNameFuncCall = bind({ func: writeAndNameFuncCall, params: { writeFuncCall, nameFn: name }});
 
-                   return { "c5cfe7d5154188daaa2a5cdf5d27a18fce4c2345": objectPut,
-                            "0abebb208d96e3aa8a17890a5606734e03fa2539": objectAutoPut,
-                            "30381757ef98651b92e54ce11a4fb839e76aa847": readObject,
-                            "6e52da614fc7779bd2aed50b06e753ee09cc346b": writeValue,
-                            "0d4085c107c1e9fab3fcb0cd49a8372003f00484": writeFuncCall,
-                            "253cd1812a32a6a81f1365e1eca19cc1549f6002": writeAndNameFuncCall };
+        return { "c5cfe7d5154188daaa2a5cdf5d27a18fce4c2345": writeObject,
+                "0abebb208d96e3aa8a17890a5606734e03fa2539": objectAutoPut,
+                "30381757ef98651b92e54ce11a4fb839e76aa847": readObject,
+                "6e52da614fc7779bd2aed50b06e753ee09cc346b": writeValue,
+                "0d4085c107c1e9fab3fcb0cd49a8372003f00484": writeFuncCall,
+                "253cd1812a32a6a81f1365e1eca19cc1549f6002": writeAndNameFuncCall };
     });
 
     // FUNCTIONS
@@ -721,6 +712,34 @@ function buildManualSystemLoader(systems) {
             console.log(`Bad Edges: ${badCount}`);
         };
         return edgeReport;
+    });
+
+    addManSys("a06a20a98b11deb325416a6897978342632db336", function() {
+        let writeFuncCall = function({ writeValue, graphAssign, func, param }) {
+            if(typeof func == "function")
+                func = func.id;
+
+            if(!func)
+                throw new Error("funcId must not be null or must have an id");
+
+            let ref = writeValue(param);
+
+            let args = { head: ref.funcId, type: func, tail: ref.id };
+            let result = graphAssign(args);
+
+            return result;
+        };
+        return writeFuncCall;
+    });
+
+    addManSys("7e387151076d045bedf4b34eef4f84aab789306d", function() {
+        let writeAndNameFuncCall = function({ writeFuncCall, nameFn, func, param, name }) {
+            let id = writeFuncCall({ func, param });
+            graphAutoPut({ head: "d2cd5a6f99428baaa05394cf1fe3afa17fb59aff", tail: id });
+            nameFn({ node: id, name });
+            return id;
+        };
+        return writeAndNameFuncCall;
     });
     // END FOLD
 
