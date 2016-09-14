@@ -245,12 +245,6 @@ function buildManualSystemLoader(systems) {
         return autoWriteEdge;
     });
 
-    addManSys("c2d807f302ca499c3584a8ccf04fb7a76cf589ad", function() {
-        let graphRemove = systems("e773ae04f0879e8a949f42d34b67f4d619c986a9");
-        graphRemove = autoParam({ func: graphRemove, paramName: "id" });
-        return graphRemove;
-    });
-
     addManSys("8c7d214678ce851d39ebb4a774c9f168bfffe43d", function() {
         let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
         let returnFirst = systems("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51");
