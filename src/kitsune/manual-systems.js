@@ -294,12 +294,6 @@ function buildManualSystemLoader(systems) {
         return cleanStringSystem;
     });
 
-    addManSys("821f1f34a4998adf0f1efd9b772b57efef71a070", function(systems) {
-        let isString = systems("0cea7cd1fc619b0d2db4f7205b63c8e15e693d9f");
-        isString = autoParam({ func: isString, paramName: "node" });
-        return isString;
-    });
-
     addManSys("15b16d6f586760a181f017d264c4808dc0f8bd06", function(systems) {
         let typeMap = systems("4f22989e5edf2634371133db2720b09fc441a141")();
 
