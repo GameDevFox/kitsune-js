@@ -294,12 +294,6 @@ function buildManualSystemLoader(systems) {
         return cleanStringSystem;
     });
 
-    addManSys("20bfa138672de625230eef7faebe0e10ba6a49d0", function(systems) {
-        let isEdge = systems("86c5865436335ab46f6cac7c620279457068490f");
-        isEdge = autoParam({ func: isEdge, paramName: "node" });
-        return isEdge;
-    });
-
     addManSys("821f1f34a4998adf0f1efd9b772b57efef71a070", function(systems) {
         let isString = systems("0cea7cd1fc619b0d2db4f7205b63c8e15e693d9f");
         isString = autoParam({ func: isString, paramName: "node" });
