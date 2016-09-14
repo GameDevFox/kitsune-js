@@ -290,12 +290,11 @@ function buildManualSystemLoader(systems) {
         return cleanStringSystem;
     });
 
-    addManSys("15b16d6f586760a181f017d264c4808dc0f8bd06", function(systems) {
+    addManSys("cbd2ac5f4784d47e3539be9d3736b23c6bbac31a", function() {
         let typeMap = systems("4f22989e5edf2634371133db2720b09fc441a141")();
 
         let describeNode = systems("4bea815e7814aa415569ecd48e5733a19e7777db");
         describeNode = bind({ func: describeNode, params: { types: typeMap }});
-        describeNode = autoParam({ func: describeNode, paramName: "node" });
         return describeNode;
     });
 
