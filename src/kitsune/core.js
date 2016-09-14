@@ -226,6 +226,8 @@ function bootstrap() {
     log.info(":Bind Function Loader");
     let bindFuncLoader = systems("9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a");
     modules.push(bindFuncLoader);
+    let autoParamLoader = systems("c18b49e9b5d330e1573707e9b3defc6592897522");
+    modules.push(autoParamLoader);
 
     // log.info(":Function Call Systems");
     // let funcCallSystems = buildFuncCallLoader(systems);

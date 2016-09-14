@@ -30,18 +30,26 @@ let regFunc = function(name, readOnly, func) {
     funcs[name] = { func, readOnly };
 };
 
-let id = "2f44f915602e3cc34f1d41cf76d53ad96f835b04";
+let id = "10ae12f47866d3c8e1d6cfeabb39fcf7e839a220";
 
 regFunc("q", false, function() {
-    let objId = "obj-id"
-
-    let objectPut = systems("c5cfe7d5154188daaa2a5cdf5d27a18fce4c2345");
-    let objRes = objectPut({ id: objId, object: { "my-name": "Some James", "my-gold": 2123 }});
-
     let func = systems(id);
-    let result = func({ node: objId });
+    let result = func({ id: "id", head: "head", tail: "tail" });
     return result;
 });
+
+function createAutoParamFunc() {
+    let writeAutoParamFunc = systems("2fb95ddb758034712fe85b8cf63c9ea1ea0570cf");
+    let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
+
+    let func = "7e5e764e118960318d513920a0f33e4c5ae64b50";
+    let paramName = "element";
+    writeAutoParamFunc({ id, func, paramName })
+
+    let autoParamFuncGroup = "01ec9bb984b50b0a7bd0e296004ef1e74ea293a0";
+    autoWriteEdge({ head: autoParamFuncGroup, tail: id });
+}
+regFunc("x", false, createAutoParamFunc);
 
 function createBindFunc() {
     let writeBindFunc = systems("ccd7b9796a25b50b3d5d712392c9758e3ab6133d");
@@ -65,7 +73,6 @@ function createBindFunc() {
     return id;
 }
 regFunc("create-bind-func", false, createBindFunc);
-regFunc("x", false, createBindFunc);
 
 regFunc("write-test", false, function() {
     writeNodeObject({ id: "this-is-the-id", obj: {
