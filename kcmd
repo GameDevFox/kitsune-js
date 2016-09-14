@@ -30,12 +30,9 @@ let regFunc = function(name, readOnly, func) {
     funcs[name] = { func, readOnly };
 };
 
-let id = "e5f7c17a83b013b4bc9d2e34c078ba5d5ae69077";
-
 regFunc("q", false, function() {
-    let func = systems(id);
-    let result = func({ hello: "world", color: "red" });
-    return result;
+    let func = systems("f6886ff48a34c6561cbab13fbfeabc0e6a4bd964");
+    return func.toString();
 });
 
 function createAutoParamFunc() {

@@ -399,15 +399,6 @@ function buildManualSystemLoader(systems) {
         return callNodeFunction;
     });
 
-    addManSys("091a8647a5d3dfbd5964e608a5490de592a4cb12", function() {
-        let writeAutoParamFunc = function({ writeString, writeEdge, id, func, paramName }) {
-            let strId = writeString(paramName);
-            writeEdge({ id, head: func, tail: strId });
-            return id;
-        };
-        return writeAutoParamFunc;
-    });
-
     addManSys("2fb95ddb758034712fe85b8cf63c9ea1ea0570cf", function() {
         let writeString = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
         let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
@@ -634,6 +625,15 @@ function buildManualSystemLoader(systems) {
         return writeBindFunc;
     });
 
+    addManSys("091a8647a5d3dfbd5964e608a5490de592a4cb12", function() {
+        let writeAutoParamFunc = function({ writeString, writeEdge, id, func, paramName }) {
+            let strId = writeString(paramName);
+            writeEdge({ id, head: func, tail: strId });
+            return id;
+        };
+        return writeAutoParamFunc;
+    });
+
     addManSys("f520dd0e4da481f0fbc18584a7bf8098d19d3222", function() {
         let recreateLinks = function({ groupList, nameList }) {
             exec("rm -rf src/kitsune-core-src");
@@ -653,6 +653,34 @@ function buildManualSystemLoader(systems) {
             });
         };
         return recreateLinks;
+    });
+
+    addManSys("a06a20a98b11deb325416a6897978342632db336", function() {
+        let writeFuncCall = function({ writeValue, graphAssign, func, param }) {
+            if(typeof func == "function")
+                func = func.id;
+
+            if(!func)
+                throw new Error("funcId must not be null or must have an id");
+
+            let ref = writeValue(param);
+
+            let args = { head: ref.funcId, type: func, tail: ref.id };
+            let result = graphAssign(args);
+
+            return result;
+        };
+        return writeFuncCall;
+    });
+
+    addManSys("7e387151076d045bedf4b34eef4f84aab789306d", function() {
+        let writeAndNameFuncCall = function({ writeFuncCall, nameFn, func, param, name }) {
+            let id = writeFuncCall({ func, param });
+            graphAutoPut({ head: "d2cd5a6f99428baaa05394cf1fe3afa17fb59aff", tail: id });
+            nameFn({ node: id, name });
+            return id;
+        };
+        return writeAndNameFuncCall;
     });
 
     addManSys("42e9ce26666845ae2855a6ed619b54b8280b415b", function() {
@@ -717,34 +745,6 @@ function buildManualSystemLoader(systems) {
             console.log(`Bad Edges: ${badCount}`);
         };
         return edgeReport;
-    });
-
-    addManSys("a06a20a98b11deb325416a6897978342632db336", function() {
-        let writeFuncCall = function({ writeValue, graphAssign, func, param }) {
-            if(typeof func == "function")
-                func = func.id;
-
-            if(!func)
-                throw new Error("funcId must not be null or must have an id");
-
-            let ref = writeValue(param);
-
-            let args = { head: ref.funcId, type: func, tail: ref.id };
-            let result = graphAssign(args);
-
-            return result;
-        };
-        return writeFuncCall;
-    });
-
-    addManSys("7e387151076d045bedf4b34eef4f84aab789306d", function() {
-        let writeAndNameFuncCall = function({ writeFuncCall, nameFn, func, param, name }) {
-            let id = writeFuncCall({ func, param });
-            graphAutoPut({ head: "d2cd5a6f99428baaa05394cf1fe3afa17fb59aff", tail: id });
-            nameFn({ node: id, name });
-            return id;
-        };
-        return writeAndNameFuncCall;
     });
     // END FOLD
 
