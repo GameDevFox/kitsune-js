@@ -265,12 +265,6 @@ function buildManualSystemLoader(systems) {
         return getHeads;
     });
 
-    addManSys("a8a338d08b0ef7e532cbc343ba1e4314608024b2", function() {
-        let getTails = systems("d27602da00e2cfcc58ce7440aa593d7b0e181921");
-        getTails = autoParam({ func: getTails, paramName: "group" });
-        return getTails;
-    });
-
     addManSys("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0", function() {
         let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
 
