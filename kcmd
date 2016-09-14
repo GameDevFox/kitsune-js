@@ -244,7 +244,8 @@ let funcReg = funcs[op];
 if(!funcReg) {
     console.error("No such command: "+op+"\n");
     console.error("Available commands:");
-    funcs.help();
+
+    funcs["help"].func();
     return 1;
 }
 

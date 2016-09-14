@@ -465,10 +465,10 @@ function buildManualSystemLoader(systems) {
         let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");
         let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
 
-        let objectPut = systems("eed13556a72cf02a35da377d6d074fe39c3b59c4");
-        objectPut = bind({ func: objectPut, params: { graphAssign, graphAutoPut, stringAutoPut, typeMappings }});
+        let writeObject = systems("eed13556a72cf02a35da377d6d074fe39c3b59c4");
+        writeObject = bind({ func: writeObject, params: { graphAssign, graphAutoPut, stringAutoPut, typeMappings }});
 
-        let objectAutoPut = autoId(objectPut);
+        let objectAutoPut = autoId(writeObject);
         objectAutoPut = autoParam({ func: objectAutoPut, paramName: "object" });
 
         // Add object to type mappings

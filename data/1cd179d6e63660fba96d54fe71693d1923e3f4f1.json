@@ -4,14 +4,6 @@
     "string": "and-is"
   },
   {
-    "id": "f3dec4d25be0ea4aa0d98af6550ce6474ce5c1c0",
-    "string": "arg-func-id"
-  },
-  {
-    "id": "06b8ba9db5de5040745f420fa3f0877fff8152b1",
-    "string": "arg-id"
-  },
-  {
     "id": "560363f85efeee37f488b663960a3c05df31e61a",
     "string": "argFuncId"
   },
@@ -40,20 +32,12 @@
     "string": "bind-function"
   },
   {
-    "id": "7f1ba3e38b4e2640b991e7f5d1d45eb1b699cf50",
-    "string": "call-node-func"
-  },
-  {
     "id": "d04d81b79dc86ca7b8c6e3e515d57f23014e5fe7",
     "string": "call-node-function"
   },
   {
     "id": "130172eb5b061051f1b1ceef7e68efea7fac2506",
     "string": "callNodeFunc"
-  },
-  {
-    "id": "c31359115860caf8dd8827cc1c32c43342494628",
-    "string": "coll-find"
   },
   {
     "id": "1a4485cc3088bcecf833d0fe8b90a42c921f0055",
@@ -88,14 +72,6 @@
     "string": "func"
   },
   {
-    "id": "46b87f7028ecafb56f0850a274976c1b9a85a26e",
-    "string": "func-id"
-  },
-  {
-    "id": "3fa4f936260bf09921d6b4698a99e45268f8b2cc",
-    "string": "func-sys"
-  },
-  {
     "id": "60f34da99edd67731aa1c30721e9b1a43296b934",
     "string": "funcId"
   },
@@ -124,10 +100,6 @@
     "string": "graph-assign"
   },
   {
-    "id": "674a65de6ca27f837c6e2f218eb04a2caa9e2f4c",
-    "string": "graph-auto-put"
-  },
-  {
     "id": "4281ff159a0253e1af1516074e7bcc93a7b00eca",
     "string": "graph-data"
   },
@@ -136,16 +108,8 @@
     "string": "graph-factor"
   },
   {
-    "id": "d6218b3952adb542e3cef81e5270c2f813b9a1b3",
-    "string": "graph-find"
-  },
-  {
     "id": "9281f6a97b1c5b7c373f3624bf1d388228e33820",
     "string": "graph-list-nodes"
-  },
-  {
-    "id": "367eaab93d9d01d4aae91614b699e2895ca52a2a",
-    "string": "graph-read-edge"
   },
   {
     "id": "cc75218d09c94da8e4fdef90923cfb7a67929c2a",
@@ -300,10 +264,6 @@
     "string": "node"
   },
   {
-    "id": "4b3739c9c50b8a92da5341a069cb14a2ba9ddd49",
-    "string": "node-func"
-  },
-  {
     "id": "774978bb69c87d62ed9ede8abb63b8d89fd7bdd2",
     "string": "node-type"
   },
@@ -320,14 +280,6 @@
     "string": "object"
   },
   {
-    "id": "30b348d2f59c021a1fd751fa631c110bd626c879",
-    "string": "object-put"
-  },
-  {
-    "id": "7c8c3618c01128d8b5cd5b39b09f4e704fb52a52",
-    "string": "param-name"
-  },
-  {
     "id": "39c5b06925df63f4420d01399f2c37941b9f945e",
     "string": "paramName"
   },
@@ -342,10 +294,6 @@
   {
     "id": "3150ecd5e0294534a81ae047ddac559de481d774",
     "string": "path"
-  },
-  {
-    "id": "52ab656f5995d7d6458361c5531afcee9f3ed69a",
-    "string": "property-name"
   },
   {
     "id": "deaeb26764551c6a022d74cf85afd8f0bbf999d7",
@@ -388,32 +336,12 @@
     "string": "string"
   },
   {
-    "id": "3a3f205bd90954db3507bf3a6d94d88fe0a9e0ae",
-    "string": "string-auto-put"
-  },
-  {
     "id": "911b601087190a41d0b744d9b402a30f2e2de206",
     "string": "string-autoPut"
   },
   {
     "id": "2b27c1910d3b5bb74505ba8a5facdc0140ac5a49",
     "string": "string-data"
-  },
-  {
-    "id": "07e5c12d50cefc3392c61bf57fb709d21dfadd18",
-    "string": "string-find"
-  },
-  {
-    "id": "d24721766a775f163627440199a2dde86f025dfa",
-    "string": "string-get-id"
-  },
-  {
-    "id": "584f1a936a1ae10e2af1f9cc352d6959cf5776a8",
-    "string": "string-put"
-  },
-  {
-    "id": "9917b7f338fceeb7f2694bf4e59c89be4e9018bf",
-    "string": "string-read-string"
   },
   {
     "id": "fbfaaffb76f3ead99f8818fdc32199a483b0d0f4",
@@ -448,10 +376,6 @@
     "string": "system-files"
   },
   {
-    "id": "ada51b2381037cd7a0732f587622057c741ddaa1",
-    "string": "system-list"
-  },
-  {
     "id": "6576d3ae606465f2272dc5f1053ecc315b159724",
     "string": "system-loader"
   },
@@ -472,10 +396,6 @@
     "string": "type"
   },
   {
-    "id": "71757d50aa8ae681778c2de3dc8f9c8ba7227ef2",
-    "string": "type-mappings"
-  },
-  {
     "id": "7589bcba3d6f18eb18914e54473caa5d3aa5e830",
     "string": "typeMappings"
   },
@@ -494,6 +414,10 @@
   {
     "id": "46148cc3b4d2b3ac8073f14b0cba7f25ffff54bd",
     "string": "where"
+  },
+  {
+    "id": "d0bdd216b9c5b3b22cbf82384d5c93a78be60c27",
+    "string": "write-object"
   },
   {
     "id": "d1e8cda0190738333a0abef26a390913f9b00a4b",
