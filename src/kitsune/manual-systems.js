@@ -409,12 +409,6 @@ function buildManualSystemLoader(systems) {
         return callNodeFunction;
     });
 
-    addManSys("d7f80b3486eee7b142c190a895c5496242519608", function() {
-        let readObject = systems("2f44f915602e3cc34f1d41cf76d53ad96f835b04");
-        readObject = autoParam({ func: readObject, paramName: "node" });
-        return readObject;
-    });
-
     addManSys("091a8647a5d3dfbd5964e608a5490de592a4cb12", function() {
         let writeAutoParamFunc = function({ writeString, writeEdge, id, func, paramName }) {
             let strId = writeString(paramName);
