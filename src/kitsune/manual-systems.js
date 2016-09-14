@@ -262,12 +262,11 @@ function buildManualSystemLoader(systems) {
         return getHeads;
     });
 
-    addManSys("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0", function() {
+    addManSys("d1d3e1c9b3a0bf5cb07df6ee9a75f741d3cfdd78", function() {
         let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
 
         let autoId = systems("d673ba0c8d334d4644375f853e30ad46df514120");
         autoId = bind({ func: autoId, params: { paramName: "id" }});
-        autoId = autoParam({ func: autoId, paramName: "func" });
         return autoId;
     });
 
