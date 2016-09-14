@@ -28,6 +28,10 @@
     "string": "auto-param-id"
   },
   {
+    "id": "bb78ccee0a09bc000f508f2262f3b887f0792ccb",
+    "string": "auto-write-node-object"
+  },
+  {
     "id": "6bdd4db977b0f96aaf3bff2e4300153c648ca382",
     "string": "bind"
   },

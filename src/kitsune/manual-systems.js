@@ -376,12 +376,11 @@ function buildManualSystemLoader(systems) {
         return writeNodeObject;
     });
 
-    addManSys("e5f7c17a83b013b4bc9d2e34c078ba5d5ae69077", function() {
+    addManSys("248743603215c126461a7e4debdee6d18c3686cb", function() {
         let writeNodeObject =  systems("236063bf30465aef27d1366d7573ffafa99d8c14");
         let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");
 
         let autoWriteNodeObject = autoId(writeNodeObject);
-        autoWriteNodeObject = autoParam({ func: autoWriteNodeObject, paramName: "obj" });
         return autoWriteNodeObject;
     });
 
