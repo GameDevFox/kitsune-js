@@ -313,12 +313,6 @@ function buildManualSystemLoader(systems) {
 
     //
 
-    addManSys("ca79cd84ab6a9eb3e5ac06ed48d3d24e6649d0bc", function(systems) {
-        let callNodeFunction = systems("ad95b67eca3c4044cb78a730a9368c3e54a56c5f");
-        callNodeFunction = bind({ func: callNodeFunction, params: { funcSys: systems }});
-        return callNodeFunction;
-    });
-
     addManSys("2fb95ddb758034712fe85b8cf63c9ea1ea0570cf", function() {
         let writeString = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
         let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
@@ -336,6 +330,8 @@ function buildManualSystemLoader(systems) {
         recreateLinks = bind({ func: recreateLinks, params: { groupList, nameList } });
         return recreateLinks;
     });
+
+    //
 
     addManSys("4f22989e5edf2634371133db2720b09fc441a141", function(systems) {
         let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
