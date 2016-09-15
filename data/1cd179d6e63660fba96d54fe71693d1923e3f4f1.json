@@ -204,6 +204,10 @@
     "string": "integer"
   },
   {
+    "id": "ae9ccbcd619110a3dcda1226d605a467fd9ebec0",
+    "string": "is-bind-function"
+  },
+  {
     "id": "9621142ee56435ad5a2c8b2f93f19f5a57194f75",
     "string": "is-core-node"
   },
