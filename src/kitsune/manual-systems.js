@@ -265,19 +265,9 @@ function buildManualSystemLoader(systems) {
     });
 
     addManSys("d1d3e1c9b3a0bf5cb07df6ee9a75f741d3cfdd78", function() {
-        let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
-
         let autoId = systems("d673ba0c8d334d4644375f853e30ad46df514120");
         autoId = bind({ func: autoId, params: { paramName: "id" }});
         return autoId;
-    });
-
-    addManSys("cbd2ac5f4784d47e3539be9d3736b23c6bbac31a", function() {
-        let typeMap = systems("4f22989e5edf2634371133db2720b09fc441a141")();
-
-        let describeNode = systems("4bea815e7814aa415569ecd48e5733a19e7777db");
-        describeNode = bind({ func: describeNode, params: { types: typeMap }});
-        return describeNode;
     });
 
     addManSys("f3d18aa9371f876d4264bfe051e5b4e312e90040", function(systems) {

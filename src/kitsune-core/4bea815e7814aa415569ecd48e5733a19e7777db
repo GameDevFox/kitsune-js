@@ -1,8 +1,11 @@
 // -*- mode: js2 -*-
 export default function describe({ node, types }) {
+
+    let typeMap = types();
+
     let result = [];
-    for(let key in types) {
-        let fn = types[key];
+    for(let key in typeMap) {
+        let fn = typeMap[key];
         let isA = fn(node);
         if(isA)
             result.push(key);
