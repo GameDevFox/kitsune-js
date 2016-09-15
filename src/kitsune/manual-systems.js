@@ -311,19 +311,6 @@ function buildManualSystemLoader(systems) {
         return autoWriteNodeObject;
     });
 
-    //
-
-    addManSys("36b76ca66bba2d0b98fe25ce05efeaec1f286826", function(systems) {
-        let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
-
-        let recreateLinks = systems("f520dd0e4da481f0fbc18584a7bf8098d19d3222");
-        recreateLinks = bind({ func: recreateLinks, params: { groupList, nameList } });
-        return recreateLinks;
-    });
-
-    //
-
     addManSys("4f22989e5edf2634371133db2720b09fc441a141", function(systems) {
         let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
 
