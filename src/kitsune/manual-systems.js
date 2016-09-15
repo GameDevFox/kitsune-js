@@ -313,15 +313,6 @@ function buildManualSystemLoader(systems) {
 
     //
 
-    addManSys("2fb95ddb758034712fe85b8cf63c9ea1ea0570cf", function() {
-        let writeString = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
-        let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
-
-        let writeAutoParamFunc = systems("091a8647a5d3dfbd5964e608a5490de592a4cb12");
-        writeAutoParamFunc = bind({ func: writeAutoParamFunc, params: { writeString, writeEdge }});
-        return writeAutoParamFunc;
-    });
-
     addManSys("36b76ca66bba2d0b98fe25ce05efeaec1f286826", function(systems) {
         let groupList = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
         let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
