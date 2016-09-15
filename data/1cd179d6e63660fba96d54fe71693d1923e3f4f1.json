@@ -240,20 +240,12 @@
     "string": "is-name-edge"
   },
   {
-    "id": "8d972248e5f502abb397ecb2a76c4be9e3bb3910",
-    "string": "is-name-pointer"
-  },
-  {
     "id": "57941d7c86588fb78b2b0152160852a04eae7f0d",
     "string": "is-string"
   },
   {
     "id": "eb4fdd61c23cabd78f0c1aae5ae1d91db531be61",
     "string": "is-system-file"
-  },
-  {
-    "id": "38b62be4bddaa5661c7d6b8e36e28159314df5c7",
-    "string": "list"
   },
   {
     "id": "da2ea5bee82302925a2874f529684e980c179d70",
