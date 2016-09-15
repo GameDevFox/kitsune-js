@@ -39,29 +39,6 @@ function buildManualSystemLoader(systems) {
     manualSystems = bind({ func: manualSystems, params: { manSysFuncs, systems, putSystem }});
     manualSystems = autoParam({ func: manualSystems, paramName: "id" });
 
-    // TODO: See which of these can be converted to function call systems or bind-functions
-
-    // TODO: Make a loader for native/libary stuff like this (like lodash)
-    addManSys("cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", () => console.log);
-
-    // list-manual-systems
-    addManSys("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8", function(systems) {
-        return () => _.keys(manSysFuncs);
-    });
-
-    // list-system-files
-    addManSys("5277dc011cbc9800046edeb4460f7138e060a935", function(systems) {
-        let files = fs.readdirSync("./src/kitsune-core");
-        return () => files;
-    });
-
-    addManSys("e6ff3d78ebd8f80c8945afd3499195049609905d", function(systems) {
-        let readSystemFile = function(id) {
-            return fs.readFileSync("./src/kitsune-core/"+id, "utf8");
-        };
-        return readSystemFile;
-    });
-
     // LOADERS //
     // FOLD
 
@@ -415,6 +392,27 @@ function buildManualSystemLoader(systems) {
 
     // FUNCTIONS
     // FOLD
+    // TODO: Make a loader for native/libary stuff like this (like lodash)
+    addManSys("cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", () => console.log);
+
+    // list-manual-systems
+    addManSys("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8", function(systems) {
+        return () => _.keys(manSysFuncs);
+    });
+
+    // list-system-files
+    addManSys("5277dc011cbc9800046edeb4460f7138e060a935", function(systems) {
+        let files = fs.readdirSync("./src/kitsune-core");
+        return () => files;
+    });
+
+    addManSys("e6ff3d78ebd8f80c8945afd3499195049609905d", function(systems) {
+        let readSystemFile = function(id) {
+            return fs.readFileSync("./src/kitsune-core/"+id, "utf8");
+        };
+        return readSystemFile;
+    });
+
     addManSys("f6886ff48a34c6561cbab13fbfeabc0e6a4bd964", function() {
         let getHeads = function({ graphFind, node }) {
             let edges = graphFind({ tail: node });
