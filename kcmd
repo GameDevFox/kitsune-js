@@ -34,7 +34,7 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "604a2dbd0f19f35564efc9b9ca3d77ac82ea9382";
+let id = "8efd75de58a2802dd9b784d8bc1bdd66aaedd856";
 
 regFunc("q", false, function() {
     let func = systems(id);
@@ -47,10 +47,9 @@ function createBindFunc() {
     let readBindFunc = systems("4841f107fb76dbf4ac1d29a936b16b7365985ca4");
     let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
 
-    let func = "de4c22f8bae0d00aad89fe0767d64f38da88a357";
+    let func = "bcf4dfc4210f020178288d9c134cf6e3e94a6d63";
     let params = {
-        "900d755ce87bef055dfa845f5e168de9af1a0049": "a1e815356dceab7fded042f3032925489407c93e",
-        "976dae6a84f3cf5e5d7a8c299e353afd96edff9d": "74b1eb95baaf14385cf3a0b1b76198a5cadfa258",
+        "9350f54e4778a54accbebf0461e210fc4fa8bab5": "8b1f2122a8c08b5c1314b3f42a9f462e35db05f7",
     };
 
     writeBindFunc({ id, func, params });
