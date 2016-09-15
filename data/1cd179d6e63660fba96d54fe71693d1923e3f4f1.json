@@ -32,6 +32,10 @@
     "string": "auto-write-node-object"
   },
   {
+    "id": "986f74b25d27e1f69d065c7930fa51088c3bee21",
+    "string": "autoWriteNodeObject"
+  },
+  {
     "id": "6bdd4db977b0f96aaf3bff2e4300153c648ca382",
     "string": "bind"
   },
@@ -46,6 +50,10 @@
   {
     "id": "130172eb5b061051f1b1ceef7e68efea7fac2506",
     "string": "callNodeFunc"
+  },
+  {
+    "id": "532d45da3f05aef0fecec19850a8c8c40a4bd7a6",
+    "string": "clean-string-system"
   },
   {
     "id": "1a4485cc3088bcecf833d0fe8b90a42c921f0055",
@@ -66,6 +74,10 @@
   {
     "id": "a8ffff2a4e7e829f2aa59185999759b1d3095920",
     "string": "describe-node"
+  },
+  {
+    "id": "d5a60147416e63ecaf69f43b6594cd5830f915ac",
+    "string": "describeNode"
   },
   {
     "id": "b478fbeae9d00581d83aff3070e93d759d23f59c",
@@ -104,6 +116,10 @@
     "string": "function-reference"
   },
   {
+    "id": "d1810bc00eaae6420e0dc7d2657cf54025122434",
+    "string": "get-data-time"
+  },
+  {
     "id": "756298c8ec1f323603452496a7bbab2a85214b6d",
     "string": "get-heads"
   },
@@ -132,6 +148,10 @@
     "string": "graph-remove"
   },
   {
+    "id": "f237eea3da9af1a4dbd75644a8fc13a006f0f4fb",
+    "string": "graph-report"
+  },
+  {
     "id": "4db993250a55f92dcfdb24f445036698dd7f86d3",
     "string": "graphAssign"
   },
@@ -148,6 +168,10 @@
     "string": "graphFind"
   },
   {
+    "id": "6f2ed7bf69e00d7e073358a991e2574338f19127",
+    "string": "graphListNodes"
+  },
+  {
     "id": "432ce2e5a839338d8bfeee812173c4c2ae84fbb3",
     "string": "graphReadEdge"
   },
@@ -162,6 +186,10 @@
   {
     "id": "072ee751f6d7c926f56fd81b3ed1a355dc4d2ae9",
     "string": "group-list"
+  },
+  {
+    "id": "c2f711efc006f9b834bb4ee1d6c854ec40f3b493",
+    "string": "groupList"
   },
   {
     "id": "099e0e5f27696b903efd607709006226c0f54436",
@@ -186,6 +214,10 @@
   {
     "id": "1a954628a960aaef81d7b2d4521929579f3541e6",
     "string": "head"
+  },
+  {
+    "id": "e3ea0240e79a2dec8d8350c8492d60fd30f97339",
+    "string": "hyphen-name-to-camel-case"
   },
   {
     "id": "87ea5dfc8b8e384d848979496e706390b497e547",
@@ -296,8 +328,20 @@
     "string": "name-remove"
   },
   {
+    "id": "cbf1bae441823b9174bed7c07a7db49049f6d891",
+    "string": "nameFn"
+  },
+  {
+    "id": "56adb701778a7f89de1ce56ebf7484e833fd9036",
+    "string": "nameList"
+  },
+  {
     "id": "f8e966d1e207d02c44511a58dccff2f5429e9a3b",
     "string": "node"
+  },
+  {
+    "id": "74144672a4bb09929af57ff3e01969590854011c",
+    "string": "node-desc-report"
   },
   {
     "id": "774978bb69c87d62ed9ede8abb63b8d89fd7bdd2",
@@ -314,6 +358,10 @@
   {
     "id": "1615307cc4523f183e777df67f168c86908e8007",
     "string": "object"
+  },
+  {
+    "id": "df06651788c884556a0b4b290fb40475ec9a45ba",
+    "string": "param"
   },
   {
     "id": "39c5b06925df63f4420d01399f2c37941b9f945e",
@@ -360,6 +408,10 @@
     "string": "readAssign"
   },
   {
+    "id": "52d80660ab9831e56020df65a2ed448959895706",
+    "string": "recreate-links"
+  },
+  {
     "id": "86c93c31e96085ffe11e6606c46b7e0e0910d00c",
     "string": "remove-edge"
   },
@@ -392,6 +444,10 @@
     "string": "string-remove"
   },
   {
+    "id": "172ca5fca35b483ed6c84e4fa6ad7e034776c971",
+    "string": "string-report"
+  },
+  {
     "id": "83b5b582e0e3d2ee1eeaaf192ed286782fdd04f9",
     "string": "stringAutoPut"
   },
@@ -412,6 +468,10 @@
     "string": "stringReadString"
   },
   {
+    "id": "dc8e3be6fbf4345f864ff17d412b20ab0123cd06",
+    "string": "stringRemove"
+  },
+  {
     "id": "317f1e761f2faa8da781a4762b9dcc2c5cad209a",
     "string": "system"
   },
@@ -426,6 +486,10 @@
   {
     "id": "6b6ed4c0e2aac0ba9c344d1b0135b6823f1b3f3a",
     "string": "systemList"
+  },
+  {
+    "id": "85488f43956a7971c44ff182b38d810be5973f9b",
+    "string": "systems"
   },
   {
     "id": "fbf5f2a2875b3bb65b8e3b23e6cc01d58ca30447",
@@ -460,8 +524,28 @@
     "string": "where"
   },
   {
+    "id": "2e7633b836591ea5e328b7f2a00493721bac61cc",
+    "string": "write-and-name-func-call"
+  },
+  {
+    "id": "efb77c3de58eb93f7073975043d6b3b45a066114",
+    "string": "write-auto-param-func"
+  },
+  {
+    "id": "f11cce9ccc01d3ae99be2e8f4b5d8631f863eb8f",
+    "string": "write-bind-func"
+  },
+  {
     "id": "f6655e1016ea2e5d13bb7e706d7872fdda32b53b",
     "string": "write-edge"
+  },
+  {
+    "id": "816957d758432178fdae9ebc2cb8759ba1e6ec87",
+    "string": "write-func-call"
+  },
+  {
+    "id": "7fead4d7c71249e598726e3bb90456c3b071e10f",
+    "string": "write-node-object"
   },
   {
     "id": "d0bdd216b9c5b3b22cbf82384d5c93a78be60c27",
@@ -478,5 +562,21 @@
   {
     "id": "d6045152174d13cb13a1c96d7bb8e2b72d0b8470",
     "string": "write-value"
+  },
+  {
+    "id": "62d44395227564a2241de865c76b5f693051cf4b",
+    "string": "writeEdge"
+  },
+  {
+    "id": "0f20b878161edf4fa436bfc72e76e336466b1fcd",
+    "string": "writeFuncCall"
+  },
+  {
+    "id": "d48cb2fc451282bd12202c3f06e79147663dc437",
+    "string": "writeString"
+  },
+  {
+    "id": "e0a8a535b8f19d52cc475d4cc88b186615954f6c",
+    "string": "writeValue"
   }
 ]
