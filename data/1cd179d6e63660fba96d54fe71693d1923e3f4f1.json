@@ -204,6 +204,10 @@
     "string": "integer"
   },
   {
+    "id": "68ffedea8fcda3427719e71e5d4b872f84ceb55e",
+    "string": "is-auto-param-function"
+  },
+  {
     "id": "ae9ccbcd619110a3dcda1226d605a467fd9ebec0",
     "string": "is-bind-function"
   },
