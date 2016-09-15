@@ -283,16 +283,6 @@ function buildManualSystemLoader(systems) {
         return autoId;
     });
 
-    addManSys("f3db04b0138e827a9b513ab195cc373433407f83", function(systems) {
-        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
-        let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
-        let stringRemove = systems("6f00c44367d415878955630378683e1463f87aea");
-
-        let cleanStringSystem = systems("d79ba735ae111d7d34457c712cf44519f13e827e");
-        cleanStringSystem = bind({ func: cleanStringSystem, params: { stringFind, graphListNodes, stringRemove }});
-        return cleanStringSystem;
-    });
-
     addManSys("cbd2ac5f4784d47e3539be9d3736b23c6bbac31a", function() {
         let typeMap = systems("4f22989e5edf2634371133db2720b09fc441a141")();
 
@@ -553,12 +543,11 @@ function buildManualSystemLoader(systems) {
 
             let diff = _.difference(stringIds, graphNodes);
 
-            console.log("Removed string ids:");
-            console.log(diff);
-
             diff.forEach(id => {
                 stringRemove({ id });
             });
+
+            return diff;
         };
         return cleanStringSystem;
     });
