@@ -256,6 +256,10 @@
     "string": "list"
   },
   {
+    "id": "da2ea5bee82302925a2874f529684e980c179d70",
+    "string": "lists"
+  },
+  {
     "id": "7babc233de26ab19ead1b9c278128d5c434910ee",
     "string": "log"
   },
@@ -274,6 +278,10 @@
   {
     "id": "2b172839e79030382cf8d7770986e1f76e3e99d4",
     "string": "loki-remove"
+  },
+  {
+    "id": "a6d66e07bf3c31dafeb6410c7cf6ea1eb32c5145",
+    "string": "manual-systems"
   },
   {
     "id": "19f34ee1e406ea84ca83c835a3301b5d9014a788",

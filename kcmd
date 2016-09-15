@@ -31,22 +31,25 @@ let regFunc = function(name, readOnly, func) {
 };
 
 regFunc("q", false, function() {
-    let func = systems("f6886ff48a34c6561cbab13fbfeabc0e6a4bd964");
-    return func.toString();
+    let func = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
+    let result = func({ head: "head", tail: "tail" });
+    return result;
 });
 
 function createAutoParamFunc() {
     let writeAutoParamFunc = systems("2fb95ddb758034712fe85b8cf63c9ea1ea0570cf");
     let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
 
-    let func = "248743603215c126461a7e4debdee6d18c3686cb";
-    let paramName = "obj";
+    let id = "91aad58f3f5cf73d7edfadb6b83c2a0e556c15e2";
+    let func = "2bf3bbec64d4b33302b9ab228eb90bc3f04b22a8";
+    let paramName = "name";
     writeAutoParamFunc({ id, func, paramName })
 
     let autoParamFuncGroup = "01ec9bb984b50b0a7bd0e296004ef1e74ea293a0";
     autoWriteEdge({ head: autoParamFuncGroup, tail: id });
 }
 regFunc("x", false, createAutoParamFunc);
+regFunc("create-auto-param-func", false, createAutoParamFunc);
 
 function createBindFunc() {
     let writeBindFunc = systems("ccd7b9796a25b50b3d5d712392c9758e3ab6133d");
@@ -210,9 +213,9 @@ regFunc("lsname", READ_ONLY, function(id) {
     result.forEach(x => console.log(x));
 });
 regFunc("lsnode", READ_ONLY, function(name) {
-    let idList = systems("2bf3bbec64d4b33302b9ab228eb90bc3f04b22a8");
+    let idList = systems("91aad58f3f5cf73d7edfadb6b83c2a0e556c15e2");
     let result = idList(name);
-    result.forEach(x => console.log(x));
+    listWithDesc(result);
 });
 regFunc("unname", false, function(node, oldName) {
     let nameRemove = systems("708f17af0e4f537757cf8817cbca4ed016b7bb8b");
@@ -240,6 +243,22 @@ regFunc("rmsf", false, function() {
         stringRemove({ id: stringNode[0].id });
     };
 });
+
+
+let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+let describeNode = systems("15b16d6f586760a181f017d264c4808dc0f8bd06");
+function listWithDesc(nodes) {
+    nodes.forEach(node => {
+        let names = nameList(node);
+        let desc = describeNode(node);
+        console.log(node, names);
+        desc.forEach(d => {
+            let names = nameList(d);
+            console.log("    -", d, names)
+
+        });
+    });
+}
 
 // Perform function
 let op = opt.argv.shift();

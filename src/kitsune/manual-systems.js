@@ -237,6 +237,26 @@ function buildManualSystemLoader(systems) {
     });
     // END FOLD
 
+    addManSys("283287a7c0c2ccaa5c69dfd99a800d13eb6805ea", function() {
+        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+
+        let listLists = function({ getTails }) {
+            let lists = getTails("283287a7c0c2ccaa5c69dfd99a800d13eb6805ea");
+            return lists;
+        };
+        listLists = bind({ func: listLists, params: { getTails }});
+        return listLists;
+    });
+
+    addManSys("bd07150e634d5b01eedbe44f28a5068b5a7c845d", function(systems) {
+        let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+
+        let isList = bind({ func: isInGroup, params: { graphFind, group: "283287a7c0c2ccaa5c69dfd99a800d13eb6805ea" }});
+        isList = autoParam({ func: isList, paramName: "node" });
+        return isList;
+    });
+
     addManSys("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7", function(systems) {
         let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
         let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");
@@ -249,6 +269,7 @@ function buildManualSystemLoader(systems) {
         let returnFirst = systems("68d3fb9d10ae2b0455a33f2bfb80543c4f137d51");
         let returnProperty = systems("c1020aea14a46b72c6f8a4b7fa57acc14a73a64e");
 
+        let stringGetId = systems("263b18de1773a7bf1954c5622e67f0f2edf0aabc");
         stringGetId = returnFirst(stringGetId);
         stringGetId = returnProperty({ func: stringGetId, propertyName: "id" });
         return stringGetId;
