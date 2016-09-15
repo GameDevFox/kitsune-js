@@ -224,6 +224,10 @@
     "string": "is-in-name-group"
   },
   {
+    "id": "c8c15209336f8c29073cdc5052ed461646037c05",
+    "string": "is-list"
+  },
+  {
     "id": "55a2da89c78a06bcecf44691b3a6707673799f71",
     "string": "is-name-edge"
   },
