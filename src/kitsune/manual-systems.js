@@ -237,14 +237,6 @@ function buildManualSystemLoader(systems) {
     });
     // END FOLD
 
-    addManSys("283287a7c0c2ccaa5c69dfd99a800d13eb6805ea", function() {
-        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-
-        let listLists = systems("4a263590d11f4ba73661c476564f7aacea8c8286");
-        listLists = bind({ func: listLists, params: { getTails }});
-        return listLists;
-    });
-
     addManSys("bd07150e634d5b01eedbe44f28a5068b5a7c845d", function(systems) {
         let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
