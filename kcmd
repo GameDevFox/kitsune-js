@@ -64,51 +64,28 @@ function createBindFunc() {
 regFunc("x", false, createBindFunc);
 regFunc("create-bind-func", false, createBindFunc);
 
-let manSysDefs = [
-    ["f6886ff48a34c6561cbab13fbfeabc0e6a4bd964", "getHeads", [ "graphFind", "node" ]],
-    ["4a24b766f417667abc55a0bcc3a6617a85c73902", "createSystemFile", [ "hashRandom", "graphAutoPut", "nameFn", "name" ]],
-    ["c574e6cc383ede7bae894721dbf7f0e19233dbac", "nodeDescReport", [ "systems", "graphListNodes", "describeNode" ]],
-    ["d79ba735ae111d7d34457c712cf44519f13e827e", "cleanStringSystem", [ "stringFind", "graphListNodes", "stringRemove" ]],
-    ["a3bf45bfe89ebb31dac911bfbe299fcb2ce6491c", "hyphenNameToCamelCase", [ "name" ]],
-    ["de4c22f8bae0d00aad89fe0767d64f38da88a357", "graphReport", [ "graphFind", "graphListNodes" ]],
-    ["bcf4dfc4210f020178288d9c134cf6e3e94a6d63", "stringReport", [ "stringFind" ]],
-    ["d5e195726a6a3650166a6591dc3d7619adaef98d", "getDataTime", []],
-    ["1d6976a263d64b64ac113f178e8ddc1d245b6120", "writeNodeObject", [ "graphAssign", "id", "obj" ]],
-    ["aed811d85de045e271fdfe4097349dbdae83db3f", "writeBindFunc", [ "autoWriteNodeObject", "writeEdge", "id", "func", "params" ]],
-    ["091a8647a5d3dfbd5964e608a5490de592a4cb12", "writeAutoParamFunc", [ "writeString", "writeEdge", "id", "func", "paramName" ]],
-    ["f520dd0e4da481f0fbc18584a7bf8098d19d3222", "recreateLinks", [ "groupList", "nameList" ]],
-    ["a06a20a98b11deb325416a6897978342632db336", "writeFuncCall", [ "writeValue", "graphAssign", "func", "param" ]],
-    ["7e387151076d045bedf4b34eef4f84aab789306d", "writeAndNameFuncCall", [ "writeFuncCall", "nameFn", "func", "param", "name" ]],
-];
-
 let mapManSysToFuncs = function() {
     let nameFn = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
     let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
     let mkid = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
     let graphAssign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
 
-    manSysDefs.forEach(manSysDef => {
-        let node = manSysDef[0];
-        let name = manSysDef[1];
-        let params = manSysDef[2];
+    let node = "4a263590d11f4ba73661c476564f7aacea8c8286";
+    let name = "list-lists";
+    let params = [ "getTails" ];
 
-        console.log(node);
-        console.log(name);
-        console.log(params);
-        console.log();
+    nameFn({ node, name });
 
-        let newName = camelToHyphen(name);
-        nameFn({ node, name: newName });
-
-        params.forEach(param => {
-            let argId = mkid();
-            graphAssign({ head: node, type: paramId, tail: argId });
-            nameFn({ node: argId, name: param });
-        });
-
-        // Add to functions
-        autoWriteEdge({ head: funcId, tail: node });
+    params.forEach(param => {
+        let argId = mkid();
+        graphAssign({ head: node, type: paramId, tail: argId });
+        nameFn({ node: argId, name: param });
     });
+
+    // Add to functions
+    autoWriteEdge({ head: funcId, tail: node });
+
+    return node;
 };
 regFunc("map-man-sys-to-func", false, mapManSysToFuncs);
 

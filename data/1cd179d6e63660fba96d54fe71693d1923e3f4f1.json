@@ -128,6 +128,10 @@
     "string": "get-tails"
   },
   {
+    "id": "407dd1e0a56369412d4d0d8731693ed8fcf5fbae",
+    "string": "getTails"
+  },
+  {
     "id": "a37fa8901cbd5d96eab6cd37187fbc498bc973b6",
     "string": "graph-assign"
   },
@@ -278,6 +282,10 @@
   {
     "id": "eb4fdd61c23cabd78f0c1aae5ae1d91db531be61",
     "string": "is-system-file"
+  },
+  {
+    "id": "ba730bb44211e52ec109b2e889ba779b3737a658",
+    "string": "list-lists"
   },
   {
     "id": "da2ea5bee82302925a2874f529684e980c179d70",
