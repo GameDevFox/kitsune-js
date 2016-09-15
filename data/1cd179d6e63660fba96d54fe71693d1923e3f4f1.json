@@ -28,6 +28,14 @@
     "string": "auto-param-id"
   },
   {
+    "id": "de036c80265a05f67cd8a8292845d251bd364a69",
+    "string": "auto-param-loader"
+  },
+  {
+    "id": "3ce39e1dfbd72bd4650e10dc710db4859a4eb25e",
+    "string": "auto-write-edge"
+  },
+  {
     "id": "bb78ccee0a09bc000f508f2262f3b887f0792ccb",
     "string": "auto-write-node-object"
   },
@@ -38,6 +46,10 @@
   {
     "id": "6bdd4db977b0f96aaf3bff2e4300153c648ca382",
     "string": "bind"
+  },
+  {
+    "id": "34bb73d0b378ca6c4a24a2cfc6031aee292b9c5c",
+    "string": "bind-func-loader"
   },
   {
     "id": "5fd89aa15360cde12141a6b6fe19d1c251a3ea07",
@@ -84,6 +96,10 @@
     "string": "dictionary-function"
   },
   {
+    "id": "4ac982b78ea2a15dcde7e4bd01629a0a8592d6df",
+    "string": "edge-report"
+  },
+  {
     "id": "dece05484839df110745b0a800297c33cc078287",
     "string": "element"
   },
@@ -126,6 +142,14 @@
   {
     "id": "0b8838e140b93b082b1358f8b5b70a045f3baf58",
     "string": "get-tails"
+  },
+  {
+    "id": "c27382c5f2608700f8d4d9c82de3be2e40e04756",
+    "string": "get-type-map"
+  },
+  {
+    "id": "1d00fa1b0b5520f5425f81ac41aaa6ecb3ba5593",
+    "string": "get-type-mappings"
   },
   {
     "id": "407dd1e0a56369412d4d0d8731693ed8fcf5fbae",
@@ -368,6 +392,10 @@
     "string": "object"
   },
   {
+    "id": "b2cc6f58f1c4bc328fcec6f6f43d3f61c99d1e0e",
+    "string": "object-auto-put"
+  },
+  {
     "id": "df06651788c884556a0b4b290fb40475ec9a45ba",
     "string": "param"
   },
@@ -400,6 +428,14 @@
     "string": "read-assign"
   },
   {
+    "id": "129ebff97499b62510ae16167e0d25dff7025158",
+    "string": "read-bind-func"
+  },
+  {
+    "id": "00ffb5201c2efd7ce568a05ba5ab478e5c61fce5",
+    "string": "read-edge"
+  },
+  {
     "id": "d1430d76372ec2fb0cec20037cc2bb9ae93f3333",
     "string": "read-function-call"
   },
@@ -408,8 +444,16 @@
     "string": "read-integer"
   },
   {
+    "id": "82ff8297372610a0faac64739e2153f9505bd7b3",
+    "string": "read-node-object"
+  },
+  {
     "id": "059d992ad1d669e2473be81f0c4c5bd5128c5c8c",
     "string": "read-object"
+  },
+  {
+    "id": "a6f58d19484525a13a1d0276a05e423dea13a40d",
+    "string": "read-system-file"
   },
   {
     "id": "0fb0e10b4adab71b2d6eb0719b38724001ec66a0",
@@ -446,6 +490,10 @@
   {
     "id": "d24721766a775f163627440199a2dde86f025dfa",
     "string": "string-get-id"
+  },
+  {
+    "id": "9917b7f338fceeb7f2694bf4e59c89be4e9018bf",
+    "string": "string-read-string"
   },
   {
     "id": "fbfaaffb76f3ead99f8818fdc32199a483b0d0f4",
