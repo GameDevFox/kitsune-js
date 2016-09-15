@@ -286,17 +286,6 @@ function buildManualSystemLoader(systems) {
         return isSystemFile;
     });
 
-    addManSys("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039", function(systems) {
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-        let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
-        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
-        let describeNode = systems("15b16d6f586760a181f017d264c4808dc0f8bd06");
-
-        let edgeReport = systems("42e9ce26666845ae2855a6ed619b54b8280b415b");
-        edgeReport = bind({ func: edgeReport, params: { graphFind, graphListNodes }});
-        return edgeReport;
-    });
-
     addManSys("0f9be9c5ad796df34aea4adf0cb340f2bbc2dfc6", function() {
         let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
@@ -314,13 +303,7 @@ function buildManualSystemLoader(systems) {
         return isNameEdge;
     });
 
-    addManSys("236063bf30465aef27d1366d7573ffafa99d8c14", function(systems) {
-        let graphAssign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
-
-        let writeNodeObject = systems("1d6976a263d64b64ac113f178e8ddc1d245b6120");
-        writeNodeObject = bind({ func: writeNodeObject, params: { graphAssign }});
-        return writeNodeObject;
-    });
+    //
 
     addManSys("248743603215c126461a7e4debdee6d18c3686cb", function() {
         let writeNodeObject =  systems("236063bf30465aef27d1366d7573ffafa99d8c14");
@@ -370,6 +353,17 @@ function buildManualSystemLoader(systems) {
 
         let typeMap = _.zipObject(nodeTypes, _.map(nodeTypes, (typeId) => systems(typeId)));
         return () => typeMap;
+    });
+
+    addManSys("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039", function(systems) {
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+        let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
+        let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
+        let describeNode = systems("15b16d6f586760a181f017d264c4808dc0f8bd06");
+
+        let edgeReport = systems("42e9ce26666845ae2855a6ed619b54b8280b415b");
+        edgeReport = bind({ func: edgeReport, params: { graphFind, graphListNodes }});
+        return edgeReport;
     });
 
     addManSys("58f4149870fd4f99bcbf8083eedfee6fbc1199b0", function() {
