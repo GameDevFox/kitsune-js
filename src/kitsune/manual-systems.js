@@ -286,15 +286,6 @@ function buildManualSystemLoader(systems) {
         return isSystemFile;
     });
 
-    addManSys("604a2dbd0f19f35564efc9b9ca3d77ac82ea9382", function(systems) {
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-        let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
-
-        let graphReport = systems("de4c22f8bae0d00aad89fe0767d64f38da88a357");
-        graphReport = bind({ func: graphReport, params: { graphFind, graphListNodes }});
-        return graphReport;
-    });
-
     addManSys("8efd75de58a2802dd9b784d8bc1bdd66aaedd856", function() {
         let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
 
