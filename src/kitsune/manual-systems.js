@@ -270,15 +270,6 @@ function buildManualSystemLoader(systems) {
         return autoId;
     });
 
-    addManSys("f3d18aa9371f876d4264bfe051e5b4e312e90040", function(systems) {
-        let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
-        let describeNode = systems("15b16d6f586760a181f017d264c4808dc0f8bd06");
-
-        let nodeDescReport = systems("c574e6cc383ede7bae894721dbf7f0e19233dbac");
-        nodeDescReport = bind({ func: nodeDescReport, params: { systems, graphListNodes, describeNode }});
-        return nodeDescReport;
-    });
-
     addManSys("1ae2731ceb6b1984be6e3dba46df3eda2f46e5a7", function() {
         let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
