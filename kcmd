@@ -32,6 +32,38 @@ let regFunc = function(name, readOnly, func) {
 
 let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
+let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
+
+let id = "fc83ddd594c9b4fa2a44b3b42d8f1824d0f68c3e";
+
+regFunc("q", false, function() {
+    let func = systems(id);
+    let result = func("4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f");
+    return result;
+});
+
+function createBindFunc() {
+    let writeBindFunc = systems("ccd7b9796a25b50b3d5d712392c9758e3ab6133d");
+    let readBindFunc = systems("4841f107fb76dbf4ac1d29a936b16b7365985ca4");
+    let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
+
+    let func = "f6886ff48a34c6561cbab13fbfeabc0e6a4bd964";
+    let params = {
+        "8387096e0d646736001f21d62a21384313678980": "a1e815356dceab7fded042f3032925489407c93e",
+    };
+
+    console.log("A", id, func);
+    console.log("B", params);
+
+    writeBindFunc({ id, func, params });
+    let result = readBindFunc(id);
+
+    autoWriteEdge({ head: bindFuncId, tail: id });
+
+    return id;
+}
+regFunc("x", false, createBindFunc);
+regFunc("create-bind-func", false, createBindFunc);
 
 let manSysDefs = [
     ["f6886ff48a34c6561cbab13fbfeabc0e6a4bd964", "getHeads", [ "graphFind", "node" ]],
@@ -49,17 +81,6 @@ let manSysDefs = [
     ["a06a20a98b11deb325416a6897978342632db336", "writeFuncCall", [ "writeValue", "graphAssign", "func", "param" ]],
     ["7e387151076d045bedf4b34eef4f84aab789306d", "writeAndNameFuncCall", [ "writeFuncCall", "nameFn", "func", "param", "name" ]],
 ];
-
-function camelToHyphen(input) {
-    let result = input.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-");
-    return result;
-}
-
-regFunc("q", false, function() {
-    let func = systems("");
-    let result = func();
-    return result;
-});
 
 let mapManSysToFuncs = function() {
     let nameFn = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
@@ -104,31 +125,7 @@ function createAutoParamFunc() {
     let autoParamFuncGroup = "01ec9bb984b50b0a7bd0e296004ef1e74ea293a0";
     autoWriteEdge({ head: autoParamFuncGroup, tail: id });
 }
-regFunc("x", false, createAutoParamFunc);
 regFunc("create-auto-param-func", false, createAutoParamFunc);
-
-function createBindFunc() {
-    let writeBindFunc = systems("ccd7b9796a25b50b3d5d712392c9758e3ab6133d");
-    let readBindFunc = systems("4841f107fb76dbf4ac1d29a936b16b7365985ca4");
-    let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
-
-    let func = "e5ac371a5d01eb2e1df8f42166f2ef20a5ae094b";
-    let params = {
-        "e48404675da0dae5f82baaac9521c03f19cd2aaf": "c83cd0ab78a1d57609f9224f851bde6d230711d0",
-        "c2d4ca3e28ca06fa2daff24f76c004a031513c91": "08f8db63b1843f7dea016e488bd547555f345c59",
-        "f8b8e76d2e19900683ddb9ae61e77c248e4f98ed": "25cff8a2afcf560b5451d2482dbf9d9d69649f26",
-        "d0b68f232f8181918e8818e0546be02e167d7e02": "ca79cd84ab6a9eb3e5ac06ed48d3d24e6649d0bc",
-    };
-
-    writeBindFunc({ id, func, params });
-    let result = readBindFunc(id);
-
-    let bindFuncGroup = "e6429ca88b178bd13982b6ca543c822043b609c6";
-    autoWriteEdge({ head: bindFuncGroup, tail: id });
-
-    return id;
-}
-regFunc("create-bind-func", false, createBindFunc);
 
 regFunc("write-test", false, function() {
     writeNodeObject({ id: "this-is-the-id", obj: {
@@ -308,6 +305,11 @@ function listWithDesc(nodes) {
 
         });
     });
+}
+
+function camelToHyphen(input) {
+    let result = input.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-");
+    return result;
 }
 
 // Perform function
