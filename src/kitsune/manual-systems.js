@@ -283,16 +283,6 @@ function buildManualSystemLoader(systems) {
         return autoId;
     });
 
-    addManSys("abd7880e8088fdf6c8e0519ea45a50a603be0687", function() {
-        let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
-        let graphAutoPut = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
-        let name = systems("2885e34819b8a2f043b139bd92b96e484efd6217");
-
-        let createSystemFile = systems("4a24b766f417667abc55a0bcc3a6617a85c73902");
-        createSystemFile = bind({ func: createSystemFile, params: { hashRandom, graphAutoPut, nameFn: name }});
-        return createSystemFile;
-    });
-
     addManSys("f3db04b0138e827a9b513ab195cc373433407f83", function(systems) {
         let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
         let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
@@ -538,6 +528,7 @@ function buildManualSystemLoader(systems) {
             exec("cp src/kitsune-core/ddfe7d402ff26c18785bcc899fa69183b3170a7d src/kitsune-core/"+newSystemId);
             graphAutoPut({ head: "66564ec14ed18fb88965140fc644d7b813121c78", tail: newSystemId });
             nameFn({ node: newSystemId, name: name });
+            return newSystemId;
         };
         return createSystemFile;
     });
