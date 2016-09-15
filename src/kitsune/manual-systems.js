@@ -303,8 +303,6 @@ function buildManualSystemLoader(systems) {
         return isNameEdge;
     });
 
-    //
-
     addManSys("248743603215c126461a7e4debdee6d18c3686cb", function() {
         let writeNodeObject =  systems("236063bf30465aef27d1366d7573ffafa99d8c14");
         let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");
@@ -313,14 +311,7 @@ function buildManualSystemLoader(systems) {
         return autoWriteNodeObject;
     });
 
-    addManSys("ccd7b9796a25b50b3d5d712392c9758e3ab6133d", function(systems) {
-        let autoWriteNodeObject = systems("e5f7c17a83b013b4bc9d2e34c078ba5d5ae69077");
-        let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
-
-        let writeBindFunc = systems("aed811d85de045e271fdfe4097349dbdae83db3f");
-        writeBindFunc = bind({ func: writeBindFunc, params: { autoWriteNodeObject, writeEdge }});
-        return writeBindFunc;
-    });
+    //
 
     addManSys("ca79cd84ab6a9eb3e5ac06ed48d3d24e6649d0bc", function(systems) {
         let callNodeFunction = systems("ad95b67eca3c4044cb78a730a9368c3e54a56c5f");
