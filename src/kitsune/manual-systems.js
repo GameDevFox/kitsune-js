@@ -214,6 +214,41 @@ function buildManualSystemLoader(systems) {
     });
     // END FOLD
 
+
+
+    addManSys("9c9a7115ab807d4f97b9f29031f5dbfc35ae0cf7", function() {
+        let libraryFuncLoader = function({ readEdge, readString, getLibraryFunc, id }) {
+            let { head: libraryNameStr, tail: funcNameStr } = readEdge(id);
+
+            let libraryName = readString(libraryNameStr);
+            let funcName = readString(funcNameStr);
+
+            let result = getLibraryFunc({ libraryName, funcName });
+            return result;
+        };
+        return libraryFuncLoader;
+    });
+
+        addManSys("c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79", function() {
+            let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+            let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
+            let getLibraryFunc = systems("3990d47251b3e9a52f311241bf65368ac66989c4");
+
+            let libraryFuncLoader = systems("9c9a7115ab807d4f97b9f29031f5dbfc35ae0cf7");
+            libraryFuncLoader = bind({ func: libraryFuncLoader, params: { readEdge, readString, getLibraryFunc }});
+            libraryFuncLoader = autoParam({ func: libraryFuncLoader, paramName: "id" });
+            return libraryFuncLoader;
+        });
+
+        addManSys("3990d47251b3e9a52f311241bf65368ac66989c4", function() {
+            let getLibraryFunc = function({ libraryName, funcName }) {
+                let library = require(libraryName);
+                let result = library[funcName];
+                return result;
+            };
+            return getLibraryFunc;
+        });
+
     addManSys("6bfea805fec330b875b15744fd8bff3ae34635c3", function() {
         let getPrimitiveType = function(input) {
             let result = typeof input;

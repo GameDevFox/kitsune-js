@@ -34,13 +34,30 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "43cd34ab8105d158f421eecce9ed22948ec34893";
+let id = "c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func(true);
+    let result = func("10b77df2b1828649e27afb81d3b17e981d054087");
+    result = result({});
     return result;
 });
+
+function createLibrayFunc() {
+    let writeString = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
+    let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
+
+    let libraryName = "lodash";
+    let funcName = "isPlainObject";
+
+    let libraryNameStr = writeString(libraryName);
+    let funcNameStr = writeString(funcName);
+
+    let id = autoWriteEdge({ head: libraryNameStr, tail: funcNameStr });
+    return id;
+}
+regFunc("x", false, createLibrayFunc);
+regFunc("create-library-func", false, createBindFunc);
 
 function createBindFunc() {
     let writeBindFunc = systems("ccd7b9796a25b50b3d5d712392c9758e3ab6133d");
@@ -60,7 +77,6 @@ function createBindFunc() {
 
     return id;
 }
-regFunc("x", false, createBindFunc);
 regFunc("create-bind-func", false, createBindFunc);
 
 let mapManSysToFuncs = function() {
