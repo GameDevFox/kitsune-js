@@ -214,6 +214,37 @@ function buildManualSystemLoader(systems) {
     });
     // END FOLD
 
+    addManSys("6bfea805fec330b875b15744fd8bff3ae34635c3", function() {
+        let getPrimitiveType = function(input) {
+            let result = typeof input;
+            return result;
+        };
+        return getPrimitiveType;
+    });
+
+    addManSys("2e898c3acd767449308279ae99645244dc248b08", function() {
+        let isPrimitiveType = function({ getPrimitiveType, primitiveType, value }) {
+            let result = getPrimitiveType(value) == primitiveType;
+            return result;
+        };
+        return isPrimitiveType;
+    });
+
+        addManSys("34808982614a55b16897427d36e8ce37c6d68277", function() {
+            let getPrimitiveType = systems("6bfea805fec330b875b15744fd8bff3ae34635c3");
+
+            let isPrimitiveType = systems("2e898c3acd767449308279ae99645244dc248b08");
+            isPrimitiveType = bind({ func: isPrimitiveType, params: { getPrimitiveType }});
+            return isPrimitiveType;
+        });
+
+        addManSys("43cd34ab8105d158f421eecce9ed22948ec34893", function() {
+            let isPrimitiveType = systems("34808982614a55b16897427d36e8ce37c6d68277");
+            let isBoolean = bind({ func: isPrimitiveType, params: { primitiveType: "boolean" }});
+            isBoolean = autoParam({ func: isBoolean, paramName: "value" });
+            return isBoolean;
+        });
+
     addManSys("bd07150e634d5b01eedbe44f28a5068b5a7c845d", function(systems) {
         let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
@@ -337,6 +368,7 @@ function buildManualSystemLoader(systems) {
         };
     });
 
+    // TODO: We might not some of this right now
     addManSys(["c5cfe7d5154188daaa2a5cdf5d27a18fce4c2345",
                "0abebb208d96e3aa8a17890a5606734e03fa2539",
                "30381757ef98651b92e54ce11a4fb839e76aa847",
@@ -376,6 +408,7 @@ function buildManualSystemLoader(systems) {
         writeValue = bind({ func: writeValue, params: { typeMappings }});
         writeValue = autoParam({ func: writeValue, paramName: "value" });
 
+        // TODO: Do we need these two?
         let writeFuncCall = systems("a06a20a98b11deb325416a6897978342632db336");
         writeFuncCall = bind({ func: writeFuncCall, params: { writeValue, graphAssign }});
 

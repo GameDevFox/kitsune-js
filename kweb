@@ -7,6 +7,8 @@ let express = require("express");
 let bodyParser = require('body-parser');
 let cors = require("cors");
 
+console.log("KISTUNE STARTING...");
+
 // Static
 let app = express();
 
@@ -38,3 +40,5 @@ app.all("/api/save", function(req, res) {
 });
 
 app.listen(8080);
+
+console.log("== KISTUNE RUNNING ==");
