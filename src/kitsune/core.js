@@ -224,11 +224,17 @@ function bootstrap() {
     modules.push(manualSystems);
 
     log.info(":Bind Function Loader");
-    let bindFuncLoader = systems("9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a");
-    modules.push(bindFuncLoader);
-    let autoParamLoader = systems("c18b49e9b5d330e1573707e9b3defc6592897522");
-    modules.push(autoParamLoader);
+    let loaders = [
+        "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a", // bind-func-loader
+        "c18b49e9b5d330e1573707e9b3defc6592897522", // auto-param-loader
+        "c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79", // library-func-loader
+    ];
+    loaders.forEach(loaderNode => {
+        let loader = systems(loaderNode);
+        modules.push(loader)
+    });
 
+    // TODO: Remove this ???
     // log.info(":Function Call Systems");
     // let funcCallSystems = buildFuncCallLoader(systems);
     // modules.push(funcCallSystems);

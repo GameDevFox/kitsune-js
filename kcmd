@@ -34,12 +34,11 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79";
+let id = "82354a47a98e3fc8a7818e0fb25438498e0ad8a6";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func("10b77df2b1828649e27afb81d3b17e981d054087");
-    result = result({});
+    let result = func({});
     return result;
 });
 
@@ -50,8 +49,8 @@ function createLibrayFunc() {
     let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
     let isInGroup = systems("9f3a4c1bb1d1e8da1fc3ab19c23cd5507666ab45");
 
-    let libraryName = "lodash";
-    let funcName = "isPlainObject";
+    let libraryName = "lokijs";
+    let funcName = "Collection";
 
     let libraryNameStr = writeString(libraryName);
     let funcNameStr = writeString(funcName);

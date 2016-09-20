@@ -214,11 +214,9 @@ function buildManualSystemLoader(systems) {
     });
     // END FOLD
 
-
-
     addManSys("9c9a7115ab807d4f97b9f29031f5dbfc35ae0cf7", function() {
-        let libraryFuncLoader = function({ readEdge, readString, getLibraryFunc, id }) {
-            let { head: libraryNameStr, tail: funcNameStr } = readEdge(id);
+        let libraryFuncLoader = function({ readEdge, readString, getLibraryFunc, node }) {
+            let { head: libraryNameStr, tail: funcNameStr } = readEdge(node);
 
             let libraryName = readString(libraryNameStr);
             let funcName = readString(funcNameStr);
@@ -236,7 +234,7 @@ function buildManualSystemLoader(systems) {
 
             let libraryFuncLoader = systems("9c9a7115ab807d4f97b9f29031f5dbfc35ae0cf7");
             libraryFuncLoader = bind({ func: libraryFuncLoader, params: { readEdge, readString, getLibraryFunc }});
-            libraryFuncLoader = autoParam({ func: libraryFuncLoader, paramName: "id" });
+            libraryFuncLoader = autoParam({ func: libraryFuncLoader, paramName: "node" });
             return libraryFuncLoader;
         });
 
