@@ -10,29 +10,23 @@ function buildManualSystemLoader(systems) {
 
     var manSysFuncs = {};
     let addManSys = function(id, builderFunc) {
-
-        if(typeof id == "object") {
-            _.forEach(id, value => {
-                manSysFuncs[value] = builderFunc;
-            });
-        } else
+        if(typeof id == "object")
+            _.forEach(id, value => manSysFuncs[value] = builderFunc);
+        else
             manSysFuncs[id] = builderFunc;
     };
 
     var manualSystems = function({ manSysFuncs, systems, putSystem, id }) {
+        if(!manSysFuncs[id])
+            return null;
 
-        let result;
+        let result = manSysFuncs[id](systems);
 
-        if(manSysFuncs[id]) {
-            result = manSysFuncs[id](systems);
-
-            if(typeof result == "object") {
-                _.forEach(result, (value, key) => {
-                    putSystem({ id: key, system: value });
-                });
-                result = result[id];
-            }
-        }
+        if(typeof result == "object") {
+            _.forEach(result, (value, key) => putSystem({ id: key, system: value }));
+            result = result[id];
+        } else
+            putSystem({ id, system: result });
 
         return result;
     };

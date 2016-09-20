@@ -231,7 +231,7 @@ function bootstrap() {
     ];
     loaders.forEach(loaderNode => {
         let loader = systems(loaderNode);
-        modules.push(loader)
+        modules.push(loader);
     });
 
     // TODO: Remove this ???
