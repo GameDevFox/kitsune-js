@@ -34,13 +34,12 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8";
+let id = "5e6260e038fb71902eafe98d4105a4a7a581eec1";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func("Hello", "World");
-    console.log("Goodbye", "Again");
-    // return result;
+    let result = func("c18b49e9b5d330e1573707e9b3defc6592897522");
+    return result;
 });
 
 function createLibrayFunc() {

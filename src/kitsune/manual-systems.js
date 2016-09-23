@@ -350,8 +350,20 @@ function buildManualSystemLoader(systems) {
         return isNameEdge;
     });
 
+    addManSys("b1f5b717834f9e2f05acb42285e07c8155cc1528", function() {
+        let isManualSystem = function({ manSysList, id }) {
+            return manSysList().includes(id);
+        };
+        return isManualSystem;
+    });
+
     addManSys("5e6260e038fb71902eafe98d4105a4a7a581eec1", function() {
         let manSysList = systems("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8");
+
+        let isManualSystem = systems("b1f5b717834f9e2f05acb42285e07c8155cc1528");
+        isManualSystem = bind({ func: isManualSystem, params: { manSysList }});
+        isManualSystem = autoParam({ func: isManualSystem, paramName: "id" });
+        return isManualSystem;
     });
 
     addManSys("248743603215c126461a7e4debdee6d18c3686cb", function() {
