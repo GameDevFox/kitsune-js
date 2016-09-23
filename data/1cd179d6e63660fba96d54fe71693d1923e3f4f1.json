@@ -300,6 +300,10 @@
     "string": "is-list"
   },
   {
+    "id": "db5ab43bb5762d7b8fe52548f2695c4b9f352668",
+    "string": "is-manual-system"
+  },
+  {
     "id": "55a2da89c78a06bcecf44691b3a6707673799f71",
     "string": "is-name-edge"
   },
