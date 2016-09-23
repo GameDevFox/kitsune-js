@@ -216,9 +216,6 @@ function buildManualSystemLoader(systems) {
 
     addManSys("9c9a7115ab807d4f97b9f29031f5dbfc35ae0cf7", function() {
         let libraryFuncLoader = function({ readEdge, readString, getLibraryFunc, node }) {
-
-            console.log("Load");
-
             let { head: libraryNameStr, tail: funcNameStr } = readEdge(node);
 
             let libraryName = readString(libraryNameStr);
@@ -244,10 +241,7 @@ function buildManualSystemLoader(systems) {
         addManSys("3990d47251b3e9a52f311241bf65368ac66989c4", function() {
             let getLibraryFunc = function({ libraryName, funcName }) {
                 let library = require(libraryName);
-                console.log("L", library);
-                console.log("F", funcName);
                 let result = library[funcName];
-                console.log("R", result);
                 return result;
             };
             return getLibraryFunc;
