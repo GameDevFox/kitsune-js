@@ -34,23 +34,26 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "82354a47a98e3fc8a7818e0fb25438498e0ad8a6";
+let id = "cfcb898db1a24d50ed7254644ff75aba4fb5c5f8";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func({});
-    return result;
+    let result = func("Hello", "World");
+    console.log("Goodbye", "Again");
+    // return result;
 });
 
 function createLibrayFunc() {
     let libraryId = "a417ba234170b6740c12a50ea99b122c3e761530";
 
     let writeString = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
-    let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
     let isInGroup = systems("9f3a4c1bb1d1e8da1fc3ab19c23cd5507666ab45");
+    let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
+    let mkid = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
+    let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
 
-    let libraryName = "lokijs";
-    let funcName = "Collection";
+    let libraryName = "console";
+    let funcName = "log";
 
     let libraryNameStr = writeString(libraryName);
     let funcNameStr = writeString(funcName);
@@ -60,7 +63,8 @@ function createLibrayFunc() {
     if(!libExists)
         autoWriteEdge({ head: libraryId, tail: libraryNameStr });
 
-    let id = autoWriteEdge({ head: libraryNameStr, tail: funcNameStr });
+    // let id = mkid();
+    writeEdge({ id, head: libraryNameStr, tail: funcNameStr });
     return id;
 }
 regFunc("x", false, createLibrayFunc);
@@ -287,6 +291,7 @@ regFunc("rmsf", false, function() {
         let stringNode = stringFind({ string: systemFileName });
         stringRemove({ id: stringNode[0].id });
     };
+    removeSystemFile();
 });
 
 

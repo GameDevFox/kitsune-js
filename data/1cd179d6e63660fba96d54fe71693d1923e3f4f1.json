@@ -72,6 +72,10 @@
     "string": "collFind"
   },
   {
+    "id": "e2346381bb8eb382eb8b3877a9d3838996c5ca2d",
+    "string": "console"
+  },
+  {
     "id": "ab53755e1c9f705798ac7812c20962a510275dff",
     "string": "core-node"
   },
