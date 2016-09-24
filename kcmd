@@ -38,11 +38,11 @@ let primeFuncGroup = "b654fb2d44e65346e18a54eab7ab3f1e692817e9";
 let bindFuncLoader = "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
 let autoParamLoader = "c18b49e9b5d330e1573707e9b3defc6592897522";
 
-let id = "d27602da00e2cfcc58ce7440aa593d7b0e181921";
+let id = "a8a338d08b0ef7e532cbc343ba1e4314608024b2";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func({ group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
+    let result = func("7f82d45a6ffb5c345f84237a621de35dd8b7b0e3");
     return result;
 });
 
@@ -54,9 +54,9 @@ function convertBindFunc() {
     let removeEdge = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
 
     // Bind
-    let funcs = getTails("e6429ca88b178bd13982b6ca543c822043b609c6");
+    // let funcs = getTails("e6429ca88b178bd13982b6ca543c822043b609c6");
     // AutoPAram
-    // let funcs = getTails("01ec9bb984b50b0a7bd0e296004ef1e74ea293a0");
+    let funcs = getTails("01ec9bb984b50b0a7bd0e296004ef1e74ea293a0");
 
     console.log(funcs);
     funcs.forEach(func => {
@@ -64,8 +64,8 @@ function convertBindFunc() {
         let { head, tail } = edge;
 
         // Transfer
-        let newHead = bindFuncLoader;
-        // let newHead = autoParamLoader;
+        // let newHead = bindFuncLoader;
+        let newHead = autoParamLoader;
         let newTail = autoWriteEdge({ head, tail });
 
         removeEdge(func);

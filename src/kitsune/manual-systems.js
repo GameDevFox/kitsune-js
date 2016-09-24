@@ -70,9 +70,6 @@ function buildManualSystemLoader(systems) {
         // Auto param loader
         addManSys("e7077ff12256c2c8da6a200c90899c311caf2cf4", function () {
             let autoParamLoader = function ({isAutoParamFunc, readEdge, readString, autoParam, id}) {
-                if (!isAutoParamFunc(id))
-                    return null;
-
                 let edge = readEdge(id);
 
                 let funcId = edge.head;
