@@ -39,9 +39,6 @@ function buildManualSystemLoader(systems) {
         // Bind func loader
         addManSys("2c677e2c78bede32f66bed87c214e5875c2c685c", function () {
             let bindFuncLoader = function ({isBindFunc, readBindFunc, nameList, bind, id}) {
-                if (!isBindFunc(id))
-                    return null;
-
                 let bindFunc = readBindFunc(id);
 
                 let func = systems(bindFunc.func);
@@ -113,7 +110,7 @@ function buildManualSystemLoader(systems) {
                 let paramId = bindFunc.tail;
                 let params = readNodeObject(paramId);
 
-                return {func, params};
+                return { func, params };
             };
             return readBindFunc;
         });
@@ -213,6 +210,30 @@ function buildManualSystemLoader(systems) {
             return isAutoParamFunc;
         });
     }
+
+    addManSys("6a96bb7f6144af37ffe81fca6dd31546890fbfb5", function(systems) {
+        let callNodeFunc = function({ readEdge, systems, node }) {
+            let edge = readEdge(node);
+            if(!edge)
+                return null;
+
+            let func = systems(edge.head);
+            let arg = edge.tail;
+
+            let result = func(arg);
+            return result;
+        };
+        return callNodeFunc;
+    });
+
+    addManSys("4c2699dc1fec0111f46c758489a210eb7f58e4df", function(systems) {
+        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+
+        let callNodeFunc = systems("6a96bb7f6144af37ffe81fca6dd31546890fbfb5");
+        callNodeFunc = bind({ func: callNodeFunc, params: { readEdge, systems }});
+        callNodeFunc = autoParam({ func: callNodeFunc, paramName: "node" });
+        return callNodeFunc;
+    });
 
     addManSys("9c9a7115ab807d4f97b9f29031f5dbfc35ae0cf7", function() {
         let libraryFuncLoader = function({ readEdge, readString, getLibraryFunc, node }) {
@@ -555,7 +576,7 @@ function buildManualSystemLoader(systems) {
         });
 
         addManSys("de4c22f8bae0d00aad89fe0767d64f38da88a357", function () {
-            let graphReport = function ({graphFind, graphListNodes}) {
+            let graphReport = function ({ graphFind, graphListNodes }) {
                 let edges = graphFind();
                 let nodes = graphListNodes();
                 let nodePercent = (edges.length / nodes.length * 100).toPrecision(4);

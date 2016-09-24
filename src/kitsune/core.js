@@ -226,9 +226,10 @@ function bootstrap() {
     log.info(":Bind Function Loader");
     // This needs to be an ordered list, and random group will not work
     let loaders = [
-        "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a", // bind-func-loader
+        // "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a", // bind-func-loader
         "c18b49e9b5d330e1573707e9b3defc6592897522", // auto-param-loader
-        "c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79", // library-func-loader
+        // "c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79", // library-func-loader
+        "4c2699dc1fec0111f46c758489a210eb7f58e4df", // prime-func-loader
     ];
     loaders.forEach(loaderNode => {
         let loader = systems(loaderNode);

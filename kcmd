@@ -34,13 +34,64 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "5e6260e038fb71902eafe98d4105a4a7a581eec1";
+let primeFuncGroup = "b654fb2d44e65346e18a54eab7ab3f1e692817e9";
+let bindFuncLoader = "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
+let autoParamLoader = "c18b49e9b5d330e1573707e9b3defc6592897522";
+
+let id = "d27602da00e2cfcc58ce7440aa593d7b0e181921";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func("c18b49e9b5d330e1573707e9b3defc6592897522");
+    let result = func({ group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" });
     return result;
 });
+
+function convertBindFunc() {
+    let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+    let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+    let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
+    let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
+    let removeEdge = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
+
+    // Bind
+    let funcs = getTails("e6429ca88b178bd13982b6ca543c822043b609c6");
+    // AutoPAram
+    // let funcs = getTails("01ec9bb984b50b0a7bd0e296004ef1e74ea293a0");
+
+    console.log(funcs);
+    funcs.forEach(func => {
+        let edge = readEdge(func);
+        let { head, tail } = edge;
+
+        // Transfer
+        let newHead = bindFuncLoader;
+        // let newHead = autoParamLoader;
+        let newTail = autoWriteEdge({ head, tail });
+
+        removeEdge(func);
+        writeEdge({ id: func, head: newHead, tail: newTail });
+
+        // Add to group
+        autoWriteEdge({ head: primeFuncGroup, tail: func });
+    });
+}
+regFunc("x", false, convertBindFunc);
+
+function createPrimeFunc() {
+    let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
+    let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
+    let mkid = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
+
+    let head = "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a"; // bind-func-loader
+    let tail = "a4268864d21fd571f4dc7888f82d15b09e0e678d"; // get-heads
+
+    // let id = mkid();
+    writeEdge({ id, head, tail });
+    autoWriteEdge({ head: primeFuncGroup, tail: id });
+
+    return id;
+}
+regFunc("create-prime-func", false, createPrimeFunc);
 
 function createLibrayFunc() {
     let libraryId = "a417ba234170b6740c12a50ea99b122c3e761530";
@@ -66,7 +117,6 @@ function createLibrayFunc() {
     writeEdge({ id, head: libraryNameStr, tail: funcNameStr });
     return id;
 }
-regFunc("x", false, createLibrayFunc);
 regFunc("create-library-func", false, createBindFunc);
 
 function createBindFunc() {
