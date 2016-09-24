@@ -19,7 +19,7 @@ var appSrcPath = ["./src/kitsune/**/*.js", "./src/kitsune-core/*"];
 var kitsuneTestPath = "./test/**/*.spec.js";
 var testSrcPath = [kitsuneTestPath];
 
-var testBuildPath = ["./build/test/kitsune/**/*.spec.js"];
+var testBuildPath = ["./build/test/kitsune/sandbox.spec.js"];
 
 var softTestFail = false;
 

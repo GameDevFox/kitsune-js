@@ -224,6 +224,7 @@ function bootstrap() {
     modules.push(manualSystems);
 
     log.info(":Bind Function Loader");
+    // This needs to be an ordered list, and random group will not work
     let loaders = [
         "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a", // bind-func-loader
         "c18b49e9b5d330e1573707e9b3defc6592897522", // auto-param-loader
