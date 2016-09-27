@@ -38,11 +38,11 @@ let primeFuncGroup = "b654fb2d44e65346e18a54eab7ab3f1e692817e9";
 let bindFuncLoader = "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
 let autoParamLoader = "c18b49e9b5d330e1573707e9b3defc6592897522";
 
-let id = "a8a338d08b0ef7e532cbc343ba1e4314608024b2";
+let id = "7babc233de26ab19ead1b9c278128d5c434910ee";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func("7f82d45a6ffb5c345f84237a621de35dd8b7b0e3");
+    let result = func("Hello World");
     return result;
 });
 
@@ -55,7 +55,7 @@ function convertBindFunc() {
 
     // Bind
     // let funcs = getTails("e6429ca88b178bd13982b6ca543c822043b609c6");
-    // AutoPAram
+    // AutoParam
     let funcs = getTails("01ec9bb984b50b0a7bd0e296004ef1e74ea293a0");
 
     console.log(funcs);
