@@ -38,13 +38,55 @@ let primeFuncGroup = "b654fb2d44e65346e18a54eab7ab3f1e692817e9";
 let bindFuncLoader = "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
 let autoParamLoader = "c18b49e9b5d330e1573707e9b3defc6592897522";
 
-let id = "debb03595c98dabf804339d4b4e8510bb14b56f9";
+let id = "6378d5d56fd34343e95156441b8f28be552925fe";
 
 regFunc("q", false, function() {
     let func = systems(id);
     let result = func("Value");
     return result;
 });
+
+function createLibrayFunc() {
+
+    let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
+
+    let id = autoWriteEdge({
+        head: "c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79",
+        tail: "49a69f468bdd40c487724963b541ea1401dfba2c"
+    });
+
+    autoWriteEdge({
+        head: "b654fb2d44e65346e18a54eab7ab3f1e692817e9",
+        tail: id
+    });
+
+    return id;
+
+    // TODO: Fix this to match prime-functions
+    // let libraryId = "a417ba234170b6740c12a50ea99b122c3e761530";
+
+    // let writeString = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
+    // let isInGroup = systems("9f3a4c1bb1d1e8da1fc3ab19c23cd5507666ab45");
+    // let mkid = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
+    // let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
+    //
+    // let libraryName = "console";
+    // let funcName = "log";
+    //
+    // let libraryNameStr = name(libraryName);
+    // let funcNameStr = name(funcName);
+
+    // Add to library group
+    // let libExists = isInGroup({ group: libraryId, node: libraryNameStr });
+    // if(!libExists)
+    //     autoWriteEdge({ head: libraryId, tail: libraryNameStr });
+
+    // let id = mkid();
+    // writeEdge({ id, head: libraryNameStr, tail: funcNameStr });
+    // return id;
+}
+regFunc("x", false, createLibrayFunc);
+regFunc("create-library-func", false, createLibrayFunc);
 
 function convertBindFunc() {
     let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
@@ -75,7 +117,7 @@ function convertBindFunc() {
         autoWriteEdge({ head: primeFuncGroup, tail: func });
     });
 }
-regFunc("x", false, convertBindFunc);
+regFunc("convert-bind-func", false, convertBindFunc);
 
 function createPrimeFunc() {
     let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
@@ -92,32 +134,6 @@ function createPrimeFunc() {
     return id;
 }
 regFunc("create-prime-func", false, createPrimeFunc);
-
-function createLibrayFunc() {
-    let libraryId = "a417ba234170b6740c12a50ea99b122c3e761530";
-
-    let writeString = systems("4e63843a9bee61351b80fac49f4182bd582907b4");
-    let isInGroup = systems("9f3a4c1bb1d1e8da1fc3ab19c23cd5507666ab45");
-    let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
-    let mkid = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
-    let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
-
-    let libraryName = "console";
-    let funcName = "log";
-
-    let libraryNameStr = writeString(libraryName);
-    let funcNameStr = writeString(funcName);
-
-    // Add to library group
-    let libExists = isInGroup({ group: libraryId, node: libraryNameStr });
-    if(!libExists)
-        autoWriteEdge({ head: libraryId, tail: libraryNameStr });
-
-    // let id = mkid();
-    writeEdge({ id, head: libraryNameStr, tail: funcNameStr });
-    return id;
-}
-regFunc("create-library-func", false, createBindFunc);
 
 function createBindFunc() {
     let writeBindFunc = systems("ccd7b9796a25b50b3d5d712392c9758e3ab6133d");

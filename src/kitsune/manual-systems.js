@@ -250,11 +250,11 @@ function buildManualSystemLoader(systems) {
     });
 
     addManSys("9c9a7115ab807d4f97b9f29031f5dbfc35ae0cf7", function() {
-        let libraryFuncLoader = function({ readEdge, readString, getLibraryFunc, node }) {
-            let { head: libraryNameStr, tail: funcNameStr } = readEdge(node);
+        let libraryFuncLoader = function({ readEdge, nameList, getLibraryFunc, node }) {
+            let { head: library, tail: func } = readEdge(node);
 
-            let libraryName = readString(libraryNameStr);
-            let funcName = readString(funcNameStr);
+            let libraryName = nameList(library)[0];
+            let funcName = nameList(func)[0];
 
             let result = getLibraryFunc({ libraryName, funcName });
             return result;
@@ -264,11 +264,11 @@ function buildManualSystemLoader(systems) {
 
         addManSys("c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79", function() {
             let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
-            let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
+            let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
             let getLibraryFunc = systems("3990d47251b3e9a52f311241bf65368ac66989c4");
 
             let libraryFuncLoader = systems("9c9a7115ab807d4f97b9f29031f5dbfc35ae0cf7");
-            libraryFuncLoader = bind({ func: libraryFuncLoader, params: { readEdge, readString, getLibraryFunc }});
+            libraryFuncLoader = bind({ func: libraryFuncLoader, params: { readEdge, nameList, getLibraryFunc }});
             libraryFuncLoader = autoParam({ func: libraryFuncLoader, paramName: "node" });
             return libraryFuncLoader;
         });
