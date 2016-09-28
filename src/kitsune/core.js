@@ -223,16 +223,9 @@ function bootstrap() {
     let manualSystems = buildManualSystemLoader(systems);
     modules.push(manualSystems);
 
-    log.info(":Bind Function Loader");
-    // This needs to be an ordered list, and random group will not work
-    let loaders = [
-        // "c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79", // library-func-loader
-        "4c2699dc1fec0111f46c758489a210eb7f58e4df", // prime-func-loader
-    ];
-    loaders.forEach(loaderNode => {
-        let loader = systems(loaderNode);
-        modules.push(loader);
-    });
+    log.info(":Prime Function Loader");
+    let primeFuncLoader = systems("4c2699dc1fec0111f46c758489a210eb7f58e4df");
+    modules.push(primeFuncLoader);
 
     // TODO: Remove this ???
     // log.info(":Function Call Systems");
