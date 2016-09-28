@@ -208,6 +208,23 @@ function buildManualSystemLoader(systems) {
         });
     }
 
+    addManSys("d744dc750675113a5914be50bf3fbd3f9bd4319f", function() {
+        let stringFindLike = function({ db, like }) {
+            let search = db().find({ string: { $regex: new RegExp(like, "i") } });
+            return search.map(x => x.id);
+        };
+        return stringFindLike;
+    });
+
+    addManSys("debb03595c98dabf804339d4b4e8510bb14b56f9", function() {
+        let stringDb = systems("ce6de1160131bddb4e214f52e895a68583105133");
+
+        let stringFindLike = systems("d744dc750675113a5914be50bf3fbd3f9bd4319f");
+        stringFindLike = bind({ func: stringFindLike, params: { db: stringDb }});
+        stringFindLike = autoParam({ func: stringFindLike, paramName: "like" });
+        return stringFindLike;
+    });
+
     addManSys("6a96bb7f6144af37ffe81fca6dd31546890fbfb5", function(systems) {
         let callNodeFunc = function({ readEdge, systems, node }) {
             let edge = readEdge(node);
