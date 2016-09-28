@@ -292,6 +292,10 @@
     "string": "is-in-name-group"
   },
   {
+    "id": "e702368959d48685054d5b2d799d88999cd6bacd",
+    "string": "is-library-function"
+  },
+  {
     "id": "c8c15209336f8c29073cdc5052ed461646037c05",
     "string": "is-list"
   },

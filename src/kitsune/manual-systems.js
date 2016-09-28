@@ -35,10 +35,9 @@ function buildManualSystemLoader(systems) {
 
     // LOADERS //
     {
-
         // Bind func loader
         addManSys("2c677e2c78bede32f66bed87c214e5875c2c685c", function () {
-            let bindFuncLoader = function ({isBindFunc, readBindFunc, nameList, bind, id}) {
+            let bindFuncLoader = function ({ readBindFunc, nameList, bind, id }) {
                 let bindFunc = readBindFunc(id);
 
                 let func = systems(bindFunc.func);
@@ -56,20 +55,19 @@ function buildManualSystemLoader(systems) {
         });
 
         addManSys("9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a", function () {
-            let isBindFunc = systems("03d33fe3603bfa66db338b5768f21a5c90a4e1b8");
             let readBindFunc = systems("4841f107fb76dbf4ac1d29a936b16b7365985ca4");
             let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
             let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
 
             let bindFuncLoader = systems("2c677e2c78bede32f66bed87c214e5875c2c685c");
-            bindFuncLoader = bind({func: bindFuncLoader, params: {isBindFunc, readBindFunc, nameList, bind}});
+            bindFuncLoader = bind({func: bindFuncLoader, params: { readBindFunc, nameList, bind }});
             bindFuncLoader = autoParam({func: bindFuncLoader, paramName: "id"});
             return bindFuncLoader;
         });
 
         // Auto param loader
         addManSys("e7077ff12256c2c8da6a200c90899c311caf2cf4", function () {
-            let autoParamLoader = function ({isAutoParamFunc, readEdge, readString, autoParam, id}) {
+            let autoParamLoader = function ({ readEdge, readString, autoParam, id }) {
                 let edge = readEdge(id);
 
                 let funcId = edge.head;
@@ -84,13 +82,12 @@ function buildManualSystemLoader(systems) {
         });
 
         addManSys("c18b49e9b5d330e1573707e9b3defc6592897522", function () {
-            let isAutoParamFunc = systems("dc9959d7b543763255547b16b11e21ae6c3a8209");
             let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
             let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
             let autoParam = systems("b69aeff3eb1a14156b1a9c52652544bcf89761e2");
 
             let autoParamLoader = systems("e7077ff12256c2c8da6a200c90899c311caf2cf4");
-            autoParamLoader = bind({func: autoParamLoader, params: {isAutoParamFunc, readEdge, readString, autoParam}});
+            autoParamLoader = bind({func: autoParamLoader, params: { readEdge, readString, autoParam }});
             autoParamLoader = autoParam({func: autoParamLoader, paramName: "id"});
             return autoParamLoader;
         });
@@ -182,31 +179,49 @@ function buildManualSystemLoader(systems) {
             stringReadString = returnProperty({func: stringReadString, propertyName: "string"});
             return stringReadString;
         });
-
-        addManSys("03d33fe3603bfa66db338b5768f21a5c90a4e1b8", function (systems) {
-            let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
-            let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-
-            let isBindFunc = bind({
-                func: isInGroup,
-                params: {graphFind, group: "e6429ca88b178bd13982b6ca543c822043b609c6"}
-            });
-            isBindFunc = autoParam({func: isBindFunc, paramName: "node"});
-            return isBindFunc;
-        });
-
-        addManSys("dc9959d7b543763255547b16b11e21ae6c3a8209", function (systems) {
-            let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
-            let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-
-            let isAutoParamFunc = bind({
-                func: isInGroup,
-                params: {graphFind, group: "01ec9bb984b50b0a7bd0e296004ef1e74ea293a0"}
-            });
-            isAutoParamFunc = autoParam({func: isAutoParamFunc, paramName: "node"});
-            return isAutoParamFunc;
-        });
     }
+
+    addManSys("da697bd0863212526208d79e3e65019377b07670", function() {
+        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+
+        let getEdgeHead = function({ readEdge, node }) {
+            let edge = readEdge(node);
+            if(!edge)
+                return null;
+
+            return edge.head;
+        };
+        getEdgeHead = bind({ func: getEdgeHead, params: { readEdge }});
+        getEdgeHead = autoParam({ func: getEdgeHead, paramName: "node" });
+        return getEdgeHead;
+    });
+
+    addManSys("03d33fe3603bfa66db338b5768f21a5c90a4e1b8", function (systems) {
+        let getEdgeHead = systems("da697bd0863212526208d79e3e65019377b07670");
+
+        let isBindFunc = function(node) {
+            return getEdgeHead(node) == "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
+        };
+        return isBindFunc;
+    });
+
+    addManSys("dc9959d7b543763255547b16b11e21ae6c3a8209", function (systems) {
+        let getEdgeHead = systems("da697bd0863212526208d79e3e65019377b07670");
+
+        let isAutoParamFunc = function(node) {
+            return getEdgeHead(node) == "c18b49e9b5d330e1573707e9b3defc6592897522";
+        };
+        return isAutoParamFunc;
+    });
+
+    addManSys("9cf4ad5264b058a8f22f85af63eae63344f097da", function (systems) {
+        let getEdgeHead = systems("da697bd0863212526208d79e3e65019377b07670");
+
+        let isLibraryFunc = function(node) {
+            return getEdgeHead(node) == "c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79";
+        };
+        return isLibraryFunc;
+    });
 
     addManSys("d744dc750675113a5914be50bf3fbd3f9bd4319f", function() {
         let stringFindLike = function({ db, like }) {
