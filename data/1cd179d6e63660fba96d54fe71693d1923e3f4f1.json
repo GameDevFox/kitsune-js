@@ -336,6 +336,10 @@
     "string": "list-lists"
   },
   {
+    "id": "4eef16e4d193d7a7c66749d696aff44d31c5e84d",
+    "string": "list-prime-functions"
+  },
+  {
     "id": "da2ea5bee82302925a2874f529684e980c179d70",
     "string": "lists"
   },
@@ -398,6 +402,10 @@
   {
     "id": "74144672a4bb09929af57ff3e01969590854011c",
     "string": "node-desc-report"
+  },
+  {
+    "id": "c498e4b367643e5830b41341716f462cc9492ac0",
+    "string": "node-function-loader"
   },
   {
     "id": "774978bb69c87d62ed9ede8abb63b8d89fd7bdd2",

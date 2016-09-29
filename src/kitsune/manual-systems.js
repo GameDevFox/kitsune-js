@@ -181,6 +181,22 @@ function buildManualSystemLoader(systems) {
         });
     }
 
+    addManSys("383103bd68460b5ff1d48e629720533dc3e3a1e4", function(systems) {
+        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+
+        let nodeFuncLoader = function({ readEdge, systems, node }) {
+            let { head: func, tail: arg } = readEdge(node);
+
+            let fn = systems(func);
+            return function() {
+                return fn(arg);
+            };
+        };
+        nodeFuncLoader = bind({ func: nodeFuncLoader, params: { readEdge, systems }});
+        nodeFuncLoader = autoParam({ func: nodeFuncLoader, paramName: "node" });
+        return nodeFuncLoader;
+    });
+
     addManSys("e73694a13d302e910ee51a1f326cf08e1bce0c12", function() {
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
 
