@@ -163,11 +163,6 @@ function bootstrap() {
     let primeFuncLoader = systems("4c2699dc1fec0111f46c758489a210eb7f58e4df");
     modules.push(primeFuncLoader);
 
-    // TODO: Remove this ???
-    // log.info(":Function Call Systems");
-    // let funcCallSystems = buildFuncCallLoader(systems);
-    // modules.push(funcCallSystems);
-
     return { modules, systems };
 }
 
