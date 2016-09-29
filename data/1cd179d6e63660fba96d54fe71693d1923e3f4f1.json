@@ -256,6 +256,10 @@
     "string": "input"
   },
   {
+    "id": "4346c2471eaa938c805a68b34a0496e2367950c7",
+    "string": "input-type"
+  },
+  {
     "id": "1178cafbd64bbbfa77f5ac0a9d5032ed88162781",
     "string": "integer"
   },
@@ -406,6 +410,10 @@
   {
     "id": "b2cc6f58f1c4bc328fcec6f6f43d3f61c99d1e0e",
     "string": "object-auto-put"
+  },
+  {
+    "id": "a6e3fc8f76db40d2a26d63521062dda3fe545604",
+    "string": "output-type"
   },
   {
     "id": "df06651788c884556a0b4b290fb40475ec9a45ba",
