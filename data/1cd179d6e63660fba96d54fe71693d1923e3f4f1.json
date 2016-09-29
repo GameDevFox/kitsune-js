@@ -336,12 +336,16 @@
     "string": "list-lists"
   },
   {
+    "id": "f3934b5bff0a14164716c5777146085e5ad7fb7a",
+    "string": "list-manual-systems"
+  },
+  {
     "id": "4eef16e4d193d7a7c66749d696aff44d31c5e84d",
     "string": "list-prime-functions"
   },
   {
-    "id": "da2ea5bee82302925a2874f529684e980c179d70",
-    "string": "lists"
+    "id": "0b990f5faa2bba9275e444b599266a9d301e40a5",
+    "string": "list-system-files"
   },
   {
     "id": "7babc233de26ab19ead1b9c278128d5c434910ee",
@@ -362,10 +366,6 @@
   {
     "id": "2b172839e79030382cf8d7770986e1f76e3e99d4",
     "string": "loki-remove"
-  },
-  {
-    "id": "a6d66e07bf3c31dafeb6410c7cf6ea1eb32c5145",
-    "string": "manual-systems"
   },
   {
     "id": "19f34ee1e406ea84ca83c835a3301b5d9014a788",
@@ -570,10 +570,6 @@
   {
     "id": "317f1e761f2faa8da781a4762b9dcc2c5cad209a",
     "string": "system"
-  },
-  {
-    "id": "74bc2baca0d62430a9ae246947b0b2c516e79f4f",
-    "string": "system-files"
   },
   {
     "id": "6576d3ae606465f2272dc5f1053ecc315b159724",
