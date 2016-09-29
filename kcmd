@@ -38,11 +38,11 @@ let primeFuncGroup = "b654fb2d44e65346e18a54eab7ab3f1e692817e9";
 let bindFuncLoader = "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
 let autoParamLoader = "c18b49e9b5d330e1573707e9b3defc6592897522";
 
-let id = "6378d5d56fd34343e95156441b8f28be552925fe";
+let id = "43cd34ab8105d158f421eecce9ed22948ec34893";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func("Value");
+    let result = func(true);
     return result;
 });
 
@@ -50,11 +50,13 @@ function createLibrayFunc() {
 
     let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
 
+    // Add loader / data combo
     let id = autoWriteEdge({
         head: "c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79",
         tail: "49a69f468bdd40c487724963b541ea1401dfba2c"
     });
 
+    // Add to prime-function group
     autoWriteEdge({
         head: "b654fb2d44e65346e18a54eab7ab3f1e692817e9",
         tail: id

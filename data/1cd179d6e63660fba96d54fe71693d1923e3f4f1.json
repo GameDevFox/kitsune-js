@@ -80,6 +80,10 @@
     "string": "create-system-file"
   },
   {
+    "id": "6b122a9ea5230c43bd4d33f128fedb6d28091865",
+    "string": "data-type"
+  },
+  {
     "id": "0352a8acc949c7df21fec16e566ba9a74e797a97",
     "string": "db"
   },
@@ -270,6 +274,10 @@
   {
     "id": "ae9ccbcd619110a3dcda1226d605a467fd9ebec0",
     "string": "is-bind-function"
+  },
+  {
+    "id": "6a3233e48d1ef1f6ed1090a5aca7ce52158e2946",
+    "string": "is-boolean"
   },
   {
     "id": "9621142ee56435ad5a2c8b2f93f19f5a57194f75",

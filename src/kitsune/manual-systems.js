@@ -331,8 +331,8 @@ function buildManualSystemLoader(systems) {
         });
 
         addManSys("43cd34ab8105d158f421eecce9ed22948ec34893", function() {
-            let isPrimitiveType = systems("34808982614a55b16897427d36e8ce37c6d68277");
-            let isBoolean = bind({ func: isPrimitiveType, params: { primitiveType: "boolean" }});
+            let getPrimitiveType = systems("34808982614a55b16897427d36e8ce37c6d68277");
+            let isBoolean = bind({ func: getPrimitiveType, params: { primitiveType: "boolean" }});
             isBoolean = autoParam({ func: isBoolean, paramName: "value" });
             return isBoolean;
         });
