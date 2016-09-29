@@ -181,6 +181,15 @@ function buildManualSystemLoader(systems) {
         });
     }
 
+    addManSys("e73694a13d302e910ee51a1f326cf08e1bce0c12", function() {
+        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+
+        let readAssign = systems("b8aea374925bfcd5884054aa23fed2ccce3c1174");
+        readAssign = bind({ func: readAssign, params: { readEdge }});
+        readAssign = autoParam({ func: readAssign, paramName: "id" });
+        return readAssign;
+    });
+
     addManSys("da697bd0863212526208d79e3e65019377b07670", function() {
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
 
@@ -524,9 +533,6 @@ function buildManualSystemLoader(systems) {
 
     // FUNCTIONS
     {
-        // TODO: Make a loader for native/libary stuff like this (like lodash)
-        // addManSys("cfcb898db1a24d50ed7254644ff75aba4fb5c5f8", () => console.log);
-
         // list-manual-systems
         addManSys("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8", function (systems) {
             return () => _.keys(manSysFuncs);
