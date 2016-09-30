@@ -386,27 +386,36 @@ function buildManualSystemLoader(systems) {
         return autoId;
     });
 
-    addManSys("1ae2731ceb6b1984be6e3dba46df3eda2f46e5a7", function() {
+    addManSys("647b87f6c165824714c48ffa8bf224d1bcf11709", function() {
         let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
-        let isCoreNode = bind({ func: isInGroup, params: { graphFind, group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" }});
+        isInGroup = bind({ func: isInGroup, params: { graphFind }});
+        return isInGroup;
+    });
+
+    addManSys("1ae2731ceb6b1984be6e3dba46df3eda2f46e5a7", function() {
+        let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
+        let isCoreNode = bind({ func: isInGroup, params: { group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" }});
         return isCoreNode;
     });
 
     addManSys("50ef96b815193e3a4fb04a648f2d9b3a50171bc5", function() {
-        let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-
-        let isSystemFile = bind({ func: isInGroup, params: { graphFind, group: "66564ec14ed18fb88965140fc644d7b813121c78" }});
+        let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
+        let isSystemFile = bind({ func: isInGroup, params: { group: "66564ec14ed18fb88965140fc644d7b813121c78" }});
         return isSystemFile;
     });
 
-    addManSys("0f9be9c5ad796df34aea4adf0cb340f2bbc2dfc6", function() {
-        let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+    addManSys("1b12f086f8555c4d13e6c98a8cece7ce4e198d43", function() {
+        let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
+        let isPrimeFunc = bind({ func: isInGroup, params: { group: "b654fb2d44e65346e18a54eab7ab3f1e692817e9" }});
+        isPrimeFunc = autoParam({ func: isPrimeFunc, paramName: "node" });
+        return isPrimeFunc;
+    });
 
-        let isInNameGroup = bind({ func: isInGroup, params: { graphFind, group: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" }});
+    addManSys("0f9be9c5ad796df34aea4adf0cb340f2bbc2dfc6", function() {
+        let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
+        let isInNameGroup = bind({ func: isInGroup, params: { group: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" }});
         return isInNameGroup;
     });
 
