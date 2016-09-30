@@ -353,6 +353,13 @@ function buildManualSystemLoader(systems) {
             return isBoolean;
         });
 
+        addManSys("05ef7fa49f431784fccc98f676c171e86c300449", function() {
+            let getPrimitiveType = systems("34808982614a55b16897427d36e8ce37c6d68277");
+            let isString = bind({ func: getPrimitiveType, params: { primitiveType: "string" }});
+            isString = autoParam({ func: isString, paramName: "value" });
+            return isString;
+        });
+
     addManSys("bd07150e634d5b01eedbe44f28a5068b5a7c845d", function(systems) {
         let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
