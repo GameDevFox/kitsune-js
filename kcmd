@@ -38,11 +38,11 @@ let primeFuncGroup = "b654fb2d44e65346e18a54eab7ab3f1e692817e9";
 let bindFuncLoader = "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
 let autoParamLoader = "c18b49e9b5d330e1573707e9b3defc6592897522";
 
-let id = "05ef7fa49f431784fccc98f676c171e86c300449";
+let id = "5658516f9274e7fcdeb87aa20d0b69a35ec335c3";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func("str");
+    let result = func("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
     return result;
 });
 

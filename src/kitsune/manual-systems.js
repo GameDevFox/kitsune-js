@@ -360,6 +360,13 @@ function buildManualSystemLoader(systems) {
             return isString;
         });
 
+        addManSys("5658516f9274e7fcdeb87aa20d0b69a35ec335c3", function() {
+            let isNode = function(string) {
+                return string.search(/^[0-9a-z]{40}$/i) != -1;
+            };
+            return isNode;
+        });
+
     addManSys("bd07150e634d5b01eedbe44f28a5068b5a7c845d", function(systems) {
         let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");

@@ -316,6 +316,10 @@
     "string": "is-name-edge"
   },
   {
+    "id": "525199fc34375dcbedebdb38402f2396cb5316dd",
+    "string": "is-node"
+  },
+  {
     "id": "4b14573cc83f36c19626b2ad582b6f9cbeba7fa7",
     "string": "is-prime-function"
   },
