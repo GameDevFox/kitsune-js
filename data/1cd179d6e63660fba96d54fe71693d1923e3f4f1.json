@@ -112,6 +112,10 @@
     "string": "execute-function"
   },
   {
+    "id": "fca9dc0bdfdbae879d8a5926703aaffd22fe4a77",
+    "string": "full-type-loader"
+  },
+  {
     "id": "99fdb3623cf5c6ad0283ca5c096018dd2f2ff5ad",
     "string": "func"
   },

@@ -367,6 +367,29 @@ function buildManualSystemLoader(systems) {
             return isNode;
         });
 
+    addManSys("3528d88fb3d5a3dc22f2ffbd40690ec71edd3819", function(systems) {
+        let inputType = "0713c6285e4a9d9fc96b375ff2dce3e1807d942d";
+        let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+
+        // RULE: Node always has exactly one input type
+        let fullTypeLoader = function({ factor, node }) {
+            let inputType = factor({ head: node, type: inputType })[0];
+
+            let child = systems(node);
+            let parent = systems(inputType.tail);
+
+            return function(input) {
+                if(!parent(input))
+                    return false;
+
+                return child(input);
+            };
+        };
+        fullTypeLoader = bind({ func: fullTypeLoader, params: { factor }});
+        fullTypeLoader = autoParam({ func: fullTypeLoader, paramName: "node" });
+        return fullTypeLoader;
+    });
+
     addManSys("bd07150e634d5b01eedbe44f28a5068b5a7c845d", function(systems) {
         let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
