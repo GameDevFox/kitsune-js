@@ -414,12 +414,6 @@ function buildManualSystemLoader(systems) {
         return isCoreNode;
     });
 
-    addManSys("50ef96b815193e3a4fb04a648f2d9b3a50171bc5", function() {
-        let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
-        let isSystemFile = bind({ func: isInGroup, params: { group: "66564ec14ed18fb88965140fc644d7b813121c78" }});
-        return isSystemFile;
-    });
-
     addManSys("1b12f086f8555c4d13e6c98a8cece7ce4e198d43", function() {
         let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
         let isPrimeFunc = bind({ func: isInGroup, params: { group: "b654fb2d44e65346e18a54eab7ab3f1e692817e9" }});
@@ -443,8 +437,8 @@ function buildManualSystemLoader(systems) {
     });
 
     addManSys("b1f5b717834f9e2f05acb42285e07c8155cc1528", function() {
-        let isManualSystem = function({ manSysList, id }) {
-            return manSysList().includes(id);
+        let isManualSystem = function({ manSysList, node }) {
+            return manSysList().includes(node);
         };
         return isManualSystem;
     });
@@ -454,8 +448,19 @@ function buildManualSystemLoader(systems) {
 
         let isManualSystem = systems("b1f5b717834f9e2f05acb42285e07c8155cc1528");
         isManualSystem = bind({ func: isManualSystem, params: { manSysList }});
-        isManualSystem = autoParam({ func: isManualSystem, paramName: "id" });
+        isManualSystem = autoParam({ func: isManualSystem, paramName: "node" });
         return isManualSystem;
+    });
+
+    addManSys("c0c7f5b157c778783ce82f431f732f19d7cb3821", function() {
+        let listSysFiles = systems("5277dc011cbc9800046edeb4460f7138e060a935");
+
+        let isSystemFile = function({ listSysFiles, node }) {
+            return listSysFiles().includes(node);
+        };
+        isSystemFile = bind({ func: isSystemFile, params: { listSysFiles }});
+        isSystemFile = autoParam({ func: isSystemFile, paramName: "node" });
+        return isSystemFile;
     });
 
     addManSys("248743603215c126461a7e4debdee6d18c3686cb", function() {
@@ -580,7 +585,10 @@ function buildManualSystemLoader(systems) {
         // list-system-files
         addManSys("5277dc011cbc9800046edeb4460f7138e060a935", function (systems) {
             let files = fs.readdirSync("./src/kitsune-core");
-            return () => files;
+            let listSysFiles = function() {
+               return files;
+            };
+            return listSysFiles;
         });
 
         addManSys("e6ff3d78ebd8f80c8945afd3499195049609905d", function (systems) {
