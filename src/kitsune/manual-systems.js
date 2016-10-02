@@ -372,7 +372,7 @@ function buildManualSystemLoader(systems) {
         let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
 
         // RULE: Node always has exactly one input type
-        let fullTypeLoader = function({ factor, node }) {
+        let fullTypeLoader = function({ factor, systems, node }) {
             let inputType = factor({ head: node, type: inputType })[0];
 
             let child = systems(node);
@@ -385,7 +385,7 @@ function buildManualSystemLoader(systems) {
                 return child(input);
             };
         };
-        fullTypeLoader = bind({ func: fullTypeLoader, params: { factor }});
+        fullTypeLoader = bind({ func: fullTypeLoader, params: { factor, systems }});
         fullTypeLoader = autoParam({ func: fullTypeLoader, paramName: "node" });
         return fullTypeLoader;
     });
@@ -412,6 +412,36 @@ function buildManualSystemLoader(systems) {
         getTypeList = bind({ func: getTypeList, params: { factor }});
         getTypeList = autoParam({ func: getTypeList, paramName: "node" });
         return getTypeList;
+    });
+
+    addManSys("d30dc37c36dd88e12dab2311ad7b1e9ef1038118", function(systems) {
+        let getTypeList = systems("5d134bcf95eb55efa7807da43e11e4fc37e269b9");
+
+        let descTypeLoader = function({ getTypeList, systems, node }) {
+            let typeList = getTypeList(node);
+            typeList = typeList.reverse();
+
+            let result = {
+                is: null,
+                isNot: null
+            };
+            return (input) => {
+                for (let typeNode of typeList) {
+                    console.log(typeNode);
+                    let type = systems(typeNode);
+                    if (type(input))
+                        result.is = typeNode;
+                    else {
+                        result.isNot = typeNode;
+                        break;
+                    }
+                }
+                return result;
+            }
+        };
+        descTypeLoader = bind({ func: descTypeLoader, params: { getTypeList, systems }});
+        descTypeLoader = autoParam({ func: descTypeLoader, paramName: "node" });
+        return descTypeLoader;
     });
 
     addManSys("bd07150e634d5b01eedbe44f28a5068b5a7c845d", function(systems) {
