@@ -394,15 +394,6 @@ function buildManualSystemLoader(systems) {
         return descTypeLoader;
     });
 
-    addManSys("bd07150e634d5b01eedbe44f28a5068b5a7c845d", function(systems) {
-        let isInGroup = systems("a3fd8e7c0d51f13671ebbb6f9758833ff6120b42");
-        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-
-        let isList = bind({ func: isInGroup, params: { graphFind, group: "283287a7c0c2ccaa5c69dfd99a800d13eb6805ea" }});
-        isList = autoParam({ func: isList, paramName: "node" });
-        return isList;
-    });
-
     addManSys("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7", function(systems) {
         let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
         let autoId = systems("e048e5d7d4a4fbc45d5cd0d035982dae2ee768d0");
@@ -435,10 +426,24 @@ function buildManualSystemLoader(systems) {
         return isInGroup;
     });
 
-    addManSys("1ae2731ceb6b1984be6e3dba46df3eda2f46e5a7", function() {
+    addManSys("cf2331e774de09eee361e94199546123913a2773", function(systems) {
         let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
-        let isCoreNode = bind({ func: isInGroup, params: { group: "7f82d45a6ffb5c345f84237a621de35dd8b7b0e3" }});
-        return isCoreNode;
+
+        let groupTypeLoader = function({ isInGroup, group }) {
+            return function(node) {
+                return isInGroup({ group, node });
+            };
+        };
+        groupTypeLoader = bind({ func: groupTypeLoader, params: { isInGroup }});
+        groupTypeLoader = autoParam({ func: groupTypeLoader, paramName: "group" });
+        return groupTypeLoader;
+    });
+
+    addManSys("bd07150e634d5b01eedbe44f28a5068b5a7c845d", function(systems) {
+        let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
+        let isList = bind({ func: isInGroup, params: { group: "283287a7c0c2ccaa5c69dfd99a800d13eb6805ea" }});
+        isList = autoParam({ func: isList, paramName: "node" });
+        return isList;
     });
 
     addManSys("1b12f086f8555c4d13e6c98a8cece7ce4e198d43", function() {

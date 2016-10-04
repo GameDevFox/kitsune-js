@@ -244,6 +244,10 @@
     "string": "group-list"
   },
   {
+    "id": "fad8cd7a96baffeb4a2c08551105a74781402e4b",
+    "string": "group-type-loader"
+  },
+  {
     "id": "c2f711efc006f9b834bb4ee1d6c854ec40f3b493",
     "string": "groupList"
   },
