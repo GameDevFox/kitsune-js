@@ -48,6 +48,10 @@
     "string": "bind-func-loader"
   },
   {
+    "id": "7f1ba3e38b4e2640b991e7f5d1d45eb1b699cf50",
+    "string": "call-node-func"
+  },
+  {
     "id": "d04d81b79dc86ca7b8c6e3e515d57f23014e5fe7",
     "string": "call-node-function"
   },
@@ -96,6 +100,10 @@
     "string": "describeNode"
   },
   {
+    "id": "a9c7a4792ef84cfa481403c5790511498aa1e496",
+    "string": "descriptive-type-loader"
+  },
+  {
     "id": "b478fbeae9d00581d83aff3070e93d759d23f59c",
     "string": "dictionary-function"
   },
@@ -140,12 +148,28 @@
     "string": "get-data-time"
   },
   {
+    "id": "409d623622196b12f4e18065eec28534e28268ba",
+    "string": "get-edge-head"
+  },
+  {
     "id": "756298c8ec1f323603452496a7bbab2a85214b6d",
     "string": "get-heads"
   },
   {
+    "id": "d353d19920418f56443ebd55d88a6b99b6d4b614",
+    "string": "get-library-function"
+  },
+  {
+    "id": "65ef0d93a0b6f021f5b421a3da9d42b5b6f1f06e",
+    "string": "get-primitive-type"
+  },
+  {
     "id": "0b8838e140b93b082b1358f8b5b70a045f3baf58",
     "string": "get-tails"
+  },
+  {
+    "id": "3909532fe81dfd3d23ed31d75797ec8954e16f83",
+    "string": "get-type-list"
   },
   {
     "id": "c27382c5f2608700f8d4d9c82de3be2e40e04756",
@@ -326,6 +350,10 @@
   {
     "id": "4b14573cc83f36c19626b2ad582b6f9cbeba7fa7",
     "string": "is-prime-function"
+  },
+  {
+    "id": "f7a9478dd347105cdd768d4ab4ab1ea493d60b71",
+    "string": "is-primitive-type"
   },
   {
     "id": "57941d7c86588fb78b2b0152160852a04eae7f0d",
@@ -538,6 +566,10 @@
   {
     "id": "2b27c1910d3b5bb74505ba8a5facdc0140ac5a49",
     "string": "string-data"
+  },
+  {
+    "id": "25ed2ccd6a23f31fc9bf16e213c381a9c1013deb",
+    "string": "string-find-like"
   },
   {
     "id": "d24721766a775f163627440199a2dde86f025dfa",
