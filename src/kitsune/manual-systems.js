@@ -96,19 +96,6 @@ function buildManualSystemLoader(systems) {
     // LOADER DEPENDENCIES //
     {
         // Dependancies of Bind Function Loader
-        addManSys("54988d866ff79e589c5a2b50aeaf720d743c01a4", function () {
-            let readBindFunc = function ({readEdge, readNodeObject, id}) {
-                let bindFunc = readEdge(id);
-
-                let func = bindFunc.head;
-                let paramId = bindFunc.tail;
-                let params = readNodeObject(paramId);
-
-                return { func, params };
-            };
-            return readBindFunc;
-        });
-
         addManSys("4841f107fb76dbf4ac1d29a936b16b7365985ca4", function (systems) {
             let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
             let readNodeObject = systems("971a9f4b9f8e841b4519d96fa8733311c8b58fe2");
@@ -248,14 +235,6 @@ function buildManualSystemLoader(systems) {
         return isLibraryFunc;
     });
 
-    addManSys("d744dc750675113a5914be50bf3fbd3f9bd4319f", function() {
-        let stringFindLike = function({ db, like }) {
-            let search = db().find({ string: { $regex: new RegExp(like, "i") } });
-            return search.map(x => x.id);
-        };
-        return stringFindLike;
-    });
-
     addManSys("debb03595c98dabf804339d4b4e8510bb14b56f9", function() {
         let stringDb = systems("ce6de1160131bddb4e214f52e895a68583105133");
 
@@ -265,21 +244,6 @@ function buildManualSystemLoader(systems) {
         return stringFindLike;
     });
 
-    addManSys("6a96bb7f6144af37ffe81fca6dd31546890fbfb5", function(systems) {
-        let callNodeFunc = function({ readEdge, systems, node }) {
-            let edge = readEdge(node);
-            if(!edge)
-                return null;
-
-            let func = systems(edge.head);
-            let arg = edge.tail;
-
-            let result = func(arg);
-            return result;
-        };
-        return callNodeFunc;
-    });
-
     addManSys("4c2699dc1fec0111f46c758489a210eb7f58e4df", function(systems) {
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
 
@@ -287,19 +251,6 @@ function buildManualSystemLoader(systems) {
         callNodeFunc = bind({ func: callNodeFunc, params: { readEdge, systems }});
         callNodeFunc = autoParam({ func: callNodeFunc, paramName: "node" });
         return callNodeFunc;
-    });
-
-    addManSys("9c9a7115ab807d4f97b9f29031f5dbfc35ae0cf7", function() {
-        let libraryFuncLoader = function({ readEdge, nameList, getLibraryFunc, node }) {
-            let { head: library, tail: func } = readEdge(node);
-
-            let libraryName = nameList(library)[0];
-            let funcName = nameList(func)[0];
-
-            let result = getLibraryFunc({ libraryName, funcName });
-            return result;
-        };
-        return libraryFuncLoader;
     });
 
         addManSys("c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79", function() {
@@ -312,31 +263,6 @@ function buildManualSystemLoader(systems) {
             libraryFuncLoader = autoParam({ func: libraryFuncLoader, paramName: "node" });
             return libraryFuncLoader;
         });
-
-        addManSys("3990d47251b3e9a52f311241bf65368ac66989c4", function() {
-            let getLibraryFunc = function({ libraryName, funcName }) {
-                let library = require(libraryName);
-                let result = library[funcName];
-                return result;
-            };
-            return getLibraryFunc;
-        });
-
-    addManSys("6bfea805fec330b875b15744fd8bff3ae34635c3", function() {
-        let getPrimitiveType = function(input) {
-            let result = typeof input;
-            return result;
-        };
-        return getPrimitiveType;
-    });
-
-    addManSys("2e898c3acd767449308279ae99645244dc248b08", function() {
-        let isPrimitiveType = function({ getPrimitiveType, primitiveType, value }) {
-            let result = getPrimitiveType(value) == primitiveType;
-            return result;
-        };
-        return isPrimitiveType;
-    });
 
         addManSys("34808982614a55b16897427d36e8ce37c6d68277", function() {
             let getPrimitiveType = systems("6bfea805fec330b875b15744fd8bff3ae34635c3");
@@ -513,13 +439,6 @@ function buildManualSystemLoader(systems) {
         return isNameEdge;
     });
 
-    addManSys("b1f5b717834f9e2f05acb42285e07c8155cc1528", function() {
-        let isManualSystem = function({ manSysList, node }) {
-            return manSysList().includes(node);
-        };
-        return isManualSystem;
-    });
-
     addManSys("5e6260e038fb71902eafe98d4105a4a7a581eec1", function() {
         let manSysList = systems("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8");
 
@@ -666,6 +585,87 @@ function buildManualSystemLoader(systems) {
                return files;
             };
             return listSysFiles;
+        });
+
+        addManSys("d744dc750675113a5914be50bf3fbd3f9bd4319f", function() {
+            let stringFindLike = function({ db, like }) {
+                let search = db().find({ string: { $regex: new RegExp(like, "i") } });
+                return search.map(x => x.id);
+            };
+            return stringFindLike;
+        });
+
+        addManSys("9c9a7115ab807d4f97b9f29031f5dbfc35ae0cf7", function() {
+            let libraryFuncLoader = function({ readEdge, nameList, getLibraryFunc, node }) {
+                let { head: library, tail: func } = readEdge(node);
+
+                let libraryName = nameList(library)[0];
+                let funcName = nameList(func)[0];
+
+                let result = getLibraryFunc({ libraryName, funcName });
+                return result;
+            };
+            return libraryFuncLoader;
+        });
+
+        addManSys("b1f5b717834f9e2f05acb42285e07c8155cc1528", function() {
+            let isManualSystem = function({ manSysList, node }) {
+                return manSysList().includes(node);
+            };
+            return isManualSystem;
+        });
+
+        addManSys("6a96bb7f6144af37ffe81fca6dd31546890fbfb5", function(systems) {
+            let callNodeFunc = function({ readEdge, systems, node }) {
+                let edge = readEdge(node);
+                if(!edge)
+                    return null;
+
+                let func = systems(edge.head);
+                let arg = edge.tail;
+
+                let result = func(arg);
+                return result;
+            };
+            return callNodeFunc;
+        });
+
+        addManSys("3990d47251b3e9a52f311241bf65368ac66989c4", function() {
+            let getLibraryFunc = function({ libraryName, funcName }) {
+                let library = require(libraryName);
+                let result = library[funcName];
+                return result;
+            };
+            return getLibraryFunc;
+        });
+
+        addManSys("6bfea805fec330b875b15744fd8bff3ae34635c3", function() {
+            let getPrimitiveType = function(input) {
+                let result = typeof input;
+                return result;
+            };
+            return getPrimitiveType;
+        });
+
+        addManSys("2e898c3acd767449308279ae99645244dc248b08", function() {
+            let isPrimitiveType = function({ getPrimitiveType, primitiveType, value }) {
+                let result = getPrimitiveType(value) == primitiveType;
+                return result;
+            };
+            return isPrimitiveType;
+        });
+
+        addManSys("54988d866ff79e589c5a2b50aeaf720d743c01a4", function () {
+            let readBindFunc = function ({readEdge, readNodeObject, id}) {
+                let bindFunc = readEdge(id);
+
+                let func = bindFunc.head;
+                let paramId = bindFunc.tail;
+                let params = readNodeObject(paramId);
+
+                return { func, params };
+            };
+            return readBindFunc;
         });
 
         addManSys("e6ff3d78ebd8f80c8945afd3499195049609905d", function (systems) {
