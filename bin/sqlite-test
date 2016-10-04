@@ -1,1 +1,0 @@
-rm -f data/test.db && KITSUNE_DB_PATH=data/test.db gulp test && sqlite3 data/test.db

@@ -326,12 +326,12 @@ function buildManualSystemLoader(systems) {
             let currentNode = node;
             while(true) {
                 let inputTypes = factor({ head: currentNode, type: inputType });
-                if(inputTypes.length == 0)
+                if(inputTypes.length === 0)
                     break;
 
                 currentNode = inputTypes[0].tail;
                 typeList.push(currentNode);
-            };
+            }
 
             return typeList;
         };
@@ -363,7 +363,7 @@ function buildManualSystemLoader(systems) {
                     }
                 }
                 return result;
-            }
+            };
         };
         descTypeLoader = bind({ func: descTypeLoader, params: { getTypeList, systems }});
         descTypeLoader = autoParam({ func: descTypeLoader, paramName: "node" });

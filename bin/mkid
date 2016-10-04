@@ -1,3 +1,0 @@
-#!/usr/bin/env node
-var createId = require("kitsune/util").createId;
-console.log(createId());

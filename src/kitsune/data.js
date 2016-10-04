@@ -25,29 +25,7 @@ export let ids = {
 
 	// chain
 	chain: "f6dca3a59be505e556331717fc119e6c1adfbf90",
-
-	// description: "4b8d5a08dc648d9f1aa7c8208ecca1a93f18a8f7",
-	// classifier: "e18591bab26442f44693abed553350b1e50b2081",
-	// view: "2d96db1064077326fe67700330fbb32c8e4b9060",
-	// is: "bc1169765ce4e2d03e224ac040e15d89189369bb",
 };
-
-export let tables = {
-	edge: {
-		id: ids.edge,
-		columns: ["id TEXT", "head TEXT", "tail TEXT"]
-	},
-	string: {
-		id: ids.string,
-		columns: ["id TEXT", "string TEXT"]
-	}
-};
-
-export let types = [
-	ids.type,
-	ids.table,
-	ids.query
-];
 
 let edgeTable = "t"+ids.edge;
 
@@ -77,28 +55,5 @@ export let queries = _.extend(typeQs, opQs);
 // TODO: Find some better way to do this
 let { tails, headEnd } = opQs;
 let nameQ = q(`'${ids.name}'`).op(tails).op(headEnd);
-// let nameQ = q(`'${ids.name}'`, tails, headEnd)
 let nameSql = buildQuery(nameQ).query;
 
-export let views = {
-	node: {
-		id: ids.node,
-		query: `SELECT DISTINCT id FROM (${typeQs.edge} UNION ${typeQs.head} UNION ${typeQs.tail})`
-	},
-	point: {
-		id: ids.point,
-		query: `SELECT DISTINCT id FROM node WHERE id NOT IN (SELECT id FROM ${edgeTable})`
-	},
-	head: {
-		id: ids.head,
-		query: typeQs.head
-	},
-	tail: {
-		id: ids.tail,
-		query: typeQs.tail
-	},
-	name: {
-		id: ids.name,
-		query: nameSql // `SELECT head FROM ${edgeTable} WHERE id IN (SELECT tail FROM ${edgeTable} WHERE head = '${ids.name}')`
-	}
-};
