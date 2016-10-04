@@ -3,8 +3,6 @@ import { expect } from "chai";
 
 import systemLoader from "kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
 
-let cwd = process.cwd();
-
 describe("kitsune/core/system-loader", function() {
 
     describe("load(systemId)", function() {
