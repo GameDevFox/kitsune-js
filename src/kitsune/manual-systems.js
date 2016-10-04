@@ -478,12 +478,11 @@ function buildManualSystemLoader(systems) {
 
     addManSys("8d15cc103c5f3453e8b5ad8cdada2e5d2dde8039", function(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-        let graphListNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
         let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
         let describeNode = systems("15b16d6f586760a181f017d264c4808dc0f8bd06");
 
         let edgeReport = systems("42e9ce26666845ae2855a6ed619b54b8280b415b");
-        edgeReport = bind({ func: edgeReport, params: { graphFind, graphListNodes }});
+        edgeReport = bind({ func: edgeReport, params: { graphFind, nameList, describeNode }});
         return edgeReport;
     });
 
@@ -857,7 +856,7 @@ function buildManualSystemLoader(systems) {
         });
 
         addManSys("42e9ce26666845ae2855a6ed619b54b8280b415b", function () {
-            let edgeReport = function ({graphFind}) {
+            let edgeReport = function ({ graphFind, nameList, describeNode }) {
                 console.log("== Graph Report ==");
 
                 var edgeTypes = {};
