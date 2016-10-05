@@ -435,7 +435,6 @@ function buildManualSystemLoader(systems) {
         return isLibraryFunc;
     });
 
-    // TODO: listTypeLoader
     addManSys("88bd34b2a7aa6c5c14127f6d3d11b82125597f61", function(systems) {
         let listTypeLoader = function({ systems, listFuncNode }) {
             let listFunc = systems(listFuncNode);
@@ -446,22 +445,6 @@ function buildManualSystemLoader(systems) {
         listTypeLoader = bind({ func: listTypeLoader, params: { systems }});
         listTypeLoader = autoParam({ func: listTypeLoader, paramName: "listFuncNode" });
         return listTypeLoader;
-    });
-
-    addManSys("b1f5b717834f9e2f05acb42285e07c8155cc1528", function() {
-        let isManualSystem = function({ manSysList, node }) {
-            return manSysList().includes(node);
-        };
-        return isManualSystem;
-    });
-
-    addManSys("5e6260e038fb71902eafe98d4105a4a7a581eec1", function() {
-        let manSysList = systems("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8");
-
-        let isManualSystem = systems("b1f5b717834f9e2f05acb42285e07c8155cc1528");
-        isManualSystem = bind({ func: isManualSystem, params: { manSysList }});
-        isManualSystem = autoParam({ func: isManualSystem, paramName: "node" });
-        return isManualSystem;
     });
 
     addManSys("bd7d5695726fa6fe5eb35bed1e009f8784b29c98", function() {
