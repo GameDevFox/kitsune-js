@@ -169,6 +169,17 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("187757b06fee5a804c312e55d834d06025762605", function(systems) {
+        let systemMap = function({ systems, system, data }) {
+            let sys = systems(system);
+            let values = _.map(data, x => sys(x));
+            let result = _.zipObject(data, values);
+            return result;
+        };
+        systemMap = bind({ func: systemMap, params: { systems }});
+        return systemMap;
+    });
+
     addManSys("5ce1af19973262a2c69aebb10c6c4aeceee96149", function(systems) {
         let listSystemFiles = systems("5277dc011cbc9800046edeb4460f7138e060a935");
         let listManualSystems = systems("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8");

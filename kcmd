@@ -34,15 +34,23 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "a5145963a941491432e65b37cbf6d4f6160cc543";
+let id = "187757b06fee5a804c312e55d834d06025762605";
 
-regFunc("q", false, function() {
+function q() {
+    let listFuncs = systems("5ce1af19973262a2c69aebb10c6c4aeceee96149");
+    let funcs = listFuncs();
+    console.log(funcs);
+
     let func = systems(id);
-    let result = func();
+    let result = func({
+        system: "890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3",
+        data: funcs
+    });
     return result;
-});
+};
+regFunc("q", false, q);
 
-function x() {
+    function x() {
     let removeEdge = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
     let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
     let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
