@@ -6,6 +6,9 @@ import _ from "lodash";
 function saveData(systems) {
     let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
     let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
+    let cleanStringSystem = systems("f3db04b0138e827a9b513ab195cc373433407f83");
+
+    cleanStringSystem();
 
     let sortedGraphData = _.sortBy(graphFind(), ["head", "tail"]);
     let sortedStringData = _.sortBy(stringFind(), ["string"]);
