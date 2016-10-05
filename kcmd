@@ -38,11 +38,11 @@ let primeFuncGroup = "b654fb2d44e65346e18a54eab7ab3f1e692817e9";
 let bindFuncLoader = "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
 let autoParamLoader = "c18b49e9b5d330e1573707e9b3defc6592897522";
 
-let id = "842d244f8e9698d469dc060db0f9c9b4e24c50b0";
+let id = "c0c7f5b157c778783ce82f431f732f19d7cb3821";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func("86f3e2b1dc12f463c8975331bb59aab5fa6a3ca2");
+    let result = func("2f7ff34b09a1fb23b9a5d4fbdd8bb44abbe2007a");
     return result;
 });
 
@@ -53,15 +53,11 @@ function x() {
     let assign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
     let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
 
-    let fac = factor({ type: "b654fb2d44e65346e18a54eab7ab3f1e692817e9" });
-    let loaderList = _.map(fac, "head");
-    loaderList = _.uniq(loaderList);
-
-    loaderList.forEach(loader => {
-        autoWriteEdge({ head: "7b4ecffac40b9c00ecdee386763b0e6584834eca", tail: loader });
+    writeEdge({
+        id,
+        head: "88bd34b2a7aa6c5c14127f6d3d11b82125597f61",
+        tail: "5277dc011cbc9800046edeb4460f7138e060a935"
     });
-
-    return loaderList;
 }
 regFunc("x", false, x);
 
