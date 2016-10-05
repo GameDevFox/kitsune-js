@@ -320,6 +320,10 @@
     "string": "is-boolean"
   },
   {
+    "id": "be03d9a1bd9255c3fcfa9f40fd07bcc3d991b17f",
+    "string": "is-builder-function"
+  },
+  {
     "id": "9621142ee56435ad5a2c8b2f93f19f5a57194f75",
     "string": "is-core-node"
   },
@@ -368,10 +372,6 @@
     "string": "is-object"
   },
   {
-    "id": "4b14573cc83f36c19626b2ad582b6f9cbeba7fa7",
-    "string": "is-prime-function"
-  },
-  {
     "id": "f7a9478dd347105cdd768d4ab4ab1ea493d60b71",
     "string": "is-primitive-type"
   },
@@ -396,6 +396,10 @@
     "string": "library-function-builder"
   },
   {
+    "id": "744fa484e17a1ebb92623d8ad969155bcebe5065",
+    "string": "list-builder-functions"
+  },
+  {
     "id": "341736ddb858798639fd6c154a823c84b9f44dfa",
     "string": "list-functions"
   },
@@ -406,10 +410,6 @@
   {
     "id": "f3934b5bff0a14164716c5777146085e5ad7fb7a",
     "string": "list-manual-systems"
-  },
-  {
-    "id": "4eef16e4d193d7a7c66749d696aff44d31c5e84d",
-    "string": "list-prime-functions"
   },
   {
     "id": "0b990f5faa2bba9275e444b599266a9d301e40a5",

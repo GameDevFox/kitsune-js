@@ -172,12 +172,12 @@ function buildManualSystemBuilder(systems) {
     addManSys("5ce1af19973262a2c69aebb10c6c4aeceee96149", function(systems) {
         let listSystemFiles = systems("5277dc011cbc9800046edeb4460f7138e060a935");
         let listManualSystems = systems("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8");
-        let listPrimeFunctions = systems("a5145963a941491432e65b37cbf6d4f6160cc543");
+        let listBuilderFunctions = systems("a5145963a941491432e65b37cbf6d4f6160cc543");
 
-        let listFunctions = function({ listSystemFiles, listManualSystems, listPrimeFunctions }) {
-            return _.concat(listSystemFiles(), listManualSystems(), listPrimeFunctions());
+        let listFunctions = function({ listSystemFiles, listManualSystems, listBuilderFunctions }) {
+            return _.concat(listSystemFiles(), listManualSystems(), listBuilderFunctions());
         };
-        listFunctions = bind({ func: listFunctions, params: { listSystemFiles, listManualSystems, listPrimeFunctions }});
+        listFunctions = bind({ func: listFunctions, params: { listSystemFiles, listManualSystems, listBuilderFunctions }});
         return listFunctions;
     });
 
@@ -386,12 +386,11 @@ function buildManualSystemBuilder(systems) {
         return groupTypeBuilder;
     });
 
-    // TODO: Rename to is-builder-function
     addManSys("1b12f086f8555c4d13e6c98a8cece7ce4e198d43", function(systems) {
         let getEdgeHead = systems("da697bd0863212526208d79e3e65019377b07670");
         let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
 
-        let isPrimeFunction = function({ getEdgeHead, isInGroup, node }) {
+        let isBuilderFunction = function({ getEdgeHead, isInGroup, node }) {
             let edgeHead = getEdgeHead(node);
             if(!edgeHead)
                 return false;
@@ -402,16 +401,16 @@ function buildManualSystemBuilder(systems) {
             });
             return result;
         };
-        isPrimeFunction = bind({ func: isPrimeFunction, params: { getEdgeHead, isInGroup }});
-        isPrimeFunction = autoParam({ func: isPrimeFunction, paramName: "node" });
-        return isPrimeFunction;
+        isBuilderFunction = bind({ func: isBuilderFunction, params: { getEdgeHead, isInGroup }});
+        isBuilderFunction = autoParam({ func: isBuilderFunction, paramName: "node" });
+        return isBuilderFunction;
     });
 
     addManSys("a5145963a941491432e65b37cbf6d4f6160cc543", function(systems) {
         let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
-        let listPrimeFunctions = function({ getTails, graphFind }) {
+        let listBuilderFunctions = function({ getTails, graphFind }) {
             let builderList = getTails("7b4ecffac40b9c00ecdee386763b0e6584834eca");
 
             let result = [];
@@ -422,8 +421,8 @@ function buildManualSystemBuilder(systems) {
             });
             return result;
         };
-        listPrimeFunctions = bind({ func: listPrimeFunctions, params: { getTails, graphFind }});
-        return listPrimeFunctions;
+        listBuilderFunctions = bind({ func: listBuilderFunctions, params: { getTails, graphFind }});
+        return listBuilderFunctions;
     });
 
     addManSys("da697bd0863212526208d79e3e65019377b07670", function() {

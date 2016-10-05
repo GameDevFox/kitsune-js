@@ -156,9 +156,9 @@ function bootstrap() {
     let manualSystems = buildManualSystemLoader(systems);
     modules.push(manualSystems);
 
-    log.info(":Prime Function Builder");
-    let primeFuncBuilder = systems("4c2699dc1fec0111f46c758489a210eb7f58e4df");
-    modules.push(primeFuncBuilder);
+    log.info(":Function Builder");
+    let funcBuilder = systems("4c2699dc1fec0111f46c758489a210eb7f58e4df");
+    modules.push(funcBuilder);
 
     return { modules, systems };
 }
