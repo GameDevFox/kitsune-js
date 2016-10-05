@@ -439,13 +439,6 @@ function buildManualSystemLoader(systems) {
         return groupTypeLoader;
     });
 
-    addManSys("1b12f086f8555c4d13e6c98a8cece7ce4e198d43", function() {
-        let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
-        let isPrimeFunc = bind({ func: isInGroup, params: { group: "b654fb2d44e65346e18a54eab7ab3f1e692817e9" }});
-        isPrimeFunc = autoParam({ func: isPrimeFunc, paramName: "node" });
-        return isPrimeFunc;
-    });
-
     addManSys("0f9be9c5ad796df34aea4adf0cb340f2bbc2dfc6", function() {
         let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
         let isInNameGroup = bind({ func: isInGroup, params: { group: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" }});
