@@ -172,7 +172,7 @@ function buildManualSystemLoader(systems) {
     addManSys("5ce1af19973262a2c69aebb10c6c4aeceee96149", function(systems) {
         let listSystemFiles = systems("5277dc011cbc9800046edeb4460f7138e060a935");
         let listManualSystems = systems("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8");
-        let listPrimeFunctions = systems("ebdc15b1dbfbab1eb375af7d73d87577237b3d9d");
+        let listPrimeFunctions = systems("a5145963a941491432e65b37cbf6d4f6160cc543");
 
         let listFunctions = function({ listSystemFiles, listManualSystems, listPrimeFunctions }) {
             return _.concat(listSystemFiles(), listManualSystems(), listPrimeFunctions());
@@ -386,11 +386,47 @@ function buildManualSystemLoader(systems) {
         return groupTypeLoader;
     });
 
-    // TODO: logical is-prime-function
+    // TODO: Remove prime-function group
     // TODO: Rename to is-loader-function
     // TODO: Rename all instances of "loader" to "builder"
-    // addManSys("1b12f086f8555c4d13e6c98a8cece7ce4e198d43", function(systems) {
-    // });
+    addManSys("1b12f086f8555c4d13e6c98a8cece7ce4e198d43", function(systems) {
+        let getEdgeHead = systems("da697bd0863212526208d79e3e65019377b07670");
+        let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
+
+        let isPrimeFunction = function({ getEdgeHead, isInGroup, node }) {
+            let edgeHead = getEdgeHead(node);
+            if(!edgeHead)
+                return false;
+
+            let result = isInGroup({
+                group: "7b4ecffac40b9c00ecdee386763b0e6584834eca",
+                node: edgeHead
+            });
+            return result;
+        };
+        isPrimeFunction = bind({ func: isPrimeFunction, params: { getEdgeHead, isInGroup }});
+        isPrimeFunction = autoParam({ func: isPrimeFunction, paramName: "node" });
+        return isPrimeFunction;
+    });
+
+    addManSys("a5145963a941491432e65b37cbf6d4f6160cc543", function(systems) {
+        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+
+        let listPrimeFunctions = function({ getTails, graphFind }) {
+            let loaderList = getTails("7b4ecffac40b9c00ecdee386763b0e6584834eca");
+
+            let result = [];
+            loaderList.forEach(loader => {
+                let edges = graphFind({ head: loader });
+                let ids = _.map(edges, "id");
+                result = result.concat(ids);
+            });
+            return result;
+        };
+        listPrimeFunctions = bind({ func: listPrimeFunctions, params: { getTails, graphFind }});
+        return listPrimeFunctions;
+    });
 
     addManSys("da697bd0863212526208d79e3e65019377b07670", function() {
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");

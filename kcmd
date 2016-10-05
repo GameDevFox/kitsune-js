@@ -38,11 +38,11 @@ let primeFuncGroup = "b654fb2d44e65346e18a54eab7ab3f1e692817e9";
 let bindFuncLoader = "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
 let autoParamLoader = "c18b49e9b5d330e1573707e9b3defc6592897522";
 
-let id = "9cf4ad5264b058a8f22f85af63eae63344f097da";
+let id = "a5145963a941491432e65b37cbf6d4f6160cc543";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func("608d2331e9d048af9d4f0f36af80e6ed7ea8c96e");
+    let result = func();
     return result;
 });
 
@@ -53,11 +53,12 @@ function x() {
     let assign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
     let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
 
-    writeEdge({
-        id,
-        head: "de9803674df491c66c99dcb85d14402f3339c645",
-        tail: "c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79"
-    });
+    removeEdge(id);
+    // writeEdge({
+    //     id,
+    //     head: "de9803674df491c66c99dcb85d14402f3339c645",
+    //     tail: "c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79"
+    // });
 }
 regFunc("x", false, x);
 
