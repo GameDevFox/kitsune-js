@@ -49,14 +49,19 @@ regFunc("q", false, function() {
 function x() {
     let removeEdge = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
     let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
+    let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
     let assign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
+    let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
 
-    removeEdge(id);
-    writeEdge({
-        id,
-        head: "cf2331e774de09eee361e94199546123913a2773",
-        tail: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0"
+    let fac = factor({ type: "b654fb2d44e65346e18a54eab7ab3f1e692817e9" });
+    let loaderList = _.map(fac, "head");
+    loaderList = _.uniq(loaderList);
+
+    loaderList.forEach(loader => {
+        autoWriteEdge({ head: "7b4ecffac40b9c00ecdee386763b0e6584834eca", tail: loader });
     });
+
+    return loaderList;
 }
 regFunc("x", false, x);
 
