@@ -55,7 +55,7 @@ gulp.task("build-test", g.sequence(["build-test-kitsune"]));
 gulp.task("build-test-kitsune", function() {
 	var input = gulp.src(kitsuneTestPath)
 		.pipe(g.cached("kitsune-src"));
-	return buildStream(input, "kistune-test-build")
+	return buildStream(input, "kitsune-test-build")
 		.pipe(gulp.dest("./build/test/kitsune"));
 });
 
