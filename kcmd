@@ -34,7 +34,6 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let primeFuncGroup = "b654fb2d44e65346e18a54eab7ab3f1e692817e9";
 let bindFuncLoader = "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
 let autoParamLoader = "c18b49e9b5d330e1573707e9b3defc6592897522";
 
@@ -52,8 +51,10 @@ function x() {
     let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
     let assign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
     let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+    let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
-    removeEdge(id);
+    let primes = graphFind({ head: "b654fb2d44e65346e18a54eab7ab3f1e692817e9" });
+    primes.map(node => node.id).forEach(removeEdge);
     // writeEdge({
     //     id,
     //     head: "de9803674df491c66c99dcb85d14402f3339c645",
@@ -61,32 +62,6 @@ function x() {
     // });
 }
 regFunc("x", false, x);
-
-function createPrimeFunc() {
-    debugger;
-    let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
-    let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
-    let mkid = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
-
-    let alpha = autoWriteEdge({
-        head: "a8a338d08b0ef7e532cbc343ba1e4314608024b2", // get-tails
-        tail: "b654fb2d44e65346e18a54eab7ab3f1e692817e9" // prime-function group
-    });
-
-    let id = mkid();
-    writeEdge({ id,
-        head: "383103bd68460b5ff1d48e629720533dc3e3a1e4", // node-function-loader
-        tail: alpha
-    });
-    autoWriteEdge({
-        head: primeFuncGroup,
-        tail: id
-    });
-
-    return id;
-}
-regFunc("primeFn", false, createPrimeFunc);
-regFunc("create-prime-func", false, createPrimeFunc);
 
 function convertBindFunc() {
     let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");

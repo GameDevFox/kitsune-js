@@ -386,7 +386,6 @@ function buildManualSystemLoader(systems) {
         return groupTypeLoader;
     });
 
-    // TODO: Remove prime-function group
     // TODO: Rename to is-loader-function
     // TODO: Rename all instances of "loader" to "builder"
     addManSys("1b12f086f8555c4d13e6c98a8cece7ce4e198d43", function(systems) {
