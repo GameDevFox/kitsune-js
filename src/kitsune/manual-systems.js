@@ -414,20 +414,11 @@ function buildManualSystemLoader(systems) {
         let edgeHeadTypeLoader = function({ getEdgeHead, edgeHead }) {
             return function(node) {
                 return getEdgeHead(node) == edgeHead;
-            }
+            };
         };
         edgeHeadTypeLoader = bind({ func: edgeHeadTypeLoader, params: { getEdgeHead }});
         edgeHeadTypeLoader = autoParam({ func: edgeHeadTypeLoader, paramName: "edgeHead" });
         return edgeHeadTypeLoader;
-    });
-
-    addManSys("dc9959d7b543763255547b16b11e21ae6c3a8209", function (systems) {
-        let getEdgeHead = systems("da697bd0863212526208d79e3e65019377b07670");
-
-        let isAutoParamFunc = function(node) {
-            return getEdgeHead(node) == "c18b49e9b5d330e1573707e9b3defc6592897522";
-        };
-        return isAutoParamFunc;
     });
 
     addManSys("9cf4ad5264b058a8f22f85af63eae63344f097da", function (systems) {
