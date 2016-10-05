@@ -38,20 +38,22 @@ let primeFuncGroup = "b654fb2d44e65346e18a54eab7ab3f1e692817e9";
 let bindFuncLoader = "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
 let autoParamLoader = "c18b49e9b5d330e1573707e9b3defc6592897522";
 
-let id = "119d36b3340d1baf57669311f1d7f26f3edf9049";
+let id = "bd07150e634d5b01eedbe44f28a5068b5a7c845d";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func("68b4abc42a7c4cd5dc27c9dad476a64a7014ce07");
+    let result = func("ebdc15b1dbfbab1eb375af7d73d87577237b3d9d");
     return result;
 });
 
 function x() {
+    let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
     let assign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
-    assign({
-        head: "03d33fe3603bfa66db338b5768f21a5c90a4e1b8",
-        type: "42748dfd2f37d5655e128b513e708acc405cc681",
-        tail: "43cd34ab8105d158f421eecce9ed22948ec34893"
+
+    writeEdge({
+        head: "cf2331e774de09eee361e94199546123913a2773",
+        id: "bd07150e634d5b01eedbe44f28a5068b5a7c845d",
+        tail: "283287a7c0c2ccaa5c69dfd99a800d13eb6805ea"
     });
 }
 regFunc("x", false, x);
