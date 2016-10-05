@@ -436,6 +436,18 @@ function buildManualSystemLoader(systems) {
     });
 
     // TODO: listTypeLoader
+    addManSys("88bd34b2a7aa6c5c14127f6d3d11b82125597f61", function(systems) {
+        let listTypeLoader = function({ systems, listFuncNode }) {
+            let listFunc = systems("listFuncNode");
+            return function(node) {
+                return listFunc().includes(node);
+            };
+        };
+        listTypeLoader = bind({ func: listTypeLoader, params: { systems }});
+        listTypeLoader = autoParam({ func: listTypeLoader, paramName: "listFuncNode" });
+        return listTypeLoader;
+    });
+
     addManSys("c0c7f5b157c778783ce82f431f732f19d7cb3821", function() {
         let listSysFiles = systems("5277dc011cbc9800046edeb4460f7138e060a935");
 
