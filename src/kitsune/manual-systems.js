@@ -392,7 +392,6 @@ function buildManualSystemLoader(systems) {
     // addManSys("1b12f086f8555c4d13e6c98a8cece7ce4e198d43", function(systems) {
     // });
 
-    // TODO: edgeHeadTypeLoader
     addManSys("da697bd0863212526208d79e3e65019377b07670", function() {
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
 
@@ -408,13 +407,18 @@ function buildManualSystemLoader(systems) {
         return getEdgeHead;
     });
 
-    addManSys("03d33fe3603bfa66db338b5768f21a5c90a4e1b8", function (systems) {
+    // TODO: edgeHeadTypeLoader
+    addManSys("de9803674df491c66c99dcb85d14402f3339c645", function(systems) {
         let getEdgeHead = systems("da697bd0863212526208d79e3e65019377b07670");
 
-        let isBindFunc = function(node) {
-            return getEdgeHead(node) == "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
+        let edgeHeadTypeLoader = function({ getEdgeHead, edgeHead }) {
+            return function(node) {
+                return getEdgeHead(node) == edgeHead;
+            }
         };
-        return isBindFunc;
+        edgeHeadTypeLoader = bind({ func: edgeHeadTypeLoader, params: { getEdgeHead }});
+        edgeHeadTypeLoader = autoParam({ func: edgeHeadTypeLoader, paramName: "edgeHead" });
+        return edgeHeadTypeLoader;
     });
 
     addManSys("dc9959d7b543763255547b16b11e21ae6c3a8209", function (systems) {
