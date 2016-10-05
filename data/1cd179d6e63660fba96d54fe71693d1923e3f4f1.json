@@ -20,12 +20,12 @@
     "string": "auto-param"
   },
   {
-    "id": "e4a73c76511ac4da021f6aa30d1f40a042b82480",
-    "string": "auto-param-id"
+    "id": "b93d664461a6e481e59125952206c300208d108a",
+    "string": "auto-param-builder"
   },
   {
-    "id": "de036c80265a05f67cd8a8292845d251bd364a69",
-    "string": "auto-param-loader"
+    "id": "e4a73c76511ac4da021f6aa30d1f40a042b82480",
+    "string": "auto-param-id"
   },
   {
     "id": "3ce39e1dfbd72bd4650e10dc710db4859a4eb25e",
@@ -44,8 +44,12 @@
     "string": "bind"
   },
   {
-    "id": "34bb73d0b378ca6c4a24a2cfc6031aee292b9c5c",
-    "string": "bind-func-loader"
+    "id": "dc230df4a394bffeeb2f7e5fa7873e237e201c03",
+    "string": "bind-func-builder"
+  },
+  {
+    "id": "f52318a05e518a5596012af2ed38de68ac26a468",
+    "string": "builder"
   },
   {
     "id": "7f1ba3e38b4e2640b991e7f5d1d45eb1b699cf50",
@@ -100,16 +104,16 @@
     "string": "describeNode"
   },
   {
-    "id": "a9c7a4792ef84cfa481403c5790511498aa1e496",
-    "string": "descriptive-type-loader"
+    "id": "d624252ae053d0a0cc7facaeb3c27cfabde7e32f",
+    "string": "descriptive-type-builder"
   },
   {
     "id": "b478fbeae9d00581d83aff3070e93d759d23f59c",
     "string": "dictionary-function"
   },
   {
-    "id": "a60bd72a497994a1b3a918f878e1e9a05d5f6e50",
-    "string": "edge-head-type-loader"
+    "id": "7ad0cfe1de4459b1e399a5985b507a92a0c66eb6",
+    "string": "edge-head-type-builder"
   },
   {
     "id": "4ac982b78ea2a15dcde7e4bd01629a0a8592d6df",
@@ -124,8 +128,8 @@
     "string": "execute-function"
   },
   {
-    "id": "fca9dc0bdfdbae879d8a5926703aaffd22fe4a77",
-    "string": "full-type-loader"
+    "id": "b390803c3e2938a30978e3acfea587b2f00f95fa",
+    "string": "full-type-builder"
   },
   {
     "id": "99fdb3623cf5c6ad0283ca5c096018dd2f2ff5ad",
@@ -248,8 +252,8 @@
     "string": "group-list"
   },
   {
-    "id": "fad8cd7a96baffeb4a2c08551105a74781402e4b",
-    "string": "group-type-loader"
+    "id": "16c53b0b1999b93ad82ac32bc28c96d339c820ca",
+    "string": "group-type-builder"
   },
   {
     "id": "c2f711efc006f9b834bb4ee1d6c854ec40f3b493",
@@ -388,8 +392,8 @@
     "string": "library"
   },
   {
-    "id": "99e4d0c80d9f46e874a1fe054436534d3b0d923c",
-    "string": "library-function-loader"
+    "id": "04043b4965ad022701e54eeed34ce9138c18f756",
+    "string": "library-function-builder"
   },
   {
     "id": "341736ddb858798639fd6c154a823c84b9f44dfa",
@@ -412,12 +416,8 @@
     "string": "list-system-files"
   },
   {
-    "id": "a1d0d6ea23cbbd5e79d1d52e996ce73154305301",
-    "string": "list-type-loader"
-  },
-  {
-    "id": "c57e08af28c85e7fe987028f7986f0bb4573f663",
-    "string": "loader"
+    "id": "91ae534fbd9654494c38d0c38caa10739357738f",
+    "string": "list-type-builder"
   },
   {
     "id": "901466a5bb52ee6de63e3e385285e690d5cba424",
@@ -480,8 +480,8 @@
     "string": "node-desc-report"
   },
   {
-    "id": "c498e4b367643e5830b41341716f462cc9492ac0",
-    "string": "node-function-loader"
+    "id": "ebfdc77b0834d673e41dd3aa3d010c4f136bb08e",
+    "string": "node-function-builder"
   },
   {
     "id": "774978bb69c87d62ed9ede8abb63b8d89fd7bdd2",

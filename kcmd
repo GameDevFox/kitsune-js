@@ -34,9 +34,6 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let bindFuncLoader = "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
-let autoParamLoader = "c18b49e9b5d330e1573707e9b3defc6592897522";
-
 let id = "a5145963a941491432e65b37cbf6d4f6160cc543";
 
 regFunc("q", false, function() {
@@ -81,15 +78,12 @@ function convertBindFunc() {
         let { head, tail } = edge;
 
         // Transfer
-        // let newHead = bindFuncLoader;
-        let newHead = autoParamLoader;
+        // let newHead = builder;
+        let newHead = "???";
         let newTail = autoWriteEdge({ head, tail });
 
         removeEdge(func);
         writeEdge({ id: func, head: newHead, tail: newTail });
-
-        // Add to group
-        autoWriteEdge({ head: primeFuncGroup, tail: func });
     });
 }
 regFunc("convert-bind-func", false, convertBindFunc);

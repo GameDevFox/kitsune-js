@@ -10,11 +10,8 @@ bootstrapLogger.setLevel(Logger.WARN);
 
 // BOOTSTRAP - STEP 1
 function buildLoader({ bind, autoParam }) {
-    // INIT LOADER SYSTEM - already loaded, just here for reference
-    // let systemLoaderId = "31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
     let loader = bind({ func: systemLoader, params: { path: "kitsune-core" }});
     loader = autoParam({ func: loader, paramName: "id" });
-
     return loader;
 }
 
@@ -159,9 +156,9 @@ function bootstrap() {
     let manualSystems = buildManualSystemLoader(systems);
     modules.push(manualSystems);
 
-    log.info(":Prime Function Loader");
-    let primeFuncLoader = systems("4c2699dc1fec0111f46c758489a210eb7f58e4df");
-    modules.push(primeFuncLoader);
+    log.info(":Prime Function Builder");
+    let primeFuncBuilder = systems("4c2699dc1fec0111f46c758489a210eb7f58e4df");
+    modules.push(primeFuncBuilder);
 
     return { modules, systems };
 }

@@ -3,7 +3,7 @@ import { execSync as exec } from "child_process";
 
 import _ from "lodash";
 
-function buildManualSystemLoader(systems) {
+function buildManualSystemBuilder(systems) {
     let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
     let autoParam = systems("b69aeff3eb1a14156b1a9c52652544bcf89761e2");
     let putSystem = systems("a26808f06030bb4c165ecbfe43d9d200672a0878");
@@ -34,11 +34,11 @@ function buildManualSystemLoader(systems) {
     manualSystems = bind({ func: manualSystems, params: { manSysFuncs, systems, putSystem }});
     manualSystems = autoParam({ func: manualSystems, paramName: "id" });
 
-    // LOADERS //
+    // BUILDERS //
     {
-        // Bind func loader
+        // Bind func builder
         addManSys("2c677e2c78bede32f66bed87c214e5875c2c685c", function () {
-            let bindFuncLoader = function ({ readBindFunc, nameList, bind, id }) {
+            let bindFuncBuilder = function ({ readBindFunc, nameList, bind, id }) {
                 let bindFunc = readBindFunc(id);
 
                 let func = systems(bindFunc.func);
@@ -52,7 +52,7 @@ function buildManualSystemLoader(systems) {
                 let result = bind({func, params});
                 return result;
             };
-            return bindFuncLoader;
+            return bindFuncBuilder;
         });
 
         addManSys("9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a", function () {
@@ -60,15 +60,15 @@ function buildManualSystemLoader(systems) {
             let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
             let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
 
-            let bindFuncLoader = systems("2c677e2c78bede32f66bed87c214e5875c2c685c");
-            bindFuncLoader = bind({func: bindFuncLoader, params: { readBindFunc, nameList, bind }});
-            bindFuncLoader = autoParam({func: bindFuncLoader, paramName: "id"});
-            return bindFuncLoader;
+            let bindFuncBuilder = systems("2c677e2c78bede32f66bed87c214e5875c2c685c");
+            bindFuncBuilder = bind({func: bindFuncBuilder, params: { readBindFunc, nameList, bind }});
+            bindFuncBuilder = autoParam({func: bindFuncBuilder, paramName: "id"});
+            return bindFuncBuilder;
         });
 
-        // Auto param loader
+        // Auto param builder
         addManSys("e7077ff12256c2c8da6a200c90899c311caf2cf4", function () {
-            let autoParamLoader = function ({ readEdge, readString, autoParam, id }) {
+            let autoParamBuilder = function ({ readEdge, readString, autoParam, id }) {
                 let edge = readEdge(id);
 
                 let funcId = edge.head;
@@ -79,7 +79,7 @@ function buildManualSystemLoader(systems) {
                 let result = autoParam({func, paramName});
                 return result;
             };
-            return autoParamLoader;
+            return autoParamBuilder;
         });
 
         addManSys("c18b49e9b5d330e1573707e9b3defc6592897522", function () {
@@ -87,16 +87,16 @@ function buildManualSystemLoader(systems) {
             let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
             let autoParam = systems("b69aeff3eb1a14156b1a9c52652544bcf89761e2");
 
-            let autoParamLoader = systems("e7077ff12256c2c8da6a200c90899c311caf2cf4");
-            autoParamLoader = bind({func: autoParamLoader, params: { readEdge, readString, autoParam }});
-            autoParamLoader = autoParam({func: autoParamLoader, paramName: "id"});
-            return autoParamLoader;
+            let autoParamBuilder = systems("e7077ff12256c2c8da6a200c90899c311caf2cf4");
+            autoParamBuilder = bind({func: autoParamBuilder, params: { readEdge, readString, autoParam }});
+            autoParamBuilder = autoParam({func: autoParamBuilder, paramName: "id"});
+            return autoParamBuilder;
         });
     }
 
-    // LOADER DEPENDENCIES //
+    // BUILDER DEPENDENCIES //
     {
-        // Dependancies of Bind Function Loader
+        // Dependancies of Bind Function Builder
         addManSys("4841f107fb76dbf4ac1d29a936b16b7365985ca4", function (systems) {
             let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
             let readNodeObject = systems("971a9f4b9f8e841b4519d96fa8733311c8b58fe2");
@@ -184,7 +184,7 @@ function buildManualSystemLoader(systems) {
     addManSys("383103bd68460b5ff1d48e629720533dc3e3a1e4", function(systems) {
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
 
-        let nodeFuncLoader = function({ readEdge, systems, node }) {
+        let nodeFuncBuilder = function({ readEdge, systems, node }) {
             let { head: func, tail: arg } = readEdge(node);
 
             let fn = systems(func);
@@ -192,9 +192,9 @@ function buildManualSystemLoader(systems) {
                 return fn(arg);
             };
         };
-        nodeFuncLoader = bind({ func: nodeFuncLoader, params: { readEdge, systems }});
-        nodeFuncLoader = autoParam({ func: nodeFuncLoader, paramName: "node" });
-        return nodeFuncLoader;
+        nodeFuncBuilder = bind({ func: nodeFuncBuilder, params: { readEdge, systems }});
+        nodeFuncBuilder = autoParam({ func: nodeFuncBuilder, paramName: "node" });
+        return nodeFuncBuilder;
     });
 
     addManSys("e73694a13d302e910ee51a1f326cf08e1bce0c12", function() {
@@ -229,10 +229,10 @@ function buildManualSystemLoader(systems) {
             let nameList = systems("890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3");
             let getLibraryFunc = systems("3990d47251b3e9a52f311241bf65368ac66989c4");
 
-            let libraryFuncLoader = systems("9c9a7115ab807d4f97b9f29031f5dbfc35ae0cf7");
-            libraryFuncLoader = bind({ func: libraryFuncLoader, params: { readEdge, nameList, getLibraryFunc }});
-            libraryFuncLoader = autoParam({ func: libraryFuncLoader, paramName: "node" });
-            return libraryFuncLoader;
+            let libraryFuncBuilder = systems("9c9a7115ab807d4f97b9f29031f5dbfc35ae0cf7");
+            libraryFuncBuilder = bind({ func: libraryFuncBuilder, params: { readEdge, nameList, getLibraryFunc }});
+            libraryFuncBuilder = autoParam({ func: libraryFuncBuilder, paramName: "node" });
+            return libraryFuncBuilder;
         });
 
         addManSys("34808982614a55b16897427d36e8ce37c6d68277", function() {
@@ -269,7 +269,7 @@ function buildManualSystemLoader(systems) {
         let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
 
         // RULE: Node always has exactly one input type
-        let fullTypeLoader = function({ factor, systems, node }) {
+        let fullTypeBuilder = function({ factor, systems, node }) {
             let inputType = factor({ head: node, type: inputType })[0];
 
             let child = systems(node);
@@ -282,9 +282,9 @@ function buildManualSystemLoader(systems) {
                 return child(input);
             };
         };
-        fullTypeLoader = bind({ func: fullTypeLoader, params: { factor, systems }});
-        fullTypeLoader = autoParam({ func: fullTypeLoader, paramName: "node" });
-        return fullTypeLoader;
+        fullTypeBuilder = bind({ func: fullTypeBuilder, params: { factor, systems }});
+        fullTypeBuilder = autoParam({ func: fullTypeBuilder, paramName: "node" });
+        return fullTypeBuilder;
     });
 
     addManSys("5d134bcf95eb55efa7807da43e11e4fc37e269b9", function(systems) {
@@ -314,7 +314,7 @@ function buildManualSystemLoader(systems) {
     addManSys("d30dc37c36dd88e12dab2311ad7b1e9ef1038118", function(systems) {
         let getTypeList = systems("5d134bcf95eb55efa7807da43e11e4fc37e269b9");
 
-        let descTypeLoader = function({ getTypeList, systems, node }) {
+        let descTypeBuilder = function({ getTypeList, systems, node }) {
             let typeList = getTypeList(node);
             typeList = typeList.reverse();
 
@@ -336,9 +336,9 @@ function buildManualSystemLoader(systems) {
                 return result;
             };
         };
-        descTypeLoader = bind({ func: descTypeLoader, params: { getTypeList, systems }});
-        descTypeLoader = autoParam({ func: descTypeLoader, paramName: "node" });
-        return descTypeLoader;
+        descTypeBuilder = bind({ func: descTypeBuilder, params: { getTypeList, systems }});
+        descTypeBuilder = autoParam({ func: descTypeBuilder, paramName: "node" });
+        return descTypeBuilder;
     });
 
     addManSys("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7", function(systems) {
@@ -376,18 +376,17 @@ function buildManualSystemLoader(systems) {
     addManSys("cf2331e774de09eee361e94199546123913a2773", function(systems) {
         let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
 
-        let groupTypeLoader = function({ isInGroup, group }) {
+        let groupTypeBuilder = function({ isInGroup, group }) {
             return function(node) {
                 return isInGroup({ group, node });
             };
         };
-        groupTypeLoader = bind({ func: groupTypeLoader, params: { isInGroup }});
-        groupTypeLoader = autoParam({ func: groupTypeLoader, paramName: "group" });
-        return groupTypeLoader;
+        groupTypeBuilder = bind({ func: groupTypeBuilder, params: { isInGroup }});
+        groupTypeBuilder = autoParam({ func: groupTypeBuilder, paramName: "group" });
+        return groupTypeBuilder;
     });
 
-    // TODO: Rename to is-loader-function
-    // TODO: Rename all instances of "loader" to "builder"
+    // TODO: Rename to is-builder-function
     addManSys("1b12f086f8555c4d13e6c98a8cece7ce4e198d43", function(systems) {
         let getEdgeHead = systems("da697bd0863212526208d79e3e65019377b07670");
         let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
@@ -413,11 +412,11 @@ function buildManualSystemLoader(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
         let listPrimeFunctions = function({ getTails, graphFind }) {
-            let loaderList = getTails("7b4ecffac40b9c00ecdee386763b0e6584834eca");
+            let builderList = getTails("7b4ecffac40b9c00ecdee386763b0e6584834eca");
 
             let result = [];
-            loaderList.forEach(loader => {
-                let edges = graphFind({ head: loader });
+            builderList.forEach(builder => {
+                let edges = graphFind({ head: builder });
                 let ids = _.map(edges, "id");
                 result = result.concat(ids);
             });
@@ -445,26 +444,26 @@ function buildManualSystemLoader(systems) {
     addManSys("de9803674df491c66c99dcb85d14402f3339c645", function(systems) {
         let getEdgeHead = systems("da697bd0863212526208d79e3e65019377b07670");
 
-        let edgeHeadTypeLoader = function({ getEdgeHead, edgeHead }) {
+        let edgeHeadTypeBuilder = function({ getEdgeHead, edgeHead }) {
             return function(node) {
                 return getEdgeHead(node) == edgeHead;
             };
         };
-        edgeHeadTypeLoader = bind({ func: edgeHeadTypeLoader, params: { getEdgeHead }});
-        edgeHeadTypeLoader = autoParam({ func: edgeHeadTypeLoader, paramName: "edgeHead" });
-        return edgeHeadTypeLoader;
+        edgeHeadTypeBuilder = bind({ func: edgeHeadTypeBuilder, params: { getEdgeHead }});
+        edgeHeadTypeBuilder = autoParam({ func: edgeHeadTypeBuilder, paramName: "edgeHead" });
+        return edgeHeadTypeBuilder;
     });
 
     addManSys("88bd34b2a7aa6c5c14127f6d3d11b82125597f61", function(systems) {
-        let listTypeLoader = function({ systems, listFuncNode }) {
+        let listTypeBuilder = function({ systems, listFuncNode }) {
             let listFunc = systems(listFuncNode);
             return function(node) {
                 return listFunc().includes(node);
             };
         };
-        listTypeLoader = bind({ func: listTypeLoader, params: { systems }});
-        listTypeLoader = autoParam({ func: listTypeLoader, paramName: "listFuncNode" });
-        return listTypeLoader;
+        listTypeBuilder = bind({ func: listTypeBuilder, params: { systems }});
+        listTypeBuilder = autoParam({ func: listTypeBuilder, paramName: "listFuncNode" });
+        return listTypeBuilder;
     });
 
     addManSys("bd7d5695726fa6fe5eb35bed1e009f8784b29c98", function() {
@@ -612,7 +611,7 @@ function buildManualSystemLoader(systems) {
         });
 
         addManSys("9c9a7115ab807d4f97b9f29031f5dbfc35ae0cf7", function() {
-            let libraryFuncLoader = function({ readEdge, nameList, getLibraryFunc, node }) {
+            let libraryFuncBuilder = function({ readEdge, nameList, getLibraryFunc, node }) {
                 let { head: library, tail: func } = readEdge(node);
 
                 let libraryName = nameList(library)[0];
@@ -621,7 +620,7 @@ function buildManualSystemLoader(systems) {
                 let result = getLibraryFunc({ libraryName, funcName });
                 return result;
             };
-            return libraryFuncLoader;
+            return libraryFuncBuilder;
         });
 
         addManSys("6a96bb7f6144af37ffe81fca6dd31546890fbfb5", function(systems) {
@@ -933,4 +932,4 @@ function buildManualSystemLoader(systems) {
     return manualSystems;
 }
 
-module.exports = buildManualSystemLoader;
+module.exports = buildManualSystemBuilder;
