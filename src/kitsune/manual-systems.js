@@ -439,11 +439,7 @@ function buildManualSystemLoader(systems) {
         return groupTypeLoader;
     });
 
-    addManSys("0f9be9c5ad796df34aea4adf0cb340f2bbc2dfc6", function() {
-        let isInGroup = systems("647b87f6c165824714c48ffa8bf224d1bcf11709");
-        let isInNameGroup = bind({ func: isInGroup, params: { group: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0" }});
-        return isInNameGroup;
-    });
+    // TODO: listTypeLoader
 
     addManSys("bd7d5695726fa6fe5eb35bed1e009f8784b29c98", function() {
         let andIs = systems("90184a3d0c84658aac411637f7442f80b3fe0040");

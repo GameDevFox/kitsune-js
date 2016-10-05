@@ -38,22 +38,24 @@ let primeFuncGroup = "b654fb2d44e65346e18a54eab7ab3f1e692817e9";
 let bindFuncLoader = "9a6b1f2a0bcb5576e5b6347cb113eb2cd16c985a";
 let autoParamLoader = "c18b49e9b5d330e1573707e9b3defc6592897522";
 
-let id = "1b12f086f8555c4d13e6c98a8cece7ce4e198d43";
+let id = "842d244f8e9698d469dc060db0f9c9b4e24c50b0";
 
 regFunc("q", false, function() {
     let func = systems(id);
-    let result = func("bd07150e634d5b01eedbe44f28a5068b5a7c845d");
+    let result = func("86f3e2b1dc12f463c8975331bb59aab5fa6a3ca2");
     return result;
 });
 
 function x() {
+    let removeEdge = systems("c2d807f302ca499c3584a8ccf04fb7a76cf589ad");
     let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
     let assign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
 
+    removeEdge(id);
     writeEdge({
+        id,
         head: "cf2331e774de09eee361e94199546123913a2773",
-        id: "1b12f086f8555c4d13e6c98a8cece7ce4e198d43",
-        tail: "b654fb2d44e65346e18a54eab7ab3f1e692817e9"
+        tail: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0"
     });
 }
 regFunc("x", false, x);
