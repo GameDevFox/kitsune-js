@@ -386,6 +386,12 @@ function buildManualSystemLoader(systems) {
         return groupTypeLoader;
     });
 
+    // TODO: logical is-prime-function
+    // TODO: Rename to is-loader-function
+    // TODO: Rename all instances of "loader" to "builder"
+    // addManSys("1b12f086f8555c4d13e6c98a8cece7ce4e198d43", function(systems) {
+    // });
+
     // TODO: edgeHeadTypeLoader
     addManSys("da697bd0863212526208d79e3e65019377b07670", function() {
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
