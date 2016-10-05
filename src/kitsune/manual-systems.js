@@ -448,17 +448,6 @@ function buildManualSystemLoader(systems) {
         return listTypeLoader;
     });
 
-    addManSys("28b31a80598564248953a0b087daf0edaa87093f", function() {
-        let listFunctions = systems("5ce1af19973262a2c69aebb10c6c4aeceee96149");
-
-        let isFunction = function({ listFunctions, node }) {
-            return listFunctions().includes(node);
-        };
-        isFunction = bind({ func: isFunction, params: { listFunctions }});
-        isFunction = autoParam({ func: isFunction, paramName: "node" });
-        return isFunction;
-    });
-
     addManSys("b1f5b717834f9e2f05acb42285e07c8155cc1528", function() {
         let isManualSystem = function({ manSysList, node }) {
             return manSysList().includes(node);
