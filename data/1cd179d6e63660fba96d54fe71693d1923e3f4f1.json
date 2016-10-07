@@ -52,6 +52,10 @@
     "string": "bind-func-builder"
   },
   {
+    "id": "261f07916c78d3ebf749337aa84252371b51686b",
+    "string": "build-and-type"
+  },
+  {
     "id": "6feecda930085be9ff9a360f2ee89896e14bf74c",
     "string": "build-merge-list"
   },

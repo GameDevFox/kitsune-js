@@ -204,18 +204,6 @@ function buildManualSystemBuilder(systems) {
         return buildMergeList;
     });
 
-    addManSys("86714abd0f4dea55c050beb005cf9b87af27c464", function(systems) {
-        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-        let buildAndType = systems("e87662929821638a53c049c8e9380d105b923458");
-
-        let andTypeBuilder = function({ getTails, systems, buildAndType, node }) {
-            let tails = getTails(node);
-            let types = systems(tails);
-            return buildAndType(types);
-        };
-        return bindAndAuto(andTypeBuilder, { getTails, systems, buildAndType }, "node");
-    });
-
     addManSys("e87662929821638a53c049c8e9380d105b923458", function(systems) {
         let buildAndType = function(types) {
             return function(input) {
