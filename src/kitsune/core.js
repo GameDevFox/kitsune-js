@@ -1,7 +1,10 @@
+import _ from "lodash";
+
 import systemLoader from "kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1";
 import buildManualSystemLoader from "kitsune/manual-systems.js";
 
 import Logger from "js-logger";
+
 let rootLogger = Logger.get("root");
 let bootstrapLogger = Logger.get("bootstrap");
 
@@ -30,7 +33,7 @@ function buildCache({ loader, bind }) {
 
 // BOOTSTRAP - STEP 3
 function buildCore({ cache, modules, putSystem, bind, autoParam }) {
-    let systems = function({ cache, modules, id }) {
+    let getSystem = function({ cache, modules, id }) {
 
         let system = cache(id);
 
@@ -50,8 +53,14 @@ function buildCore({ cache, modules, putSystem, bind, autoParam }) {
         }
         return system;
     };
-    systems = bind({ func: systems, params: { cache, modules }});
-    systems = autoParam({ func: systems, paramName: "id" });
+    getSystem = bind({ func: getSystem, params: { cache, modules }});
+    getSystem = autoParam({ func: getSystem, paramName: "id" });
+
+    let listSystems = (nodes) =>nodes.map(getSystem);
+
+    let systems = function(nodes) {
+        return _.isArray(nodes) ? listSystems(nodes) : getSystem(nodes);
+    };
 
     return systems;
 }
