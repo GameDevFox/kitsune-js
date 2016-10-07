@@ -4,6 +4,10 @@
     "string": "and-is"
   },
   {
+    "id": "0e244410d11323857cb45f87eb3ad93f81f0fd96",
+    "string": "and-type-builder"
+  },
+  {
     "id": "560363f85efeee37f488b663960a3c05df31e61a",
     "string": "argFuncId"
   },
@@ -506,6 +510,10 @@
   {
     "id": "b2cc6f58f1c4bc328fcec6f6f43d3f61c99d1e0e",
     "string": "object-auto-put"
+  },
+  {
+    "id": "24b60cce05f415ff5c03b778c4632a1049b9f210",
+    "string": "or-type-builder"
   },
   {
     "id": "a6e3fc8f76db40d2a26d63521062dda3fe545604",

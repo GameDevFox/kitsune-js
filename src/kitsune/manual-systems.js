@@ -177,6 +177,60 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("86714abd0f4dea55c050beb005cf9b87af27c464", function(systems) {
+        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+        let buildAndType = systems("e87662929821638a53c049c8e9380d105b923458");
+
+        let andTypeBuilder = function({ getTails, systems, buildAndType, node }) {
+            let tails = getTails(node);
+            let types = systems(tails);
+            return buildAndType(types);
+        };
+        return bindAndAuto(andTypeBuilder, { getTails, systems, buildAndType }, "node");
+    });
+
+    addManSys("e87662929821638a53c049c8e9380d105b923458", function(systems) {
+        let buildAndType = function(types) {
+            return function(input) {
+                let result;
+                for(let type of types) {
+                    result = type(input);
+                    if(!result)
+                        break;
+                }
+                return result;
+            };
+        };
+        return buildAndType;
+    });
+
+    addManSys("295e4470cd81dc2e58d4c33e6a746767d92e00c0", function(systems) {
+        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+        let buildOrType = systems("dc613d0418cf2e86aa585dcef149b29906302c42");
+
+        let orTypeBuilder = function({ getTails, systems, buildOrType, node }) {
+            let tails = getTails(node);
+            let types = systems(tails);
+            return buildOrType(types);
+        };
+        return bindAndAuto(orTypeBuilder, { getTails, systems, buildOrType }, "node");
+    });
+
+    addManSys("dc613d0418cf2e86aa585dcef149b29906302c42", function(systems) {
+        let buildOrType = function(types) {
+            return function(input) {
+                let result;
+                for(let type of types) {
+                    result = type(input);
+                    if(result)
+                        break;
+                }
+                return result;
+            };
+        };
+        return buildOrType;
+    });
+
     addManSys("f5f1de26b2bd57f7e5d28a3ef9cfc7e67e72eff8", function(systems) {
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
         let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");

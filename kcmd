@@ -34,14 +34,14 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "f5f1de26b2bd57f7e5d28a3ef9cfc7e67e72eff8";
+let id = "295e4470cd81dc2e58d4c33e6a746767d92e00c0";
 
 function q() {
     let func = systems(id);
-    let result = func("f8c9b7054c008f09c7a30eaa76c57c228bc96f71");
-    result = result({ node: "c2d807f302ca499c3584a8ccf04fb7a76cf589ad" });
+    let result = func("79f01a3ca92da4a72a2876a3487576c5d00747bd");
+    result = result(true);
     return result;
-};
+}
 regFunc("q", false, q);
 
     function x() {
