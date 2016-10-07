@@ -169,6 +169,23 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    let bindAndAuto = function(func, bindParams, paramName) {
+        let result = bind({ func: func, params: bindParams });
+        if(paramName)
+            result = autoParam({ func: result, paramName: "node" });
+        return result;
+    };
+
+    addManSys("c583892108bf5de4fa22b42a75d0e5e47651a744", function(systems) {
+        let trueFn = () => true;
+        return trueFn;
+    });
+
+    addManSys("c6bf0178d3510380fcb21d749751934a01f4f6be", function(systems) {
+        let falseFn = () => false;
+        return falseFn;
+    });
+
     addManSys("187757b06fee5a804c312e55d834d06025762605", function(systems) {
         let systemMap = function({ systems, system, data }) {
             let sys = systems(system);
@@ -195,16 +212,14 @@ function buildManualSystemBuilder(systems) {
     addManSys("383103bd68460b5ff1d48e629720533dc3e3a1e4", function(systems) {
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
 
-        let nodeFuncBuilder = function({ readEdge, systems, node }) {
+        let nodeFuncBuilder = bindAndAuto(function({ readEdge, systems, node }) {
             let { head: func, tail: arg } = readEdge(node);
 
             let fn = systems(func);
             return function() {
                 return fn(arg);
             };
-        };
-        nodeFuncBuilder = bind({ func: nodeFuncBuilder, params: { readEdge, systems }});
-        nodeFuncBuilder = autoParam({ func: nodeFuncBuilder, paramName: "node" });
+        }, { readEdge, systems }, "node");
         return nodeFuncBuilder;
     });
 

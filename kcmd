@@ -34,18 +34,11 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "187757b06fee5a804c312e55d834d06025762605";
+let id = "c6bf0178d3510380fcb21d749751934a01f4f6be";
 
 function q() {
-    let listFuncs = systems("5ce1af19973262a2c69aebb10c6c4aeceee96149");
-    let funcs = listFuncs();
-    console.log(funcs);
-
     let func = systems(id);
-    let result = func({
-        system: "890b0b96d7d239e2f246ec03b00cb4e8e06ca2c3",
-        data: funcs
-    });
+    let result = func({ name: "james", gold: 1234 });
     return result;
 };
 regFunc("q", false, q);
