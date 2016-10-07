@@ -34,12 +34,11 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "8b13eec62f88d5b1b268f3a03d88b7de57b052a8";
+let id = "5ce1af19973262a2c69aebb10c6c4aeceee96149";
 
 function q() {
     let func = systems(id);
-    let result = func("9370227b17589d1e0c29e6d08b36d91926425d73");
-    result = result();
+    let result = func();
     return result;
 }
 regFunc("q", false, q);
@@ -56,8 +55,8 @@ function x() {
     // primes.map(node => node.id).forEach(removeEdge);
     writeEdge({
         id,
-        head: "cea68943c5674bdfd2a880fedb40965adb801790",
-        tail: "4f5b93c385b2702b57d09a31e62933e2a77af668"
+        head: "8b13eec62f88d5b1b268f3a03d88b7de57b052a8",
+        tail: "9370227b17589d1e0c29e6d08b36d91926425d73"
     });
 }
 regFunc("x", false, x);

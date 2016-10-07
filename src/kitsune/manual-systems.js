@@ -296,18 +296,6 @@ function buildManualSystemBuilder(systems) {
         return systemMap;
     });
 
-    addManSys("5ce1af19973262a2c69aebb10c6c4aeceee96149", function(systems) {
-        let listSystemFiles = systems("5277dc011cbc9800046edeb4460f7138e060a935");
-        let listManualSystems = systems("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8");
-        let listBuilderFunctions = systems("a5145963a941491432e65b37cbf6d4f6160cc543");
-
-        let listFunctions = function({ listSystemFiles, listManualSystems, listBuilderFunctions }) {
-            return _.concat(listSystemFiles(), listManualSystems(), listBuilderFunctions());
-        };
-        listFunctions = bind({ func: listFunctions, params: { listSystemFiles, listManualSystems, listBuilderFunctions }});
-        return listFunctions;
-    });
-
     addManSys("383103bd68460b5ff1d48e629720533dc3e3a1e4", function(systems) {
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
 
