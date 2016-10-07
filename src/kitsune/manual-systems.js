@@ -37,7 +37,7 @@ function buildManualSystemBuilder(systems) {
     let bindAndAuto = function(func, bindParams, paramName) {
         let result = bind({ func: func, params: bindParams });
         if(paramName)
-            result = autoParam({ func: result, paramName: "node" });
+            result = autoParam({ func: result, paramName });
         return result;
     };
     addManSys("7da92783c4352686c028256ae61207647fc61831", (systems) => bindAndAuto);
@@ -176,6 +176,38 @@ function buildManualSystemBuilder(systems) {
             return stringReadString;
         });
     }
+
+    addManSys("cea68943c5674bdfd2a880fedb40965adb801790", function(systems) {
+        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+
+        let systemGroupBuilderBuilder = function({ systems, getTails, groupFuncNode }) {
+            let groupFunc = systems(groupFuncNode);
+            let systemGroupBuilder = function(node) {
+                let tails = getTails(node);
+                let systemGroup = systems(tails);
+                return groupFunc(systemGroup);
+            };
+            return systemGroupBuilder;
+        };
+        return bindAndAuto(systemGroupBuilderBuilder, { systems, getTails }, "groupFuncNode");
+    });
+
+    addManSys("8b13eec62f88d5b1b268f3a03d88b7de57b052a8", function(systems) {
+        let buildSystemGroupBuilder = systems("cea68943c5674bdfd2a880fedb40965adb801790");
+        return buildSystemGroupBuilder("4f5b93c385b2702b57d09a31e62933e2a77af668");
+    });
+
+    addManSys("4f5b93c385b2702b57d09a31e62933e2a77af668", function(systems) {
+        let buildMergeList = function(lists) {
+            return function() {
+                let result = [];
+                for(let list of lists)
+                    result = result.concat(list());
+                return result;
+            };
+        };
+        return buildMergeList;
+    });
 
     addManSys("86714abd0f4dea55c050beb005cf9b87af27c464", function(systems) {
         let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
