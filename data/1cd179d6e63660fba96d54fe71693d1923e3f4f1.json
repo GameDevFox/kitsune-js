@@ -128,6 +128,10 @@
     "string": "execute-function"
   },
   {
+    "id": "99d6b0c225e3d3837be08ef4d11bbf52d0cbeda1",
+    "string": "field-type-builder"
+  },
+  {
     "id": "b390803c3e2938a30978e3acfea587b2f00f95fa",
     "string": "full-type-builder"
   },

@@ -34,11 +34,12 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "c6bf0178d3510380fcb21d749751934a01f4f6be";
+let id = "f5f1de26b2bd57f7e5d28a3ef9cfc7e67e72eff8";
 
 function q() {
     let func = systems(id);
-    let result = func({ name: "james", gold: 1234 });
+    let result = func("f8c9b7054c008f09c7a30eaa76c57c228bc96f71");
+    result = result({ node: "c2d807f302ca499c3584a8ccf04fb7a76cf589ad" });
     return result;
 };
 regFunc("q", false, q);

@@ -34,6 +34,14 @@ function buildManualSystemBuilder(systems) {
     manualSystems = bind({ func: manualSystems, params: { manSysFuncs, systems, putSystem }});
     manualSystems = autoParam({ func: manualSystems, paramName: "id" });
 
+    let bindAndAuto = function(func, bindParams, paramName) {
+        let result = bind({ func: func, params: bindParams });
+        if(paramName)
+            result = autoParam({ func: result, paramName: "node" });
+        return result;
+    };
+    addManSys("7da92783c4352686c028256ae61207647fc61831", (systems) => bindAndAuto);
+
     // BUILDERS //
     {
         // Bind func builder
@@ -169,21 +177,31 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
-    let bindAndAuto = function(func, bindParams, paramName) {
-        let result = bind({ func: func, params: bindParams });
-        if(paramName)
-            result = autoParam({ func: result, paramName: "node" });
-        return result;
-    };
+    addManSys("f5f1de26b2bd57f7e5d28a3ef9cfc7e67e72eff8", function(systems) {
+        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+        let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
+        let buildFieldType = systems("369acd471c7100072de57ae0dbcc8cfcb4c39dfa");
 
-    addManSys("c583892108bf5de4fa22b42a75d0e5e47651a744", function(systems) {
-        let trueFn = () => true;
-        return trueFn;
+        let fieldTypeBuilder = function({ readEdge, readString, systems, buildFieldType, node }) {
+            let { head: nameNode, tail: typeNode } = readEdge(node);
+            let name = readString(nameNode);
+            let type = systems(typeNode);
+
+            return buildFieldType({ name, type });
+        };
+        return bindAndAuto(fieldTypeBuilder, {
+            readEdge, readString, systems, buildFieldType }, "node");
     });
 
-    addManSys("c6bf0178d3510380fcb21d749751934a01f4f6be", function(systems) {
-        let falseFn = () => false;
-        return falseFn;
+    addManSys("369acd471c7100072de57ae0dbcc8cfcb4c39dfa", function(systems) {
+        let buildFieldType = function({ name, type }) {
+            return (object) => {
+                let field = object[name];
+                let result = (field === undefined) ? false : type(field);
+                return result;
+            };
+        };
+        return buildFieldType;
     });
 
     addManSys("187757b06fee5a804c312e55d834d06025762605", function(systems) {
@@ -212,15 +230,15 @@ function buildManualSystemBuilder(systems) {
     addManSys("383103bd68460b5ff1d48e629720533dc3e3a1e4", function(systems) {
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
 
-        let nodeFuncBuilder = bindAndAuto(function({ readEdge, systems, node }) {
+        let nodeFuncBuilder = function({ readEdge, systems, node }) {
             let { head: func, tail: arg } = readEdge(node);
 
             let fn = systems(func);
             return function() {
                 return fn(arg);
             };
-        }, { readEdge, systems }, "node");
-        return nodeFuncBuilder;
+        };
+        return bindAndAuto(nodeFuncBuilder, { readEdge, systems }, "node");
     });
 
     addManSys("e73694a13d302e910ee51a1f326cf08e1bce0c12", function() {
@@ -613,6 +631,16 @@ function buildManualSystemBuilder(systems) {
 
     // FUNCTIONS
     {
+        addManSys("c583892108bf5de4fa22b42a75d0e5e47651a744", function(systems) {
+            let trueFn = () => true;
+            return trueFn;
+        });
+
+        addManSys("c6bf0178d3510380fcb21d749751934a01f4f6be", function(systems) {
+            let falseFn = () => false;
+            return falseFn;
+        });
+
         // list-manual-systems
         addManSys("12d8b6e0e03d5c6e5d5ddb86bda423d50d172ec8", function (systems) {
             return () => _.keys(manSysFuncs);
