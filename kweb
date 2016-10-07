@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 // -*- mode: js2 -*-
 let core = require("kitsune/core.js");
-let saveData = require("kitsune/save-data.js");
 
 let express = require("express");
 let bodyParser = require('body-parser');
@@ -35,6 +34,7 @@ app.all("/api/:id([0-9a-fA-F]{40})", function(req, res) {
 });
 
 app.all("/api/save", function(req, res) {
+    let saveData = systems("c2ff24899966a19f0615519692679bff2c2b8b26");
     saveData(systems, true);
     res.send(true);
 });

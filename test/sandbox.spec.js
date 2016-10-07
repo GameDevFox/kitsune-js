@@ -2,7 +2,6 @@ import _ from "lodash";
 import { expect } from "chai";
 
 import bootstrap from "kitsune/core.js";
-import saveData from "kitsune/save-data.js";
 
 // Logging
 import Logger from "js-logger";
@@ -102,6 +101,7 @@ describe("sandbox", function() {
         let recreateLinks = systems("36b76ca66bba2d0b98fe25ce05efeaec1f286826");
         recreateLinks();
 
+        let saveData = systems("c2ff24899966a19f0615519692679bff2c2b8b26");
         if(run.reportWrappers)
             saveData(systems);
     });

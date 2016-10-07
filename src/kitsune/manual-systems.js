@@ -177,6 +177,46 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("c2ff24899966a19f0615519692679bff2c2b8b26", function(systems) {
+        let cleanStringSystem = systems("f3db04b0138e827a9b513ab195cc373433407f83");
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+        let stringFind = systems("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7");
+        let writeData = systems("40e2d84c31114c5a00b567a94cefe4e8e83a3050");
+
+        let saveData = function({ cleanStringSystem, graphFind, stringFind, writeData }) {
+            cleanStringSystem();
+
+            let sortedGraphData = _.sortBy(graphFind(), ["head", "tail"]);
+            let sortedStringData = _.sortBy(stringFind(), ["string"]);
+
+            exec("mkdir -p out/data");
+            writeData({ data: sortedGraphData, filename: "./data/24c045b912918d65c9e9aaea9993e9ab56f50d2e.json" });
+            writeData({ data: sortedStringData, filename: "./data/1cd179d6e63660fba96d54fe71693d1923e3f4f1.json" });
+        };
+        return bindAndAuto(saveData, { cleanStringSystem, graphFind, stringFind, writeData });
+    });
+
+    addManSys("40e2d84c31114c5a00b567a94cefe4e8e83a3050", function(systems) {
+        let cleanLoki = systems("3a9764d312ae5668c2f7e12f9bfd509a3a01224e");
+
+        let writeData = function({ cleanLoki, data, filename }) {
+            let cleanData = cleanLoki(data);
+            let json = JSON.stringify(cleanData, null, 2);
+            fs.writeFileSync(filename, json+"\n");
+        };
+        writeData = bind({ func: writeData, params: { cleanLoki }});
+        return writeData;
+    });
+
+    addManSys("3a9764d312ae5668c2f7e12f9bfd509a3a01224e", function(systems) {
+        let cleanLoki = function(data) {
+            let result = data.map(value => _.omit(value, "meta", "$loki"));
+            return result;
+        };
+        return cleanLoki;
+    });
+
+
     addManSys("cea68943c5674bdfd2a880fedb40965adb801790", function(systems) {
         let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
 

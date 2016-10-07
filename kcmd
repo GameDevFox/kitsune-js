@@ -7,7 +7,6 @@ Logger.useDefaults();
 let _ = require("lodash");
 
 let core = require("kitsune/core.js");
-let saveData = require("kitsune/save-data.js");
 
 let opt = require("node-getopt").create([
     ['h', 'help', 'display this help']
@@ -34,12 +33,11 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "0f47f5227af81e957ad7bef049607376726609b4";
+let id = "5ce1af19973262a2c69aebb10c6c4aeceee96149";
 
 function q() {
     let func = systems(id);
-    let result = func("122177bc23a60f86f6aaf1baa8c81ea86b3f60e4");
-    result = result(false);
+    let result = func();
     return result;
 }
 regFunc("q", false, q);
@@ -330,6 +328,7 @@ function listWithDesc(nodes) {
     });
 }
 
+// TODO: Move to system
 function camelToHyphen(input) {
     let result = input.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-");
     return result;
@@ -353,5 +352,7 @@ let output = func.apply(this, opt.argv);
 if(typeof output != "undefined")
     console.log(output);
 
-if(!funcReg.readOnly)
+if(!funcReg.readOnly) {
+    let saveData = systems("c2ff24899966a19f0615519692679bff2c2b8b26");
     saveData(systems, true);
+}
