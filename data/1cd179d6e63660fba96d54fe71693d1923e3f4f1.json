@@ -52,6 +52,10 @@
     "string": "bind-func-builder"
   },
   {
+    "id": "6feecda930085be9ff9a360f2ee89896e14bf74c",
+    "string": "build-merge-list"
+  },
+  {
     "id": "f52318a05e518a5596012af2ed38de68ac26a468",
     "string": "builder"
   },
@@ -450,6 +454,10 @@
   {
     "id": "2b172839e79030382cf8d7770986e1f76e3e99d4",
     "string": "loki-remove"
+  },
+  {
+    "id": "743f88e7a33e19ae2240de9f69770d38965a3c84",
+    "string": "merge-list-builder"
   },
   {
     "id": "19f34ee1e406ea84ca83c835a3301b5d9014a788",

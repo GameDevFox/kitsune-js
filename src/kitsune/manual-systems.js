@@ -192,11 +192,6 @@ function buildManualSystemBuilder(systems) {
         return bindAndAuto(systemGroupBuilderBuilder, { systems, getTails }, "groupFuncNode");
     });
 
-    addManSys("8b13eec62f88d5b1b268f3a03d88b7de57b052a8", function(systems) {
-        let buildSystemGroupBuilder = systems("cea68943c5674bdfd2a880fedb40965adb801790");
-        return buildSystemGroupBuilder("4f5b93c385b2702b57d09a31e62933e2a77af668");
-    });
-
     addManSys("4f5b93c385b2702b57d09a31e62933e2a77af668", function(systems) {
         let buildMergeList = function(lists) {
             return function() {

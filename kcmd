@@ -38,7 +38,7 @@ let id = "8b13eec62f88d5b1b268f3a03d88b7de57b052a8";
 
 function q() {
     let func = systems(id);
-    let result = func("f3f9113758cff4542726ba9d31d9b2a9168c663f");
+    let result = func("9370227b17589d1e0c29e6d08b36d91926425d73");
     result = result();
     return result;
 }
@@ -52,13 +52,13 @@ function x() {
     let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
     let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
-    let primes = graphFind({ head: "b654fb2d44e65346e18a54eab7ab3f1e692817e9" });
-    primes.map(node => node.id).forEach(removeEdge);
-    // writeEdge({
-    //     id,
-    //     head: "de9803674df491c66c99dcb85d14402f3339c645",
-    //     tail: "c62d4ef1e0a3e7cf289dfb455e52ed540ac06b79"
-    // });
+    // let primes = graphFind({ head: "b654fb2d44e65346e18a54eab7ab3f1e692817e9" });
+    // primes.map(node => node.id).forEach(removeEdge);
+    writeEdge({
+        id,
+        head: "cea68943c5674bdfd2a880fedb40965adb801790",
+        tail: "4f5b93c385b2702b57d09a31e62933e2a77af668"
+    });
 }
 regFunc("x", false, x);
 
