@@ -219,18 +219,6 @@ function buildManualSystemBuilder(systems) {
         return buildAndType;
     });
 
-    addManSys("295e4470cd81dc2e58d4c33e6a746767d92e00c0", function(systems) {
-        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-        let buildOrType = systems("dc613d0418cf2e86aa585dcef149b29906302c42");
-
-        let orTypeBuilder = function({ getTails, systems, buildOrType, node }) {
-            let tails = getTails(node);
-            let types = systems(tails);
-            return buildOrType(types);
-        };
-        return bindAndAuto(orTypeBuilder, { getTails, systems, buildOrType }, "node");
-    });
-
     addManSys("dc613d0418cf2e86aa585dcef149b29906302c42", function(systems) {
         let buildOrType = function(types) {
             return function(input) {

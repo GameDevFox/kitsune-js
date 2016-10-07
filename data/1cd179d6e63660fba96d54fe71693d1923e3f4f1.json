@@ -60,6 +60,10 @@
     "string": "build-merge-list"
   },
   {
+    "id": "19ec069a6dfb634b320d63364d04bf844b77c7f7",
+    "string": "build-or-type"
+  },
+  {
     "id": "f52318a05e518a5596012af2ed38de68ac26a468",
     "string": "builder"
   },
