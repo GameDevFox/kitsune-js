@@ -33,19 +33,14 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "5ce1af19973262a2c69aebb10c6c4aeceee96149";
+let id = "6deaa7dcfe0bcf82e193ea7c4f28b0ae4b9ad894";
 
 function q() {
-    // let func = systems(id);
-    // let result = func();
-    // return result;
-
-    let writeChain = systems("f7d85e5fdaa712e9ce55724d1bd2006ebc48032c");
-    let readChain = systems("97142d3a71acdb994784bb0d57450ddd3513d41d");
-
-    writeChain({ node: "chain", items: ["a","b","c","d","e","f","g"] });
-    let result = readChain("chain");
+    let func = systems(id);
+    let result = func("1f3763ef1542321c1e08afaa879954c491e6180f");
+    result = result("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
     return result;
+
 }
 regFunc("q", false, q);
 

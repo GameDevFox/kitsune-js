@@ -208,6 +208,37 @@ function buildManualSystemBuilder(systems) {
         return getInputType;
     });
 
+    addManSys("1f7e292e777e8e80355290c6f7d1ff901766931b", function(systems) {
+        let describeNode = function({ typeMap, node }) {
+            let result = [];
+            for(let key in typeMap) {
+                let type = typeMap[key];
+
+                let isA = type(node);
+                if(isA)
+                    result.push(key);
+            }
+            return result;
+        };
+        return describeNode;
+    });
+
+    addManSys("6deaa7dcfe0bcf82e193ea7c4f28b0ae4b9ad894", function(systems) {
+        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+        let describeNode = systems("1f7e292e777e8e80355290c6f7d1ff901766931b");
+
+        let nodeDescriptionBuilder = function({ getTails, systems, node }) {
+            let typeNodes = getTails(node);
+            let typeMap = {};
+            for(let typeNode of typeNodes)
+                typeMap[typeNode] = systems(typeNode);
+
+            return bindAndAuto(describeNode, { typeMap }, "node");
+        };
+        nodeDescriptionBuilder = bindAndAuto(nodeDescriptionBuilder, { getTails, systems }, "node");
+        return nodeDescriptionBuilder;
+    });
+
     // write "toward" chain or "away" chain
     // "away" for lists (default)
     // "toward" for types and super types
@@ -226,13 +257,13 @@ function buildManualSystemBuilder(systems) {
         writeChain = bindAndAuto(writeChain, { autoWriteEdge });
         return writeChain;
     });
-    
+
     addManSys("f7d85e5fdaa712e9ce55724d1bd2006ebc48032c", function(systems) {
         let writeChain = systems("f934a7bede868c16b8603c20f31965a262ac19f4");
         let writeAwayChain = bindAndAuto(writeChain, { away: true });
         return writeAwayChain;
     });
-    
+
     addManSys("26c327a18c224378783ee1603f46ac9618462b85", function(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
@@ -258,13 +289,13 @@ function buildManualSystemBuilder(systems) {
         readChain = bindAndAuto(readChain, { graphFind });
         return readChain;
     });
-    
+
     addManSys("97142d3a71acdb994784bb0d57450ddd3513d41d", function(systems) {
         let readChain = systems("26c327a18c224378783ee1603f46ac9618462b85");
         let readAwayChain = bindAndAuto(readChain, { away: true }, "node");
         return readAwayChain;
     });
-    
+
     addManSys("c2ff24899966a19f0615519692679bff2c2b8b26", function(systems) {
         let cleanStringSystem = systems("f3db04b0138e827a9b513ab195cc373433407f83");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
