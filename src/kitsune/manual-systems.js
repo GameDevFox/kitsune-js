@@ -177,35 +177,108 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
-    addManSys("a82d6af4777c9f7036fc0a137f7cd31a2ec133b9", function(systems) {
-        // based on object description
-        // type <-> function mapping
-        // This must be an ordered list
-        let descMappings = {
-            "is-type-builder-function": function(node) {
-                return is-node;
-            },
-            "has-input": function(node) {
-                return factor({ head: node, type: input })[0].tail;
-            }
+    // ******************************************************
+
+    // based on object description
+    // type <-> function mapping
+    // This must be an ordered list
+    // let typeImplMap = [
+    //     ["type-func", "impl-func"]
+    //         ["is-type-builder-function", function(node) {
+    //         return is-node;
+    //     }],
+    //     ["has-input", function(node) {
+    //         return factor({ head: node, type: input })[0].tail;
+    //     }],
+    // ];
+
+
+    addManSys("03900e7d7594b30628f4d787d9e91639ff0a6f76", function(systems) {
+        let func = function({ target, args }) {
+            console.log("T", target);
+            console.log("A", args);
+            return "A";
         };
+        return func;
+    });
 
-        let getInputType = function(node) {
-            // We can call a more efficient method here based on available types in mapping
-            // The results of this method should be a subset of the mapping types
-            let desc = describeNode(node);
+    addManSys("6fa4e839df9f34cc1c76c7c1924a0c703e47d264", function(systems) {
+        let func = function({ target, args }) {
+            console.log("T", target);
+            console.log("A", args);
+            return "B";
+        };
+        return func;
+    });
 
-            let input;
-            for(let d of desc) {
-                let func = descMappings[d];
-                if(func) {
-                    input = func(node);
-                    break;
+    addManSys("b519748eb9e67504556db1c0ba0c66ac0e2a4b37", function(systems) {
+        let func = function({ target, args }) {
+            console.log("T", target);
+            console.log("A", args);
+            return "C";
+        };
+        return func;
+    });
+
+    addManSys("4cc734270e82626c15f899d15a671add6d5e39b4", function(systems) {
+        let func = function({ target, args }) {
+            console.log("T", target);
+            console.log("A", args);
+            return "D";
+        };
+        return func;
+    });
+
+    // ******************************************************
+
+    addManSys("e4e33d78e37170738a4f84925f4ada0d80ec74f6", function(systems) {
+        let readChain = systems("97142d3a71acdb994784bb0d57450ddd3513d41d");
+        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+
+        let readTypeImpl = function({ readChain, readEdge, systems, node }) {
+            let list = readChain(node);
+            let result = list.map(item => {
+                let { head: typeNode, tail: implNode } = readEdge(item);
+
+                let type = systems(typeNode);
+                let impl = systems(implNode);
+
+                return [type, impl];
+            });
+            return result;
+        };
+        readTypeImpl = bindAndAuto(readTypeImpl, { readChain, readEdge, systems }, "node");
+        return readTypeImpl;
+    });
+
+    addManSys("a82d6af4777c9f7036fc0a137f7cd31a2ec133b9", function(systems) {
+        let getImplFunc = function({ typeImpl, input }) {
+            for(let i in typeImpl) {
+                let pair = typeImpl[i];
+                let type = pair[0];
+
+                if(type(input)) {
+                    let implFunc = pair[1];
+                    return implFunc;
                 }
             }
-            return input;
+            throw new Error("No implementation found for input: "+input);
         };
-        return getInputType;
+        return getImplFunc;
+    });
+
+    addManSys("6a77c3877d99fa29846eae647cea102edab55903", function(systems) {
+        let readTypeImpl = systems("e4e33d78e37170738a4f84925f4ada0d80ec74f6");
+        let getImplFunc = systems("a82d6af4777c9f7036fc0a137f7cd31a2ec133b9");
+
+        let getImplFuncByNode = function({ readTypeImpl, getImplFunc, typeImplNode }) {
+            let typeImpl = readTypeImpl(typeImplNode);
+
+            let boundGetImplFunc = bindAndAuto(getImplFunc, { typeImpl }, "input");
+            return boundGetImplFunc;
+        };
+        getImplFuncByNode = bindAndAuto(getImplFuncByNode, { readTypeImpl, getImplFunc }, "typeImplNode");
+        return getImplFuncByNode;
     });
 
     addManSys("1f7e292e777e8e80355290c6f7d1ff901766931b", function(systems) {

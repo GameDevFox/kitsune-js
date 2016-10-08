@@ -33,14 +33,16 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "6deaa7dcfe0bcf82e193ea7c4f28b0ae4b9ad894";
+let id = "6a77c3877d99fa29846eae647cea102edab55903";
 
 function q() {
-    let func = systems(id);
-    let result = func("1f3763ef1542321c1e08afaa879954c491e6180f");
-    result = result("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
-    return result;
+    let target = "6a77c3877d99fa29846eae647cea102edab55903";
 
+    let func = systems(id);
+    let result = func("3506c7b32b1fb5b2f147a7cd397a01730b7ea34a");
+    result = result(target); // get func
+    result = result({ target, args: "Hello" }); // exec func
+    return result;
 }
 regFunc("q", false, q);
 
@@ -51,14 +53,22 @@ function x() {
     let assign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
     let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
     let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+    let writeChain = systems("f7d85e5fdaa712e9ce55724d1bd2006ebc48032c");
 
     // let primes = graphFind({ head: "b654fb2d44e65346e18a54eab7ab3f1e692817e9" });
     // primes.map(node => node.id).forEach(removeEdge);
-    writeEdge({
-        id,
-        head: "8b13eec62f88d5b1b268f3a03d88b7de57b052a8",
-        tail: "9370227b17589d1e0c29e6d08b36d91926425d73"
-    });
+    // writeEdge({
+    //     id,
+    //     head: "8b13eec62f88d5b1b268f3a03d88b7de57b052a8",
+    //     tail: "9370227b17589d1e0c29e6d08b36d91926425d73"
+    // });
+
+    writeChain({ node: "3506c7b32b1fb5b2f147a7cd397a01730b7ea34a", items: [
+        "c732fe74e0a9c57370c80b539881522fce0ae049", // is-node -> A
+        "329290460dd30761bc764f4874dc9eb3772c09d4", // is-object -> B
+        "44187e1da8c838276027e8a299047b1125b59381", // is-boolean -> C
+        "58a6096874c6274343e67c786df08d6453d2ac78", // is-string -> D
+    ]});
 }
 regFunc("x", false, x);
 
