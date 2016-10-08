@@ -177,59 +177,48 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
-    // ******************************************************
-
-    // based on object description
-    // type <-> function mapping
-    // This must be an ordered list
-    // let typeImplMap = [
-    //     ["type-func", "impl-func"]
-    //         ["is-type-builder-function", function(node) {
-    //         return is-node;
-    //     }],
-    //     ["has-input", function(node) {
-    //         return factor({ head: node, type: input })[0].tail;
-    //     }],
-    // ];
-
-
-    addManSys("03900e7d7594b30628f4d787d9e91639ff0a6f76", function(systems) {
-        let func = function({ target, args }) {
-            console.log("T", target);
-            console.log("A", args);
+    addManSys("541fe231a38c39263178ec6b436c1344153b268f", function(systems) {
+        return function(input) {
+            console.log(input);
             return "A";
         };
-        return func;
     });
-
-    addManSys("6fa4e839df9f34cc1c76c7c1924a0c703e47d264", function(systems) {
-        let func = function({ target, args }) {
-            console.log("T", target);
-            console.log("A", args);
+    addManSys("29ae17d030bcb31e3efc6d71f09335f1d9704cbb", function(systems) {
+        return function(input) {
+            console.log(input);
             return "B";
         };
-        return func;
     });
-
-    addManSys("b519748eb9e67504556db1c0ba0c66ac0e2a4b37", function(systems) {
-        let func = function({ target, args }) {
-            console.log("T", target);
-            console.log("A", args);
+    addManSys("d819f6b5558a2a9aae9d490f3f125a8de3a34666", function(systems) {
+        return function(input) {
+            console.log(input);
             return "C";
         };
-        return func;
     });
-
-    addManSys("4cc734270e82626c15f899d15a671add6d5e39b4", function(systems) {
-        let func = function({ target, args }) {
-            console.log("T", target);
-            console.log("A", args);
+    addManSys("107036c09a4e55e3cb1b736f36944f755b6ea159", function(systems) {
+        return function(input) {
+            console.log(input);
             return "D";
         };
-        return func;
     });
 
-    // ******************************************************
+    addManSys("307f3450473542f1b5b31b23eb9bd00197c9f4e8", function(systems) {
+        let getImplFuncByNode = systems("6a77c3877d99fa29846eae647cea102edab55903");
+
+        let callableImplFuncBuilder = function({ getImplFuncByNode, node }) {
+            let func = getImplFuncByNode(node);
+            let doubleFunc = function(target) {
+                let innerFunc = func(target);
+                return function(args) {
+                    let input = _.merge(args, { $target: target });
+                    return innerFunc(input);
+                };
+            };
+            return doubleFunc;
+        };
+        callableImplFuncBuilder = bindAndAuto(callableImplFuncBuilder, { getImplFuncByNode }, "node");
+        return callableImplFuncBuilder;
+    });
 
     addManSys("e4e33d78e37170738a4f84925f4ada0d80ec74f6", function(systems) {
         let readChain = systems("97142d3a71acdb994784bb0d57450ddd3513d41d");

@@ -33,16 +33,21 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "6a77c3877d99fa29846eae647cea102edab55903";
+let id = "307f3450473542f1b5b31b23eb9bd00197c9f4e8";
 
 function q() {
     let target = "6a77c3877d99fa29846eae647cea102edab55903";
+    let target2 = {};
 
     let func = systems(id);
-    let result = func("3506c7b32b1fb5b2f147a7cd397a01730b7ea34a");
-    result = result(target); // get func
-    result = result({ target, args: "Hello" }); // exec func
-    return result;
+    let implFunc = func("26efd9c7cce7c981b0030328a437ced6f9956a3d");
+
+    let result = implFunc(target)({ msg: "Hello World" });
+    console.log(result);
+    result = implFunc(target2)({ msg: "Hello World" });
+    console.log(result);
+
+    // return result;
 }
 regFunc("q", false, q);
 
@@ -63,12 +68,14 @@ function x() {
     //     tail: "9370227b17589d1e0c29e6d08b36d91926425d73"
     // });
 
-    writeChain({ node: "3506c7b32b1fb5b2f147a7cd397a01730b7ea34a", items: [
-        "c732fe74e0a9c57370c80b539881522fce0ae049", // is-node -> A
-        "329290460dd30761bc764f4874dc9eb3772c09d4", // is-object -> B
-        "44187e1da8c838276027e8a299047b1125b59381", // is-boolean -> C
-        "58a6096874c6274343e67c786df08d6453d2ac78", // is-string -> D
-    ]});
+    let typeImpl = [
+        ["a4d43bc2f8a3b0e8e87917ffca52cfba3ab45d6a","541fe231a38c39263178ec6b436c1344153b268f"],
+        ["608d2331e9d048af9d4f0f36af80e6ed7ea8c96e","29ae17d030bcb31e3efc6d71f09335f1d9704cbb"],
+        ["43cd34ab8105d158f421eecce9ed22948ec34893","d819f6b5558a2a9aae9d490f3f125a8de3a34666"],
+        ["05ef7fa49f431784fccc98f676c171e86c300449","107036c09a4e55e3cb1b736f36944f755b6ea159"],
+    ];
+    let items = typeImpl.map(x => autoWriteEdge({ head: x[0], tail: x[1] }));
+    writeChain({ node: "26efd9c7cce7c981b0030328a437ced6f9956a3d", items });
 }
 regFunc("x", false, x);
 

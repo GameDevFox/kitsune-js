@@ -80,6 +80,10 @@
     "string": "callNodeFunc"
   },
   {
+    "id": "8bb653f59434ba0109909b4ed0e45e79e4452738",
+    "string": "callable-implementation-function-builder"
+  },
+  {
     "id": "532d45da3f05aef0fecec19850a8c8c40a4bd7a6",
     "string": "clean-string-system"
   },
