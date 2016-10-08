@@ -36,8 +36,15 @@ let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 let id = "5ce1af19973262a2c69aebb10c6c4aeceee96149";
 
 function q() {
-    let func = systems(id);
-    let result = func();
+    // let func = systems(id);
+    // let result = func();
+    // return result;
+
+    let writeChain = systems("f7d85e5fdaa712e9ce55724d1bd2006ebc48032c");
+    let readChain = systems("97142d3a71acdb994784bb0d57450ddd3513d41d");
+
+    writeChain({ node: "chain", items: ["a","b","c","d","e","f","g"] });
+    let result = readChain("chain");
     return result;
 }
 regFunc("q", false, q);

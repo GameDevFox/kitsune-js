@@ -177,6 +177,94 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("a82d6af4777c9f7036fc0a137f7cd31a2ec133b9", function(systems) {
+        // based on object description
+        // type <-> function mapping
+        // This must be an ordered list
+        let descMappings = {
+            "is-type-builder-function": function(node) {
+                return is-node;
+            },
+            "has-input": function(node) {
+                return factor({ head: node, type: input })[0].tail;
+            }
+        };
+
+        let getInputType = function(node) {
+            // We can call a more efficient method here based on available types in mapping
+            // The results of this method should be a subset of the mapping types
+            let desc = describeNode(node);
+
+            let input;
+            for(let d of desc) {
+                let func = descMappings[d];
+                if(func) {
+                    input = func(node);
+                    break;
+                }
+            }
+            return input;
+        };
+        return getInputType;
+    });
+
+    // write "toward" chain or "away" chain
+    // "away" for lists (default)
+    // "toward" for types and super types
+    addManSys("f934a7bede868c16b8603c20f31965a262ac19f4", function(systems) {
+        let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
+
+        let writeChain = function({ autoWriteEdge, away, node, items }) {
+            let edge = node;
+            for(let i=0; i<items.length; i++) {
+                let item = items[i];
+                edge = away ? autoWriteEdge({ head: edge, tail: item })
+                            : autoWriteEdge({ head: item, tail: edge });
+            }
+            return edge;
+        };
+        writeChain = bindAndAuto(writeChain, { autoWriteEdge });
+        return writeChain;
+    });
+    
+    addManSys("f7d85e5fdaa712e9ce55724d1bd2006ebc48032c", function(systems) {
+        let writeChain = systems("f934a7bede868c16b8603c20f31965a262ac19f4");
+        let writeAwayChain = bindAndAuto(writeChain, { away: true });
+        return writeAwayChain;
+    });
+    
+    addManSys("26c327a18c224378783ee1603f46ac9618462b85", function(systems) {
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+
+        let readChain = function({ graphFind, away, node }) {
+            let base = node;
+            let result = [];
+            while(true) {
+                let search = away ? { head: base } : { tail: base };
+                let edges = graphFind(search);
+
+                if (edges.length > 1)
+                    throw new Error("readChain: Multiple tails for node: " + node);
+
+                if(edges.length === 0)
+                    break;
+
+                let edge = edges[0];
+                result.push(away ? edge.tail : edge.head);
+                base = edge.id;
+            }
+            return result;
+        };
+        readChain = bindAndAuto(readChain, { graphFind });
+        return readChain;
+    });
+    
+    addManSys("97142d3a71acdb994784bb0d57450ddd3513d41d", function(systems) {
+        let readChain = systems("26c327a18c224378783ee1603f46ac9618462b85");
+        let readAwayChain = bindAndAuto(readChain, { away: true }, "node");
+        return readAwayChain;
+    });
+    
     addManSys("c2ff24899966a19f0615519692679bff2c2b8b26", function(systems) {
         let cleanStringSystem = systems("f3db04b0138e827a9b513ab195cc373433407f83");
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
@@ -215,7 +303,6 @@ function buildManualSystemBuilder(systems) {
         };
         return cleanLoki;
     });
-
 
     addManSys("cea68943c5674bdfd2a880fedb40965adb801790", function(systems) {
         let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
