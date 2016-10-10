@@ -1,5 +1,4 @@
-import crypto from "crypto";
-import _ from "lodash";
+let crypto = require("crypto");
 
 export function hash(str) {
 	let result = crypto.createHash("sha1").update(str).digest("hex");

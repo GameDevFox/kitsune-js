@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-import _ from "lodash";
+let _ = require("lodash");
 
 export default function autoId({ hashRandom, func, paramName }) {
     return function(input) {

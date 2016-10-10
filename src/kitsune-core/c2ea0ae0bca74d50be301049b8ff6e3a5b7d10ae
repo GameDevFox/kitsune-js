@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-import crypto from "crypto";
+let crypto = require("crypto");
 
 export default function hashString(string) {
     let result = crypto.createHash("sha1").update(string).digest("hex");

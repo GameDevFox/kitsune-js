@@ -1,9 +1,9 @@
-import _ from "lodash";
+let _ = require("lodash");
 
-import systemLoader from "kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1";
-import buildManualSystemLoader from "kitsune/manual-systems.js";
+let systemLoader = require("kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1");
+let buildManualSystemLoader = require("kitsune/manual-systems.js");
 
-import Logger from "js-logger";
+let Logger = require("js-logger");
 
 let rootLogger = Logger.get("root");
 let bootstrapLogger = Logger.get("bootstrap");

@@ -1,7 +1,7 @@
-import fs from "fs";
-import { execSync as exec } from "child_process";
+let _ = require("lodash");
 
-import _ from "lodash";
+let fs = require("fs");
+let exec = require("child_process").execSync;
 
 function buildManualSystemBuilder(systems) {
     let bind = systems("878c8ef64d31a194159765945fc460cb6b3f486f");
@@ -224,6 +224,7 @@ function buildManualSystemBuilder(systems) {
         let readChain = systems("97142d3a71acdb994784bb0d57450ddd3513d41d");
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
 
+        // TODO: Create read-func/write-func relationships for types
         let readTypeImpl = function({ readChain, readEdge, systems, node }) {
             let list = readChain(node);
             let result = list.map(item => {
@@ -260,6 +261,7 @@ function buildManualSystemBuilder(systems) {
         let readTypeImpl = systems("e4e33d78e37170738a4f84925f4ada0d80ec74f6");
         let getImplFunc = systems("a82d6af4777c9f7036fc0a137f7cd31a2ec133b9");
 
+        // TODO: Rename to builder
         let getImplFuncByNode = function({ readTypeImpl, getImplFunc, typeImplNode }) {
             let typeImpl = readTypeImpl(typeImplNode);
 
@@ -574,6 +576,7 @@ function buildManualSystemBuilder(systems) {
         });
 
     addManSys("3528d88fb3d5a3dc22f2ffbd40690ec71edd3819", function(systems) {
+        // TODO: Swap for a getInputType system
         let inputType = "0713c6285e4a9d9fc96b375ff2dce3e1807d942d";
         let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
 
@@ -597,6 +600,7 @@ function buildManualSystemBuilder(systems) {
     });
 
     addManSys("5d134bcf95eb55efa7807da43e11e4fc37e269b9", function(systems) {
+        // TODO: Swap for a getInputType system
         let inputType = "0713c6285e4a9d9fc96b375ff2dce3e1807d942d";
         let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
 

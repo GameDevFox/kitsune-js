@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-import { hash } from "kitsune/util";
+let hash = require("kitsune/util").hash;
 
 export default function autoPut({ stringFind, stringPut, string }) {
     // Make sure the string isn't stored already

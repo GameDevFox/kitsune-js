@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-import { Collection } from "lokijs";
+let Collection = require("lokijs").Collection;
 
 export default function lokiColl() {
     return new Collection();
