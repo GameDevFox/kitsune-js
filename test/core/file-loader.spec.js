@@ -1,7 +1,7 @@
-import _ from "lodash";
-import { expect } from "chai";
+let _ = require("lodash");
+let expect = require("chai").expect;
 
-import systemLoader from "kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1"; // system-loader
+let systemLoader = require("kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1"); // system-loader
 
 describe("kitsune/core/system-loader", function() {
 

@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function nameList({ graphFactor, stringReadString, node }) {
+function nameList({ graphFactor, stringReadString, node }) {
     if(!node)
         return [];
 

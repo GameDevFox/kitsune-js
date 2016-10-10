@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function value(input) {
+function value(input) {
     return input();
 }
 module.exports = value;

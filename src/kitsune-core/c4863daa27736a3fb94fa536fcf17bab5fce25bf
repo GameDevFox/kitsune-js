@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function nameListIds({ stringAutoPut, graphFactor, name }) {
+function nameListIds({ stringAutoPut, graphFactor, name }) {
     // TODO: Fix this or simplify, we just need the hash of the string instead of "stringAutoPut"
     let nameId = stringAutoPut(name);
     let factor = graphFactor({ type: "f1830ba2c84e3c6806d95e74cc2b04d99cd269e0", head: nameId });

@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function valueFunc(input) {
+function valueFunc(input) {
     return function() {
         return input;
     };

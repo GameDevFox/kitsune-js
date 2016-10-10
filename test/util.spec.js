@@ -1,6 +1,6 @@
-import { expect } from "chai";
+let expect = require("chai").expect;
 
-import * as util from "kitsune/util";
+let util = require("kitsune/util");
 
 describe("kitsune/util", function() {
 	describe("one(array)", function() {

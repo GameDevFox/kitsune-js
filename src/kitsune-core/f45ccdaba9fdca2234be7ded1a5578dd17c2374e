@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function lokiPut({ db, element }) {
+function lokiPut({ db, element }) {
     if(!element)
         throw new Error(`The "element" property is null, please set { element: ... }`);
 

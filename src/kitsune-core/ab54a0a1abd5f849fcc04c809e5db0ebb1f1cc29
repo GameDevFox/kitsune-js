@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function groupList({ graphFind, group }) {
+function groupList({ graphFind, group }) {
     let edges = graphFind({ head: group });
     let result = edges.map(edge => edge.tail);
     return result;

@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function removeName({ node, name, stringGetId, graphFactor, graphRemove }) {
+function removeName({ node, name, stringGetId, graphFactor, graphRemove }) {
     let strId = stringGetId(name);
 
     if(!strId)

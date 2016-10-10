@@ -40,8 +40,7 @@ var buildStream = function(stream, debugTitle) {
 		.pipe(g.debug({ title: debugTitle }))
 		.pipe(g.jshint({ esnext: true }))
 		.pipe(g.jshint.reporter(jshintStylish))
-		.pipe(g.jshint.reporter("fail"))
-		.pipe(g.babel({ presets: ["es2015"], sourceMaps: "inline" }));
+		.pipe(g.jshint.reporter("fail"));
 };
 
 gulp.task("build", "Builds project", function() {

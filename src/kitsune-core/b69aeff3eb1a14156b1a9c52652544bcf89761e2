@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function autoParam({ func, paramName }) {
+function autoParam({ func, paramName }) {
     return function autoParamF(param) {
         var params = {};
         params[paramName] = param;

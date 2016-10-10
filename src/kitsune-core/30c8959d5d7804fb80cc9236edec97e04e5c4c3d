@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function dictionaryFunc(obj) {
+function dictionaryFunc(obj) {
     return function(input) {
         let output = obj[input];
         return output;

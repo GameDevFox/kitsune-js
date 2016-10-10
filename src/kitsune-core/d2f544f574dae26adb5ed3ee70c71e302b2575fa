@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function isInCollection({ collFind, node }) {
+function isInCollection({ collFind, node }) {
     var result = collFind({ id: node });
     return result.length > 0;
 }

@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function writeValue({ typeMappings, value }) {
+function writeValue({ typeMappings, value }) {
     let id;
     let funcId;
     for(let key in typeMappings) {

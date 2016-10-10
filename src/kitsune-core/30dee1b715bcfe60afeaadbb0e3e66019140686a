@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function lokiFind({ db, where }) {
+function lokiFind({ db, where }) {
     let criteria = [];
 
     let count = 0;

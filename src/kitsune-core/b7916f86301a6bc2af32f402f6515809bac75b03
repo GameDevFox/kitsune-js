@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function listNodes({ graphFind }) {
+function listNodes({ graphFind }) {
     var edges = graphFind();
 
     var nodes = [];

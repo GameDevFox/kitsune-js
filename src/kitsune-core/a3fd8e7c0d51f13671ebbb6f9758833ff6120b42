@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function isInGroup({ graphFind, group, node }) {
+function isInGroup({ graphFind, group, node }) {
     let results = graphFind({ head: group, tail: node });
     return results.length > 0;
 }

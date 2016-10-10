@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function readObject({ graphFactor, stringReadString, graphReadEdge, nodeFunc, node }) {
+function readObject({ graphFactor, stringReadString, graphReadEdge, nodeFunc, node }) {
 
     let result;
 

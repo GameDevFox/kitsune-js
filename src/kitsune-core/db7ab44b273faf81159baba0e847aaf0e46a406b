@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function execFunc({ callNodeFunc, funcSys, funcId, argFuncId, argId }) {
+function execFunc({ callNodeFunc, funcSys, funcId, argFuncId, argId }) {
 
     let nodeFuncResult = callNodeFunc({
         funcSys,

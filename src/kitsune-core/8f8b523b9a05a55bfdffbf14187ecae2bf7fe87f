@@ -1,7 +1,7 @@
 // -*- mode: js2 -*-
 let hash = require("kitsune/util").hash;
 
-export default function autoPut({ stringFind, stringPut, string }) {
+function autoPut({ stringFind, stringPut, string }) {
     // Make sure the string isn't stored already
     let search = stringFind({ string: string });
     if(search.length > 0)

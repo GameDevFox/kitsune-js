@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function readAssign({ graphReadEdge, id }) {
+function readAssign({ graphReadEdge, id }) {
     let typeEdge = graphReadEdge(id);
 
     if(!typeEdge)

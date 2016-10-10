@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function testData() {
+function testData() {
     var result =
     // json wrapper-top
     [

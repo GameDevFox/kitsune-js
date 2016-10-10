@@ -1,10 +1,7 @@
-import _ from "lodash";
-import { expect } from "chai";
-
-import bootstrap from "kitsune/core.js";
+let bootstrap = require("kitsune/core.js");
 
 // Logging
-import Logger from "js-logger";
+let Logger = require("js-logger");
 Logger.useDefaults();
 
 let rootLogger = Logger.get("root");

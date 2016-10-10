@@ -1,7 +1,7 @@
 // -*- mode: js2 -*-
 let Collection = require("lokijs").Collection;
 
-export default function lokiColl() {
+function lokiColl() {
     return new Collection();
 }
 module.exports = lokiColl;

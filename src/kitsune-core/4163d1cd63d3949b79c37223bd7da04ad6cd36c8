@@ -1,5 +1,5 @@
 // -*- mode: js2 -*-
-export default function factor({ graphFind, head, type, tail }) {
+function factor({ graphFind, head, type, tail }) {
 
     if(!head && !type && !tail)
         throw new Error("Must have one or more of (head, type, tail) params set");

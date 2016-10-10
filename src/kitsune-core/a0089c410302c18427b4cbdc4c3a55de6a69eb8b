@@ -1,7 +1,7 @@
 // -*- mode: js2 -*-
 let _ = require("lodash");
 
-export default function autoId({ hashRandom, func, paramName }) {
+function autoId({ hashRandom, func, paramName }) {
     return function(input) {
         let initial = {};
         initial[paramName] = hashRandom();
