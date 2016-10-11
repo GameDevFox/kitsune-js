@@ -1,6 +1,6 @@
 let _ = require("lodash");
 
-let systemLoader = require("kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1");
+let systemLoader = require("kitsune-core/31d21eb2620a8f353a250ad2edd4587958faf3b1.js");
 let buildManualSystemLoader = require("kitsune/manual-systems.js");
 
 let Logger = require("js-logger");
