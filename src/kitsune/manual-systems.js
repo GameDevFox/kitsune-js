@@ -582,10 +582,10 @@ function buildManualSystemBuilder(systems) {
 
         // RULE: Node always has exactly one input type
         let fullTypeBuilder = function({ factor, systems, node }) {
-            let inputType = factor({ head: node, type: inputType })[0];
+            let result = factor({ head: node, type: inputType })[0];
 
             let child = systems(node);
-            let parent = systems(inputType.tail);
+            let parent = systems(result.tail);
 
             return function(input) {
                 if(!parent(input))
