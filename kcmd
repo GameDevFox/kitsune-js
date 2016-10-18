@@ -33,11 +33,11 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "1d89395460431d99a68ee10632caa2744b346829";
+let id = "ed09bcc6254179db71bbee6e58fdf10917e8643a";
 
 function q() {
     let func = systems(id);
-    let result = func(false);
+    let result = func("5ed7da047e31af439507c0f2311521a7c41bf7eb");
     return result;
 }
 regFunc("q", false, q);

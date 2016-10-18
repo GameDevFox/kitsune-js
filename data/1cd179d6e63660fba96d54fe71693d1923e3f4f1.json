@@ -372,6 +372,10 @@
     "string": "is-core-node"
   },
   {
+    "id": "635ccbcf849fd71628fb78827579eb5167b9ae20",
+    "string": "is-derived-type"
+  },
+  {
     "id": "8f65641814e35fec0e6196a6f56674eb56e5e19e",
     "string": "is-edge"
   },
