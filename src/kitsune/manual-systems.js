@@ -177,30 +177,92 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
-    addManSys("541fe231a38c39263178ec6b436c1344153b268f", function(systems) {
-        return function(input) {
-            console.log(input);
-            return "A";
+    addManSys("c27664993b4c1de48d4b1545f87171018336ba43", function(systems) {
+        let buildLoadDataFn = function({ coll, putFn, data }) {
+            // Clear collection
+            coll.clear();
+
+            // Load data
+            data.forEach(value => {
+                putFn({ element: value });
+            });
         };
+        return buildLoadDataFn;
     });
-    addManSys("29ae17d030bcb31e3efc6d71f09335f1d9704cbb", function(systems) {
-        return function(input) {
-            console.log(input);
-            return "B";
-        };
+
+    // Graph Stuff
+    addManSys("adf6b91bb7c0472237e4764c044733c4328b1e55", function(systems) {
+        let lokiColl = systems("0741c54e604ad973eb41c02ab59c5aabdf2c6bc3");
+        let valueFunc = systems("62126ce823b700cf7441b5179a3848149c9d8c89");
+
+        let graphColl = lokiColl();
+        return valueFunc(graphColl);
     });
-    addManSys("d819f6b5558a2a9aae9d490f3f125a8de3a34666", function(systems) {
-        return function(input) {
-            console.log(input);
-            return "C";
-        };
+
+    addManSys("7e5e764e118960318d513920a0f33e4c5ae64b50", function(systems) {
+        let lokiPut = systems("f45ccdaba9fdca2234be7ded1a5578dd17c2374e");
+        let graphColl = systems("adf6b91bb7c0472237e4764c044733c4328b1e55");
+
+        let graphPut = bind({ func: lokiPut, params: { db: graphColl() }});
+        return graphPut;
     });
-    addManSys("107036c09a4e55e3cb1b736f36944f755b6ea159", function(systems) {
-        return function(input) {
-            console.log(input);
-            return "D";
-        };
+
+    addManSys("a1e815356dceab7fded042f3032925489407c93e", function(systems) {
+        let lokiFind = systems("30dee1b715bcfe60afeaadbb0e3e66019140686a");
+        let graphColl = systems("adf6b91bb7c0472237e4764c044733c4328b1e55");
+
+        let graphFind = bind({ func: lokiFind, params: { db: graphColl() }});
+        graphFind = autoParam({ func: graphFind, paramName: "where" });
+        return graphFind;
     });
+
+    addManSys("abc1100cf7579a10d519719dc72ff7ead4a5914b", function(systems) {
+        let buildLoadDataFn = systems("c27664993b4c1de48d4b1545f87171018336ba43");
+        let graphColl = systems("adf6b91bb7c0472237e4764c044733c4328b1e55");
+        let graphPut = systems("7e5e764e118960318d513920a0f33e4c5ae64b50");
+
+        let loadGraphData = bind({ func: buildLoadDataFn, params: { coll: graphColl(), putFn: graphPut }});
+        loadGraphData = autoParam({ func: loadGraphData, paramName: "data" });
+        return loadGraphData;
+    });
+
+    // String Stuff
+    addManSys("ce6de1160131bddb4e214f52e895a68583105133", function(systems) {
+        let lokiColl = systems("0741c54e604ad973eb41c02ab59c5aabdf2c6bc3");
+        let valueFunc = systems("62126ce823b700cf7441b5179a3848149c9d8c89");
+
+        let stringColl = lokiColl();
+        return valueFunc(stringColl);
+    });
+
+    addManSys("b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385", function(systems) {
+        let lokiPut = systems("f45ccdaba9fdca2234be7ded1a5578dd17c2374e");
+        let stringColl = systems("ce6de1160131bddb4e214f52e895a68583105133");
+
+        let stringPut = bind({ func: lokiPut, params: { db: stringColl() }});
+        return stringPut;
+    });
+
+    addManSys("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", function(systems) {
+        let lokiFind = systems("30dee1b715bcfe60afeaadbb0e3e66019140686a");
+        let stringColl = systems("ce6de1160131bddb4e214f52e895a68583105133");
+
+        let stringFind = bind({ func: lokiFind, params: { db: stringColl() }});
+        stringFind = autoParam({ func: stringFind, paramName: "where" });
+        return stringFind;
+    });
+
+    addManSys("aa9b9341f8c4236d27831625ebbb91f2031cfb4b", function(systems) {
+        let buildLoadDataFn = systems("c27664993b4c1de48d4b1545f87171018336ba43");
+        let stringColl = systems("ce6de1160131bddb4e214f52e895a68583105133");
+        let stringPut = systems("b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385");
+
+        let loadStringData = bind({ func: buildLoadDataFn, params: { coll: stringColl(), putFn: stringPut }});
+        loadStringData = autoParam({ func: loadStringData, paramName: "data" });
+        return loadStringData;
+    });
+
+    // END STUFF
 
     addManSys("307f3450473542f1b5b31b23eb9bd00197c9f4e8", function(systems) {
         let getImplFuncByNode = systems("6a77c3877d99fa29846eae647cea102edab55903");
