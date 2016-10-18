@@ -178,7 +178,7 @@ function buildManualSystemBuilder(systems) {
     }
 
     addManSys("c27664993b4c1de48d4b1545f87171018336ba43", function(systems) {
-        let buildLoadDataFn = function({ coll, putFn, data }) {
+        let loadData = function({ coll, putFn, data }) {
             // Clear collection
             coll.clear();
 
@@ -187,7 +187,7 @@ function buildManualSystemBuilder(systems) {
                 putFn({ element: value });
             });
         };
-        return buildLoadDataFn;
+        return loadData;
     });
 
     // Graph Stuff
@@ -203,8 +203,8 @@ function buildManualSystemBuilder(systems) {
         let lokiPut = systems("f45ccdaba9fdca2234be7ded1a5578dd17c2374e");
         let graphColl = systems("adf6b91bb7c0472237e4764c044733c4328b1e55");
 
-        let graphPut = bind({ func: lokiPut, params: { db: graphColl() }});
-        return graphPut;
+        let writeEdge = bind({ func: lokiPut, params: { db: graphColl() }});
+        return writeEdge;
     });
 
     addManSys("a1e815356dceab7fded042f3032925489407c93e", function(systems) {
@@ -219,9 +219,9 @@ function buildManualSystemBuilder(systems) {
     addManSys("abc1100cf7579a10d519719dc72ff7ead4a5914b", function(systems) {
         let buildLoadDataFn = systems("c27664993b4c1de48d4b1545f87171018336ba43");
         let graphColl = systems("adf6b91bb7c0472237e4764c044733c4328b1e55");
-        let graphPut = systems("7e5e764e118960318d513920a0f33e4c5ae64b50");
+        let writeEdge = systems("7e5e764e118960318d513920a0f33e4c5ae64b50");
 
-        let loadGraphData = bind({ func: buildLoadDataFn, params: { coll: graphColl(), putFn: graphPut }});
+        let loadGraphData = bind({ func: buildLoadDataFn, params: { coll: graphColl(), putFn: writeEdge }});
         loadGraphData = autoParam({ func: loadGraphData, paramName: "data" });
         return loadGraphData;
     });
@@ -239,8 +239,8 @@ function buildManualSystemBuilder(systems) {
         let lokiPut = systems("f45ccdaba9fdca2234be7ded1a5578dd17c2374e");
         let stringColl = systems("ce6de1160131bddb4e214f52e895a68583105133");
 
-        let stringPut = bind({ func: lokiPut, params: { db: stringColl() }});
-        return stringPut;
+        let writeString = bind({ func: lokiPut, params: { db: stringColl() }});
+        return writeString;
     });
 
     addManSys("8b1f2122a8c08b5c1314b3f42a9f462e35db05f7", function(systems) {
@@ -255,9 +255,9 @@ function buildManualSystemBuilder(systems) {
     addManSys("aa9b9341f8c4236d27831625ebbb91f2031cfb4b", function(systems) {
         let buildLoadDataFn = systems("c27664993b4c1de48d4b1545f87171018336ba43");
         let stringColl = systems("ce6de1160131bddb4e214f52e895a68583105133");
-        let stringPut = systems("b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385");
+        let writeString = systems("b4cdd85ce19700c7ef631dc7e4a320d0ed1fd385");
 
-        let loadStringData = bind({ func: buildLoadDataFn, params: { coll: stringColl(), putFn: stringPut }});
+        let loadStringData = bind({ func: buildLoadDataFn, params: { coll: stringColl(), putFn: writeString }});
         loadStringData = autoParam({ func: loadStringData, paramName: "data" });
         return loadStringData;
     });

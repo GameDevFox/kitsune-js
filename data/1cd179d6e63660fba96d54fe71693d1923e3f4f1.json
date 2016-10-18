@@ -48,6 +48,10 @@
     "string": "bind"
   },
   {
+    "id": "fd01ac1c483aa3f86bd26f69011c0e998a668658",
+    "string": "bind-and-auto-parameter"
+  },
+  {
     "id": "dc230df4a394bffeeb2f7e5fa7873e237e201c03",
     "string": "bind-func-builder"
   },
@@ -220,12 +224,20 @@
     "string": "graph-assign"
   },
   {
+    "id": "c34b731d571d6e854a72b8a7813bc07c89419bf8",
+    "string": "graph-collection"
+  },
+  {
     "id": "4281ff159a0253e1af1516074e7bcc93a7b00eca",
     "string": "graph-data"
   },
   {
     "id": "f8ba4a5c56ef9d99be74d1d785857fb96eb2cbf6",
     "string": "graph-factor"
+  },
+  {
+    "id": "d6218b3952adb542e3cef81e5270c2f813b9a1b3",
+    "string": "graph-find"
   },
   {
     "id": "9281f6a97b1c5b7c373f3624bf1d388228e33820",
@@ -444,6 +456,18 @@
     "string": "list-type-builder"
   },
   {
+    "id": "a11e4421343ca0b4ae4c4c7b4f5bc218c46c8cd4",
+    "string": "load-data"
+  },
+  {
+    "id": "dc1a4035693139442b7e3aa86193d2386f9b9434",
+    "string": "load-graph-data"
+  },
+  {
+    "id": "9b5486030b58fd121449e2695f1c75dd7ecfbfb9",
+    "string": "load-string-data"
+  },
+  {
     "id": "901466a5bb52ee6de63e3e385285e690d5cba424",
     "string": "lodash"
   },
@@ -628,8 +652,16 @@
     "string": "string-autoPut"
   },
   {
+    "id": "ce8268e21d4e3fe5c2f6a1ace4676bb06c465b1e",
+    "string": "string-collection"
+  },
+  {
     "id": "2b27c1910d3b5bb74505ba8a5facdc0140ac5a49",
     "string": "string-data"
+  },
+  {
+    "id": "07e5c12d50cefc3392c61bf57fb709d21dfadd18",
+    "string": "string-find"
   },
   {
     "id": "25ed2ccd6a23f31fc9bf16e213c381a9c1013deb",
