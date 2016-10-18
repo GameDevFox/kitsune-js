@@ -979,7 +979,7 @@ function buildManualSystemBuilder(systems) {
 
         // list-system-files
         addManSys("5277dc011cbc9800046edeb4460f7138e060a935", function (systems) {
-            let files = fs.readdirSync("./src/kitsune-core");
+            let files = fs.readdirSync("./src/kitsune-core").map(x => x.replace(/\.js/g, ""));
             let listSysFiles = function() {
                return files;
             };
@@ -1192,19 +1192,23 @@ function buildManualSystemBuilder(systems) {
         });
 
         addManSys("f520dd0e4da481f0fbc18584a7bf8098d19d3222", function () {
-            let recreateLinks = function ({groupList, nameList}) {
+            let listSystemFiles = systems("5277dc011cbc9800046edeb4460f7138e060a935");
+
+            let recreateLinks = function ({ groupList, nameList }) {
                 exec("rm -rf src/kitsune-core-src");
                 exec("mkdir -p src/kitsune-core-src");
 
-                let coreNodes = groupList("66564ec14ed18fb88965140fc644d7b813121c78");
+                // let coreNodes = groupList("66564ec14ed18fb88965140fc644d7b813121c78");
+                let coreNodes = listSystemFiles();
                 coreNodes.forEach(node => {
                     let myNames = nameList(node);
                     if (myNames && myNames.length > 0) {
+                        let name = myNames[0]+".js";
                         try {
-                            let cmdStr = "ln -s ../../src/kitsune-core/" + node + " src/kitsune-core-src/" + myNames[0];
+                            let cmdStr = "ln -s ../../src/kitsune-core/" + node + ".js src/kitsune-core-src/" + name;
                             exec(cmdStr);
                         } catch (e) {
-                            console.log("Already a link for " + myNames[0]);
+                            console.log("Already a link for " + name);
                         }
                     }
                 });

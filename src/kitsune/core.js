@@ -109,7 +109,6 @@ function loadDataSystems({ systems, putSystem }) {
     let loadStringData = systems("aa9b9341f8c4236d27831625ebbb91f2031cfb4b");
 
     let loadedTime;
-
     let getLoadedTime = () => loadedTime;
     putSystem({ id: "9a3a7c56e96abc04bd92f63cdfc5f31d49f778cd", system: getLoadedTime });
 
