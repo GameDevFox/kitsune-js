@@ -177,6 +177,44 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("6db94400d9b6b8904970a5fdf2b1d080b981572d", function(systems) {
+        let and = function(typeResults) {
+            for(let typeResult of typeResults)
+                if(!typeResult)
+                    return false;
+            return true;
+        };
+        return and;
+    });
+
+    addManSys("45917b34b8a7812461d191790fd9116afad36dff", function(systems) {
+        let or = function(typeResults) {
+            for(let typeResult of typeResults)
+                if(typeResult)
+                    return true;
+            return false;
+        };
+        return or;
+    });
+
+    addManSys("5ed7da047e31af439507c0f2311521a7c41bf7eb", function(systems) {
+        let xor = function(typeResults) {
+            let trueCount = 0;
+            for(let typeResult of typeResults)
+                if(typeResult)
+                    trueCount++;
+            return trueCount % 2 != 0;
+        };
+        return xor;
+    });
+
+    addManSys("1d89395460431d99a68ee10632caa2744b346829", function(systems) {
+        let not = function(typeResult) {
+            return !typeResult;
+        };
+        return not;
+    });
+
     addManSys("c27664993b4c1de48d4b1545f87171018336ba43", function(systems) {
         let loadData = function({ coll, putFn, data }) {
             // Clear collection

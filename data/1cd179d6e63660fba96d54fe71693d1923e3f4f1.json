@@ -1,5 +1,9 @@
 [
   {
+    "id": "cffa50a32cb13a240d705317bcec65dd1f31b6ad",
+    "string": "and"
+  },
+  {
     "id": "9a568dbcfa701b76da01c7537d6ed517a6cd354d",
     "string": "and-is"
   },
@@ -118,6 +122,10 @@
   {
     "id": "0352a8acc949c7df21fec16e566ba9a74e797a97",
     "string": "db"
+  },
+  {
+    "id": "8059f824ee7b7f46290f363e2b0e7a6065b5ecee",
+    "string": "derived-type"
   },
   {
     "id": "a8ffff2a4e7e829f2aa59185999759b1d3095920",
@@ -544,6 +552,10 @@
     "string": "nodeFunc"
   },
   {
+    "id": "557f255516719ea16f8f4a0aae1166054e2c9b43",
+    "string": "not"
+  },
+  {
     "id": "9b5c0b859faba061dd60fd8070fce74fcee29d0b",
     "string": "obj"
   },
@@ -554,6 +566,10 @@
   {
     "id": "b2cc6f58f1c4bc328fcec6f6f43d3f61c99d1e0e",
     "string": "object-auto-put"
+  },
+  {
+    "id": "1758356db21759f7c5a0da9b4dd1db8fd6feab3f",
+    "string": "or"
   },
   {
     "id": "24b60cce05f415ff5c03b778c4632a1049b9f210",
@@ -814,5 +830,9 @@
   {
     "id": "e0a8a535b8f19d52cc475d4cc88b186615954f6c",
     "string": "writeValue"
+  },
+  {
+    "id": "f1922a234bb92764a276a8524d28cdb446d3c7da",
+    "string": "xor"
   }
 ]

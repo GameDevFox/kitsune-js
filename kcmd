@@ -33,21 +33,12 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "307f3450473542f1b5b31b23eb9bd00197c9f4e8";
+let id = "1d89395460431d99a68ee10632caa2744b346829";
 
 function q() {
-    let target = "6a77c3877d99fa29846eae647cea102edab55903";
-    let target2 = {};
-
     let func = systems(id);
-    let implFunc = func("26efd9c7cce7c981b0030328a437ced6f9956a3d");
-
-    let result = implFunc(target)({ msg: "Hello World" });
-    console.log(result);
-    result = implFunc(target2)({ msg: "Hello World" });
-    console.log(result);
-
-    // return result;
+    let result = func(false);
+    return result;
 }
 regFunc("q", false, q);
 
