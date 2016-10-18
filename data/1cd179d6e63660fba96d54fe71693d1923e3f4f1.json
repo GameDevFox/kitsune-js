@@ -352,6 +352,10 @@
     "string": "integer"
   },
   {
+    "id": "0b54043795dcc99839e6419c532af5af72ff0c76",
+    "string": "is-anything"
+  },
+  {
     "id": "68ffedea8fcda3427719e71e5d4b872f84ceb55e",
     "string": "is-auto-param-function"
   },
@@ -414,6 +418,10 @@
   {
     "id": "525199fc34375dcbedebdb38402f2396cb5316dd",
     "string": "is-node"
+  },
+  {
+    "id": "e104e960ce17d974ece3eefc21bfa1db5f16f4e9",
+    "string": "is-nothing"
   },
   {
     "id": "5672ef6b6f37ca79dd3887227dc8eb30dc5ac38c",

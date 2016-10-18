@@ -177,6 +177,20 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("2efc0dfc9c2e65aa9aabb3b29346315cd1330761", function(systems) {
+        let isAnything = function() {
+            return true;
+        };
+        return isAnything();
+    });
+
+    addManSys("5ee5fd45d44b35eec83eeab4d1e4c9edbf77ee0d", function(systems) {
+        let isNothing = function() {
+            return false;
+        };
+        return isNothing();
+    });
+
     addManSys("6db94400d9b6b8904970a5fdf2b1d080b981572d", function(systems) {
         let and = function(typeResults) {
             for(let typeResult of typeResults)
