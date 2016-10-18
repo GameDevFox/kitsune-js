@@ -177,18 +177,64 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
-    addManSys("2efc0dfc9c2e65aa9aabb3b29346315cd1330761", function(systems) {
-        let isAnything = function() {
-            return true;
+    addManSys("58d80bc9bf4f30755cfbbde04055c0a9229b35bb", function() {
+        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+
+        let derivedType = "daf93e35e6521c3af6de24d91121ed557a089b3e";
+
+        let listDerivedTypes = function({ getTails }) {
+            let baseTypes = getTails(derivedType);
+
+            let result = [];
+            for(let baseType of baseTypes) {
+                let types = getTails(baseType);
+                result = result.concat(types);
+            }
+            return result;
         };
-        return isAnything();
+        listDerivedTypes = bind({ func: listDerivedTypes, params: { getTails }});
+        return listDerivedTypes;
     });
 
-    addManSys("5ee5fd45d44b35eec83eeab4d1e4c9edbf77ee0d", function(systems) {
-        let isNothing = function() {
-            return false;
-        };
-        return isNothing();
+    addManSys("51322740c8de7e951c6a5ed1462edb352d60f33b", function(systems) {
+        let isDerivedType = systems("c479bb7023cf898287beee3bd6e8c616ff6afe8d");
+        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+        let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+
+        let inputType = "0713c6285e4a9d9fc96b375ff2dce3e1807d942d";
+        let isAnything = "2efc0dfc9c2e65aa9aabb3b29346315cd1330761";
+
+        let getTypeTree;
+        function fn({ isDerivedType, getTails, factor, node }) {
+            let types = null;
+            if(isDerivedType(node)) {
+                types = getTails(node);
+            } else {
+                let f = factor({ head: node, type: inputType });
+                if(f.length !== 0) {
+                    let inputType = f[0].tail;
+                    if(inputType != isAnything)
+                        types = [inputType];
+                    else
+                        return true;
+                }
+            }
+
+            let result = null;
+            if(types && types.length) {
+                result = {};
+                for (let type of types) {
+                    let subTypes = getTypeTree(type);
+                    result[type] = subTypes;
+                }
+            }
+
+            return result;
+        }
+        getTypeTree = fn;
+        getTypeTree = bind({ func: getTypeTree, params: { isDerivedType, getTails, factor }});
+        getTypeTree = autoParam({ func: getTypeTree, paramName: "node" });
+        return getTypeTree;
     });
 
     addManSys("6db94400d9b6b8904970a5fdf2b1d080b981572d", function(systems) {
@@ -217,7 +263,7 @@ function buildManualSystemBuilder(systems) {
             for(let typeResult of typeResults)
                 if(typeResult)
                     trueCount++;
-            return trueCount % 2 != 0;
+            return trueCount % 2 !== 0;
         };
         return xor;
     });
@@ -1014,14 +1060,19 @@ function buildManualSystemBuilder(systems) {
 
     // FUNCTIONS
     {
-        addManSys("c583892108bf5de4fa22b42a75d0e5e47651a744", function(systems) {
-            let trueFn = () => true;
-            return trueFn;
+
+        addManSys("2efc0dfc9c2e65aa9aabb3b29346315cd1330761", function(systems) {
+            let isAnything = function() {
+                return true;
+            };
+            return isAnything();
         });
 
-        addManSys("c6bf0178d3510380fcb21d749751934a01f4f6be", function(systems) {
-            let falseFn = () => false;
-            return falseFn;
+        addManSys("5ee5fd45d44b35eec83eeab4d1e4c9edbf77ee0d", function(systems) {
+            let isNothing = function() {
+                return false;
+            };
+            return isNothing();
         });
 
         // list-manual-systems

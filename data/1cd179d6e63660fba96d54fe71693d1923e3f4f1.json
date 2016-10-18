@@ -224,6 +224,10 @@
     "string": "get-type-mappings"
   },
   {
+    "id": "4084718ef181dcb06e6103789b1fefe5e90b7428",
+    "string": "get-type-tree"
+  },
+  {
     "id": "407dd1e0a56369412d4d0d8731693ed8fcf5fbae",
     "string": "getTails"
   },
@@ -356,6 +360,10 @@
     "string": "is-anything"
   },
   {
+    "id": "4561139f9cec967055031fa1538a583d80475be2",
+    "string": "is-array"
+  },
+  {
     "id": "68ffedea8fcda3427719e71e5d4b872f84ceb55e",
     "string": "is-auto-param-function"
   },
@@ -404,6 +412,10 @@
     "string": "is-library-function"
   },
   {
+    "id": "a9da30ec9e31f4684eadddc4d4119effbc4c3009",
+    "string": "is-like-object"
+  },
+  {
     "id": "c8c15209336f8c29073cdc5052ed461646037c05",
     "string": "is-list"
   },
@@ -440,6 +452,10 @@
     "string": "is-system-file"
   },
   {
+    "id": "e33e0e502d09092ea117be8c27fb58b1dd3aa609",
+    "string": "isArray"
+  },
+  {
     "id": "78375be7ed9dbd094df0cb37958dbcaeecfba909",
     "string": "isPlainObject"
   },
@@ -454,6 +470,10 @@
   {
     "id": "744fa484e17a1ebb92623d8ad969155bcebe5065",
     "string": "list-builder-functions"
+  },
+  {
+    "id": "c2797a51e3b4ba4bae89da1380edfe294f3ede5e",
+    "string": "list-derived-types"
   },
   {
     "id": "341736ddb858798639fd6c154a823c84b9f44dfa",
