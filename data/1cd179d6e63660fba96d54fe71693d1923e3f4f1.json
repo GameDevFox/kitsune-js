@@ -88,10 +88,6 @@
     "string": "callNodeFunc"
   },
   {
-    "id": "8bb653f59434ba0109909b4ed0e45e79e4452738",
-    "string": "callable-implementation-function-builder"
-  },
-  {
     "id": "532d45da3f05aef0fecec19850a8c8c40a4bd7a6",
     "string": "clean-string-system"
   },
@@ -798,6 +794,10 @@
   {
     "id": "90625a7940d4425591c41e527d8523b1eb17c9ff",
     "string": "value-function"
+  },
+  {
+    "id": "3e3405fe46991970e636c6c947a0c80efba45bbe",
+    "string": "virtual-function-builder"
   },
   {
     "id": "46148cc3b4d2b3ac8073f14b0cba7f25ffff54bd",
