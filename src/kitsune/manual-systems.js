@@ -177,6 +177,20 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("b70da77f2d3efbdda74669fb5e60b0ddaab06d87", function(systems) {
+        let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
+
+        let hasPropertyBuilder = function({ readString, node }) {
+            let propName = readString(node);
+            return function(input) {
+                return (propName in input);
+            };
+        };
+        hasPropertyBuilder = bind({ func: hasPropertyBuilder, params: { readString }});
+        hasPropertyBuilder = autoParam({ func: hasPropertyBuilder, paramName: "node" });
+        return hasPropertyBuilder;
+    });
+
     addManSys("eda1dd6a89611ea7dcc225580bc5ea92975a9e22", function(systems) {
         let descTypeBuilder = systems("2d8022c3ef2d5b3ecc906c8429aab57c672a1b29");
 
@@ -200,15 +214,14 @@ function buildManualSystemBuilder(systems) {
         function checkNode({ typeNode, typeResults, input }) {
             let node = typeNode.node;
 
-            let cacheResult = typeResults[node];
-            if(cacheResult != undefined)
-                return cacheResult;
+            if(node in typeResults)
+                return typeResults[node];
 
             let deps = typeNode.deps;
             let prereqs = deps === true ? true : checkDeps({ deps, typeResults, input });
 
             let result;
-            if(typeNode.derivedTypeFn != null) {
+            if(typeNode.derivedTypeFn) {
                 let type = systems(typeNode.derivedTypeFn);
                 result = type(prereqs);
             } else {
@@ -725,9 +738,9 @@ function buildManualSystemBuilder(systems) {
 
     addManSys("369acd471c7100072de57ae0dbcc8cfcb4c39dfa", function(systems) {
         let buildFieldType = function({ name, type }) {
-            return (object) => {
+            return function(object) {
                 let field = object[name];
-                let result = (field === undefined) ? false : type(field);
+                let result = type(field);
                 return result;
             };
         };
