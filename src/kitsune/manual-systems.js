@@ -177,6 +177,138 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("eda1dd6a89611ea7dcc225580bc5ea92975a9e22", function(systems) {
+        let descTypeBuilder = systems("2d8022c3ef2d5b3ecc906c8429aab57c672a1b29");
+
+        let typeBuilder = function({ descTypeBuilder, node }) {
+            let fn = descTypeBuilder(node);
+            return function(input) {
+                let desc = fn(input);
+                let result = desc.result;
+                return result;
+            };
+        };
+        typeBuilder = bind({ func: typeBuilder, params: { descTypeBuilder }});
+        typeBuilder = autoParam({ func: typeBuilder, paramName: "node" });
+        return typeBuilder;
+    });
+
+    addManSys("2d8022c3ef2d5b3ecc906c8429aab57c672a1b29", function(systems) {
+        let getTypeTree = systems("51322740c8de7e951c6a5ed1462edb352d60f33b");
+        let applyResults = systems("2699b90bfdc36e4beb2404b750316835f697ba3b");
+
+        function checkNode({ typeNode, typeResults, input }) {
+            let node = typeNode.node;
+
+            let cacheResult = typeResults[node];
+            if(cacheResult != undefined)
+                return cacheResult;
+
+            let deps = typeNode.deps;
+            let prereqs = deps === true ? true : checkDeps({ deps, typeResults, input });
+
+            let result;
+            if(typeNode.derivedTypeFn != null) {
+                let type = systems(typeNode.derivedTypeFn);
+                result = type(prereqs);
+            } else {
+                let type = systems(typeNode.node);
+                let prereq = prereqs[0];
+                result = prereq ? false : type(input);
+            }
+
+            typeResults[node] = result;
+            return result;
+        }
+
+        function checkDeps({ deps, typeResults, input }) {
+            let result = [];
+            for(let dep of deps) {
+                let nodeResult = checkNode({ typeNode: dep, typeResults, input });
+                result.push(nodeResult);
+            }
+            return result;
+        }
+
+        let descTypeBuilder = function({ getTypeTree, node }) {
+            let typeTree = getTypeTree(node);
+
+            return function(input) {
+                let typeResults = {};
+                checkNode({ typeNode: typeTree, typeResults, input });
+                let result = applyResults({ typeTree, typeResults });
+                return result;
+            };
+        };
+        descTypeBuilder = bind({ func: descTypeBuilder, params: { getTypeTree }});
+        descTypeBuilder = autoParam({ func: descTypeBuilder, paramName: "node" });
+        return descTypeBuilder;
+    });
+
+    addManSys("2699b90bfdc36e4beb2404b750316835f697ba3b", function(systems) {
+        let applyResults = function({ typeTree, typeResults }) {
+            let node = typeTree.node;
+            typeTree.result = typeResults[node];
+
+            let deps = typeTree.deps || [];
+            for(let dep of deps)
+                applyResults({ typeTree: dep, typeResults });
+
+            return typeTree;
+        };
+        return applyResults;
+    });
+
+    addManSys("51322740c8de7e951c6a5ed1462edb352d60f33b", function(systems) {
+        let isDerivedType = systems("c479bb7023cf898287beee3bd6e8c616ff6afe8d");
+        let getHeads = systems("fc83ddd594c9b4fa2a44b3b42d8f1824d0f68c3e");
+        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+        let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+
+        let derivedType = "daf93e35e6521c3af6de24d91121ed557a089b3e";
+        let inputType = "0713c6285e4a9d9fc96b375ff2dce3e1807d942d";
+        let isAnything = "2efc0dfc9c2e65aa9aabb3b29346315cd1330761";
+
+        let derivedTypeFns = getTails(derivedType);
+
+        let getTypeTree;
+        function fn({ isDerivedType: isDerivedTypeFn, getHeads, getTails, factor, node }) {
+            let types = null;
+
+            // Use impl func here
+            let derivedTypeFn = null;
+            let isDerivedType = isDerivedTypeFn(node);
+            if(isDerivedType) {
+                derivedTypeFn = getHeads(node).filter(x => derivedTypeFns.includes(x))[0];
+                types = getTails(node);
+            } else {
+                let f = factor({ head: node, type: inputType });
+                if(f.length !== 0) {
+                    let inputType = f[0].tail;
+                    if(inputType != isAnything)
+                        types = [inputType];
+                    else
+                        return true;
+                }
+            }
+
+            let deps = [];
+            if(types && types.length) {
+                for (let type of types) {
+                    let typeTree = getTypeTree(type);
+                    deps.push(typeTree);
+                }
+            }
+
+            let result = { node, derivedTypeFn, deps };
+            return result;
+        }
+        getTypeTree = fn;
+        getTypeTree = bind({ func: getTypeTree, params: { isDerivedType, getHeads, getTails, factor }});
+        getTypeTree = autoParam({ func: getTypeTree, paramName: "node" });
+        return getTypeTree;
+    });
+
     addManSys("58d80bc9bf4f30755cfbbde04055c0a9229b35bb", function() {
         let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
 
@@ -194,47 +326,6 @@ function buildManualSystemBuilder(systems) {
         };
         listDerivedTypes = bind({ func: listDerivedTypes, params: { getTails }});
         return listDerivedTypes;
-    });
-
-    addManSys("51322740c8de7e951c6a5ed1462edb352d60f33b", function(systems) {
-        let isDerivedType = systems("c479bb7023cf898287beee3bd6e8c616ff6afe8d");
-        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-        let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
-
-        let inputType = "0713c6285e4a9d9fc96b375ff2dce3e1807d942d";
-        let isAnything = "2efc0dfc9c2e65aa9aabb3b29346315cd1330761";
-
-        let getTypeTree;
-        function fn({ isDerivedType, getTails, factor, node }) {
-            let types = null;
-            if(isDerivedType(node)) {
-                types = getTails(node);
-            } else {
-                let f = factor({ head: node, type: inputType });
-                if(f.length !== 0) {
-                    let inputType = f[0].tail;
-                    if(inputType != isAnything)
-                        types = [inputType];
-                    else
-                        return true;
-                }
-            }
-
-            let result = null;
-            if(types && types.length) {
-                result = {};
-                for (let type of types) {
-                    let subTypes = getTypeTree(type);
-                    result[type] = subTypes;
-                }
-            }
-
-            return result;
-        }
-        getTypeTree = fn;
-        getTypeTree = bind({ func: getTypeTree, params: { isDerivedType, getTails, factor }});
-        getTypeTree = autoParam({ func: getTypeTree, paramName: "node" });
-        return getTypeTree;
     });
 
     addManSys("6db94400d9b6b8904970a5fdf2b1d080b981572d", function(systems) {
