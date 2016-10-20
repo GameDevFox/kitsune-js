@@ -177,6 +177,17 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("791c75dbf041d6343bc059f420ad4e591aa3f0ad", function(systems) {
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+
+        let listEdges = function() {
+            let edges = graphFind();
+            let edgeIds = edges.map(x => x.id);
+            return edgeIds;
+        };
+        return listEdges;
+    });
+
     addManSys("3547f89e53986393711f8c1a1a278f4880b7bb08", function(systems) {
         let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
 

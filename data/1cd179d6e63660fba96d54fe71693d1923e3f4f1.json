@@ -472,6 +472,10 @@
     "string": "list-derived-types"
   },
   {
+    "id": "4777fc84519bd4cb5fc0c85278fe50a824e33b79",
+    "string": "list-edges"
+  },
+  {
     "id": "341736ddb858798639fd6c154a823c84b9f44dfa",
     "string": "list-functions"
   },
@@ -482,6 +486,10 @@
   {
     "id": "f3934b5bff0a14164716c5777146085e5ad7fb7a",
     "string": "list-manual-systems"
+  },
+  {
+    "id": "f8cc9321534fce9d2c04d0c0ea87e019439c2a85",
+    "string": "list-nodes"
   },
   {
     "id": "0b990f5faa2bba9275e444b599266a9d301e40a5",
@@ -578,10 +586,6 @@
   {
     "id": "774978bb69c87d62ed9ede8abb63b8d89fd7bdd2",
     "string": "node-type"
-  },
-  {
-    "id": "e497651ab2c8fa6550540df974c49821ea6c072f",
-    "string": "node-type-list"
   },
   {
     "id": "9826923718233c1d5227522b5cca6a65e83fbcc1",
@@ -798,6 +802,10 @@
   {
     "id": "d0a3e7f81a9885e99049d1cae0336d269d5e47a9",
     "string": "type"
+  },
+  {
+    "id": "1585ea7119214801bbfb807e2ac6f7d324ee4c54",
+    "string": "type-list"
   },
   {
     "id": "7589bcba3d6f18eb18914e54473caa5d3aa5e830",
