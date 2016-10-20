@@ -309,7 +309,7 @@ function buildManualSystemBuilder(systems) {
         let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
 
         let derivedType = "daf93e35e6521c3af6de24d91121ed557a089b3e";
-        let inputType = "0713c6285e4a9d9fc96b375ff2dce3e1807d942d";
+        let parentType = "cd522ceab4c9285b7b5bafe107eab8d738e7bc59";
         let isAnything = "2efc0dfc9c2e65aa9aabb3b29346315cd1330761";
 
         let derivedTypeFns = getTails(derivedType);
@@ -325,7 +325,7 @@ function buildManualSystemBuilder(systems) {
                 derivedTypeFn = getHeads(node).filter(x => derivedTypeFns.includes(x))[0];
                 types = getTails(node);
             } else {
-                let f = factor({ head: node, type: inputType });
+                let f = factor({ head: node, type: parentType });
                 if(f.length !== 0) {
                     let inputType = f[0].tail;
                     if(inputType != isAnything)
@@ -869,6 +869,7 @@ function buildManualSystemBuilder(systems) {
             return isNode;
         });
 
+    // TODO: Deprecate this
     addManSys("3528d88fb3d5a3dc22f2ffbd40690ec71edd3819", function(systems) {
         // TODO: Swap for a getInputType system
         let inputType = "0713c6285e4a9d9fc96b375ff2dce3e1807d942d";
@@ -893,6 +894,7 @@ function buildManualSystemBuilder(systems) {
         return fullTypeBuilder;
     });
 
+    // TODO: Deprecate this
     addManSys("5d134bcf95eb55efa7807da43e11e4fc37e269b9", function(systems) {
         // TODO: Swap for a getInputType system
         let inputType = "0713c6285e4a9d9fc96b375ff2dce3e1807d942d";

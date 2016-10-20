@@ -580,6 +580,10 @@
     "string": "node-type"
   },
   {
+    "id": "e497651ab2c8fa6550540df974c49821ea6c072f",
+    "string": "node-type-list"
+  },
+  {
     "id": "9826923718233c1d5227522b5cca6a65e83fbcc1",
     "string": "nodeFunc"
   },
