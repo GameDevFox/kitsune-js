@@ -444,6 +444,10 @@
     "string": "is-system-file"
   },
   {
+    "id": "001bf8bd7af5bfb170661ed9a1e71f83902d2443",
+    "string": "is-type"
+  },
+  {
     "id": "e33e0e502d09092ea117be8c27fb58b1dd3aa609",
     "string": "isArray"
   },
@@ -486,6 +490,10 @@
   {
     "id": "91ae534fbd9654494c38d0c38caa10739357738f",
     "string": "list-type-builder"
+  },
+  {
+    "id": "caa3622ce673289cb2ce493f2c76df719debaaf4",
+    "string": "list-types"
   },
   {
     "id": "a11e4421343ca0b4ae4c4c7b4f5bc218c46c8cd4",
@@ -618,6 +626,10 @@
   {
     "id": "fd7b034e09b752c24942cd9b0b20c29db2dc3e90",
     "string": "params"
+  },
+  {
+    "id": "35032dd4d44f33470bd7c99c949d6f4a26435c53",
+    "string": "parent-type"
   },
   {
     "id": "3150ecd5e0294534a81ae047ddac559de481d774",

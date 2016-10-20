@@ -177,6 +177,36 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("3547f89e53986393711f8c1a1a278f4880b7bb08", function(systems) {
+        let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+
+        let parentType = "cd522ceab4c9285b7b5bafe107eab8d738e7bc59";
+
+        let listTypes = function({ factor }) {
+            let f = factor({ type: parentType });
+            let result = f.map(x => x.head);
+            result = _.uniq(result);
+            return result;
+        };
+        listTypes = bind({ func: listTypes, params: { factor }});
+        return listTypes;
+    });
+
+    addManSys("dd350e001cd1498b968bcd04df198c03ea072539", function(systems) {
+        let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+
+        let parentType = "cd522ceab4c9285b7b5bafe107eab8d738e7bc59";
+
+        let isType = function({ factor, node }) {
+            let f = factor({ head: node, type: parentType });
+            let result = f.length > 0;
+            return result;
+        };
+        isType = bind({ func: isType, params: { factor }});
+        isType = autoParam({ func: isType, paramName: "node" });
+        return isType;
+    });
+
     addManSys("b70da77f2d3efbdda74669fb5e60b0ddaab06d87", function(systems) {
         let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
 
