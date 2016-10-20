@@ -177,6 +177,21 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("25230375a7135e5fa9248c18908b9edbef6a0e38", function(systems) {
+        let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+
+        let getSingleTailAssign = function({ factor, type, node }) {
+            let f = factor({ head: node, type });
+            if(f.length > 1)
+                throw new Error(`Node '${node}' has more than one tail assign of type: ${type}`);
+
+            let result = f.length ? f[0].tail : null;
+            return result;
+        };
+        getSingleTailAssign = bind({ func: getSingleTailAssign, params: { factor }});
+        return getSingleTailAssign;
+    });
+
     addManSys("791c75dbf041d6343bc059f420ad4e591aa3f0ad", function(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
