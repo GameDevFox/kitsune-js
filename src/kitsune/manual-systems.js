@@ -587,7 +587,7 @@ function buildManualSystemBuilder(systems) {
     addManSys("307f3450473542f1b5b31b23eb9bd00197c9f4e8", function(systems) {
         let getImplFuncByNode = systems("6a77c3877d99fa29846eae647cea102edab55903");
 
-        let virtualFuncBuilder = function({ getImplFuncByNode, node }) {
+        let virtualFuncSwitchBuilder = function({ getImplFuncByNode, node }) {
             let func = getImplFuncByNode(node);
             let doubleFunc = function(target) {
                 let innerFunc = func(target);
@@ -598,8 +598,8 @@ function buildManualSystemBuilder(systems) {
             };
             return doubleFunc;
         };
-        virtualFuncBuilder = bindAndAuto(virtualFuncBuilder, { getImplFuncByNode }, "node");
-        return virtualFuncBuilder;
+        virtualFuncSwitchBuilder = bindAndAuto(virtualFuncSwitchBuilder, { getImplFuncByNode }, "node");
+        return virtualFuncSwitchBuilder;
     });
 
     addManSys("e4e33d78e37170738a4f84925f4ada0d80ec74f6", function(systems) {
