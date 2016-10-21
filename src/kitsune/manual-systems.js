@@ -177,16 +177,54 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
-    addManSys("4d93b56e9f9d81c189417aff770052589d930d7e", function(systems) {
-        let getSingleTailAssign = systems("25230375a7135e5fa9248c18908b9edbef6a0e38");
+    addManSys("6807e56240bfb462f4aaf8195b6be8d5fd053350", function(systems) {
+        let hasTailAssign = systems("10ab1718fa83f48ec2cd14bd8d2b7b44cbc7f9dd");
 
-        let getSingleTailAssignBuilder = function({ getSingleTailAssign, type }) {
-            let result = bind({ func: getSingleTailAssign, params: { type }});
-            result = autoParam({ func: result, paramName: "node" });
+        let hasTailAssignTypeBuilder = function({ hasTailAssign, type }) {
+            return function(node) {
+                let result = hasTailAssign({ type, node });
+                return result;
+            };
+        };
+        hasTailAssignTypeBuilder = bindAndAuto(hasTailAssignTypeBuilder, { hasTailAssign }, "type");
+        return hasTailAssignTypeBuilder;
+    });
+
+    addManSys("c661457ccddf43406886a34c10e8a3049bbd26d0", function(systems) {
+        let getTailAssign = systems("1e51b328e86262ad616cbac51c1a87371e454c2c");
+
+        let getTailAssignBuilder = function({ getTailAssign, type }) {
+            return function(node) {
+                let result = getTailAssign({ type, node });
+                return result;
+            };
+        };
+        getTailAssignBuilder = bindAndAuto(getTailAssignBuilder, { getTailAssign }, "type");
+        return getTailAssignBuilder;
+    });
+
+    addManSys("10ab1718fa83f48ec2cd14bd8d2b7b44cbc7f9dd", function(systems) {
+        let getTailAssign = systems("1e51b328e86262ad616cbac51c1a87371e454c2c");
+
+        let hasTailAssign = function({ getTailAssign, type, node }) {
+            let tailAssign = getTailAssign({ type, node });
+            let result = tailAssign.length > 0;
             return result;
         };
-        getSingleTailAssignBuilder = bind({ func: getSingleTailAssignBuilder, params: { getSingleTailAssign }});
-        return getSingleTailAssignBuilder;
+        hasTailAssign = bind({ func: hasTailAssign, params: { getTailAssign }});
+        return hasTailAssign;
+    });
+
+    addManSys("1e51b328e86262ad616cbac51c1a87371e454c2c", function(systems) {
+        let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+
+        let getTailAssign = function({ factor, type, node }) {
+            let f = factor({ head: node, type });
+            let result = f.map(x => x.tail);
+            return result;
+        };
+        getTailAssign = bind({ func: getTailAssign, params: { factor }});
+        return getTailAssign;
     });
 
     addManSys("25230375a7135e5fa9248c18908b9edbef6a0e38", function(systems) {
@@ -202,6 +240,18 @@ function buildManualSystemBuilder(systems) {
         };
         getSingleTailAssign = bind({ func: getSingleTailAssign, params: { factor }});
         return getSingleTailAssign;
+    });
+
+    addManSys("4d93b56e9f9d81c189417aff770052589d930d7e", function(systems) {
+        let getSingleTailAssign = systems("25230375a7135e5fa9248c18908b9edbef6a0e38");
+
+        let getSingleTailAssignBuilder = function({ getSingleTailAssign, type }) {
+            let result = bind({ func: getSingleTailAssign, params: { type }});
+            result = autoParam({ func: result, paramName: "node" });
+            return result;
+        };
+        getSingleTailAssignBuilder = bind({ func: getSingleTailAssignBuilder, params: { getSingleTailAssign }});
+        return getSingleTailAssignBuilder;
     });
 
     addManSys("791c75dbf041d6343bc059f420ad4e591aa3f0ad", function(systems) {
@@ -971,7 +1021,6 @@ function buildManualSystemBuilder(systems) {
             };
             return (input) => {
                 for (let typeNode of typeList) {
-                    console.log(typeNode);
                     let type = systems(typeNode);
                     if (type(input))
                         result.is = typeNode;

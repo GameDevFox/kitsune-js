@@ -33,11 +33,11 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "7806cde5c1d31f49bfc6cd82ffa1ffac8a0c11df";
+let id = "eb79c827ab87cc5a6bf0463bbc237e238f7c8128";
 
 function q() {
     let func = systems(id);
-    let result = func("a4d43bc2f8a3b0e8e87917ffca52cfba3ab45d6a");
+    let result = func("05ef7fa49f431784fccc98f676c171e86c300449");
     return JSON.stringify(result, null, 2);
 }
 regFunc("q", false, q);
@@ -66,7 +66,7 @@ function x() {
         ["05ef7fa49f431784fccc98f676c171e86c300449","107036c09a4e55e3cb1b736f36944f755b6ea159"],
     ];
     let items = typeImpl.map(x => autoWriteEdge({ head: x[0], tail: x[1] }));
-    writeChain({ node: "26efd9c7cce7c981b0030328a437ced6f9956a3d", items });
+    writeChain({ node: "4a9c956662e789d103ebb5e7b2ced607d8e87a7c", items }); // get-parent-node
 }
 regFunc("x", false, x);
 

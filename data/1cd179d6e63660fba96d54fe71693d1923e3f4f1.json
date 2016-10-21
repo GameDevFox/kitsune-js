@@ -196,12 +196,20 @@
     "string": "get-library-function"
   },
   {
+    "id": "84ee7ef4d8b9328faf957c8d25135da48bb91044",
+    "string": "get-parent-type"
+  },
+  {
     "id": "65ef0d93a0b6f021f5b421a3da9d42b5b6f1f06e",
     "string": "get-primitive-type"
   },
   {
     "id": "a2fb03c1fb98a736f006cfd06bb765e400ca9d65",
     "string": "get-single-tail-assign-builder"
+  },
+  {
+    "id": "9ec2f78a1edf1a642a32007cd2b8a652c9bf8888",
+    "string": "get-tail-assign-builder"
   },
   {
     "id": "0b8838e140b93b082b1358f8b5b70a045f3baf58",
@@ -302,6 +310,14 @@
   {
     "id": "c2f711efc006f9b834bb4ee1d6c854ec40f3b493",
     "string": "groupList"
+  },
+  {
+    "id": "229e37e61d7e886345d3e3e40cc1b3264883a08c",
+    "string": "has-parent-type"
+  },
+  {
+    "id": "1914bbe4aebdb4a8f6fe1f85431c286ff05a5df0",
+    "string": "has-tail-assign-type-builder"
   },
   {
     "id": "099e0e5f27696b903efd607709006226c0f54436",
