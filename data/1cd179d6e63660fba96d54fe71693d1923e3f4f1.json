@@ -700,6 +700,10 @@
     "string": "read-object"
   },
   {
+    "id": "e7b802d97937c61a3f01ee14131ac6495449b2d9",
+    "string": "read-string"
+  },
+  {
     "id": "a6f58d19484525a13a1d0276a05e423dea13a40d",
     "string": "read-system-file"
   },
@@ -754,10 +758,6 @@
   {
     "id": "d24721766a775f163627440199a2dde86f025dfa",
     "string": "string-get-id"
-  },
-  {
-    "id": "9917b7f338fceeb7f2694bf4e59c89be4e9018bf",
-    "string": "string-read-string"
   },
   {
     "id": "fbfaaffb76f3ead99f8818fdc32199a483b0d0f4",
