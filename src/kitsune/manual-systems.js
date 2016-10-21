@@ -177,6 +177,18 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("4d93b56e9f9d81c189417aff770052589d930d7e", function(systems) {
+        let getSingleTailAssign = systems("25230375a7135e5fa9248c18908b9edbef6a0e38");
+
+        let getSingleTailAssignBuilder = function({ getSingleTailAssign, type }) {
+            let result = bind({ func: getSingleTailAssign, params: { type }});
+            result = autoParam({ func: result, paramName: "node" });
+            return result;
+        };
+        getSingleTailAssignBuilder = bind({ func: getSingleTailAssignBuilder, params: { getSingleTailAssign }});
+        return getSingleTailAssignBuilder;
+    });
+
     addManSys("25230375a7135e5fa9248c18908b9edbef6a0e38", function(systems) {
         let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
 
