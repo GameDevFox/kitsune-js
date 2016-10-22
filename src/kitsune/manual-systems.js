@@ -725,6 +725,12 @@ function buildManualSystemBuilder(systems) {
         return nodeDescriptionBuilder;
     });
 
+    addManSys("f2a8d330f7980a2b757056a3d4790d03f4d68c0e", function(systems) {
+        let graphRemove = systems("e773ae04f0879e8a949f42d34b67f4d619c986a9");
+        graphRemove = autoParam({ func: graphRemove, paramName: "id" });
+        return graphRemove;
+    });
+
     // write "toward" chain or "away" chain
     // "away" for lists (default)
     // "toward" for types and super types
