@@ -1,3 +1,8 @@
+/.idea/
+/kitsune.iml
+
 /node_modules/
 /build/
 /coverage/
+
+/src/kitsune-core-src/
