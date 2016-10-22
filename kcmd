@@ -33,11 +33,15 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "97142d3a71acdb994784bb0d57450ddd3513d41d";
+let id = "b1565419b484bc440da1a81316cec147aec4e1dc";
 
 function q() {
     let func = systems(id);
-    let result = func("XXX");
+    let result = func({
+        node: "XXX",
+        away: true,
+        until: "three"
+    });
     return JSON.stringify(result, null, 2);
 }
 regFunc("q", false, q);

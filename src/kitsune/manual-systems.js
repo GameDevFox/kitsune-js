@@ -776,10 +776,13 @@ function buildManualSystemBuilder(systems) {
         return chainReadLink;
     });
 
-    addManSys("26c327a18c224378783ee1603f46ac9618462b85", function(systems) {
+    addManSys("b1565419b484bc440da1a81316cec147aec4e1dc", function(systems) {
         let chainReadLink = systems("50d8281dde04445fa434a9617ed7b033b495900c");
 
-        let readChain = function({ chainReadLink, away, node, skip, limit }) {
+        let traceChain = function({ chainReadLink, away, skip, limit, until, node }) {
+            if(away === undefined)
+                throw new Error("'away' must be set");
+
             let base = node;
 
             let count = 0;
@@ -792,15 +795,33 @@ function buildManualSystemBuilder(systems) {
                 if(!next)
                     break;
 
-                if(!skip || count >= skip)
-                    result.push(away ? next.tail : next.head);
 
                 base = next.id;
+                if(!skip || count >= skip) {
+                    let link = away ? next.head : next.tail;
+                    let value = away ? next.tail : next.head;
+                    result.push({ link, next: base, value });
+                    if(until && (value == until))
+                        break;
+                }
+
                 count++;
             }
             return result;
         };
-        readChain = bindAndAuto(readChain, { chainReadLink });
+        traceChain = bindAndAuto(traceChain, { chainReadLink });
+        return traceChain;
+    });
+
+    addManSys("26c327a18c224378783ee1603f46ac9618462b85", function(systems) {
+        let traceChain = systems("b1565419b484bc440da1a81316cec147aec4e1dc");
+
+        let readChain = function({ traceChain, away, skip, limit, until, node }) {
+            let trace = traceChain({ away, skip, limit, until, node });
+            let result = trace.map(x => x.value);
+            return result;
+        };
+        readChain = bindAndAuto(readChain, { traceChain });
         return readChain;
     });
 
