@@ -213,7 +213,7 @@ function buildManualSystemBuilder(systems) {
                 return func(input);
             };
         };
-        targetedSystemBuilder = bindAndAuto(targetedSystemBuilder, { readEdge, systems, readString }, "node")
+        targetedSystemBuilder = bindAndAuto(targetedSystemBuilder, { readEdge, systems, readString }, "node");
         return targetedSystemBuilder;
     });
 
@@ -750,7 +750,7 @@ function buildManualSystemBuilder(systems) {
             let split = splitChain({ away, node: tail });
 
             // Delete
-            for (var i = 0; split != null && i < deleteCount; i++)
+            for (var i = 0; split !== null && i < deleteCount; i++)
                 split = deleteLink({ away, node: split });
 
             // Insert
@@ -759,12 +759,14 @@ function buildManualSystemBuilder(systems) {
                 tail = writeLink({ away, link: tail, node: val });
 
             // Join
-            if (split != null) {
-                let joinLink = readLink({ away, node: split });
-                graphRemove(joinLink.id);
-                let newEdge = away ? { head: tail, tail: joinLink.tail } : { head: joinLink.head, tail: tail };
-                newEdge.id = joinLink.id;
-                writeEdge(newEdge);
+            if (split !== null) {
+                let joinLink = readLink({away, node: split});
+                if (joinLink) {
+                    graphRemove(joinLink.id);
+                    let newEdge = away ? {head: tail, tail: joinLink.tail} : {head: joinLink.head, tail: tail};
+                    newEdge.id = joinLink.id;
+                    writeEdge(newEdge);
+                }
             }
 
             return tail;
@@ -862,12 +864,13 @@ function buildManualSystemBuilder(systems) {
     addManSys("50d8281dde04445fa434a9617ed7b033b495900c", function(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
+        // TODO: Make a version of this that returns { link, next, value } format
         let readLink = function({ graphFind, away, node }) {
             let search = away ? { head: node } : { tail: node };
             let edges = graphFind(search);
 
             if(edges.length > 1)
-                throw new Error("readChain: Multiple tails for node: " + node);
+                throw new Error("readLink: Multiple tails for node: " + node);
 
             let result = edges.length === 0 ? null : edges[0];
             return result;
@@ -888,10 +891,16 @@ function buildManualSystemBuilder(systems) {
             let count = 0;
             let result = [];
             while(true) {
-                if(limit !== undefined && result.length >= limit)
+                if (limit !== undefined && result.length >= limit)
                     break;
 
-                let next = readLink({ away, node: base });
+                let next;
+                try {
+                    next = readLink({away, node: base});
+                } catch(e) {
+                    console.warn("traceChain: link found with multiple tails");
+                    break;
+                }
                 if(!next)
                     break;
 
