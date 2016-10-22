@@ -735,7 +735,6 @@ function buildManualSystemBuilder(systems) {
     // "away" for lists (default)
     // "toward" for types and super types
     addManSys("f3106f372a55b1e33b3b666d5df0c9e96f06cba1", function(systems) {
-        let getLastLink = systems("9c25645ecb274b261f1afebd115b09f6e35f7cec");
         let splitChain = systems("0b5e055cd86ea41c8df64b3e41235e553f564b13");
         let deleteLink = systems("c3d64c328223bc8739858c73a01b6c56986f9e74");
         let writeLink = systems("aaed3741d764d724eb2f0b0b48faed8d6834ad91");
@@ -744,34 +743,34 @@ function buildManualSystemBuilder(systems) {
         let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
 
         let spliceChain = function({
-                getLastLink, splitChain, deleteLink, writeLink, readLink, graphRemove, writeEdge,
+                splitChain, deleteLink, writeLink, readLink, graphRemove, writeEdge,
                 deleteCount, insert, // TODO: deleteUntil
-                away, skip, limit, until, node }) {
-            let link = getLastLink({away, skip, limit, until, node});
-            let split = splitChain({away, node: link});
+                away, node }) {
+            let tail = node;
+            let split = splitChain({ away, node: tail });
 
             // Delete
             for (var i = 0; split != null && i < deleteCount; i++)
-                split = deleteLink({away, node: split});
+                split = deleteLink({ away, node: split });
 
             // Insert
             insert = insert || [];
             for (let val of insert)
-                link = writeLink({away, link, node: val});
+                tail = writeLink({ away, link: tail, node: val });
 
             // Join
             if (split != null) {
-                let joinLink = readLink({away, node: split});
+                let joinLink = readLink({ away, node: split });
                 graphRemove(joinLink.id);
-                let newEdge = away ? {head: link, tail: joinLink.tail} : {head: joinLink.head, tail: link};
+                let newEdge = away ? { head: tail, tail: joinLink.tail } : { head: joinLink.head, tail: tail };
                 newEdge.id = joinLink.id;
                 writeEdge(newEdge);
             }
 
-            return link;
+            return tail;
         };
         spliceChain = bind({ func: spliceChain, params: {
-            getLastLink, splitChain, deleteLink, writeLink, readLink, graphRemove, writeEdge
+            splitChain, deleteLink, writeLink, readLink, graphRemove, writeEdge
         }});
         return spliceChain;
     });
