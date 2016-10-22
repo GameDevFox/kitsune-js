@@ -177,6 +177,20 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("725bf3d81ff4670a523206ba90c193dd536db85d", function(systems) {
+        let deleteEdge = systems("f2a8d330f7980a2b757056a3d4790d03f4d68c0e");
+        let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
+
+        let updateEdge = function({ deleteEdge, writeEdge, edge }) {
+            deleteEdge(edge.id);
+            writeEdge(edge);
+            let result = edge.id;
+            return result;
+        };
+        updateEdge = bindAndAuto(updateEdge, { deleteEdge, writeEdge }, "edge");
+        return updateEdge;
+    });
+
     addManSys("985e17bdc3c4406fb3e61de0d2ad6d79f7dc04f3", function(systems) {
         let virtualFuncBuilder = function(node) {
             let virtualFnSwitch = systems(node);
