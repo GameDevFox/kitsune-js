@@ -37,10 +37,9 @@ let id = "b1565419b484bc440da1a81316cec147aec4e1dc";
 
 function q() {
     let func = systems(id);
-    let result = func({
-        node: "XXX",
+    result = func({
+        node: "f7c286071ce64d78d49f7b04117600f1f7ae1846",
         away: true,
-        until: "three"
     });
     return JSON.stringify(result, null, 2);
 }
@@ -53,15 +52,10 @@ function x() {
     let assign = systems("7b5e1726ccc3a1c2ac69e441900ba002c26b2f74");
     let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
     let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
-    let writeChain = systems("f7d85e5fdaa712e9ce55724d1bd2006ebc48032c");
 
-    // let primes = graphFind({ head: "b654fb2d44e65346e18a54eab7ab3f1e692817e9" });
-    // primes.map(node => node.id).forEach(removeEdge);
-    // writeEdge({
-    //     id,
-    //     head: "8b13eec62f88d5b1b268f3a03d88b7de57b052a8",
-    //     tail: "9370227b17589d1e0c29e6d08b36d91926425d73"
-    // });
+    let writeChain = systems("f7d85e5fdaa712e9ce55724d1bd2006ebc48032c");
+    let getLastLink = systems("9c25645ecb274b261f1afebd115b09f6e35f7cec");
+    let deleteLink = systems("c3d64c328223bc8739858c73a01b6c56986f9e74");
 
     // let typeImpl = [
     //     // has-parent-type                          // get-parent-type
@@ -70,14 +64,18 @@ function x() {
     // let items = typeImpl.map(x => autoWriteEdge({ head: x[0], tail: x[1] }));
     // writeChain({ node: "befaac09f20d43f0e9b30702c584c15d76c48de5", items }); // get-parent-node
 
-    let lastLink = writeChain({
+    let firstLink = writeChain({
         node: "XXX",
         items: ["one", "two", "three", "four", "five"]
     });
-    lastLink = writeChain({
-        node: lastLink,
+    let lastLink = writeChain({
+        node: firstLink,
         items: ["six", "seven", "eight", "nine"]
     });
+    let deleteResult = deleteLink({ away: true, node: "XXX" });
+    deleteResult = deleteLink({ away: true, node: deleteResult });
+    deleteResult = deleteLink({ away: true, node: deleteResult });
+    console.log("D", deleteResult);
     return lastLink;
 }
 regFunc("x", false, x);

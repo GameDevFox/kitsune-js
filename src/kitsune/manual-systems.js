@@ -734,6 +734,35 @@ function buildManualSystemBuilder(systems) {
     // write "toward" chain or "away" chain
     // "away" for lists (default)
     // "toward" for types and super types
+    addManSys("c3d64c328223bc8739858c73a01b6c56986f9e74", function(systems) {
+        let chainReadLink = systems("50d8281dde04445fa434a9617ed7b033b495900c");
+        let graphRemove = systems("f2a8d330f7980a2b757056a3d4790d03f4d68c0e");
+
+        let deleteLink = function({ chainReadLink, graphRemove, away, node }) {
+            let link = chainReadLink({ away, node });
+            if(!link)
+                return null;
+
+            let result = link.id;
+            graphRemove(result);
+            return result;
+        };
+        deleteLink = bind({ func: deleteLink, params: { chainReadLink, graphRemove }});
+        return deleteLink;
+    });
+
+    addManSys("9c25645ecb274b261f1afebd115b09f6e35f7cec", function(systems) {
+        let traceChain = systems("b1565419b484bc440da1a81316cec147aec4e1dc");
+
+        let getLastLink = function({ traceChain, away, skip, limit, until, node }) {
+            let trace = traceChain({ away, skip, limit, until, node });
+            let result = trace.length ? trace[trace.length-1].next : node;
+            return result;
+        };
+        getLastLink = bind({ func: getLastLink, params: { traceChain }});
+        return getLastLink;
+    });
+
     addManSys("aaed3741d764d724eb2f0b0b48faed8d6834ad91", function(systems) {
         let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
 
