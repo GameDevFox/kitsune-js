@@ -728,19 +728,28 @@ function buildManualSystemBuilder(systems) {
     // write "toward" chain or "away" chain
     // "away" for lists (default)
     // "toward" for types and super types
-    addManSys("f934a7bede868c16b8603c20f31965a262ac19f4", function(systems) {
+    addManSys("aaed3741d764d724eb2f0b0b48faed8d6834ad91", function(systems) {
         let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
 
-        let writeChain = function({ autoWriteEdge, away, node, items }) {
-            let edge = node;
-            for(let i=0; i<items.length; i++) {
-                let item = items[i];
-                edge = away ? autoWriteEdge({ head: edge, tail: item })
-                            : autoWriteEdge({ head: item, tail: edge });
-            }
-            return edge;
+        let chainWriteLink = function({ autoWriteEdge, away, link, node }) {
+            let nextLink = away ? autoWriteEdge({ head: link, tail: node })
+                                : autoWriteEdge({ head: node, tail: link });
+            return nextLink;
         };
-        writeChain = bindAndAuto(writeChain, { autoWriteEdge });
+        chainWriteLink = bind({ func: chainWriteLink, params: { autoWriteEdge }});
+        return chainWriteLink;
+    });
+
+    addManSys("f934a7bede868c16b8603c20f31965a262ac19f4", function(systems) {
+        let chainWriteLink = systems("aaed3741d764d724eb2f0b0b48faed8d6834ad91");
+
+        let writeChain = function({ chainWriteLink, away, node, items }) {
+            let link = node;
+            for(let item of items)
+                link = chainWriteLink({ away, link, node: item });
+            return link;
+        };
+        writeChain = bindAndAuto(writeChain, { chainWriteLink });
         return writeChain;
     });
 
@@ -750,10 +759,27 @@ function buildManualSystemBuilder(systems) {
         return writeAwayChain;
     });
 
-    addManSys("26c327a18c224378783ee1603f46ac9618462b85", function(systems) {
+    addManSys("50d8281dde04445fa434a9617ed7b033b495900c", function(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
-        let readChain = function({ graphFind, away, node, skip, limit }) {
+        let chainReadLink = function({ graphFind, away, node }) {
+            let search = away ? { head: node } : { tail: node };
+            let edges = graphFind(search);
+
+            if(edges.length > 1)
+                throw new Error("readChain: Multiple tails for node: " + node);
+
+            let result = edges.length === 0 ? null : edges[0];
+            return result;
+        };
+        chainReadLink = bind({ func: chainReadLink, params: { graphFind }});
+        return chainReadLink;
+    });
+
+    addManSys("26c327a18c224378783ee1603f46ac9618462b85", function(systems) {
+        let chainReadLink = systems("50d8281dde04445fa434a9617ed7b033b495900c");
+
+        let readChain = function({ chainReadLink, away, node, skip, limit }) {
             let base = node;
 
             let count = 0;
@@ -762,25 +788,19 @@ function buildManualSystemBuilder(systems) {
                 if(limit !== undefined && result.length >= limit)
                     break;
 
-                let search = away ? { head: base } : { tail: base };
-                let edges = graphFind(search);
-
-                if(edges.length > 1)
-                    throw new Error("readChain: Multiple tails for node: " + node);
-                if(edges.length === 0)
+                let next = chainReadLink({ away, node: base });
+                if(!next)
                     break;
 
-                let edge = edges[0];
-
                 if(!skip || count >= skip)
-                    result.push(away ? edge.tail : edge.head);
+                    result.push(away ? next.tail : next.head);
 
-                base = edge.id;
+                base = next.id;
                 count++;
             }
             return result;
         };
-        readChain = bindAndAuto(readChain, { graphFind });
+        readChain = bindAndAuto(readChain, { chainReadLink });
         return readChain;
     });
 
@@ -797,7 +817,9 @@ function buildManualSystemBuilder(systems) {
     });
 
     addManSys("fcb1f557b96d421e538eafd97fb3b73d3f0cab66", function(systems) {
-        let getChainEdge = function({ chainNode,  }) {
+        let readChain = systems("26c327a18c224378783ee1603f46ac9618462b85");
+
+        let chainSplice = function({ readChain, node }) {
 
         };
         return chainSplice;
