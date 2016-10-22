@@ -753,22 +753,30 @@ function buildManualSystemBuilder(systems) {
     addManSys("26c327a18c224378783ee1603f46ac9618462b85", function(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
-        let readChain = function({ graphFind, away, node }) {
+        let readChain = function({ graphFind, away, node, skip, limit }) {
             let base = node;
+
+            let count = 0;
             let result = [];
             while(true) {
+                if(limit !== undefined && result.length >= limit)
+                    break;
+
                 let search = away ? { head: base } : { tail: base };
                 let edges = graphFind(search);
 
-                if (edges.length > 1)
+                if(edges.length > 1)
                     throw new Error("readChain: Multiple tails for node: " + node);
-
                 if(edges.length === 0)
                     break;
 
                 let edge = edges[0];
-                result.push(away ? edge.tail : edge.head);
+
+                if(!skip || count >= skip)
+                    result.push(away ? edge.tail : edge.head);
+
                 base = edge.id;
+                count++;
             }
             return result;
         };
@@ -780,6 +788,19 @@ function buildManualSystemBuilder(systems) {
         let readChain = systems("26c327a18c224378783ee1603f46ac9618462b85");
         let readAwayChain = bindAndAuto(readChain, { away: true }, "node");
         return readAwayChain;
+    });
+
+    addManSys("cd12108f90eb59a6044fe894815bc104fe2fd201", function(systems) {
+        let readChain = systems("26c327a18c224378783ee1603f46ac9618462b85");
+        let readAwayChain = bindAndAuto(readChain, { away: true });
+        return readAwayChain;
+    });
+
+    addManSys("fcb1f557b96d421e538eafd97fb3b73d3f0cab66", function(systems) {
+        let getChainEdge = function({ chainNode,  }) {
+
+        };
+        return chainSplice;
     });
 
     addManSys("c2ff24899966a19f0615519692679bff2c2b8b26", function(systems) {

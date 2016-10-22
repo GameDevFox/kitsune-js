@@ -33,11 +33,17 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "2eda26cdbda0537d7483e8b68bb85983144c87c7";
+let id = "cd12108f90eb59a6044fe894815bc104fe2fd201";
 
 function q() {
+    let writeChain = systems("f7d85e5fdaa712e9ce55724d1bd2006ebc48032c");
+
     let func = systems(id);
-    let result = func("a4d43bc2f8a3b0e8e87917ffca52cfba3ab45d6a");
+    let result = func({
+        node: "XXX",
+        skip: 2,
+        limit: 2
+    });
     return JSON.stringify(result, null, 2);
 }
 regFunc("q", false, q);
@@ -59,12 +65,17 @@ function x() {
     //     tail: "9370227b17589d1e0c29e6d08b36d91926425d73"
     // });
 
-    let typeImpl = [
-        // has-parent-type                          // get-parent-type
-        ["6b79ca99d812b33ecad0ab71c206d854a4b42958","eb79c827ab87cc5a6bf0463bbc237e238f7c8128"],
-    ];
-    let items = typeImpl.map(x => autoWriteEdge({ head: x[0], tail: x[1] }));
-    writeChain({ node: "befaac09f20d43f0e9b30702c584c15d76c48de5", items }); // get-parent-node
+    // let typeImpl = [
+    //     // has-parent-type                          // get-parent-type
+    //     ["6b79ca99d812b33ecad0ab71c206d854a4b42958","eb79c827ab87cc5a6bf0463bbc237e238f7c8128"],
+    // ];
+    // let items = typeImpl.map(x => autoWriteEdge({ head: x[0], tail: x[1] }));
+    // writeChain({ node: "befaac09f20d43f0e9b30702c584c15d76c48de5", items }); // get-parent-node
+
+    writeChain({
+        node: "XXX",
+        items: ["one", "two", "three", "four", "five"]
+    });
 }
 regFunc("x", false, x);
 
