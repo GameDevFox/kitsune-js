@@ -33,11 +33,11 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "eb79c827ab87cc5a6bf0463bbc237e238f7c8128";
+let id = "2eda26cdbda0537d7483e8b68bb85983144c87c7";
 
 function q() {
     let func = systems(id);
-    let result = func("05ef7fa49f431784fccc98f676c171e86c300449");
+    let result = func("a4d43bc2f8a3b0e8e87917ffca52cfba3ab45d6a");
     return JSON.stringify(result, null, 2);
 }
 regFunc("q", false, q);
@@ -60,13 +60,11 @@ function x() {
     // });
 
     let typeImpl = [
-        ["a4d43bc2f8a3b0e8e87917ffca52cfba3ab45d6a","541fe231a38c39263178ec6b436c1344153b268f"],
-        ["608d2331e9d048af9d4f0f36af80e6ed7ea8c96e","29ae17d030bcb31e3efc6d71f09335f1d9704cbb"],
-        ["43cd34ab8105d158f421eecce9ed22948ec34893","d819f6b5558a2a9aae9d490f3f125a8de3a34666"],
-        ["05ef7fa49f431784fccc98f676c171e86c300449","107036c09a4e55e3cb1b736f36944f755b6ea159"],
+        // has-parent-type                          // get-parent-type
+        ["6b79ca99d812b33ecad0ab71c206d854a4b42958","eb79c827ab87cc5a6bf0463bbc237e238f7c8128"],
     ];
     let items = typeImpl.map(x => autoWriteEdge({ head: x[0], tail: x[1] }));
-    writeChain({ node: "4a9c956662e789d103ebb5e7b2ced607d8e87a7c", items }); // get-parent-node
+    writeChain({ node: "befaac09f20d43f0e9b30702c584c15d76c48de5", items }); // get-parent-node
 }
 regFunc("x", false, x);
 

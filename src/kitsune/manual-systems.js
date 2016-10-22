@@ -177,6 +177,46 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("985e17bdc3c4406fb3e61de0d2ad6d79f7dc04f3", function(systems) {
+        let virtualFuncBuilder = function(node) {
+            let virtualFnSwitch = systems(node);
+            return function(target) {
+                let fn = virtualFnSwitch(target);
+                return fn(target);
+            };
+        };
+        return virtualFuncBuilder;
+    });
+
+    addManSys("bc9cf7aae6e2d2a418bcac62778bdd655c644085", function(systems) {
+        let targetedVirtualFuncBuilder = function(node) {
+            let virtualFnSwitch = systems(node);
+            return function(input) {
+                let fn = virtualFnSwitch(input.$target);
+                return fn(input);
+            };
+        };
+        return targetedVirtualFuncBuilder;
+    });
+
+    addManSys("5888eb9b00777ebd470a5e9d5522b12afebb7db5", function(systems) {
+        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+        let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
+
+        let targetedSystemBuilder = function({ readEdge, systems, readString, node }) {
+            let edge = readEdge(node);
+            let func = systems(edge.head);
+            let paramName = readString(edge.tail);
+            return function(input) {
+                input[paramName] = input.$target;
+                delete input.$target;
+                return func(input);
+            };
+        };
+        targetedSystemBuilder = bindAndAuto(targetedSystemBuilder, { readEdge, systems, readString }, "node")
+        return targetedSystemBuilder;
+    });
+
     addManSys("6807e56240bfb462f4aaf8195b6be8d5fd053350", function(systems) {
         let hasTailAssign = systems("10ab1718fa83f48ec2cd14bd8d2b7b44cbc7f9dd");
 

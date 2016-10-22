@@ -196,8 +196,8 @@
     "string": "get-library-function"
   },
   {
-    "id": "84ee7ef4d8b9328faf957c8d25135da48bb91044",
-    "string": "get-parent-type"
+    "id": "7e218f5b2787a417d9fb9a7cdb14430924179df1",
+    "string": "get-parent-types"
   },
   {
     "id": "65ef0d93a0b6f021f5b421a3da9d42b5b6f1f06e",
@@ -466,6 +466,10 @@
   {
     "id": "001bf8bd7af5bfb170661ed9a1e71f83902d2443",
     "string": "is-type"
+  },
+  {
+    "id": "ce49cec7ed6ec66979f9ecd8183195de91c9a8c5",
+    "string": "is-virtual-function"
   },
   {
     "id": "e33e0e502d09092ea117be8c27fb58b1dd3aa609",
@@ -816,6 +820,10 @@
     "string": "tail"
   },
   {
+    "id": "d4bad3dcf38142e79b1465702015ae6f66c5a231",
+    "string": "targeted-virtual-function-builder"
+  },
+  {
     "id": "7115e9890f5b5cc6914bdfa3b7c011db1cdafedb",
     "string": "test-data"
   },
@@ -842,6 +850,10 @@
   {
     "id": "90625a7940d4425591c41e527d8523b1eb17c9ff",
     "string": "value-function"
+  },
+  {
+    "id": "3e3405fe46991970e636c6c947a0c80efba45bbe",
+    "string": "virtual-function-builder"
   },
   {
     "id": "c8fb4f3ac7f7b2ca15ba473c9e94fd1597e46353",
