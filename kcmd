@@ -38,7 +38,7 @@ let id = "b1565419b484bc440da1a81316cec147aec4e1dc";
 function q() {
     let func = systems(id);
     result = func({
-        node: "f7c286071ce64d78d49f7b04117600f1f7ae1846",
+        node: "XXX",
         away: true,
     });
     return JSON.stringify(result, null, 2);
@@ -56,6 +56,7 @@ function x() {
     let writeChain = systems("f7d85e5fdaa712e9ce55724d1bd2006ebc48032c");
     let getLastLink = systems("9c25645ecb274b261f1afebd115b09f6e35f7cec");
     let deleteLink = systems("c3d64c328223bc8739858c73a01b6c56986f9e74");
+    let splitLink = systems("0b5e055cd86ea41c8df64b3e41235e553f564b13");
 
     // let typeImpl = [
     //     // has-parent-type                          // get-parent-type
@@ -72,10 +73,9 @@ function x() {
         node: firstLink,
         items: ["six", "seven", "eight", "nine"]
     });
-    let deleteResult = deleteLink({ away: true, node: "XXX" });
-    deleteResult = deleteLink({ away: true, node: deleteResult });
-    deleteResult = deleteLink({ away: true, node: deleteResult });
-    console.log("D", deleteResult);
+    let midLink = getLastLink({ away: true, node: "XXX", limit: 7 });
+    let split = splitLink({ away: true, node: midLink });
+    console.log("S", split);
     return lastLink;
 }
 regFunc("x", false, x);

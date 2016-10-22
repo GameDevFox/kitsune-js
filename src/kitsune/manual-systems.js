@@ -734,6 +734,30 @@ function buildManualSystemBuilder(systems) {
     // write "toward" chain or "away" chain
     // "away" for lists (default)
     // "toward" for types and super types
+    addManSys("0b5e055cd86ea41c8df64b3e41235e553f564b13", function(systems) {
+        let chainReadLink = systems("50d8281dde04445fa434a9617ed7b033b495900c");
+        let graphRemove = systems("f2a8d330f7980a2b757056a3d4790d03f4d68c0e");
+        let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
+        let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
+
+        let splitLink = function({ chainReadLink, graphRemove, hashRandom, writeEdge, away, node }) {
+            let link = chainReadLink({ away, node });
+            if(!link)
+                return null;
+
+            graphRemove(link.id);
+
+            let newLink = hashRandom();
+            let newEdge = away ? { head: newLink, tail: link.tail } : { head: link.head, tail: newLink };
+            newEdge.id = link.id;
+            writeEdge(newEdge);
+
+            return newLink;
+        };
+        splitLink = bind({ func: splitLink, params: { chainReadLink, graphRemove, hashRandom, writeEdge }});
+        return splitLink;
+    });
+
     addManSys("c3d64c328223bc8739858c73a01b6c56986f9e74", function(systems) {
         let chainReadLink = systems("50d8281dde04445fa434a9617ed7b033b495900c");
         let graphRemove = systems("f2a8d330f7980a2b757056a3d4790d03f4d68c0e");
