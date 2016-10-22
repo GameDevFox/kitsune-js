@@ -734,14 +734,56 @@ function buildManualSystemBuilder(systems) {
     // write "toward" chain or "away" chain
     // "away" for lists (default)
     // "toward" for types and super types
+    addManSys("f3106f372a55b1e33b3b666d5df0c9e96f06cba1", function(systems) {
+        let getLastLink = systems("9c25645ecb274b261f1afebd115b09f6e35f7cec");
+        let splitChain = systems("0b5e055cd86ea41c8df64b3e41235e553f564b13");
+        let deleteLink = systems("c3d64c328223bc8739858c73a01b6c56986f9e74");
+        let writeLink = systems("aaed3741d764d724eb2f0b0b48faed8d6834ad91");
+        let readLink = systems("50d8281dde04445fa434a9617ed7b033b495900c");
+        let graphRemove = systems("f2a8d330f7980a2b757056a3d4790d03f4d68c0e");
+        let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
+
+        let spliceChain = function({
+                getLastLink, splitChain, deleteLink, writeLink, readLink, graphRemove, writeEdge,
+                deleteCount, insert, // TODO: deleteUntil
+                away, skip, limit, until, node }) {
+            let link = getLastLink({away, skip, limit, until, node});
+            let split = splitChain({away, node: link});
+
+            // Delete
+            for (var i = 0; split != null && i < deleteCount; i++)
+                split = deleteLink({away, node: split});
+
+            // Insert
+            insert = insert || [];
+            for (let val of insert)
+                link = writeLink({away, link, node: val});
+
+            // Join
+            if (split != null) {
+                let joinLink = readLink({away, node: split});
+                graphRemove(joinLink.id);
+                let newEdge = away ? {head: link, tail: joinLink.tail} : {head: joinLink.head, tail: link};
+                newEdge.id = joinLink.id;
+                writeEdge(newEdge);
+            }
+
+            return link;
+        };
+        spliceChain = bind({ func: spliceChain, params: {
+            getLastLink, splitChain, deleteLink, writeLink, readLink, graphRemove, writeEdge
+        }});
+        return spliceChain;
+    });
+
     addManSys("0b5e055cd86ea41c8df64b3e41235e553f564b13", function(systems) {
-        let chainReadLink = systems("50d8281dde04445fa434a9617ed7b033b495900c");
+        let readLink = systems("50d8281dde04445fa434a9617ed7b033b495900c");
         let graphRemove = systems("f2a8d330f7980a2b757056a3d4790d03f4d68c0e");
         let hashRandom = systems("bf565ae1309f425b0ab00efa2ba541ae03ad22cf");
         let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
 
-        let splitLink = function({ chainReadLink, graphRemove, hashRandom, writeEdge, away, node }) {
-            let link = chainReadLink({ away, node });
+        let splitChain = function({ readLink, graphRemove, hashRandom, writeEdge, away, node }) {
+            let link = readLink({ away, node });
             if(!link)
                 return null;
 
@@ -754,16 +796,16 @@ function buildManualSystemBuilder(systems) {
 
             return newLink;
         };
-        splitLink = bind({ func: splitLink, params: { chainReadLink, graphRemove, hashRandom, writeEdge }});
-        return splitLink;
+        splitChain = bind({ func: splitChain, params: { readLink, graphRemove, hashRandom, writeEdge }});
+        return splitChain;
     });
 
     addManSys("c3d64c328223bc8739858c73a01b6c56986f9e74", function(systems) {
-        let chainReadLink = systems("50d8281dde04445fa434a9617ed7b033b495900c");
+        let readLink = systems("50d8281dde04445fa434a9617ed7b033b495900c");
         let graphRemove = systems("f2a8d330f7980a2b757056a3d4790d03f4d68c0e");
 
-        let deleteLink = function({ chainReadLink, graphRemove, away, node }) {
-            let link = chainReadLink({ away, node });
+        let deleteLink = function({ readLink, graphRemove, away, node }) {
+            let link = readLink({ away, node });
             if(!link)
                 return null;
 
@@ -771,7 +813,7 @@ function buildManualSystemBuilder(systems) {
             graphRemove(result);
             return result;
         };
-        deleteLink = bind({ func: deleteLink, params: { chainReadLink, graphRemove }});
+        deleteLink = bind({ func: deleteLink, params: { readLink, graphRemove }});
         return deleteLink;
     });
 
@@ -790,25 +832,25 @@ function buildManualSystemBuilder(systems) {
     addManSys("aaed3741d764d724eb2f0b0b48faed8d6834ad91", function(systems) {
         let autoWriteEdge = systems("f7b073eb5ef5680e7ba308eaf289de185f0ec3f7");
 
-        let chainWriteLink = function({ autoWriteEdge, away, link, node }) {
+        let writeLink = function({ autoWriteEdge, away, link, node }) {
             let nextLink = away ? autoWriteEdge({ head: link, tail: node })
                                 : autoWriteEdge({ head: node, tail: link });
             return nextLink;
         };
-        chainWriteLink = bind({ func: chainWriteLink, params: { autoWriteEdge }});
-        return chainWriteLink;
+        writeLink = bind({ func: writeLink, params: { autoWriteEdge }});
+        return writeLink;
     });
 
     addManSys("f934a7bede868c16b8603c20f31965a262ac19f4", function(systems) {
-        let chainWriteLink = systems("aaed3741d764d724eb2f0b0b48faed8d6834ad91");
+        let writeLink = systems("aaed3741d764d724eb2f0b0b48faed8d6834ad91");
 
-        let writeChain = function({ chainWriteLink, away, node, items }) {
+        let writeChain = function({ writeLink, away, node, items }) {
             let link = node;
             for(let item of items)
-                link = chainWriteLink({ away, link, node: item });
+                link = writeLink({ away, link, node: item });
             return link;
         };
-        writeChain = bindAndAuto(writeChain, { chainWriteLink });
+        writeChain = bindAndAuto(writeChain, { writeLink });
         return writeChain;
     });
 
@@ -821,7 +863,7 @@ function buildManualSystemBuilder(systems) {
     addManSys("50d8281dde04445fa434a9617ed7b033b495900c", function(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
-        let chainReadLink = function({ graphFind, away, node }) {
+        let readLink = function({ graphFind, away, node }) {
             let search = away ? { head: node } : { tail: node };
             let edges = graphFind(search);
 
@@ -831,14 +873,14 @@ function buildManualSystemBuilder(systems) {
             let result = edges.length === 0 ? null : edges[0];
             return result;
         };
-        chainReadLink = bind({ func: chainReadLink, params: { graphFind }});
-        return chainReadLink;
+        readLink = bind({ func: readLink, params: { graphFind }});
+        return readLink;
     });
 
     addManSys("b1565419b484bc440da1a81316cec147aec4e1dc", function(systems) {
-        let chainReadLink = systems("50d8281dde04445fa434a9617ed7b033b495900c");
+        let readLink = systems("50d8281dde04445fa434a9617ed7b033b495900c");
 
-        let traceChain = function({ chainReadLink, away, skip, limit, until, node }) {
+        let traceChain = function({ readLink, away, skip, limit, until, node }) {
             if(away === undefined)
                 throw new Error("'away' must be set");
 
@@ -850,7 +892,7 @@ function buildManualSystemBuilder(systems) {
                 if(limit !== undefined && result.length >= limit)
                     break;
 
-                let next = chainReadLink({ away, node: base });
+                let next = readLink({ away, node: base });
                 if(!next)
                     break;
 
@@ -868,7 +910,7 @@ function buildManualSystemBuilder(systems) {
             }
             return result;
         };
-        traceChain = bindAndAuto(traceChain, { chainReadLink });
+        traceChain = bindAndAuto(traceChain, { readLink });
         return traceChain;
     });
 
