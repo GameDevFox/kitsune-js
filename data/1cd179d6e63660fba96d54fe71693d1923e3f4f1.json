@@ -112,6 +112,10 @@
     "string": "console-log"
   },
   {
+    "id": "a4181f9f91b0029395ee2037420b8335e224609d",
+    "string": "constant-function-builder"
+  },
+  {
     "id": "ab53755e1c9f705798ac7812c20962a510275dff",
     "string": "core-node"
   },
@@ -466,6 +470,10 @@
   {
     "id": "525199fc34375dcbedebdb38402f2396cb5316dd",
     "string": "is-node"
+  },
+  {
+    "id": "ee32589f5f7fb8c316910fd2b0581f10a1bd6f69",
+    "string": "is-node-constant"
   },
   {
     "id": "df79047dd2ae227a1ef1a9dcc875adc788963eed",

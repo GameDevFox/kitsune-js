@@ -179,10 +179,10 @@ function buildManualSystemBuilder(systems) {
 
     // GENERAL //
     addManSys("e6a52b68704b1b4e322c2f55d8e79b19ad0d55eb", function(systems) {
-        let constantBuilder = function(node) {
+        let constantFuncBuilder = function(node) {
             return () => node;
         };
-        return constantBuilder;
+        return constantFuncBuilder;
     });
 
     // GRAPH EDGE FUNCTIONS
