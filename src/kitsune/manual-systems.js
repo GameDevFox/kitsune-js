@@ -178,6 +178,11 @@ function buildManualSystemBuilder(systems) {
     }
 
     // GENERAL //
+    addManSys("b6b8b3186cc54944c4b6f1c19969b04736da57e5", function(systems) {
+        let emptyArrayFn = () => [];
+        return emptyArrayFn;
+    });
+
     addManSys("e35f8959f853683e0c164af7e907d881ec62c46a", function(systems) {
         let isArray = systems("c04c9e4cf83ffbde1c5254409f078ac39d144c10");
 
@@ -1529,14 +1534,14 @@ function buildManualSystemBuilder(systems) {
             let isAnything = function() {
                 return true;
             };
-            return isAnything();
+            return isAnything;
         });
 
         addManSys("5ee5fd45d44b35eec83eeab4d1e4c9edbf77ee0d", function(systems) {
             let isNothing = function() {
                 return false;
             };
-            return isNothing();
+            return isNothing;
         });
 
         // list-manual-systems
