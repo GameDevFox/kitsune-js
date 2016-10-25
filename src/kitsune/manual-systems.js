@@ -178,6 +178,64 @@ function buildManualSystemBuilder(systems) {
     }
 
     // GENERAL //
+    addManSys("e6a52b68704b1b4e322c2f55d8e79b19ad0d55eb", function(systems) {
+        let constantBuilder = function(node) {
+            return () => node;
+        };
+        return constantBuilder;
+    });
+
+    // GRAPH EDGE FUNCTIONS
+    // TODO: Refactor this somehow to make them more "DRY"
+    addManSys("7deb5958598154496504933f2efd1e4b07a178f3", function(systems) {
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+
+        let headEdge = function({ graphFind, node }) {
+            let find = graphFind({ head: node });
+            let result = find.map(x => x.id);
+            return result;
+        };
+        headEdge = bindAndAuto(headEdge, { graphFind }, "node");
+        return headEdge;
+    });
+
+    addManSys("5b9b75eed94783f8534b41179aa81b0440710f67", function(systems) {
+        let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
+
+        let tailEdge = function({ graphFind, node }) {
+            let find = graphFind({ tail: node });
+            let result = find.map(x => x.id);
+            return result;
+        };
+        tailEdge = bindAndAuto(tailEdge, { graphFind }, "node");
+        return tailEdge;
+    });
+
+    addManSys("da697bd0863212526208d79e3e65019377b07670", function() {
+        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+
+        let edgeHead = function({ readEdge, node }) {
+            let edge = readEdge(node);
+            let result = edge ? edge.head : null;
+            return result;
+        };
+        edgeHead = bindAndAuto(edgeHead, { readEdge }, "node");
+        return edgeHead;
+    });
+
+    addManSys("f6c2b98f1f73626330bc5660f2bb4146fbcfb5ec", function(systems) {
+        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+
+        let edgeTail = function({ readEdge, node }) {
+            let edge = readEdge(node);
+            let result = edge.tail ? edge.head : null;
+            return result;
+        };
+        edgeTail = bindAndAuto(edgeTail, { readEdge }, "node");
+        return edgeTail;
+    });
+    // END OF GRAPH EDGE FUNCTIONS
+
     addManSys("b6b8b3186cc54944c4b6f1c19969b04736da57e5", function(systems) {
         let emptyArrayFn = () => [];
         return emptyArrayFn;
@@ -382,16 +440,14 @@ function buildManualSystemBuilder(systems) {
     });
 
     addManSys("dd350e001cd1498b968bcd04df198c03ea072539", function(systems) {
-        let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+        let getParentType = systems("2eda26cdbda0537d7483e8b68bb85983144c87c7");
 
-        let parentType = "cd522ceab4c9285b7b5bafe107eab8d738e7bc59";
-
-        let isType = function({ factor, node }) {
-            let f = factor({ head: node, type: parentType });
-            let result = f.length > 0;
+        let isType = function({ getParentType, node }) {
+            let parentTypes = getParentType(node);
+            let result = parentTypes.length > 0;
             return result;
         };
-        isType = bind({ func: isType, params: { factor }});
+        isType = bind({ func: isType, params: { getParentType }});
         isType = autoParam({ func: isType, paramName: "node" });
         return isType;
     });
@@ -1367,21 +1423,6 @@ function buildManualSystemBuilder(systems) {
         return listBuilderFunctions;
     });
 
-    addManSys("da697bd0863212526208d79e3e65019377b07670", function() {
-        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
-
-        let getEdgeHead = function({ readEdge, node }) {
-            let edge = readEdge(node);
-            if(!edge)
-                return null;
-
-            return edge.head;
-        };
-        getEdgeHead = bind({ func: getEdgeHead, params: { readEdge }});
-        getEdgeHead = autoParam({ func: getEdgeHead, paramName: "node" });
-        return getEdgeHead;
-    });
-
     addManSys("de9803674df491c66c99dcb85d14402f3339c645", function(systems) {
         let getEdgeHead = systems("da697bd0863212526208d79e3e65019377b07670");
 
@@ -1529,7 +1570,6 @@ function buildManualSystemBuilder(systems) {
 
     // FUNCTIONS
     {
-
         addManSys("2efc0dfc9c2e65aa9aabb3b29346315cd1330761", function(systems) {
             let isAnything = function() {
                 return true;

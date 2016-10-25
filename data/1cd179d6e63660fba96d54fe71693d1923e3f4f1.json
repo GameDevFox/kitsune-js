@@ -200,6 +200,14 @@
     "string": "get-edge-head"
   },
   {
+    "id": "9e6674d167cab28cc34b5a6149ee2bb0391a0c42",
+    "string": "get-edge-tail"
+  },
+  {
+    "id": "fd7f50091518a10a8fe7b5f4c2454862ae030398",
+    "string": "get-head-edges"
+  },
+  {
     "id": "756298c8ec1f323603452496a7bbab2a85214b6d",
     "string": "get-heads"
   },
@@ -222,6 +230,10 @@
   {
     "id": "9ec2f78a1edf1a642a32007cd2b8a652c9bf8888",
     "string": "get-tail-assign-builder"
+  },
+  {
+    "id": "6903d26546537df41c1da06463c790f546043101",
+    "string": "get-tail-edges"
   },
   {
     "id": "0b8838e140b93b082b1358f8b5b70a045f3baf58",
@@ -524,6 +536,10 @@
     "string": "list-manual-systems"
   },
   {
+    "id": "346670e84778de2669a079eabe09badf0bda04b3",
+    "string": "list-node-type-builder-functions"
+  },
+  {
     "id": "f8cc9321534fce9d2c04d0c0ea87e019439c2a85",
     "string": "list-nodes"
   },
@@ -626,6 +642,10 @@
   {
     "id": "774978bb69c87d62ed9ede8abb63b8d89fd7bdd2",
     "string": "node-type"
+  },
+  {
+    "id": "9036ae16442af01ff5eaa6c282b25acaa2303c98",
+    "string": "node-type-builder-group"
   },
   {
     "id": "9826923718233c1d5227522b5cca6a65e83fbcc1",
@@ -834,6 +854,10 @@
   {
     "id": "fbf5f2a2875b3bb65b8e3b23e6cc01d58ca30447",
     "string": "tail"
+  },
+  {
+    "id": "71ce38fe62561ee245032d8dd2cd79c6ca8b1c3c",
+    "string": "tail-headedge"
   },
   {
     "id": "5ba8dab1fbc816a2ff5a388896ffa7aa327ee7fa",
