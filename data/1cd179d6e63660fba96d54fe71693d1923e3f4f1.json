@@ -568,6 +568,10 @@
     "string": "loki-remove"
   },
   {
+    "id": "b3a7df6610bea2ec80effc1488894b8138cb1ebf",
+    "string": "map-merge-function-builder"
+  },
+  {
     "id": "743f88e7a33e19ae2240de9f69770d38965a3c84",
     "string": "merge-list-builder"
   },

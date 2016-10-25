@@ -178,6 +178,18 @@ function buildManualSystemBuilder(systems) {
     }
 
     // GENERAL //
+    addManSys("b2b0b2c49dae0b75a8681b0cd0afeba3e3e65265", function(systems) {
+        let mapMergeFuncBuilder = function(node) {
+            let arrayFunc = systems(node);
+            return function(inputArray) {
+                let resultArrays = inputArray.map(arrayFunc);
+                let result = _.flatten(resultArrays);
+                return result;
+            };
+        };
+        return mapMergeFuncBuilder;
+    });
+
     addManSys("7efca9ebecc3eded126cef2ef89c67bb35516d78", function(systems) {
         let readChain = systems("97142d3a71acdb994784bb0d57450ddd3513d41d");
 
