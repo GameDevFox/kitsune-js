@@ -140,6 +140,10 @@
     "string": "dictionary-function"
   },
   {
+    "id": "964478039dd6e92e9b9eb3698b938b6e21a8fefc",
+    "string": "double-tail"
+  },
+  {
     "id": "7ad0cfe1de4459b1e399a5985b507a92a0c66eb6",
     "string": "edge-head-type-builder"
   },
@@ -218,6 +222,10 @@
   {
     "id": "0b8838e140b93b082b1358f8b5b70a045f3baf58",
     "string": "get-tails"
+  },
+  {
+    "id": "9795023047428d9be79ab44b9502b8891a7fa882",
+    "string": "get-tails-map-merge"
   },
   {
     "id": "3909532fe81dfd3d23ed31d75797ec8954e16f83",
@@ -826,6 +834,10 @@
   {
     "id": "fbf5f2a2875b3bb65b8e3b23e6cc01d58ca30447",
     "string": "tail"
+  },
+  {
+    "id": "5ba8dab1fbc816a2ff5a388896ffa7aa327ee7fa",
+    "string": "tail-tail"
   },
   {
     "id": "d4bad3dcf38142e79b1465702015ae6f66c5a231",
