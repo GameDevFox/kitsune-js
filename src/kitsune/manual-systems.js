@@ -177,6 +177,25 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    // GENERAL //
+    addManSys("7efca9ebecc3eded126cef2ef89c67bb35516d78", function(systems) {
+        let readChain = systems("97142d3a71acdb994784bb0d57450ddd3513d41d");
+
+        let chainFuncBuilder = function({ readChain, systems, node }) {
+            let chain = readChain(node);
+            let funcs = chain.map(systems);
+
+            return function(input) {
+                let result = input;
+                for(func of funcs)
+                    result = func(result);
+                return result;
+            };
+        };
+        chainFuncBuilder = bindAndAuto(chainFuncBuilder, { readChain, systems }, "node");
+        return chainFuncBuilder;
+    });
+
     addManSys("725bf3d81ff4670a523206ba90c193dd536db85d", function(systems) {
         let deleteEdge = systems("f2a8d330f7980a2b757056a3d4790d03f4d68c0e");
         let writeEdge = systems("10ae12f47866d3c8e1d6cfeabb39fcf7e839a220");
@@ -958,15 +977,6 @@ function buildManualSystemBuilder(systems) {
         let readChain = systems("26c327a18c224378783ee1603f46ac9618462b85");
         let readAwayChain = bindAndAuto(readChain, { away: true });
         return readAwayChain;
-    });
-
-    addManSys("fcb1f557b96d421e538eafd97fb3b73d3f0cab66", function(systems) {
-        let readChain = systems("26c327a18c224378783ee1603f46ac9618462b85");
-
-        let chainSplice = function({ readChain, node }) {
-
-        };
-        return chainSplice;
     });
 
     addManSys("c2ff24899966a19f0615519692679bff2c2b8b26", function(systems) {

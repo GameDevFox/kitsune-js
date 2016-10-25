@@ -88,6 +88,10 @@
     "string": "callNodeFunc"
   },
   {
+    "id": "4e522f5407a4ec2369f7681d3490e188f3d29591",
+    "string": "chain-function-builder"
+  },
+  {
     "id": "532d45da3f05aef0fecec19850a8c8c40a4bd7a6",
     "string": "clean-string-system"
   },
