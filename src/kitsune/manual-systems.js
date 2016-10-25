@@ -178,6 +178,17 @@ function buildManualSystemBuilder(systems) {
     }
 
     // GENERAL //
+    addManSys("e35f8959f853683e0c164af7e907d881ec62c46a", function(systems) {
+        let isArray = systems("c04c9e4cf83ffbde1c5254409f078ac39d144c10");
+
+        let castToArray = function({ isArray, input }) {
+            input = isArray(input) ? input : [input];
+            return input;
+        };
+        castToArray = bindAndAuto(castToArray, { isArray }, "input");
+        return castToArray;
+    });
+
     addManSys("b2b0b2c49dae0b75a8681b0cd0afeba3e3e65265", function(systems) {
         let mapMergeFuncBuilder = function(node) {
             let arrayFunc = systems(node);
@@ -523,25 +534,6 @@ function buildManualSystemBuilder(systems) {
         getTypeTree = bind({ func: getTypeTree, params: { isDerivedType, getHeads, getTails, factor }});
         getTypeTree = autoParam({ func: getTypeTree, paramName: "node" });
         return getTypeTree;
-    });
-
-    addManSys("58d80bc9bf4f30755cfbbde04055c0a9229b35bb", function() {
-        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-
-        let derivedType = "daf93e35e6521c3af6de24d91121ed557a089b3e";
-
-        let listDerivedTypes = function({ getTails }) {
-            let baseTypes = getTails(derivedType);
-
-            let result = [];
-            for(let baseType of baseTypes) {
-                let types = getTails(baseType);
-                result = result.concat(types);
-            }
-            return result;
-        };
-        listDerivedTypes = bind({ func: listDerivedTypes, params: { getTails }});
-        return listDerivedTypes;
     });
 
     addManSys("6db94400d9b6b8904970a5fdf2b1d080b981572d", function(systems) {
