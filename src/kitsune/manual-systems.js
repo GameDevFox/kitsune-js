@@ -178,6 +178,7 @@ function buildManualSystemBuilder(systems) {
     }
 
     // GENERAL //
+    // TODO: Is this redundant, should we use an identity funciton instead?
     addManSys("e6a52b68704b1b4e322c2f55d8e79b19ad0d55eb", function(systems) {
         let constantFuncBuilder = function(node) {
             return () => node;
@@ -731,7 +732,8 @@ function buildManualSystemBuilder(systems) {
                 let innerFunc = func(target);
                 return function(args) {
                     let input = _.merge(args, { $target: target });
-                    return innerFunc(input);
+                    let result = innerFunc(input);
+                    return result;
                 };
             };
             return doubleFunc;
