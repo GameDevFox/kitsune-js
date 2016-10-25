@@ -248,10 +248,6 @@
     "string": "get-type-tree"
   },
   {
-    "id": "407dd1e0a56369412d4d0d8731693ed8fcf5fbae",
-    "string": "getTails"
-  },
-  {
     "id": "a37fa8901cbd5d96eab6cd37187fbc498bc973b6",
     "string": "graph-assign"
   },

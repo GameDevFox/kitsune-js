@@ -1811,14 +1811,6 @@ function buildManualSystemBuilder(systems) {
             return writeAndNameFuncCall;
         });
 
-        addManSys("4a263590d11f4ba73661c476564f7aacea8c8286", function () {
-            let listLists = function ({getTails}) {
-                let lists = getTails("283287a7c0c2ccaa5c69dfd99a800d13eb6805ea");
-                return lists;
-            };
-            return listLists;
-        });
-
         addManSys("42e9ce26666845ae2855a6ed619b54b8280b415b", function () {
             let edgeReport = function ({ graphFind, nameList, describeNode }) {
                 console.log("== Graph Report ==");
