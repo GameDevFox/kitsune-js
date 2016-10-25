@@ -468,6 +468,10 @@
     "string": "is-node"
   },
   {
+    "id": "df79047dd2ae227a1ef1a9dcc875adc788963eed",
+    "string": "is-node-type-builder-function"
+  },
+  {
     "id": "e104e960ce17d974ece3eefc21bfa1db5f16f4e9",
     "string": "is-nothing"
   },
