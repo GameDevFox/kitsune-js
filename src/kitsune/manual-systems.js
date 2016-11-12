@@ -441,21 +441,6 @@ function buildManualSystemBuilder(systems) {
         return listEdges;
     });
 
-    addManSys("3547f89e53986393711f8c1a1a278f4880b7bb08", function(systems) {
-        let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
-
-        let parentType = "cd522ceab4c9285b7b5bafe107eab8d738e7bc59";
-
-        let listTypes = function({ factor }) {
-            let f = factor({ type: parentType });
-            let result = f.map(x => x.head);
-            result = _.uniq(result);
-            return result;
-        };
-        listTypes = bind({ func: listTypes, params: { factor }});
-        return listTypes;
-    });
-
     addManSys("dd350e001cd1498b968bcd04df198c03ea072539", function(systems) {
         let getParentType = systems("2eda26cdbda0537d7483e8b68bb85983144c87c7");
 
