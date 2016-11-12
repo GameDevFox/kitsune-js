@@ -438,7 +438,7 @@ function buildManualSystemBuilder(systems) {
             result = autoParam({ func: result, paramName: "node" });
             return result;
         };
-        getSingleTailAssignBuilder = bind({ func: getSingleTailAssignBuilder, params: { getSingleTailAssign }});
+        getSingleTailAssignBuilder = bindAndAuto(getSingleTailAssignBuilder, { getSingleTailAssign }, "type");
         return getSingleTailAssignBuilder;
     });
 
