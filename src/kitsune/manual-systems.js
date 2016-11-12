@@ -181,11 +181,13 @@ function buildManualSystemBuilder(systems) {
         let listNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
 
         let bruteForceTypeListBuilder = function({ listNodes, typeNode }) {
-            let nodes = listNodes();
             let type = systems(typeNode);
 
-            let result = nodes.filter(type);
-            return result;
+            return function() {
+                let nodes = listNodes();
+                let result = nodes.filter(type);
+                return result;
+            }
         };
         bruteForceTypeListBuilder = bindAndAuto(bruteForceTypeListBuilder, { listNodes }, "typeNode");
         return bruteForceTypeListBuilder;

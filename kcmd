@@ -33,12 +33,12 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "25cae5094cf676484804e9205b35691cb1aea4c9";
+let id = "0ce4a8d8b002642e968adc1699b7f32c7f62f502";
 // chain: befaac09f20d43f0e9b30702c584c15d76c48de5
 
 function q() {
     let func = systems(id);
-    let result = func("dd350e001cd1498b968bcd04df198c03ea072539");
+    let result = func();
     return JSON.stringify(result, null, 2);
 }
 regFunc("q", false, q);
