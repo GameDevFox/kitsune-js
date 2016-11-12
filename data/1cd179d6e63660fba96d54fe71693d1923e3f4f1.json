@@ -532,6 +532,10 @@
     "string": "library-function-builder"
   },
   {
+    "id": "38b62be4bddaa5661c7d6b8e36e28159314df5c7",
+    "string": "list"
+  },
+  {
     "id": "744fa484e17a1ebb92623d8ad969155bcebe5065",
     "string": "list-builder-functions"
   },
@@ -546,10 +550,6 @@
   {
     "id": "341736ddb858798639fd6c154a823c84b9f44dfa",
     "string": "list-functions"
-  },
-  {
-    "id": "ba730bb44211e52ec109b2e889ba779b3737a658",
-    "string": "list-lists"
   },
   {
     "id": "f3934b5bff0a14164716c5777146085e5ad7fb7a",
