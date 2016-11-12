@@ -177,8 +177,22 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("25cae5094cf676484804e9205b35691cb1aea4c9", function(systems) {
+        let listNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
+
+        let bruteForceTypeListBuilder = function({ listNodes, typeNode }) {
+            let nodes = listNodes();
+            let type = systems(typeNode);
+
+            let result = nodes.filter(type);
+            return result;
+        };
+        bruteForceTypeListBuilder = bindAndAuto(bruteForceTypeListBuilder, { listNodes }, "typeNode");
+        return bruteForceTypeListBuilder;
+    });
+
     // GENERAL //
-    // TODO: Is this redundant, should we use an identity funciton instead?
+    // TODO: Is this redundant, should we use an identity function instead?
     addManSys("e6a52b68704b1b4e322c2f55d8e79b19ad0d55eb", function(systems) {
         let constantFuncBuilder = function(node) {
             return () => node;

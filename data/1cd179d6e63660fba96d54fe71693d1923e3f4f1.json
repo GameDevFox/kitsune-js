@@ -60,6 +60,10 @@
     "string": "bind-func-builder"
   },
   {
+    "id": "4b2265fb665a62ec83ba33dcffe82b70060b685a",
+    "string": "brute-force-type-list-builder"
+  },
+  {
     "id": "261f07916c78d3ebf749337aa84252371b51686b",
     "string": "build-and-type"
   },
