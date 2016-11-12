@@ -512,6 +512,10 @@
     "string": "is-type"
   },
   {
+    "id": "1fcf41ec50c47e1fd1716f04473a8a331d588aae",
+    "string": "is-universal-type"
+  },
+  {
     "id": "ce49cec7ed6ec66979f9ecd8183195de91c9a8c5",
     "string": "is-virtual-function"
   },
@@ -574,6 +578,10 @@
   {
     "id": "caa3622ce673289cb2ce493f2c76df719debaaf4",
     "string": "list-types"
+  },
+  {
+    "id": "9ad52c4a308835b7f23a306adb430b41a6acd8c0",
+    "string": "list-universal-type"
   },
   {
     "id": "a11e4421343ca0b4ae4c4c7b4f5bc218c46c8cd4",

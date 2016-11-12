@@ -177,6 +177,18 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("ce51c50d5d2e25deecc288a82c71f3010e380d8f", function(systems) {
+        let getParentTypes = systems("2eda26cdbda0537d7483e8b68bb85983144c87c7");
+        let isAnythingNode = "2efc0dfc9c2e65aa9aabb3b29346315cd1330761";
+
+        let isUniversalType = function({ getParentTypes, node }) {
+            let parentTypes = getParentTypes(node);
+            return _.isEqual(parentTypes, [isAnythingNode]);
+        };
+        isUniversalType = bindAndAuto(isUniversalType, { getParentTypes }, "node");
+        return isUniversalType;
+    });
+
     addManSys("25cae5094cf676484804e9205b35691cb1aea4c9", function(systems) {
         let listNodes = systems("74b1eb95baaf14385cf3a0b1b76198a5cadfa258");
 
@@ -187,7 +199,7 @@ function buildManualSystemBuilder(systems) {
                 let nodes = listNodes();
                 let result = nodes.filter(type);
                 return result;
-            }
+            };
         };
         bruteForceTypeListBuilder = bindAndAuto(bruteForceTypeListBuilder, { listNodes }, "typeNode");
         return bruteForceTypeListBuilder;
@@ -290,7 +302,7 @@ function buildManualSystemBuilder(systems) {
 
             return function(input) {
                 let result = input;
-                for(func of funcs)
+                for(let func of funcs)
                     result = func(result);
                 return result;
             };
