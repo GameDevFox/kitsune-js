@@ -507,7 +507,7 @@ function buildManualSystemBuilder(systems) {
                 return typeResults[node];
 
             let deps = typeNode.deps;
-            let prereqs = deps === true ? true : checkDeps({ deps, typeResults, input });
+            let prereqs = checkDeps({ deps, typeResults, input });
 
             let result;
             if(typeNode.derivedTypeFn) {
@@ -516,7 +516,7 @@ function buildManualSystemBuilder(systems) {
             } else {
                 let type = systems(typeNode.node);
                 let prereq = prereqs[0];
-                result = prereq ? false : type(input);
+                result = prereq ? type(input) : false;
             }
 
             typeResults[node] = result;
@@ -526,7 +526,7 @@ function buildManualSystemBuilder(systems) {
         function checkDeps({ deps, typeResults, input }) {
             let result = [];
             for(let dep of deps) {
-                let nodeResult = checkNode({ typeNode: dep, typeResults, input });
+                let nodeResult = (dep === true) ? true : checkNode({ typeNode: dep, typeResults, input });
                 result.push(nodeResult);
             }
             return result;
@@ -581,16 +581,17 @@ function buildManualSystemBuilder(systems) {
             let derivedTypeFn = null;
             let isDerivedType = isDerivedTypeFn(node);
             if(isDerivedType) {
-                derivedTypeFn = getHeads(node).filter(x => derivedTypeFns.includes(x))[0];
+                let heads = getHeads(node);
+                derivedTypeFn = heads.filter(x => derivedTypeFns.includes(x))[0];
                 types = getTails(node);
             } else {
+                if(node == isAnything)
+                    return true;
+
                 let f = factor({ head: node, type: parentType });
                 if(f.length !== 0) {
                     let inputType = f[0].tail;
-                    if(inputType != isAnything)
-                        types = [inputType];
-                    else
-                        return true;
+                    types = [inputType];
                 }
             }
 
