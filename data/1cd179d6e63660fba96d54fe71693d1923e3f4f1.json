@@ -480,6 +480,10 @@
     "string": "is-node-array"
   },
   {
+    "id": "daf7da2726ec9e003ee1ee7a3aa719e17b281b23",
+    "string": "is-node-type"
+  },
+  {
     "id": "df79047dd2ae227a1ef1a9dcc875adc788963eed",
     "string": "is-node-type-builder-function"
   },
@@ -506,6 +510,10 @@
   {
     "id": "57941d7c86588fb78b2b0152160852a04eae7f0d",
     "string": "is-string"
+  },
+  {
+    "id": "6b237ccefd2f2a110401c8ae4617b024a464b8fa",
+    "string": "is-string-node"
   },
   {
     "id": "eb4fdd61c23cabd78f0c1aae5ae1d91db531be61",
