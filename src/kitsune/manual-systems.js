@@ -177,6 +177,13 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("0bfc33cfde7ec6737ec04e620af67a12636f155f", function(systems) {
+        let subtractSet = function({ a, b }) {
+            return _.difference(a, b);
+        };
+        return subtractSet;
+    });
+
     addManSys("ce51c50d5d2e25deecc288a82c71f3010e380d8f", function(systems) {
         let getParentTypes = systems("2eda26cdbda0537d7483e8b68bb85983144c87c7");
         let isAnythingNode = "2efc0dfc9c2e65aa9aabb3b29346315cd1330761";
