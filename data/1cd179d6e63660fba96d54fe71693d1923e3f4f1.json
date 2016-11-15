@@ -456,8 +456,8 @@
     "string": "is-library-function"
   },
   {
-    "id": "a9da30ec9e31f4684eadddc4d4119effbc4c3009",
-    "string": "is-like-object"
+    "id": "85793e2ec9dae5f3aab0cabfb1b617209e484d6b",
+    "string": "is-like-object-expression"
   },
   {
     "id": "c8c15209336f8c29073cdc5052ed461646037c05",
@@ -492,8 +492,12 @@
     "string": "is-non-universal-type"
   },
   {
-    "id": "01824c7c91d429887dee1dace528ac6b8bc52764",
-    "string": "is-not-universal-type"
+    "id": "7cb9babf04693b99dc24e48d45fa3ad2b4c1c583",
+    "string": "is-non-universal-type-expression"
+  },
+  {
+    "id": "485b8b6c05061e4d1188bcf3dcd3ea1cd4db75da",
+    "string": "is-not-universal-type-expression"
   },
   {
     "id": "e104e960ce17d974ece3eefc21bfa1db5f16f4e9",

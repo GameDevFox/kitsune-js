@@ -33,18 +33,11 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "0bfc33cfde7ec6737ec04e620af67a12636f155f";
+let id = "613ae517285ea36fcc250013c276b8b7e0a89b0b";
 
 function q() {
     let func = systems(id);
-
-    let listTypes = systems("0ce4a8d8b002642e968adc1699b7f32c7f62f502");
-    let types = listTypes();
-
-    let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-    let nodeTypes = getTails("585d4cc792af1a4754f1819630068bdbb81bfd20");
-
-    let result = func({ a: nodeTypes, b: types });
+    let result = func();
     return JSON.stringify(result, null, 2);
 }
 regFunc("q", false, q);
