@@ -1690,7 +1690,7 @@ function buildManualSystemBuilder(systems) {
 
         addManSys("e6ff3d78ebd8f80c8945afd3499195049609905d", function (systems) {
             let readSystemFile = function (id) {
-                return fs.readFileSync("./src/kitsune-core/" + id, "utf8");
+                return fs.readFileSync("./src/kitsune-core/" + id + ".js", "utf8");
             };
             return readSystemFile;
         });
