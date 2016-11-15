@@ -428,12 +428,16 @@
     "string": "is-core-node"
   },
   {
-    "id": "635ccbcf849fd71628fb78827579eb5167b9ae20",
-    "string": "is-derived-type"
-  },
-  {
     "id": "8f65641814e35fec0e6196a6f56674eb56e5e19e",
     "string": "is-edge"
+  },
+  {
+    "id": "460c1f423448fd9e316e7ca3120e7c489ea577c5",
+    "string": "is-fragment-type"
+  },
+  {
+    "id": "0fa99c6abce6e930ff883108f26e66143326a640",
+    "string": "is-fragment-type-expression"
   },
   {
     "id": "c9808d4e1d896bbdc70e264df38f10231cdc9dee",
@@ -488,16 +492,8 @@
     "string": "is-node-type-builder-function"
   },
   {
-    "id": "4db4584fdff3ddfa5cd09d30d58a1383e14a9766",
-    "string": "is-non-universal-type"
-  },
-  {
-    "id": "7cb9babf04693b99dc24e48d45fa3ad2b4c1c583",
-    "string": "is-non-universal-type-expression"
-  },
-  {
-    "id": "485b8b6c05061e4d1188bcf3dcd3ea1cd4db75da",
-    "string": "is-not-universal-type-expression"
+    "id": "9e4ece4b63dc221f47df192359399df31c49e610",
+    "string": "is-not-whole-type-expression"
   },
   {
     "id": "e104e960ce17d974ece3eefc21bfa1db5f16f4e9",
@@ -528,12 +524,16 @@
     "string": "is-type"
   },
   {
-    "id": "1fcf41ec50c47e1fd1716f04473a8a331d588aae",
-    "string": "is-universal-type"
+    "id": "e6740baf0eb57c259693dd4f714233d68b6dfbc6",
+    "string": "is-type-expression"
   },
   {
     "id": "ce49cec7ed6ec66979f9ecd8183195de91c9a8c5",
     "string": "is-virtual-function"
+  },
+  {
+    "id": "3ba52f2a8318c05a15a78b1359ec17866342d437",
+    "string": "is-whole-type"
   },
   {
     "id": "e33e0e502d09092ea117be8c27fb58b1dd3aa609",
@@ -560,12 +560,12 @@
     "string": "list-builder-functions"
   },
   {
-    "id": "c2797a51e3b4ba4bae89da1380edfe294f3ede5e",
-    "string": "list-derived-types"
-  },
-  {
     "id": "4777fc84519bd4cb5fc0c85278fe50a824e33b79",
     "string": "list-edges"
+  },
+  {
+    "id": "8d508a1f7ba27903f963868fcd0bea51d1de5d8a",
+    "string": "list-fragment-types"
   },
   {
     "id": "341736ddb858798639fd6c154a823c84b9f44dfa",
@@ -584,10 +584,6 @@
     "string": "list-nodes"
   },
   {
-    "id": "ec39565582e70ae81b15e508fa42eac9c0d6b82e",
-    "string": "list-non-universal-types"
-  },
-  {
     "id": "0b990f5faa2bba9275e444b599266a9d301e40a5",
     "string": "list-system-files"
   },
@@ -596,12 +592,16 @@
     "string": "list-type-builder"
   },
   {
+    "id": "c40c5deb7b197aa9371f7f880636ca370f7974c3",
+    "string": "list-type-expressions"
+  },
+  {
     "id": "caa3622ce673289cb2ce493f2c76df719debaaf4",
     "string": "list-types"
   },
   {
-    "id": "9ad52c4a308835b7f23a306adb430b41a6acd8c0",
-    "string": "list-universal-type"
+    "id": "fea983cf3fc6243bd2aed4434e016e7adca300fe",
+    "string": "list-whole-types"
   },
   {
     "id": "a11e4421343ca0b4ae4c4c7b4f5bc218c46c8cd4",
