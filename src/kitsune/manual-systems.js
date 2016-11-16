@@ -188,12 +188,12 @@ function buildManualSystemBuilder(systems) {
         let getParentTypes = systems("2eda26cdbda0537d7483e8b68bb85983144c87c7");
         let isAnythingNode = "2efc0dfc9c2e65aa9aabb3b29346315cd1330761";
 
-        let isUniversalType = function({ getParentTypes, node }) {
+        let isWholeType = function({ getParentTypes, node }) {
             let parentTypes = getParentTypes(node);
             return _.isEqual(parentTypes, [isAnythingNode]);
         };
-        isUniversalType = bindAndAuto(isUniversalType, { getParentTypes }, "node");
-        return isUniversalType;
+        isWholeType = bindAndAuto(isWholeType, { getParentTypes }, "node");
+        return isWholeType;
     });
 
     addManSys("25cae5094cf676484804e9205b35691cb1aea4c9", function(systems) {
@@ -651,8 +651,8 @@ function buildManualSystemBuilder(systems) {
     });
 
     addManSys("1d89395460431d99a68ee10632caa2744b346829", function(systems) {
-        let not = function(typeResult) {
-            return !typeResult;
+        let not = function(typeResults) {
+            return !(typeResults[0]);
         };
         return not;
     });
