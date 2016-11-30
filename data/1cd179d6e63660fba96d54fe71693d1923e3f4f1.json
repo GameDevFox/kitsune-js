@@ -344,12 +344,28 @@
     "string": "groupList"
   },
   {
+    "id": "a6f4f5c592e418d46d476a7275c95418195f8e46",
+    "string": "has-head-property"
+  },
+  {
+    "id": "c53d2422645c7c1bf221e65c7697569548da465c",
+    "string": "has-id-property"
+  },
+  {
     "id": "229e37e61d7e886345d3e3e40cc1b3264883a08c",
     "string": "has-parent-type"
   },
   {
+    "id": "220d1e2c1f6818423a9910afffa3e9f6c3a3c815",
+    "string": "has-property-builder"
+  },
+  {
     "id": "1914bbe4aebdb4a8f6fe1f85431c286ff05a5df0",
     "string": "has-tail-assign-type-builder"
+  },
+  {
+    "id": "3573b2cd5d0331489e29082516affcf7bde05fbb",
+    "string": "has-tail-property"
   },
   {
     "id": "099e0e5f27696b903efd607709006226c0f54436",
@@ -442,6 +458,10 @@
   {
     "id": "c9808d4e1d896bbdc70e264df38f10231cdc9dee",
     "string": "is-function"
+  },
+  {
+    "id": "f85e8434425d59952b58e67e33005df523cec9a4",
+    "string": "is-has-property-function"
   },
   {
     "id": "aa233bb14b0b75084bd435c4e857a10c955e948c",
@@ -822,6 +842,10 @@
   {
     "id": "9de68cd0e266891396ea06449338805d9a2bce77",
     "string": "return-is-node-array"
+  },
+  {
+    "id": "7b2316a12ac604639d281268e7da88fb745c7ab3",
+    "string": "return-is-object-array"
   },
   {
     "id": "179e8ff5659db6eb4519e09ab588f1525b74584f",

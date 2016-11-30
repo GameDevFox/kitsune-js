@@ -177,6 +177,20 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("25e92ce0554c7d66aacdd515eaf117b717d2ceeb", function(systems) {
+        let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
+
+        let hasPropertyBuilder = function({ readString, propertyStringNode }) {
+            let propertyName = readString(propertyStringNode);
+
+            return function(input) {
+                return input.hasOwnProperty(propertyName);
+            };
+        };
+        hasPropertyBuilder = bindAndAuto(hasPropertyBuilder, { readString }, "propertyStringNode");
+        return hasPropertyBuilder;
+    });
+
     addManSys("0bfc33cfde7ec6737ec04e620af67a12636f155f", function(systems) {
         let subtractSet = function({ a, b }) {
             return _.difference(a, b);
