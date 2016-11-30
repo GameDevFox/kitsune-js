@@ -177,6 +177,25 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("2cc93fc040d12588f1c78770465daee890e8ad36", function(systems) {
+        let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
+        let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
+
+        let hasPropertyTypeBuilder = function({ readEdge, readString, systems, edge }) {
+            let { head: propertyStringNode, tail: propertyTypeNode } = readEdge(edge);
+
+            let propertyName = readString(propertyStringNode);
+            let type = systems(propertyTypeNode);
+
+            return function(input) {
+                let property = input[propertyName];
+                return type(property);
+            };
+        };
+        hasPropertyTypeBuilder = bindAndAuto(hasPropertyTypeBuilder, { readEdge, readString, systems }, "edge");
+        return hasPropertyTypeBuilder;
+    });
+
     addManSys("25e92ce0554c7d66aacdd515eaf117b717d2ceeb", function(systems) {
         let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
 

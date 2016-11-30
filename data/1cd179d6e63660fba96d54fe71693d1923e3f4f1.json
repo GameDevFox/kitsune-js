@@ -352,12 +352,28 @@
     "string": "has-id-property"
   },
   {
+    "id": "d5ff12fb93946b2fea4cf533b7f2e77084b26216",
+    "string": "has-node-type-head"
+  },
+  {
+    "id": "48f63beaa80b1d0c877a12f48a2a62ac2a3c7dfe",
+    "string": "has-node-type-id"
+  },
+  {
+    "id": "0023fddef2fdbf4e6206244477c789287798e824",
+    "string": "has-node-type-tail"
+  },
+  {
     "id": "229e37e61d7e886345d3e3e40cc1b3264883a08c",
     "string": "has-parent-type"
   },
   {
     "id": "220d1e2c1f6818423a9910afffa3e9f6c3a3c815",
     "string": "has-property-builder"
+  },
+  {
+    "id": "ab8fd23a62d107bab4321e68f58ad9dafa1dc6f1",
+    "string": "has-property-type-builder"
   },
   {
     "id": "1914bbe4aebdb4a8f6fe1f85431c286ff05a5df0",
