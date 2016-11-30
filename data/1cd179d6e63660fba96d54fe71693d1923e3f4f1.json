@@ -480,10 +480,6 @@
     "string": "is-node"
   },
   {
-    "id": "f39f5755e21f57f6b073ea46425b3ebc20bcfb5c",
-    "string": "is-node-array"
-  },
-  {
     "id": "daf7da2726ec9e003ee1ee7a3aa719e17b281b23",
     "string": "is-node-type"
   },
@@ -522,6 +518,10 @@
   {
     "id": "001bf8bd7af5bfb170661ed9a1e71f83902d2443",
     "string": "is-type"
+  },
+  {
+    "id": "6feecf36df287aef0c9f52c0fb4d979559642b55",
+    "string": "is-type-builder-function"
   },
   {
     "id": "e6740baf0eb57c259693dd4f714233d68b6dfbc6",
@@ -814,6 +814,14 @@
   {
     "id": "40e834bf73db510d13dab70ff96a300962037d31",
     "string": "return-first"
+  },
+  {
+    "id": "be3474f4aec4a25f47f4a04d200f5003ed992188",
+    "string": "return-is-anything-array"
+  },
+  {
+    "id": "9de68cd0e266891396ea06449338805d9a2bce77",
+    "string": "return-is-node-array"
   },
   {
     "id": "179e8ff5659db6eb4519e09ab588f1525b74584f",
