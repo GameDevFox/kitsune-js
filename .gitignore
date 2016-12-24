@@ -1,7 +1,10 @@
 /.idea/
 /kitsune.iml
 
-/node_modules/
+/node_modules/**
+!/node_modules/kitsune
+!/node_modules/kitsune-core
+
 /build/
 /coverage/
 

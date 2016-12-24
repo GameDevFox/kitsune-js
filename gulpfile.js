@@ -1,150 +1,45 @@
-require('source-map-support').install();
+let gulpHelp = require("gulp-help");
+let gulp = gulpHelp(require("gulp"));
 
-var spawn = require("child_process").spawn;
+let gulpLoadPlugins = require("gulp-load-plugins");
+let g = gulpLoadPlugins();
 
-var gulpHelp = require("gulp-help");
-var gulp = gulpHelp(require("gulp"), {
-	hideEmpty: true
-});
+let jshintStylish = require("jshint-stylish");
 
-var gulpLoadPlugins = require("gulp-load-plugins");
-var g = gulpLoadPlugins();
+let appSrcPath = "./src/**/*.js";
+let testSrcPath = "./test/**/*.spec.js";
 
-var del = require("del");
-var jshintStylish = require("jshint-stylish");
-var browserSync = require("browser-sync").create();
+gulp.task("default", 'runs "test"', ["test"]);
 
-var appSrcPath = ["./src/kitsune/**/*.js", "./src/kitsune-core/*"];
-
-var kitsuneTestPath = "./test/**/*.spec.js";
-var testSrcPath = [kitsuneTestPath];
-
-var testBuildPath = ["./build/test/kitsune/sandbox.spec.js"];
-
-var softTestFail = false;
-
-gulp.task("default", 'runs "clean" and "build"', g.sequence("clean", ["build", "build-test-kitsune"], "test-run"));
-
-gulp.task("clean", 'Cleans up (deletes) all build files', function(done) {
-    del([
-        "./node_modules/kitsune",
-        "./node_modules/kitsune-core",
-        "./build",
-        "./coverage"
-    ], done);
-});
-
-var buildStream = function(stream, debugTitle) {
+let lintStream = function(stream) {
 	return stream
-		.pipe(g.plumber())
-		.pipe(g.debug({ title: debugTitle }))
 		.pipe(g.jshint({ esnext: true }))
 		.pipe(g.jshint.reporter(jshintStylish))
 		.pipe(g.jshint.reporter("fail"));
 };
 
-gulp.task("build", "Builds project", function() {
-	var input = gulp.src(appSrcPath, { base: "./src" })
-		.pipe(g.cached("build"));
-	return buildStream(input, "build")
-		.pipe(gulp.dest("./node_modules"));
+gulp.task("lint", "Builds project", function() {
+	let input = gulp.src(appSrcPath);
+	return lintStream(input);
 });
 
-gulp.task("build-test", g.sequence(["build-test-kitsune"]));
-gulp.task("build-test-kitsune", function() {
-	var input = gulp.src(kitsuneTestPath)
-		.pipe(g.cached("kitsune-src"));
-	return buildStream(input, "kitsune-test-build")
-		.pipe(gulp.dest("./build/test/kitsune"));
+gulp.task("lint-test", function() {
+	let input = gulp.src(testSrcPath);
+	return lintStream(input);
 });
 
-var mochaOpts = {
-	require: ["source-map-support"]
-};
-
-gulp.task("test", "Runs tests", g.sequence(["build", "build-test-kitsune"], "test-run"));
-gulp.task("test-run", function() {
-    var stream = gulp.src(testBuildPath)
-	    .pipe(g.cached("mocha"))
-	    .pipe(g.mocha(mochaOpts));
-
-    if(softTestFail) {
-	stream.on("error", function(e) {
-	    g.util.log(e.stack);
-	    this.emit("end");
-	});
-    }
-
+gulp.task("test", function() {
+    let stream = gulp.src(testSrcPath)
+	    .pipe(g.mocha());
     return stream;
 });
 
-gulp.task("coverage", "Creates coverage report", g.sequence("clean", ["build", "build-test-kitsune"], "coverage-run"));
-gulp.task("coverage-run", function(done) {
-	gulp.src(["./build/**/*.js", "!./build/test/**/*.spec.js"])
-		.pipe(g.plumber())
-		.pipe(g.istanbul({
-			includeUntested: true
-		}))
-		.pipe(g.istanbul.hookRequire())
-		.on("finish", function() {
-			gulp.src(testBuildPath)
-				.pipe(g.plumber())
-				.pipe(g.mocha(mochaOpts))
-				.pipe(g.istanbul.writeReports())
-				.on('error', function(e) {
-					g.util.log(e.stack);
-					this.emit("end");
-				})
-				.on("end", done);
-		});
-});
-
-// gulp.task("prepend-source-map-support", ["build"], function() {
-//		return gulp.src("./app/kitsune.js")
-//			.pipe(insert.prepend("require('source-map-support').install();\n"))
-//			.pipe(gulp.dest("./app"));
-// });
-
 // Watch tasks
-gulp.task("watch", 'Runs app in "development mode", reloading app and running tests on files changes',
-          g.sequence("watch-flag", "clean", ["build", "build-test-kitsune"], "test-run", ["watch-src", "watch-test"]));
+gulp.task("watch", 'Runs app in "development mode", reloading app and running tests on files changes', ["watch-src", "watch-test"]);
 
-gulp.task("watch-flag", function() {
-    softTestFail = true;
+gulp.task("watch-src", function() {
+	gulp.watch(appSrcPath, () => gulp.start("lint"));
 });
-
-gulp.task("watch-src", function() { gulp.watch(appSrcPath, ["watch-src-run"]); });
-gulp.task("watch-src-run", function(cb) {
-	delete g.cached.caches["mocha"];
-	g.sequence("build", "test-run")(cb);
-});
-
-gulp.task("watch-test", function() { gulp.watch(testSrcPath, ["watch-test-run"]); });
-gulp.task("watch-test-run", function(cb) {
-	g.sequence(["build-test-kitsune"], "test-run")(cb);
-});
-
-//
-gulp.task("watch-coverage", "Create new coverage report everytime files change", g.sequence("clean", ["build", "build-test-kitsune"], "coverage-run", ["watch-cover-src", "watch-cover-test", "browser-sync-cover"]));
-
-gulp.task("watch-cover-src", function() { gulp.watch(appSrcPath, ["watch-cover-src-run"]); });
-gulp.task("watch-cover-src-run", function(cb) {
-	g.sequence("build", "coverage-run", "browser-sync-reload")(cb);
-});
-
-gulp.task("watch-cover-test", function() { gulp.watch(testSrcPath, ["watch-cover-test-run"]); });
-gulp.task("watch-cover-test-run", function(cb) {
-	g.sequence(["build-test-kitsune"], "coverage-run", "browser-sync-reload")(cb);
-});
-
-gulp.task("browser-sync-cover", function() {
-	browserSync.init({
-		server: {
-			baseDir: "./coverage/lcov-report"
-		}
-	});
-});
-
-gulp.task("browser-sync-reload", function() {
-	browserSync.reload();
+gulp.task("watch-test", function() {
+	gulp.watch(testSrcPath, () => gulp.start("test"));
 });
