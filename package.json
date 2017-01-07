@@ -4,6 +4,7 @@
   "description": "Experimental programming system",
   "main": "index.js",
   "scripts": {
+    "postignstall": "./bin/link-kitsune",
     "test": "gulp test",
     "start": "node server.js"
   },
