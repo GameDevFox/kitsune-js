@@ -33,11 +33,22 @@ let funcId = "4f29cda5f5bff53168c88e3cf8f8674fd7cbc67f";
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let id = "aa1c07e327111a1b0682b419d16c7728528d3ffa";
+let id = "6dbb32ac4a1bf4b8f84203e8ee123ae4e3df1ba6";
 
 function q() {
     let func = systems(id);
-    let result = func("6ebc3ddc3feff08772b0641513ceb20bd7fffaad");
+    let pathFn = systems("aa1c07e327111a1b0682b419d16c7728528d3ffa");
+    let node = "5a10efb9b3269b2c15fcd23e3b45a309d34e7384";
+
+    let nodeList = systems("d24e3bb4404957831292abf43d3b5278aff740b7");
+    let anyPath = systems("53a4aadb2260f1ff1f1b6209a774884d6fda3204");
+
+    let result = func({
+        collectFn: anyPath,
+        // untilFn: ({ result, value, visited }) => {
+        //     return !visited.includes("ac92599cff9837457d975429a516cc8cb160cd34");
+        // },
+        pathFn, node });
     return JSON.stringify(result, null, 2);
 }
 regFunc("q", false, q);

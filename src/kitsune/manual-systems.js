@@ -177,6 +177,70 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("6dbb32ac4a1bf4b8f84203e8ee123ae4e3df1ba6", function(systems) {
+        let traceWeb = function({ collectFn, untilFn, pathFn, node }) {
+
+            let result = null;
+
+            let visited = [node];
+            let endpoints = [node];
+
+            // Prime the collector
+            let trace;
+            do {
+                trace = {};
+                endpoints.forEach(endpoint => {
+                    trace[endpoint] = pathFn(endpoint);
+                });
+
+                result = collectFn({ result, value: trace, visited });
+
+                let newEndpoints = _(trace).values().flatten().uniq().value();
+                endpoints = _.difference(newEndpoints, visited);
+                visited = visited.concat(endpoints);
+
+            } while(endpoints.length && (
+                untilFn ? untilFn({ result, value: trace, visited }) : true))
+
+            return result;
+        };
+        return traceWeb;
+    });
+
+    addManSys("d24e3bb4404957831292abf43d3b5278aff740b7", function(systems) {
+        let nodeListCollectFunc = function({ result, value }) {
+            if(!result)
+                result = [_.keys(value)[0]];
+
+            let newNodes = _(value).values().flatten().uniq().value();
+            return _.uniq(result.concat(newNodes));
+        };
+        return nodeListCollectFunc;
+    });
+
+    addManSys("53a4aadb2260f1ff1f1b6209a774884d6fda3204", function(systems) {
+        let anyPathCollectFn = function({ result, value, visited }) {
+            if(!result)
+                result = {};
+
+            _.each(value, (list, key) => {
+                if(list.length) {
+                    let base = result[key] || [key];
+
+                    _.each(list, item => {
+                        if(!visited.includes(item)) {
+                            delete result[key];
+                            result[item] = base.concat([item]);
+                        }
+                    });
+                }
+            });
+
+            return result;
+        };
+        return anyPathCollectFn;
+    });
+
     addManSys("2cc93fc040d12588f1c78770465daee890e8ad36", function(systems) {
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
         let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
