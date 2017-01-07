@@ -1052,7 +1052,7 @@ function buildManualSystemBuilder(systems) {
                 try {
                     next = readLink({away, node: base});
                 } catch(e) {
-                    console.warn("traceChain: link found with multiple tails");
+                    console.debug("traceChain: link found with multiple tails");
                     break;
                 }
                 if(!next)

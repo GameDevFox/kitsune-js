@@ -1,5 +1,8 @@
 function describe({ node, types }) {
 
+    if(!node)
+        return [];
+
     let typeMap = types();
 
     let result = [];
