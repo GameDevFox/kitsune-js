@@ -305,6 +305,20 @@ function buildManualSystemBuilder(systems) {
     });
     // END OF GRAPH EDGE FUNCTIONS
 
+    addManSys("aa1c07e327111a1b0682b419d16c7728528d3ffa", function(systems) {
+        let getHeads = systems("fc83ddd594c9b4fa2a44b3b42d8f1824d0f68c3e");
+        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+
+        let adjacent = function({ getHeads, getTails, node }) {
+            let heads = getHeads(node);
+            let tails = getTails(node);
+            let result = _.uniq(heads.concat(tails));
+            return result;
+        };
+        adjacent = bindAndAuto(adjacent, { getHeads, getTails }, "node");
+        return adjacent;
+    });
+
     addManSys("b6b8b3186cc54944c4b6f1c19969b04736da57e5", function(systems) {
         let emptyArrayFn = () => [];
         return emptyArrayFn;

@@ -1,5 +1,9 @@
 [
   {
+    "id": "7d1dd83e391008394510425e1a12f74ff6dd3f92",
+    "string": "adjacent"
+  },
+  {
     "id": "cffa50a32cb13a240d705317bcec65dd1f31b6ad",
     "string": "and"
   },
@@ -160,6 +164,14 @@
     "string": "edge-report"
   },
   {
+    "id": "fbacd2f0f766263ed8d146f621b0fba7ef9ed360",
+    "string": "edgeHead"
+  },
+  {
+    "id": "b9e55dea36d4629286fce5f0f49b356c9a1888ff",
+    "string": "edgeTail"
+  },
+  {
     "id": "dece05484839df110745b0a800297c33cc078287",
     "string": "element"
   },
@@ -204,18 +216,6 @@
     "string": "get-data-time"
   },
   {
-    "id": "409d623622196b12f4e18065eec28534e28268ba",
-    "string": "get-edge-head"
-  },
-  {
-    "id": "9e6674d167cab28cc34b5a6149ee2bb0391a0c42",
-    "string": "get-edge-tail"
-  },
-  {
-    "id": "fd7f50091518a10a8fe7b5f4c2454862ae030398",
-    "string": "get-head-edges"
-  },
-  {
     "id": "756298c8ec1f323603452496a7bbab2a85214b6d",
     "string": "get-heads"
   },
@@ -238,10 +238,6 @@
   {
     "id": "9ec2f78a1edf1a642a32007cd2b8a652c9bf8888",
     "string": "get-tail-assign-builder"
-  },
-  {
-    "id": "6903d26546537df41c1da06463c790f546043101",
-    "string": "get-tail-edges"
   },
   {
     "id": "0b8838e140b93b082b1358f8b5b70a045f3baf58",
@@ -406,6 +402,10 @@
   {
     "id": "1a954628a960aaef81d7b2d4521929579f3541e6",
     "string": "head"
+  },
+  {
+    "id": "68a206e608419807d8fe6674cda13009002ed58f",
+    "string": "headEdge"
   },
   {
     "id": "e3ea0240e79a2dec8d8350c8492d60fd30f97339",
@@ -962,6 +962,10 @@
   {
     "id": "5ba8dab1fbc816a2ff5a388896ffa7aa327ee7fa",
     "string": "tail-tail"
+  },
+  {
+    "id": "4337ec54792d64c33643073cf9613e672ca6ea47",
+    "string": "tailEdge"
   },
   {
     "id": "d4bad3dcf38142e79b1465702015ae6f66c5a231",
