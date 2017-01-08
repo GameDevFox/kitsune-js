@@ -37,18 +37,39 @@ let id = "6dbb32ac4a1bf4b8f84203e8ee123ae4e3df1ba6";
 
 function q() {
     let func = systems(id);
-    let pathFn = systems("aa1c07e327111a1b0682b419d16c7728528d3ffa");
     let node = "5a10efb9b3269b2c15fcd23e3b45a309d34e7384";
 
-    let nodeList = systems("d24e3bb4404957831292abf43d3b5278aff740b7");
-    let anyPath = systems("53a4aadb2260f1ff1f1b6209a774884d6fda3204");
+    let traceBuilder = systems("7d562339e77cd97aae891225a9774b4e81920561");
 
-    let result = func({
-        collectFn: anyPath,
-        // untilFn: ({ result, value, visited }) => {
-        //     return !visited.includes("ac92599cff9837457d975429a516cc8cb160cd34");
-        // },
-        pathFn, node });
+    let pathFn = systems("aa1c07e327111a1b0682b419d16c7728528d3ffa");
+    let traceFn = traceBuilder(pathFn);
+
+    let nodeCollector = systems("d24e3bb4404957831292abf43d3b5278aff740b7");
+    let nodePathCollector = systems("53a4aadb2260f1ff1f1b6209a774884d6fda3204");
+
+    let pruneFn = systems("701917131e54c3db120274bb011c6d3ea9c1b2cc");
+
+    let untilFn = function(state) {
+        return state.leaves.length; // && !state.visited.includes("ac92599cff9837457d975429a516cc8cb160cd34");
+    };
+
+    let concatFuncs = systems("f84b4e95bc3151c4f938ed30427461e903df2704");
+    let superFunc = concatFuncs([ traceFn, nodePathCollector, pruneFn ]);
+
+    let state = {
+        result: null,
+        visited: new Set(),
+        leaves: [node],
+        trace: null
+    };
+
+    do
+        state = superFunc(state);
+    while(untilFn(state));
+
+    let result = state.result;
+
+    // let result = func(node);
     return JSON.stringify(result, null, 2);
 }
 regFunc("q", false, q);
@@ -383,8 +404,10 @@ if(!funcReg) {
 let func = funcReg.func;
 let output = func.apply(this, opt.argv);
 
-if(typeof output != "undefined")
+if(typeof output != "undefined") {
+    console.log("====================");
     console.log(output);
+}
 
 if(!funcReg.readOnly) {
     let saveData = systems("c2ff24899966a19f0615519692679bff2c2b8b26");

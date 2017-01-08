@@ -177,68 +177,69 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
-    addManSys("6dbb32ac4a1bf4b8f84203e8ee123ae4e3df1ba6", function(systems) {
-        let traceWeb = function({ collectFn, untilFn, pathFn, node }) {
-
-            let result = null;
-
-            let visited = [node];
-            let endpoints = [node];
-
-            // Prime the collector
-            let trace;
-            do {
-                trace = {};
-                endpoints.forEach(endpoint => {
-                    trace[endpoint] = pathFn(endpoint);
+    addManSys("7d562339e77cd97aae891225a9774b4e81920561", function(systems) {
+        return function(pathFn) {
+            let trace = function (state) {
+                state.trace = {};
+                state.leaves.forEach(endpoint => {
+                    state.trace[endpoint] = pathFn(endpoint);
                 });
-
-                result = collectFn({ result, value: trace, visited });
-
-                let newEndpoints = _(trace).values().flatten().uniq().value();
-                endpoints = _.difference(newEndpoints, visited);
-                visited = visited.concat(endpoints);
-
-            } while(endpoints.length && (
-                untilFn ? untilFn({ result, value: trace, visited }) : true))
-
-            return result;
+                return state;
+            };
+            return trace;
         };
-        return traceWeb;
     });
 
     addManSys("d24e3bb4404957831292abf43d3b5278aff740b7", function(systems) {
-        let nodeListCollectFunc = function({ result, value }) {
-            if(!result)
-                result = [_.keys(value)[0]];
+        let nodeCollector = function(state) {
+            if(!state.result) {
+                state.result = new Set();
+                state.result.add(_.keys(state.trace)[0]);
+            }
 
-            let newNodes = _(value).values().flatten().uniq().value();
-            return _.uniq(result.concat(newNodes));
+            let newNodes = _(state.trace).values().flatten().value();
+            newNodes.forEach(x => state.result.add(x));
+            return state;
         };
-        return nodeListCollectFunc;
+        return nodeCollector;
     });
 
     addManSys("53a4aadb2260f1ff1f1b6209a774884d6fda3204", function(systems) {
-        let anyPathCollectFn = function({ result, value, visited }) {
-            if(!result)
-                result = {};
+        let nodePathColector = function(state) {
+            if(!state.result) {
+                state.result = {};
+                state.visited.add(state.leaves[0]);
+            }
 
-            _.each(value, (list, key) => {
+            _.each(state.trace, (list, key) => {
                 if(list.length) {
-                    let base = result[key] || [key];
+                    let base = state.result[key] || [key];
 
                     _.each(list, item => {
-                        if(!visited.includes(item)) {
-                            delete result[key];
-                            result[item] = base.concat([item]);
+                        if(!state.visited.has(item)) {
+                            delete state.result[key];
+                            state.result[item] = base.concat([item]);
                         }
                     });
                 }
             });
 
-            return result;
+            return state;
         };
-        return anyPathCollectFn;
+        return nodePathColector;
+    });
+
+    addManSys("701917131e54c3db120274bb011c6d3ea9c1b2cc", function(systems) {
+        let oncePerTrace = function(state) {
+            // TODO: Custom method for "prune"ing leaves
+            // Example, a node can only be visited once on this trace
+            // vs. a node can only be visited once on each path
+            let newLeaves = _(state.trace).values().flatten().value();
+            state.leaves = _.difference(newLeaves, Array.from(state.visited));
+            state.leaves.forEach(x => state.visited.add(x));
+            return state;
+        };
+        return oncePerTrace;
     });
 
     addManSys("2cc93fc040d12588f1c78770465daee890e8ad36", function(systems) {
@@ -413,11 +414,22 @@ function buildManualSystemBuilder(systems) {
 
     addManSys("7efca9ebecc3eded126cef2ef89c67bb35516d78", function(systems) {
         let readChain = systems("97142d3a71acdb994784bb0d57450ddd3513d41d");
+        let concatFuncs = systems("f84b4e95bc3151c4f938ed30427461e903df2704");
 
         let chainFuncBuilder = function({ readChain, systems, node }) {
             let chain = readChain(node);
             let funcs = chain.map(systems);
 
+            let result = concatFuncs(funcs);
+            return result;
+
+        };
+        chainFuncBuilder = bindAndAuto(chainFuncBuilder, { readChain, systems }, "node");
+        return chainFuncBuilder;
+    });
+
+    addManSys("f84b4e95bc3151c4f938ed30427461e903df2704", function(systems) {
+        let concatFuncs = function(funcs) {
             return function(input) {
                 let result = input;
                 for(let func of funcs)
@@ -425,8 +437,7 @@ function buildManualSystemBuilder(systems) {
                 return result;
             };
         };
-        chainFuncBuilder = bindAndAuto(chainFuncBuilder, { readChain, systems }, "node");
-        return chainFuncBuilder;
+        return concatFuncs;
     });
 
     addManSys("725bf3d81ff4670a523206ba90c193dd536db85d", function(systems) {
