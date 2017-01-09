@@ -40,25 +40,30 @@ function q() {
     let node = "5a10efb9b3269b2c15fcd23e3b45a309d34e7384";
 
     let traceBuilder = systems("7d562339e77cd97aae891225a9774b4e81920561");
+    let buildAllPathsCollector = systems("1a62dc17dee225b35bd8f89198bec294292fa991");
 
     let pathFn = systems("aa1c07e327111a1b0682b419d16c7728528d3ffa");
     let traceFn = traceBuilder(pathFn);
 
     let nodeCollector = systems("d24e3bb4404957831292abf43d3b5278aff740b7");
     let nodePathCollector = systems("53a4aadb2260f1ff1f1b6209a774884d6fda3204");
+    let allFullPathsCollector = buildAllPathsCollector();
+    let allPathsCollector = buildAllPathsCollector(true);
 
-    let pruneFn = systems("701917131e54c3db120274bb011c6d3ea9c1b2cc");
+    let oncePerTrace = systems("701917131e54c3db120274bb011c6d3ea9c1b2cc");
+    let oncePerPath = systems("7063ef90354b8c4bfcbdb05d88a25ef27508954e");
 
     let untilFn = function(state) {
         return state.leaves.length; // && !state.visited.includes("ac92599cff9837457d975429a516cc8cb160cd34");
     };
 
     let concatFuncs = systems("f84b4e95bc3151c4f938ed30427461e903df2704");
-    let superFunc = concatFuncs([ traceFn, nodePathCollector, pruneFn ]);
+    let superFunc = concatFuncs([ traceFn, allFullPathsCollector, oncePerPath ]);
 
     let state = {
-        result: null,
-        visited: new Set(),
+        result: {},
+        activePaths: {},
+        // visited: new Set(),
         leaves: [node],
         trace: null
     };

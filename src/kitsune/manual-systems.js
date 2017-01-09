@@ -212,16 +212,14 @@ function buildManualSystemBuilder(systems) {
             }
 
             _.each(state.trace, (list, key) => {
-                if(list.length) {
-                    let base = state.result[key] || [key];
+                let base = state.result[key] || [key];
 
-                    _.each(list, item => {
-                        if(!state.visited.has(item)) {
-                            delete state.result[key];
-                            state.result[item] = base.concat([item]);
-                        }
-                    });
-                }
+                _.each(list, item => {
+                    if(!state.visited.has(item)) {
+                        delete state.result[key];
+                        state.result[item] = base.concat([item]);
+                    }
+                });
             });
 
             return state;
@@ -229,9 +227,45 @@ function buildManualSystemBuilder(systems) {
         return nodePathColector;
     });
 
+    addManSys("1a62dc17dee225b35bd8f89198bec294292fa991", function(systems) {
+        // TODO: Refactor this with 53a4aadb2260f1ff1f1b6209a774884d6fda3204
+        return function buildAllPathsCollector(includeShortPaths = false) {
+            return function allPathsCollector(state) {
+                let newResult = {};
+
+                _.each(state.trace, (list, key) => {
+                    let basePaths = state.activePaths[key] || [[key]];
+
+                    basePaths.forEach(base => {
+                        let newPath = false;
+
+                        _.each(list, item => {
+                            if(!base.includes(item)) {
+                                newPath = true;
+
+                                let pathList = newResult[item] || [];
+                                pathList.push(base.concat([item]));
+                                newResult[item] = pathList;
+                            }
+                        });
+
+                        if(!newPath || includeShortPaths) {
+                            let pathList = state.result[key] || [];
+                            pathList.push(base);
+                            state.result[key] = pathList;
+                        }
+                    });
+                });
+
+                state.activePaths = newResult;
+                return state;
+            };
+        };
+    });
+
     addManSys("701917131e54c3db120274bb011c6d3ea9c1b2cc", function(systems) {
         let oncePerTrace = function(state) {
-            // TODO: Custom method for "prune"ing leaves
+            // NOTE: Custom method for "prune"ing leaves
             // Example, a node can only be visited once on this trace
             // vs. a node can only be visited once on each path
             let newLeaves = _(state.trace).values().flatten().value();
@@ -240,6 +274,14 @@ function buildManualSystemBuilder(systems) {
             return state;
         };
         return oncePerTrace;
+    });
+
+    addManSys("7063ef90354b8c4bfcbdb05d88a25ef27508954e", function(systems) {
+        let oncePerPath = function(state) {
+            state.leaves = _.keys(state.activePaths);
+            return state;
+        };
+        return oncePerPath;
     });
 
     addManSys("2cc93fc040d12588f1c78770465daee890e8ad36", function(systems) {
