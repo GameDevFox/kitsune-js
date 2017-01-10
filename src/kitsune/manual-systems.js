@@ -284,6 +284,22 @@ function buildManualSystemBuilder(systems) {
         return oncePerPath;
     });
 
+    addManSys("b7d803ed59c3a9e980b2d0be1287539c83870d33", function(systems) {
+        return function unindentSource(source) {
+            let lines = source.split(/\n/);
+            let indentLevel = lines[lines.length-1].length - 1;
+            let result = lines.map(x => x.replace(new RegExp("^\\s{"+indentLevel+"}"), "")).join("\n");
+            return result;
+        };
+    });
+
+    addManSys("68606459815b75b6d41b94c53383cd1e5b04685b", function(systems) {
+        return function getFunctionName(func) {
+            let match = func.toString().match(/^\s*function\s+(\w+)\(/);
+            return match && match.length > 1 ? match[1] : null;
+        };
+    });
+
     addManSys("2cc93fc040d12588f1c78770465daee890e8ad36", function(systems) {
         let readEdge = systems("25cff8a2afcf560b5451d2482dbf9d9d69649f26");
         let readString = systems("08f8db63b1843f7dea016e488bd547555f345c59");
