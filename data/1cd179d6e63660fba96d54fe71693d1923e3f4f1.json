@@ -180,6 +180,14 @@
     "string": "empty-array"
   },
   {
+    "id": "f57b2d312d9efe8fe993c8eb1f3e19d41ad04030",
+    "string": "equal"
+  },
+  {
+    "id": "341efea4ff7820d46f605881448f6b7199d2bff0",
+    "string": "exclusive"
+  },
+  {
     "id": "a25b9201c262946252a4a093a45888312e72c1fa",
     "string": "execute-function"
   },
@@ -430,6 +438,10 @@
   {
     "id": "1178cafbd64bbbfa77f5ac0a9d5032ed88162781",
     "string": "integer"
+  },
+  {
+    "id": "4b6914c620d2daa62ebe5994f36f361b3a759bf8",
+    "string": "intersection"
   },
   {
     "id": "0b54043795dcc99839e6419c532af5af72ff0c76",
@@ -928,8 +940,16 @@
     "string": "stringRemove"
   },
   {
+    "id": "6857d1ce9e02129da0459aea3e9556f7f434aa7e",
+    "string": "sub-set"
+  },
+  {
     "id": "7e09fad8025c4c435e9432a461f35aa9c254a84d",
     "string": "subtract-set"
+  },
+  {
+    "id": "6a539f854f0b5b66ac08ee50d8bcee9d2e5dd465",
+    "string": "super-set"
   },
   {
     "id": "317f1e761f2faa8da781a4762b9dcc2c5cad209a",
@@ -982,6 +1002,10 @@
   {
     "id": "d3c17afa426baf9e9f60c83a6107916585157cde",
     "string": "type-builder"
+  },
+  {
+    "id": "f43021ce75125743b51ba60b2608fdc181aaf5f6",
+    "string": "type-comparison"
   },
   {
     "id": "1143836ea62122fecc1bcdf49fb0150d40d121ad",
