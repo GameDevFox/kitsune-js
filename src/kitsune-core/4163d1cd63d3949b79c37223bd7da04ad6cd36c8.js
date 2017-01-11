@@ -1,5 +1,8 @@
 function factor({ graphFind, head, type, tail }) {
 
+    // TODO: Fix me so that this will return plain edges
+    // when no type is provided
+
     if(!head && !type && !tail)
         throw new Error("Must have one or more of (head, type, tail) params set");
 
@@ -34,6 +37,9 @@ function factor({ graphFind, head, type, tail }) {
         edges = graphFind({ id: typeTails });
 
     let result = typeEdges.map(typeEdge => {
+        // FIXME: THIS SHOULD BE EDGES
+        // How to we handle multiple types on a query that's doesn't
+        // specify type
         var edge = edges.find(edge => edge.id == typeEdge.tail);
         return {
             id: edge.id,
