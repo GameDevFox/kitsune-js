@@ -177,6 +177,33 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("5b81b5b7b2fe930a8605ff4b025f995b5884d339", function(systems) {
+
+        let typeTriTable = { "!=": {}, "<": {}, ">": {}, "x": {} };
+
+        typeTriTable["!="]["!="] = { "!=": true,  "<": true,  "=": true,  ">": true,  "x": true };
+        typeTriTable["!="]["<"]  = { "!=": true,  "<": true,  "=": false, ">": false, "x": true };
+        typeTriTable["!="][">"]  = { "!=": true,  "<": false, "=": false, ">": false, "x": false };
+        typeTriTable["!="]["x"]  = { "!=": true,  "<": true,  "=": false, ">": false, "x": true };
+
+        typeTriTable["<"]["!="]  = { "!=": true,  "<": false, "=": false, ">": false, "x": false };
+        typeTriTable["<"]["<"]   = { "!=": false, "<": true,  "=": false, ">": false, "x": false };
+        typeTriTable["<"][">"]   = { "!=": true,  "<": true,  "=": true,  ">": true,  "x": true };
+        typeTriTable["<"]["x"]   = { "!=": true,  "<": true,  "=": false, ">": false, "x": true };
+
+        typeTriTable[">"]["!="]  = { "!=": true,  "<": false, "=": false, ">": true,  "x": true };
+        typeTriTable[">"]["<"]   = { "!=": false, "<": true,  "=": true,  ">": true,  "x": true };
+        typeTriTable[">"][">"]   = { "!=": false, "<": false, "=": false, ">": true,  "x": false };
+        typeTriTable[">"]["x"]   = { "!=": false, "<": false, "=": false, ">": true,  "x": true };
+
+        typeTriTable["x"]["!="]  = { "!=": true,  "<": false, "=": false, ">": true,  "x": true };
+        typeTriTable["x"]["<"]   = { "!=": false, "<": true,  "=": false, ">": false, "x": true };
+        typeTriTable["x"][">"]   = { "!=": true,  "<": false, "=": false, ">": true,  "x": true };
+        typeTriTable["x"]["x"]   = { "!=": true,  "<": true,  "=": true,  ">": true,  "x": true };
+
+        return function getTypeTriTable() { return typeTriTable; };
+    });
+
     addManSys("7d562339e77cd97aae891225a9774b4e81920561", function(systems) {
         return function(pathFn) {
             let trace = function (state) {
