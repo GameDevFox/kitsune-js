@@ -32,16 +32,23 @@ let regFunc = function(name, readOnly, func) {
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let funcId = "68606459815b75b6d41b94c53383cd1e5b04685b";
+let funcId = "6dbb32ac4a1bf4b8f84203e8ee123ae4e3df1ba6";
 
 function q() {
     let func = systems(funcId);
-    let node = "5a10efb9b3269b2c15fcd23e3b45a309d34e7384";
 
-    let buildAllPathsCollector = systems("1a62dc17dee225b35bd8f89198bec294292fa991");
+    // let node = "5a10efb9b3269b2c15fcd23e3b45a309d34e7384";
+    // let result = func(node);
 
-    let result = func(buildAllPathsCollector);
-    return typeof result == "string" ? result : JSON.stringify(result, null, 2);
+    let root = "b6d2d41af3cddc767a002b52402b762f05b9a25d";
+
+    let startNode = root;
+    let endNode = "74deae159f38103a612cc1b12ae3d85be0eb2a8d";
+
+    let getDirectTypeComparison = systems("9c1cdc016834375586a69c311a3a2924371d6daf");
+    let result = getDirectTypeComparison({ a: startNode, b: endNode })
+
+    return JSON.stringify(result, null, 2);
 }
 regFunc("q", false, q);
 

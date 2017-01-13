@@ -177,6 +177,53 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("2b2c25eb1dcecd00fe7665a0d8fa240c49bbd201", function(systems) {
+        let subSet = "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3";
+        let superSet = "fdd18cbd62751219d86b28917c63b474ff8bc562";
+
+        return function invertTypeComp(typeComp) {
+            let result = typeComp;
+
+            if(result == subSet)
+                result = superSet;
+            else if(result == superSet)
+                result = subSet;
+
+            return result;
+        };
+    });
+
+    addManSys("9c1cdc016834375586a69c311a3a2924371d6daf", function(systems) {
+        let typeComparisonGroup = "30cb4bac5b1a658edad05e3622938b98a06c117d";
+        let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+        let invertTypeComp = systems("2b2c25eb1dcecd00fe7665a0d8fa240c49bbd201");
+
+        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+        let identity = systems("e6a52b68704b1b4e322c2f55d8e79b19ad0d55eb");
+        let typeComparisons = getTails(typeComparisonGroup);
+        let listTypeComparisons = identity(typeComparisons);
+
+        let getDirectTypeComparison = function({ listTypeComparisons, factor, invertTypeComp, a, b }) {
+            let reverse = false;
+
+            let typeComparisons = listTypeComparisons();
+            let f = factor({ head: a, type: typeComparisons, tail: b }); // forward
+            if(f.length == 0) {
+                reverse = true;
+                f = factor({head: b, type: typeComparisons, tail: a}); // backwards
+            }
+
+            let typeComp = f[0] ? f[0].type : null;
+
+            if(typeComp && reverse)
+                typeComp = invertTypeComp(typeComp);
+
+            return typeComp;
+        };
+        getDirectTypeComparison = bind({ func: getDirectTypeComparison, params: { listTypeComparisons, factor, invertTypeComp }});
+        return getDirectTypeComparison;
+    });
+
     addManSys("5b81b5b7b2fe930a8605ff4b025f995b5884d339", function(systems) {
 
         let typeTriTable = { "!=": {}, "<": {}, ">": {}, "x": {} };
@@ -405,7 +452,7 @@ function buildManualSystemBuilder(systems) {
     });
 
     // GRAPH EDGE FUNCTIONS
-    // TODO: Refactor this somehow to make them more "DRY"
+    // TODO: Refactor these to make them more "DRY"
     addManSys("7deb5958598154496504933f2efd1e4b07a178f3", function(systems) {
         let graphFind = systems("a1e815356dceab7fded042f3032925489407c93e");
 
