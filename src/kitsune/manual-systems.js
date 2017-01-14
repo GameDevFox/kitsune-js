@@ -177,6 +177,125 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("9ccbcf649745eac2934836654fd897472d432d6f", function(systems) {
+        return function doWhile({ funcs, untilFn, state }) {
+            do {
+                for(let fn of funcs)
+                    state = fn(state);
+            } while(untilFn(state));
+            return state;
+        };
+    });
+
+    addManSys("7d562339e77cd97aae891225a9774b4e81920561", function(systems) {
+        return function(pathFn) {
+            let trace = function (state) {
+                state.trace = {};
+                state.leaves.forEach(endpoint => {
+                    state.trace[endpoint] = pathFn(endpoint);
+                });
+                return state;
+            };
+            return trace;
+        };
+    });
+
+    addManSys("3b0008cb3d2af256175ce0bae1c202281f24ec3e", function(systems) {
+        return function allEdgePathCollector(state) {
+            let nextPaths = {};
+
+            // Extend each current path by the new edges
+            _.each(state.trace, (traceForKey, key) => {
+
+                // Get the list of paths that end with "key"
+                let pathsThatEndWithKey = state.activePaths[key];
+
+                // TODO: Move me up ???
+                // We only do this the first time to "prime" the results
+                // and next round
+                if(!pathsThatEndWithKey) {
+                    traceForKey.forEach(item => {
+                        state.result[item.tail] = [[item]];
+                    });
+                    nextPaths = state.result;
+                    return;
+                }
+
+                pathsThatEndWithKey.forEach(keyPath => {
+
+                    // Append edge to each existing path
+                    _.each(traceForKey, edge => {
+                        let pathNodes = keyPath.map(edge => edge.head)
+                        pathNodes.push(edge.head);
+
+                        let tailNode = edge.tail;
+
+                        // If this point isn't on the path yet...
+                        if(!pathNodes.includes(tailNode)) {
+                            // Create a new path ...
+                            let newPath = keyPath.concat([edge]);
+
+                            // ... and add to nextPaths ...
+                            let nextPathList = nextPaths[tailNode] || [];
+                            nextPathList.push(newPath);
+                            nextPaths[tailNode] = nextPathList;
+
+                            // ... and add to results.
+                            let resultNode = state.result[tailNode] || [];
+                            resultNode.push(newPath);
+                            state.result[tailNode] = resultNode;
+                        }
+                    });
+                });
+            });
+
+            state.activePaths = nextPaths;
+            return state;
+        };
+    });
+
+    addManSys("7063ef90354b8c4bfcbdb05d88a25ef27508954e", function(systems) {
+        return function oncePerPath(state) {
+            state.leaves = _.keys(state.activePaths);
+            return state;
+        };
+    });
+
+    addManSys("2dd4d8f4f0e8b94abfbe50c580687575064afafa", function(systems) {
+        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
+        let identity = systems("e6a52b68704b1b4e322c2f55d8e79b19ad0d55eb");
+
+        let typeComparisonGroup = "30cb4bac5b1a658edad05e3622938b98a06c117d";
+
+        let typeComparisons = getTails(typeComparisonGroup);
+        let listTypeComparisons = identity(typeComparisons);
+        return listTypeComparisons;
+    });
+
+    addManSys("0e214191b56f3d3017da66e1b45c5dea5dd5a107", function(systems) {
+        let listTypeComparisons = systems("2dd4d8f4f0e8b94abfbe50c580687575064afafa");
+        let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
+        let invertTypeComp = systems("2b2c25eb1dcecd00fe7665a0d8fa240c49bbd201");
+
+        let typeCompPath = function({ listTypeComparisons, factor, invertTypeComp, node }) {
+            let typeComparisons = listTypeComparisons();
+
+            let forward = factor({ head: node, type: typeComparisons });
+            let reverse = factor({ type: typeComparisons, tail: node }).map(f => ({
+                id: f.id,
+                head: f.tail,
+                tail: f.head,
+                typeEdge: f.typeEdge,
+                type: invertTypeComp(f.type),
+                reverse: true
+            }));
+
+            let result = forward.concat(reverse);
+            return result;
+        };
+        return bindAndAuto(typeCompPath, { listTypeComparisons, factor, invertTypeComp }, "node");
+    });
+
     addManSys("2b2c25eb1dcecd00fe7665a0d8fa240c49bbd201", function(systems) {
         let subSet = "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3";
         let superSet = "fdd18cbd62751219d86b28917c63b474ff8bc562";
@@ -194,14 +313,9 @@ function buildManualSystemBuilder(systems) {
     });
 
     addManSys("9c1cdc016834375586a69c311a3a2924371d6daf", function(systems) {
-        let typeComparisonGroup = "30cb4bac5b1a658edad05e3622938b98a06c117d";
         let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
         let invertTypeComp = systems("2b2c25eb1dcecd00fe7665a0d8fa240c49bbd201");
-
-        let getTails = systems("a8a338d08b0ef7e532cbc343ba1e4314608024b2");
-        let identity = systems("e6a52b68704b1b4e322c2f55d8e79b19ad0d55eb");
-        let typeComparisons = getTails(typeComparisonGroup);
-        let listTypeComparisons = identity(typeComparisons);
+        let listTypeComparisons = systems("2dd4d8f4f0e8b94abfbe50c580687575064afafa");
 
         let getDirectTypeComparison = function({ listTypeComparisons, factor, invertTypeComp, a, b }) {
             let reverse = false;
@@ -251,19 +365,6 @@ function buildManualSystemBuilder(systems) {
         return function getTypeTriTable() { return typeTriTable; };
     });
 
-    addManSys("7d562339e77cd97aae891225a9774b4e81920561", function(systems) {
-        return function(pathFn) {
-            let trace = function (state) {
-                state.trace = {};
-                state.leaves.forEach(endpoint => {
-                    state.trace[endpoint] = pathFn(endpoint);
-                });
-                return state;
-            };
-            return trace;
-        };
-    });
-
     addManSys("d24e3bb4404957831292abf43d3b5278aff740b7", function(systems) {
         let nodeCollector = function(state) {
             if(!state.result) {
@@ -279,7 +380,7 @@ function buildManualSystemBuilder(systems) {
     });
 
     addManSys("53a4aadb2260f1ff1f1b6209a774884d6fda3204", function(systems) {
-        let nodePathColector = function(state) {
+        let pathNodeColector = function(state) {
             if(!state.result) {
                 state.result = {};
                 state.visited.add(state.leaves[0]);
@@ -298,13 +399,12 @@ function buildManualSystemBuilder(systems) {
 
             return state;
         };
-        return nodePathColector;
+        return pathNodeColector;
     });
 
     addManSys("1a62dc17dee225b35bd8f89198bec294292fa991", function(systems) {
-        // TODO: Refactor this with 53a4aadb2260f1ff1f1b6209a774884d6fda3204
-        return function buildAllPathsCollector(includeShortPaths = false) {
-            return function allPathsCollector(state) {
+        return function buildAllNodePathCollector(includeShortPaths = false) {
+            return function allNodePathCollector(state) {
                 let newResult = {};
 
                 _.each(state.trace, (list, key) => {
@@ -314,7 +414,7 @@ function buildManualSystemBuilder(systems) {
                         let newPath = false;
 
                         _.each(list, item => {
-                            if(!base.includes(item)) {
+                            if(!base.includes(item.tail)) {
                                 newPath = true;
 
                                 let pathList = newResult[item] || [];
@@ -348,14 +448,6 @@ function buildManualSystemBuilder(systems) {
             return state;
         };
         return oncePerTrace;
-    });
-
-    addManSys("7063ef90354b8c4bfcbdb05d88a25ef27508954e", function(systems) {
-        let oncePerPath = function(state) {
-            state.leaves = _.keys(state.activePaths);
-            return state;
-        };
-        return oncePerPath;
     });
 
     addManSys("b7d803ed59c3a9e980b2d0be1287539c83870d33", function(systems) {
