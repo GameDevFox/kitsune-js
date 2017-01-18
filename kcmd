@@ -42,8 +42,8 @@ function q() {
 
     let root = "b6d2d41af3cddc767a002b52402b762f05b9a25d";
 
-    let startNode = root;
-    let endNode = "74deae159f38103a612cc1b12ae3d85be0eb2a8d";
+    let startNode = "74deae159f38103a612cc1b12ae3d85be0eb2a8d";
+    let endNode = "37b06456671820d86af8e7772395f519057b91ea";
 
     let typeCompPath = systems("0e214191b56f3d3017da66e1b45c5dea5dd5a107");
     let traceBuilder = systems("7d562339e77cd97aae891225a9774b4e81920561");
@@ -61,11 +61,37 @@ function q() {
         return state.leaves.length;
     }, state: {
         activePaths: {},
-        leaves: [root],
+        leaves: [startNode],
         result: {},
     }});
 
-    let result = state.result;
+    let typeCompPaths = state.result[endNode];
+
+    // let result = {};
+    // let crinklePath = systems("3e4264182db70fd87e175f92fcf0576e8d868f24");
+    // typeCompPaths.forEach(path => {
+    //     result = crinklePath(path);
+    //     console.log("R", result);
+    // });
+
+    let triangulateComps = systems("a2f2b1b1801497250960c0129490fef74a0c1859");
+    let result = triangulateComps({
+        ab: {
+            "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": false,
+            "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": false,
+            "9649fe713cc3a7371b7819748fabde4162ccdbf0": false,
+            "fdd18cbd62751219d86b28917c63b474ff8bc562": true,
+            "3d5a63c8c8284c2139972cb554abd4ee328d9766": false,
+        },
+        bc: {
+            "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": false,
+            "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": true,
+            "9649fe713cc3a7371b7819748fabde4162ccdbf0": false,
+            "fdd18cbd62751219d86b28917c63b474ff8bc562": false,
+            "3d5a63c8c8284c2139972cb554abd4ee328d9766": false,
+        }
+    });
+
     return JSON.stringify(result, null, 2);
 }
 regFunc("q", false, q);

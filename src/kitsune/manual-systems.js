@@ -177,6 +177,155 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("a2f2b1b1801497250960c0129490fef74a0c1859", function(systems) {
+        let compToComplexComp = systems("58e5ef9ca70a508bfea5cc9dc1bbdd514557bf1d");
+        let complexCompToComp = systems("2d38cd4fcc8cf3b4149abf6544432b222bcde238");
+        let getCompTriTable = systems("5b81b5b7b2fe930a8605ff4b025f995b5884d339");
+        let compOrOp = systems("ad0a8647bcf488b890bfdd26556ed4a24d0282ae");
+
+        let triangulateComps = function({ getCompTriTable, ab, bc }) {
+            let abSimple = complexCompToComp(ab);
+            if(abSimple == "9649fe713cc3a7371b7819748fabde4162ccdbf0") // equals
+                return bc;
+
+            let bcSimple = complexCompToComp(bc);
+            if(bcSimple == "9649fe713cc3a7371b7819748fabde4162ccdbf0") // equals
+                return ab;
+
+            let compTriTable = getCompTriTable();
+
+            // Try all possible ab comps with all possible bc comps
+            let combinations = [];
+            for(let compAB in ab) {
+                for(let compBC in bc) {
+                    if(!ab[compAB] || !bc[compBC])
+                        continue;
+
+                    if(compAB == "9649fe713cc3a7371b7819748fabde4162ccdbf0") { // equals
+                        let complexBC = compToComplexComp(compBC);
+                        combinations.push(complexBC);
+                        continue;
+                    }
+
+                    if(compBC == "9649fe713cc3a7371b7819748fabde4162ccdbf0") { // equals
+                        let complexAB = compToComplexComp(compAB);
+                        combinations.push(complexAB);
+                        continue;
+                    }
+
+                    let triComp = compTriTable[compAB][compBC];
+                    combinations.push(triComp);
+                }
+            }
+
+            // Run OR operation on all combinations
+            let result = compToComplexComp(null);
+            combinations.forEach(x => {
+                result = compOrOp({ a: result, b: x });
+            });
+
+            return result;
+
+        };
+        return bind({ func: triangulateComps, params: { getCompTriTable }});
+    });
+
+    addManSys("ad0a8647bcf488b890bfdd26556ed4a24d0282ae", function(systems) {
+        let getCompTypes = systems("3f7ce3918303e20d29fd6a0fc82da1b8a5a5a2ee");
+
+        let compOrOp = function({ getCompTypes, a, b }) {
+            let compTypes = getCompTypes();
+
+            let result = {};
+            compTypes.forEach(comp => {
+                result[comp] = a[comp] || b[comp];
+            });
+            return result;
+        };
+        return bind({ func: compOrOp, params: { getCompTypes }});
+    });
+
+    addManSys("3f7ce3918303e20d29fd6a0fc82da1b8a5a5a2ee", function(systems) {
+        let compTypes = [
+            "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6", //"!=",
+            "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3", //"<",
+            "9649fe713cc3a7371b7819748fabde4162ccdbf0", //"=",
+            "fdd18cbd62751219d86b28917c63b474ff8bc562", //">",
+            "3d5a63c8c8284c2139972cb554abd4ee328d9766" //"<>"
+        ];
+
+        return function getCompTypes() { return compTypes; };
+    });
+
+    addManSys("2d38cd4fcc8cf3b4149abf6544432b222bcde238", function(systems) {
+        let getCompTypes = systems("3f7ce3918303e20d29fd6a0fc82da1b8a5a5a2ee");
+
+        return function complexCompToComp(complex) {
+            let compTypes = getCompTypes();
+
+            let result = null;
+            let found = false;
+            for(let comp of compTypes) {
+                if(complex[comp]) {
+                    if(!found) {
+                        result = comp;
+                        found = true;
+                    } else {
+                        result = null;
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        };
+    });
+
+    addManSys("58e5ef9ca70a508bfea5cc9dc1bbdd514557bf1d", function(systems) {
+        let getCompTypes = systems("3f7ce3918303e20d29fd6a0fc82da1b8a5a5a2ee");
+
+       return function compToComplexComp(comp) {
+           let compTypes = getCompTypes();
+
+           let completeComp = {};
+           compTypes.forEach(x => {
+              completeComp[x] = (x == comp);
+           });
+           return completeComp;
+       };
+    });
+
+    addManSys("3e4264182db70fd87e175f92fcf0576e8d868f24", function(systems) {
+        let invertTypeComp = systems("2b2c25eb1dcecd00fe7665a0d8fa240c49bbd201");
+
+        let crinklePath = function crinklePath({ invertTypeComp, edgeList }) {
+            // Prime initial comp map with explicit comps
+            let compMap = {};
+            edgeList.forEach(edge => {
+                let headMap = compMap[edge.head] || {};
+                headMap[edge.tail] = edge.type;
+                compMap[edge.head] = headMap;
+
+                let tailMap = compMap[edge.tail] || {};
+                tailMap[edge.head] = invertTypeComp(edge.type);
+                compMap[edge.tail] = tailMap;
+            });
+
+            // Iterate and calculate implicit comps
+            _.keys(compMap).forEach(nodeA => {
+                let siblings = _.keys(compMap[nodeA]);
+                console.log("Direct Sibs:", nodeA, siblings);
+                siblings.forEach(siblingB => {
+                    let indirectSiblings = compMap[siblingsB];
+
+                });
+            });
+
+            return compMap;
+        };
+        return bindAndAuto(crinklePath, { invertTypeComp }, "edgeList");
+    });
+
     addManSys("9ccbcf649745eac2934836654fd897472d432d6f", function(systems) {
         return function doWhile({ funcs, untilFn, state }) {
             do {
@@ -340,29 +489,29 @@ function buildManualSystemBuilder(systems) {
 
     addManSys("5b81b5b7b2fe930a8605ff4b025f995b5884d339", function(systems) {
 
-        let typeTriTable = { "!=": {}, "<": {}, ">": {}, "x": {} };
+        let compTriTable={ "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": {}, "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": {}, "fdd18cbd62751219d86b28917c63b474ff8bc562": {}, "3d5a63c8c8284c2139972cb554abd4ee328d9766": {} };
 
-        typeTriTable["!="]["!="] = { "!=": true,  "<": true,  "=": true,  ">": true,  "x": true };
-        typeTriTable["!="]["<"]  = { "!=": true,  "<": true,  "=": false, ">": false, "x": true };
-        typeTriTable["!="][">"]  = { "!=": true,  "<": false, "=": false, ">": false, "x": false };
-        typeTriTable["!="]["x"]  = { "!=": true,  "<": true,  "=": false, ">": false, "x": true };
+        compTriTable["6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6"]["6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": true,  "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": true,  "9649fe713cc3a7371b7819748fabde4162ccdbf0": true,  "fdd18cbd62751219d86b28917c63b474ff8bc562": true,  "3d5a63c8c8284c2139972cb554abd4ee328d9766": true };
+        compTriTable["6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6"]["e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": true,  "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": true,  "9649fe713cc3a7371b7819748fabde4162ccdbf0": false, "fdd18cbd62751219d86b28917c63b474ff8bc562": false, "3d5a63c8c8284c2139972cb554abd4ee328d9766": true };
+        compTriTable["6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6"]["fdd18cbd62751219d86b28917c63b474ff8bc562"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": true,  "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": false, "9649fe713cc3a7371b7819748fabde4162ccdbf0": false, "fdd18cbd62751219d86b28917c63b474ff8bc562": false, "3d5a63c8c8284c2139972cb554abd4ee328d9766": false };
+        compTriTable["6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6"]["3d5a63c8c8284c2139972cb554abd4ee328d9766"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": true,  "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": true,  "9649fe713cc3a7371b7819748fabde4162ccdbf0": false, "fdd18cbd62751219d86b28917c63b474ff8bc562": false, "3d5a63c8c8284c2139972cb554abd4ee328d9766": true };
 
-        typeTriTable["<"]["!="]  = { "!=": true,  "<": false, "=": false, ">": false, "x": false };
-        typeTriTable["<"]["<"]   = { "!=": false, "<": true,  "=": false, ">": false, "x": false };
-        typeTriTable["<"][">"]   = { "!=": true,  "<": true,  "=": true,  ">": true,  "x": true };
-        typeTriTable["<"]["x"]   = { "!=": true,  "<": true,  "=": false, ">": false, "x": true };
+        compTriTable["e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3"]["6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": true,  "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": false, "9649fe713cc3a7371b7819748fabde4162ccdbf0": false, "fdd18cbd62751219d86b28917c63b474ff8bc562": false, "3d5a63c8c8284c2139972cb554abd4ee328d9766": false };
+        compTriTable["e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3"]["e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": false, "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": true,  "9649fe713cc3a7371b7819748fabde4162ccdbf0": false, "fdd18cbd62751219d86b28917c63b474ff8bc562": false, "3d5a63c8c8284c2139972cb554abd4ee328d9766": false };
+        compTriTable["e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3"]["fdd18cbd62751219d86b28917c63b474ff8bc562"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": true,  "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": true,  "9649fe713cc3a7371b7819748fabde4162ccdbf0": true,  "fdd18cbd62751219d86b28917c63b474ff8bc562": true,  "3d5a63c8c8284c2139972cb554abd4ee328d9766": true };
+        compTriTable["e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3"]["3d5a63c8c8284c2139972cb554abd4ee328d9766"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": true,  "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": true,  "9649fe713cc3a7371b7819748fabde4162ccdbf0": false, "fdd18cbd62751219d86b28917c63b474ff8bc562": false, "3d5a63c8c8284c2139972cb554abd4ee328d9766": true };
 
-        typeTriTable[">"]["!="]  = { "!=": true,  "<": false, "=": false, ">": true,  "x": true };
-        typeTriTable[">"]["<"]   = { "!=": false, "<": true,  "=": true,  ">": true,  "x": true };
-        typeTriTable[">"][">"]   = { "!=": false, "<": false, "=": false, ">": true,  "x": false };
-        typeTriTable[">"]["x"]   = { "!=": false, "<": false, "=": false, ">": true,  "x": true };
+        compTriTable["fdd18cbd62751219d86b28917c63b474ff8bc562"]["6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": true,  "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": false, "9649fe713cc3a7371b7819748fabde4162ccdbf0": false, "fdd18cbd62751219d86b28917c63b474ff8bc562": true,  "3d5a63c8c8284c2139972cb554abd4ee328d9766": true };
+        compTriTable["fdd18cbd62751219d86b28917c63b474ff8bc562"]["e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": false, "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": true,  "9649fe713cc3a7371b7819748fabde4162ccdbf0": true,  "fdd18cbd62751219d86b28917c63b474ff8bc562": true,  "3d5a63c8c8284c2139972cb554abd4ee328d9766": true };
+        compTriTable["fdd18cbd62751219d86b28917c63b474ff8bc562"]["fdd18cbd62751219d86b28917c63b474ff8bc562"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": false, "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": false, "9649fe713cc3a7371b7819748fabde4162ccdbf0": false, "fdd18cbd62751219d86b28917c63b474ff8bc562": true,  "3d5a63c8c8284c2139972cb554abd4ee328d9766": false };
+        compTriTable["fdd18cbd62751219d86b28917c63b474ff8bc562"]["3d5a63c8c8284c2139972cb554abd4ee328d9766"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": false, "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": false, "9649fe713cc3a7371b7819748fabde4162ccdbf0": false, "fdd18cbd62751219d86b28917c63b474ff8bc562": true,  "3d5a63c8c8284c2139972cb554abd4ee328d9766": true };
 
-        typeTriTable["x"]["!="]  = { "!=": true,  "<": false, "=": false, ">": true,  "x": true };
-        typeTriTable["x"]["<"]   = { "!=": false, "<": true,  "=": false, ">": false, "x": true };
-        typeTriTable["x"][">"]   = { "!=": true,  "<": false, "=": false, ">": true,  "x": true };
-        typeTriTable["x"]["x"]   = { "!=": true,  "<": true,  "=": true,  ">": true,  "x": true };
+        compTriTable["3d5a63c8c8284c2139972cb554abd4ee328d9766"]["6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": true,  "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": false, "9649fe713cc3a7371b7819748fabde4162ccdbf0": false, "fdd18cbd62751219d86b28917c63b474ff8bc562": true,  "3d5a63c8c8284c2139972cb554abd4ee328d9766": true };
+        compTriTable["3d5a63c8c8284c2139972cb554abd4ee328d9766"]["e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": false, "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": true,  "9649fe713cc3a7371b7819748fabde4162ccdbf0": false, "fdd18cbd62751219d86b28917c63b474ff8bc562": false, "3d5a63c8c8284c2139972cb554abd4ee328d9766": true };
+        compTriTable["3d5a63c8c8284c2139972cb554abd4ee328d9766"]["fdd18cbd62751219d86b28917c63b474ff8bc562"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": true,  "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": false, "9649fe713cc3a7371b7819748fabde4162ccdbf0": false, "fdd18cbd62751219d86b28917c63b474ff8bc562": true,  "3d5a63c8c8284c2139972cb554abd4ee328d9766": true };
+        compTriTable["3d5a63c8c8284c2139972cb554abd4ee328d9766"]["3d5a63c8c8284c2139972cb554abd4ee328d9766"] = { "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": true,  "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": true,  "9649fe713cc3a7371b7819748fabde4162ccdbf0": true,  "fdd18cbd62751219d86b28917c63b474ff8bc562": true,  "3d5a63c8c8284c2139972cb554abd4ee328d9766": true };
 
-        return function getTypeTriTable() { return typeTriTable; };
+        return function getCompTriTable() { return compTriTable; };
     });
 
     addManSys("d24e3bb4404957831292abf43d3b5278aff740b7", function(systems) {
