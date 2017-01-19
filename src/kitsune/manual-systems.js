@@ -177,6 +177,186 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("3e4264182db70fd87e175f92fcf0576e8d868f24", function(systems) {
+        let buildEdgeCompMap = systems("e3e200c959b09a8b08b6f8596aa66945ab674204");
+        let mergeCompMap = systems("5397080cb511d0394e4b7bc50c87c9d9bb93961c");
+        let triangulateComps = systems("a2f2b1b1801497250960c0129490fef74a0c1859");
+        let invertComplexComp = systems("4a6109968fc51d86450ca3c08b120fc5f5f386d3");
+
+        let crinklePath = function crinklePath({ buildEdgeCompMap, invertComplexComp, edgeCompList }) {
+            let myEdgeCompList = edgeCompList;
+
+            let result = {};
+            let tris = {};
+            while(myEdgeCompList.length) {
+                // Prime initial comp map with explicit comps
+                let compMap = buildEdgeCompMap(myEdgeCompList);
+
+                // Merge compMap into master compMap
+                mergeCompMap({ from: compMap, to: result });
+
+                // Get new comps
+                let implicitComps = [];
+                myEdgeCompList.forEach(edge => {
+                    let edgeComps = [];
+
+                    // Get ABc combinations
+                    let tail = edge.tail;
+                    let cComps = result[tail];
+                    _.forEach(cComps, (comp, c) => {
+                        if(edge.head == c)
+                            return;
+
+                        let tailComp = {
+                            a: edge.head,
+                            ab: result[edge.head][tail],
+                            b: edge.tail,
+                            bc: comp,
+                            c: c
+                        };
+                        edgeComps.push(tailComp);
+                    });
+
+                    // Get aBC combinations
+                    let head = edge.head;
+                    let aComps = result[head];
+                    _.forEach(aComps, (comp, a) => {
+                        if(a == edge.tail)
+                            return;
+
+                        let headComp = {
+                            a: a,
+                            ab: invertComplexComp(comp),
+                            b: edge.head,
+                            bc: result[head][edge.tail],
+                            c: edge.tail
+                        };
+                        edgeComps.push(headComp);
+                    });
+
+                    _.forEach(edgeComps, comp => {
+                        let reverse = {
+                            a: comp.c,
+                            ab: invertComplexComp(comp.bc),
+                            b: comp.b,
+                            bc: invertComplexComp(comp.ab),
+                            c: comp.a
+                        };
+
+                        let found = implicitComps.find(x => _.isEqual(x, comp));
+                        found = found || implicitComps.find(x => _.isEqual(x, reverse));
+                        if(!found)
+                            implicitComps.push(comp);
+                    });
+                });
+
+                // Filter out implicit comps we've already triangulated
+                implicitComps = implicitComps.filter(comp => {
+                    return !(
+                        (tris[comp.a]
+                        && tris[comp.a][comp.b]
+                        && tris[comp.a][comp.b].includes(comp.c))
+                        || (tris[comp.c]
+                        && tris[comp.c][comp.b]
+                        && tris[comp.c][comp.b].includes(comp.a))
+                    );
+                });
+
+                // Triangulate and resolve implicit comps to edge comps
+                myEdgeCompList = implicitComps.map(implicit => {
+                    // Remeber that we've tried this one
+                    let a = tris[implicit.a] || {};
+                    let b = a[implicit.b] || [];
+                    b.push(implicit.c);
+                    a[implicit.b] = b;
+                    tris[implicit.a] = a;
+
+                    let comp = triangulateComps({ ab: implicit.ab, bc: implicit.bc });
+                    return {
+                        head: implicit.a,
+                        type: comp,
+                        tail: implicit.c
+                    };
+                });
+            }
+
+            return result;
+        };
+        return bindAndAuto(crinklePath, { buildEdgeCompMap, invertComplexComp }, "edgeCompList");
+    });
+
+    addManSys("5397080cb511d0394e4b7bc50c87c9d9bb93961c", function(systems) {
+        let compAndOp = systems("2d2fedf2ea867ef6028c692ad8dfd72fec088ea1");
+
+        let mergeCompMap = function({ compAndOp, from, to }) {
+            for(let keyA in from) {
+                for(let keyB in from[keyA]) {
+                    if(to && to[keyA] && to[keyA][keyB]) {
+                        // merge with AND
+                        let existingComp = to[keyA][keyB];
+                        let newComp = from[keyA][keyB];
+
+                        let final = compAndOp({ a: existingComp, b: newComp });
+                        to[keyA][keyB] = final;
+                    } else {
+                        let map = to[keyA] || {};
+                        map[keyB] = from[keyA][keyB];
+                        to[keyA] = map;
+                    }
+                }
+            }
+
+            return to;
+        };
+        return bind({ func: mergeCompMap, params: { compAndOp }});
+    });
+
+    // TODO: Refactor this with compOrOp to make it DRY
+    addManSys("2d2fedf2ea867ef6028c692ad8dfd72fec088ea1", function(systems) {
+        let getCompTypes = systems("3f7ce3918303e20d29fd6a0fc82da1b8a5a5a2ee");
+
+        let compAndOp = function({ getCompTypes, a, b }) {
+            let compTypes = getCompTypes();
+
+            let result = {};
+            compTypes.forEach(comp => {
+                result[comp] = a[comp] && b[comp];
+            });
+            return result;
+        };
+        return bind({ func: compAndOp, params: { getCompTypes }});
+    });
+
+    addManSys("e3e200c959b09a8b08b6f8596aa66945ab674204", function(systems) {
+        let compToComplexComp = systems("58e5ef9ca70a508bfea5cc9dc1bbdd514557bf1d");
+        let invertComplexComp = systems("4a6109968fc51d86450ca3c08b120fc5f5f386d3");
+
+        let buildEdgeCompMap = function({ compToComplexComp, invertComplexComp, edgeCompList }) {
+            let compMap = {};
+
+            edgeCompList.forEach(edgeComp => {
+                let headMap = compMap[edgeComp.head] || {};
+                let headType = edgeComp.type;
+                headType = (typeof headType == "string")
+                    ? compToComplexComp(headType)
+                    : headType;
+                headMap[edgeComp.tail] = headType;
+                compMap[edgeComp.head] = headMap;
+
+                let tailMap = compMap[edgeComp.tail] || {};
+                let tailType = edgeComp.type;
+                tailType = (typeof tailType == "string")
+                    ? compToComplexComp(tailType)
+                    : tailType;
+                tailMap[edgeComp.head] = invertComplexComp(tailType);
+                compMap[edgeComp.tail] = tailMap;
+            });
+
+            return compMap;
+        };
+        return bindAndAuto(buildEdgeCompMap, { compToComplexComp, invertComplexComp }, "edgeCompList");
+    });
+
     addManSys("a2f2b1b1801497250960c0129490fef74a0c1859", function(systems) {
         let compToComplexComp = systems("58e5ef9ca70a508bfea5cc9dc1bbdd514557bf1d");
         let complexCompToComp = systems("2d38cd4fcc8cf3b4149abf6544432b222bcde238");
@@ -295,37 +475,6 @@ function buildManualSystemBuilder(systems) {
        };
     });
 
-    addManSys("3e4264182db70fd87e175f92fcf0576e8d868f24", function(systems) {
-        let invertTypeComp = systems("2b2c25eb1dcecd00fe7665a0d8fa240c49bbd201");
-
-        let crinklePath = function crinklePath({ invertTypeComp, edgeList }) {
-            // Prime initial comp map with explicit comps
-            let compMap = {};
-            edgeList.forEach(edge => {
-                let headMap = compMap[edge.head] || {};
-                headMap[edge.tail] = edge.type;
-                compMap[edge.head] = headMap;
-
-                let tailMap = compMap[edge.tail] || {};
-                tailMap[edge.head] = invertTypeComp(edge.type);
-                compMap[edge.tail] = tailMap;
-            });
-
-            // Iterate and calculate implicit comps
-            _.keys(compMap).forEach(nodeA => {
-                let siblings = _.keys(compMap[nodeA]);
-                console.log("Direct Sibs:", nodeA, siblings);
-                siblings.forEach(siblingB => {
-                    let indirectSiblings = compMap[siblingsB];
-
-                });
-            });
-
-            return compMap;
-        };
-        return bindAndAuto(crinklePath, { invertTypeComp }, "edgeList");
-    });
-
     addManSys("9ccbcf649745eac2934836654fd897472d432d6f", function(systems) {
         return function doWhile({ funcs, untilFn, state }) {
             do {
@@ -424,9 +573,9 @@ function buildManualSystemBuilder(systems) {
     addManSys("0e214191b56f3d3017da66e1b45c5dea5dd5a107", function(systems) {
         let listTypeComparisons = systems("2dd4d8f4f0e8b94abfbe50c580687575064afafa");
         let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
-        let invertTypeComp = systems("2b2c25eb1dcecd00fe7665a0d8fa240c49bbd201");
+        let invertComp = systems("2b2c25eb1dcecd00fe7665a0d8fa240c49bbd201");
 
-        let typeCompPath = function({ listTypeComparisons, factor, invertTypeComp, node }) {
+        let typeCompPath = function({ listTypeComparisons, factor, invertComp, node }) {
             let typeComparisons = listTypeComparisons();
 
             let forward = factor({ head: node, type: typeComparisons });
@@ -435,21 +584,21 @@ function buildManualSystemBuilder(systems) {
                 head: f.tail,
                 tail: f.head,
                 typeEdge: f.typeEdge,
-                type: invertTypeComp(f.type),
+                type: invertComp(f.type),
                 reverse: true
             }));
 
             let result = forward.concat(reverse);
             return result;
         };
-        return bindAndAuto(typeCompPath, { listTypeComparisons, factor, invertTypeComp }, "node");
+        return bindAndAuto(typeCompPath, { listTypeComparisons, factor, invertComp }, "node");
     });
 
     addManSys("2b2c25eb1dcecd00fe7665a0d8fa240c49bbd201", function(systems) {
         let subSet = "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3";
         let superSet = "fdd18cbd62751219d86b28917c63b474ff8bc562";
 
-        return function invertTypeComp(typeComp) {
+        return function invertComp(typeComp) {
             let result = typeComp;
 
             if(result == subSet)
@@ -461,12 +610,24 @@ function buildManualSystemBuilder(systems) {
         };
     });
 
+    addManSys("4a6109968fc51d86450ca3c08b120fc5f5f386d3", function(systems) {
+        return function invertComplexComp(comp) {
+            return {
+                "6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6": comp["6d098c31e5916c6dd18f1b16d9f3ecb6db6ab4f6"], //"!=",
+                "e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3": comp["fdd18cbd62751219d86b28917c63b474ff8bc562"], //"<",
+                "9649fe713cc3a7371b7819748fabde4162ccdbf0": comp["9649fe713cc3a7371b7819748fabde4162ccdbf0"], //"=",
+                "fdd18cbd62751219d86b28917c63b474ff8bc562": comp["e0bc866dfccb8f3e2ab1dd05ef68cba5bc260bd3"], //">",
+                "3d5a63c8c8284c2139972cb554abd4ee328d9766": comp["3d5a63c8c8284c2139972cb554abd4ee328d9766"] //"<>"
+            };
+        };
+    });
+
     addManSys("9c1cdc016834375586a69c311a3a2924371d6daf", function(systems) {
         let factor = systems("c83cd0ab78a1d57609f9224f851bde6d230711d0");
-        let invertTypeComp = systems("2b2c25eb1dcecd00fe7665a0d8fa240c49bbd201");
+        let invertComp = systems("2b2c25eb1dcecd00fe7665a0d8fa240c49bbd201");
         let listTypeComparisons = systems("2dd4d8f4f0e8b94abfbe50c580687575064afafa");
 
-        let getDirectTypeComparison = function({ listTypeComparisons, factor, invertTypeComp, a, b }) {
+        let getDirectTypeComparison = function({ listTypeComparisons, factor, invertComp, a, b }) {
             let reverse = false;
 
             let typeComparisons = listTypeComparisons();
@@ -479,11 +640,11 @@ function buildManualSystemBuilder(systems) {
             let typeComp = f[0] ? f[0].type : null;
 
             if(typeComp && reverse)
-                typeComp = invertTypeComp(typeComp);
+                typeComp = invertComp(typeComp);
 
             return typeComp;
         };
-        getDirectTypeComparison = bind({ func: getDirectTypeComparison, params: { listTypeComparisons, factor, invertTypeComp }});
+        getDirectTypeComparison = bind({ func: getDirectTypeComparison, params: { listTypeComparisons, factor, invertComp }});
         return getDirectTypeComparison;
     });
 
