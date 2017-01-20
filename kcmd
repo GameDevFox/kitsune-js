@@ -32,49 +32,16 @@ let regFunc = function(name, readOnly, func) {
 let paramId = "68b4abc42a7c4cd5dc27c9dad476a64a7014ce07";
 let bindFuncId = "e6429ca88b178bd13982b6ca543c822043b609c6";
 
-let funcId = "0e214191b56f3d3017da66e1b45c5dea5dd5a107";
+let funcId = "b56ec2240b3e09e53a0747b3c120fb3ef3f901bc";
 
 function q() {
     let func = systems(funcId);
 
     // let node = "5a10efb9b3269b2c15fcd23e3b45a309d34e7384";
-    // let result = func(node);
-
-    let root = "b6d2d41af3cddc767a002b52402b762f05b9a25d";
-
-    let startNode = "74deae159f38103a612cc1b12ae3d85be0eb2a8d";
-    let endNode = "37b06456671820d86af8e7772395f519057b91ea";
-
-    let typeCompPath = systems("0e214191b56f3d3017da66e1b45c5dea5dd5a107");
-    let traceBuilder = systems("7d562339e77cd97aae891225a9774b4e81920561");
-
-    let traceFn = traceBuilder(typeCompPath);
-    let collectorFn = systems("3b0008cb3d2af256175ce0bae1c202281f24ec3e");
-    let pruneFn = systems("7063ef90354b8c4bfcbdb05d88a25ef27508954e");
-
-    let doWhile = systems("9ccbcf649745eac2934836654fd897472d432d6f");
-    let state = doWhile({ funcs: [
-        traceFn,
-        collectorFn,
-        pruneFn
-    ], untilFn: state => {
-        return state.leaves.length;
-    }, state: {
-        activePaths: {},
-        leaves: [startNode],
-        result: {},
-    }});
-
-    let typeCompPaths = state.result[endNode];
-
-    let result = {};
-    let crinklePath = systems("3e4264182db70fd87e175f92fcf0576e8d868f24");
-    typeCompPaths.forEach(path => {
-        result = crinklePath(path);
+    let result = func({
+        a: "74deae159f38103a612cc1b12ae3d85be0eb2a8d",
+        b: "37b06456671820d86af8e7772395f519057b91ea"
     });
-
-    console.log("S>E", result[startNode][endNode]);
-    console.log("E>S", result[endNode][startNode]);
 
     return JSON.stringify(result, null, 2);
 }

@@ -177,6 +177,38 @@ function buildManualSystemBuilder(systems) {
         });
     }
 
+    addManSys("b56ec2240b3e09e53a0747b3c120fb3ef3f901bc", function(systems) {
+        let doWhile = systems("9ccbcf649745eac2934836654fd897472d432d6f");
+            let traceTypeComp = systems("27e5fff1d180f1a96433128f322a0ca25bc5a177");
+            let allEdgePathCollector = systems("3b0008cb3d2af256175ce0bae1c202281f24ec3e");
+            let pruneFn = systems("7063ef90354b8c4bfcbdb05d88a25ef27508954e");
+        let crinklePath = systems("3e4264182db70fd87e175f92fcf0576e8d868f24");
+
+        let compareTypes = function({ doWhile, traceTypeComp, allEdgePathCollector, pruneFn, crinklePath,
+                a, b }) {
+
+            let state = doWhile({ funcs: [
+                traceTypeComp,
+                allEdgePathCollector,
+                pruneFn
+            ], untilFn: state => {
+                return state.leaves.length;
+            }, state: {
+                activePaths: {},
+                leaves: [a],
+                result: {},
+            }});
+
+            let paths = _.flatten(state.result[b]);
+            let comps = crinklePath(paths);
+
+            let result = comps[a][b];
+            return result;
+        };
+        return bind({ func: compareTypes, params: {
+            doWhile, traceTypeComp, allEdgePathCollector, pruneFn, crinklePath }});
+    });
+    
     addManSys("3e4264182db70fd87e175f92fcf0576e8d868f24", function(systems) {
         let buildEdgeCompMap = systems("e3e200c959b09a8b08b6f8596aa66945ab674204");
         let mergeCompMap = systems("5397080cb511d0394e4b7bc50c87c9d9bb93961c");
@@ -486,7 +518,9 @@ function buildManualSystemBuilder(systems) {
     });
 
     addManSys("7d562339e77cd97aae891225a9774b4e81920561", function(systems) {
-        return function(pathFn) {
+        return function(pathFnNode) {
+            let pathFn = systems(pathFnNode);
+
             let trace = function (state) {
                 state.trace = {};
                 state.leaves.forEach(endpoint => {
