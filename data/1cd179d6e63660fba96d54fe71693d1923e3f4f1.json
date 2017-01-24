@@ -196,6 +196,10 @@
     "string": "field-type-builder"
   },
   {
+    "id": "0baa59bcf8d20d8acdb20816b284df5fab64c426",
+    "string": "full-intersection"
+  },
+  {
     "id": "b390803c3e2938a30978e3acfea587b2f00f95fa",
     "string": "full-type-builder"
   },
